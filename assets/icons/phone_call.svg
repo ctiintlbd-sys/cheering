@@ -1,0 +1,18 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_d_955_6574)">
+        <rect x="2" y="1" width="40" height="40" rx="20" fill="#F8FAFC" shape-rendering="crispEdges"/>
+        <path d="M15.1369 21.764L18.155 18.0866C18.463 17.6906 18.617 17.4926 18.6977 17.2706C18.7692 17.0741 18.7987 16.8648 18.7845 16.6563C18.7684 16.4205 18.6753 16.1876 18.4889 15.7218L17.7783 13.9451C17.5025 13.2558 17.3647 12.9111 17.1268 12.6852C16.9173 12.4862 16.6547 12.3519 16.3706 12.2985C16.0482 12.238 15.6881 12.328 14.9678 12.5081L13.0005 13C13.0005 23 20.0002 30 30.0005 30L30.4921 28.0324C30.6722 27.3121 30.7622 26.952 30.7017 26.6296C30.6483 26.3456 30.5141 26.0829 30.315 25.8734C30.0891 25.6355 29.7444 25.4977 29.0551 25.222L27.4696 24.5877C26.9382 24.3752 26.6725 24.2689 26.4076 24.2608C26.1734 24.2536 25.9409 24.3013 25.7285 24.4001C25.4882 24.512 25.2859 24.7143 24.8812 25.119L21.8279 28.1733M23.0002 16C23.9769 16.1906 24.8746 16.6683 25.5783 17.3719C26.282 18.0756 26.7596 18.9733 26.9502 19.95M23.0002 12C25.0295 12.2254 26.9218 13.1342 28.3665 14.577C29.8111 16.0198 30.7222 17.911 30.9502 19.94" stroke="#0F172A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <defs>
+        <filter id="filter0_d_955_6574" x="0" y="0" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+            <feOffset dy="1"/>
+            <feGaussianBlur stdDeviation="1"/>
+            <feComposite in2="hardAlpha" operator="out"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0.0392157 0 0 0 0 0.0509804 0 0 0 0 0.0784314 0 0 0 0.03 0"/>
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_955_6574"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_955_6574" result="shape"/>
+        </filter>
+    </defs>
+</svg>

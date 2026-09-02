@@ -1,0 +1,38 @@
+{
+  "@@locale": "en",
+  "appName": "Cheering Partner",
+  "@appName": { "description": "Application name" },
+
+  "loginTitle": "Welcome back",
+  "loginSubtitle": "Sign in to continue",
+  "loginButton": "Sign In",
+  "registerTitle": "Create account",
+  "registerButton": "Sign Up",
+  "logoutButton": "Log Out",
+  "otpTitle": "Verify your number",
+  "otpSubtitle": "Enter the 6-digit code sent to {phone}",
+  "@otpSubtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "phoneLabel": "Phone number",
+  "nameLabel": "Full name",
+
+  "homeTitle": "Home",
+  "settingsTitle": "Settings",
+  "languageLabel": "Language",
+  "themeLabel": "Theme",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeSystem": "System",
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorNetwork": "No internet connection.",
+  "errorUnauthorized": "Session expired. Please login again.",
+  "retryButton": "Retry",
+  "loadingText": "Loading..."
+}

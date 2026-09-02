@@ -1,0 +1,33 @@
+{
+  "@@locale": "bn",
+  "appName": "চিয়ারিং ভেন্ডর",
+  "loginTitle": "স্বাগতম",
+  "loginSubtitle": "চালিয়ে যেতে সাইন ইন করুন",
+  "loginButton": "সাইন ইন",
+  "registerTitle": "অ্যাকাউন্ট তৈরি করুন",
+  "registerButton": "নিবন্ধন করুন",
+  "logoutButton": "লগ আউট",
+  "otpTitle": "নম্বর যাচাই করুন",
+  "otpSubtitle": "{phone} নম্বরে পাঠানো ৬ সংখ্যার কোড দিন",
+  "@otpSubtitle": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "emailLabel": "ইমেইল",
+  "passwordLabel": "পাসওয়ার্ড",
+  "phoneLabel": "ফোন নম্বর",
+  "nameLabel": "পূর্ণ নাম",
+  "homeTitle": "হোম",
+  "settingsTitle": "সেটিংস",
+  "languageLabel": "ভাষা",
+  "themeLabel": "থিম",
+  "themeDark": "ডার্ক",
+  "themeLight": "লাইট",
+  "themeSystem": "সিস্টেম",
+  "errorGeneric": "কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।",
+  "errorNetwork": "ইন্টারনেট সংযোগ নেই।",
+  "errorUnauthorized": "সেশন শেষ হয়ে গেছে। আবার লগ ইন করুন।",
+  "retryButton": "আবার চেষ্টা করুন",
+  "loadingText": "লোড হচ্ছে..."
+}
