@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../features/splash/presentation/bloc/onboarding_bloc.dart';
 import '../../../features/splash/presentation/screens/onboarding_screen.dart';
 import '../../../features/splash/presentation/screens/splash_screen.dart';
 import '../di/service_locator.dart';
@@ -18,6 +20,7 @@ class AppRouter {
     navigatorKey: rootNavigatorKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: getIt<AppRouterNotifier>(),
+
     debugLogDiagnostics: kDebugMode,
     redirect: (context, state) =>
         AppAuthGuard.redirect(context, state, getIt<AppRouterNotifier>()),
@@ -29,7 +32,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RoutePaths.onboarding,
-        builder: (context, state) => const OnboardingScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => OnboardingBloc(),
+          child: const OnboardingScreen(),
+        ),
       ),
 
       // ── 2. Auth Flow ─────────────────────────────────────────────────────
