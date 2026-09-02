@@ -72,6 +72,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/nogod.svg
   SvgGenImage get nogod => const SvgGenImage('assets/icons/nogod.svg');
 
+  /// File path: assets/icons/onboarding_last.svg
+  SvgGenImage get onboardingLast =>
+      const SvgGenImage('assets/icons/onboarding_last.svg');
+
+  /// File path: assets/icons/onboarding_one.svg
+  SvgGenImage get onboardingOne =>
+      const SvgGenImage('assets/icons/onboarding_one.svg');
+
+  /// File path: assets/icons/onboarding_second.svg
+  SvgGenImage get onboardingSecond =>
+      const SvgGenImage('assets/icons/onboarding_second.svg');
+
   /// File path: assets/icons/order.svg
   SvgGenImage get order => const SvgGenImage('assets/icons/order.svg');
 
@@ -173,6 +185,9 @@ class $AssetsIconsGen {
     menuBd,
     menuCategory,
     nogod,
+    onboardingLast,
+    onboardingOne,
+    onboardingSecond,
     order,
     orderCompleted,
     overviewBd,
@@ -209,12 +224,8 @@ class $AssetsImagesGen {
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
 
-  /// File path: assets/images/onboarding.png
-  AssetGenImage get onboarding =>
-      const AssetGenImage('assets/images/onboarding.png');
-
   /// List of all assets
-  List<AssetGenImage> get values => [appIcon, mapLocation, onboarding];
+  List<AssetGenImage> get values => [appIcon, mapLocation];
 }
 
 class $AssetsLottiesGen {

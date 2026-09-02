@@ -37,7 +37,26 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: context.colors.background,
       body: Center(
-        child: Assets.icons.appLogo.svg(width: 171.w, height: 52.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Assets.icons.appLogo.svg(width: 61.w, height: 57.h),
+            CustomText(
+              top: 16.h,
+              text: 'CHEERING',
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w700,
+              color: context.colors.textPrimary,
+            ),
+            CustomText(
+              top: 4.h,
+              text: 'Order everything',
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
+              color: context.colors.primary,
+            ),
+          ],
+        ),
       ),
     );
   }
