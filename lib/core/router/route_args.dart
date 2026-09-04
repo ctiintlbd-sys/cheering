@@ -76,31 +76,9 @@ class PayoutSuccessArgs {
   }
 }
 
-
-
-/// Arguments required for [OtpScreen]
-class OtpScreenArgs {
-  final String email;
-  final void Function(String code) onConfirm;
-  final void Function() onResend;
-  final bool isLoading;
-  final bool isResending;
-
-  const OtpScreenArgs({
-    required this.email,
-    required this.onConfirm,
-    required this.onResend,
-    this.isLoading = false,
-    this.isResending = false,
-  });
-}
-
 class ResetPasswordArgs {
   final String email;
   final String code;
 
-  const ResetPasswordArgs({
-    required this.email,
-    required this.code,
-  });
+  const ResetPasswordArgs({required this.email, required this.code});
 }

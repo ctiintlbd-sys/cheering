@@ -4,6 +4,7 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/utils/validators.dart';
 import 'package:cheering/core/widgets/app_auth_title.dart';
 import 'package:cheering/features/authentication/presentation/screen/widgets/touch_face_id_sheet.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -19,15 +20,40 @@ class _EmailScreenState extends State<EmailScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
   }
 
-  void _onContinueWithEmail() {
+  Future<void> _onContinueWithEmail() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    context.push(RoutePaths.password);
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Simulate API call to check if user exists
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    final email = _emailController.text.trim();
+
+    // Mock Logic: 
+    // If the email contains "new" (e.g. new@gmail.com), route to OTP (Create Account)
+    // Otherwise, route to Password (Login)
+    if (email.toLowerCase().contains('new')) {
+      context.push(RoutePaths.otp, extra: email);
+    } else {
+      context.push(RoutePaths.password);
+    }
   }
 
   @override
@@ -49,6 +75,7 @@ class _EmailScreenState extends State<EmailScreen> {
         Form(
           key: _formKey,
           child: CustomTextField(
+
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             labelText: 'Enter your email',
@@ -61,6 +88,7 @@ class _EmailScreenState extends State<EmailScreen> {
         /// Login Button
         CustomButton(
           label: 'Continue with Email',
+          isLoading: _isLoading,
           onPressed: _onContinueWithEmail,
         ),
 
@@ -116,14 +144,6 @@ class _EmailScreenState extends State<EmailScreen> {
           foregroundColor: context.colors.textPrimary,
           bordersColor: context.colors.borderSecondary,
           label: 'Continue with Google',
-          onPressed: () {},
-        ),
-        SizedBox(height: 12.h),
-        CustomButton(
-          backgroundColor: context.colors.background,
-          foregroundColor: context.colors.textPrimary,
-          bordersColor: context.colors.borderSecondary,
-          label: 'Continue with Facebook',
           onPressed: () {},
         ),
       ],

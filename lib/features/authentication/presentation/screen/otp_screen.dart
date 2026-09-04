@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'package:cheering/core/router/route_args.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/helpers/toast_message_helper.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/widgets.dart';
 import 'package:cheering/core/widgets/app_auth_title.dart';
 
 class OtpScreen extends StatefulWidget {
-  final OtpScreenArgs args;
+  final String email;
 
-  const OtpScreen({super.key, required this.args});
+  const OtpScreen({super.key, required this.email});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -47,53 +47,43 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _onConfirm(BuildContext context) {
-    final code = _otpController.text.trim();
-    if (code.isEmpty) {
-      ToastMessageHelper.show('Please enter OTP code');
-      return;
-    }
-
-    if (widget.args.isLoading) return;
-    widget.args.onConfirm(code);
+    context.push(
+      RoutePaths.setPassword,
+      extra:  {
+        'email': widget.email,
+        'otp': _otpController.text.trim(),
+      }
+    );
   }
 
   void _onResend(BuildContext context) {
-    if (_countdownNotifier.value > 0 || widget.args.isResending) return;
-    widget.args.onResend();
     _startTimer();
   }
 
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
+      sideContentPadding: 24.w,
       appBar: CustomSliverAppBar(
         expandedHeight: 180.h,
         flexibleChild: AppAuthTitle(
           title: 'Enter OTP',
-          subtitle: 'We have sent a verification code to ${widget.args.email}',
+          subtitle: 'We have sent a verification code to ${widget.email}',
         ),
       ),
       bodyList: [
         SizedBox(height: 24.h),
 
         /// PinCode Input Field
-        Center(
-          child: CustomPinCodeTextField(
-            controller: _otpController,
-            onCompleted: (pin) {
-              _onConfirm(context);
-            },
-          ),
-        ).horizontal(24),
+        Center(child: CustomPinCodeTextField(controller: _otpController)),
 
         SizedBox(height: 32.h),
 
         /// Confirm CTA Button
         CustomButton(
           label: 'Confirm & Submit',
-          isLoading: widget.args.isLoading,
-          onPressed: widget.args.isLoading ? null : () => _onConfirm(context),
-        ).horizontal(24),
+          onPressed: () => _onConfirm(context),
+        ),
 
         SizedBox(height: 24.h),
 
@@ -119,14 +109,12 @@ class _OtpScreenState extends State<OtpScreen> {
                   color: isCounting
                       ? context.colors.textPlaceholder
                       : context.colors.primary,
-                  onTap: (!isCounting && !widget.args.isResending)
-                      ? () => _onResend(context)
-                      : null,
+                  onTap: () => _onResend(context),
                 );
               },
             ),
           ],
-        ).horizontal(24),
+        ),
 
         SizedBox(height: 32.h),
       ],

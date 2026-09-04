@@ -7,6 +7,7 @@ abstract final class AppAuthGuard {
   static const _publicRoutes = {
     RoutePaths.login,
     RoutePaths.password,
+    RoutePaths.setPassword,
     RoutePaths.forgotPassword,
     RoutePaths.resetPassword,
     RoutePaths.onboarding,
