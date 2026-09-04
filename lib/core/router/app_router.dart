@@ -20,7 +20,6 @@ class AppRouter {
     navigatorKey: rootNavigatorKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: getIt<AppRouterNotifier>(),
-
     debugLogDiagnostics: kDebugMode,
     redirect: (context, state) =>
         AppAuthGuard.redirect(context, state, getIt<AppRouterNotifier>()),

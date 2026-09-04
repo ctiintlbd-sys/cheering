@@ -40,7 +40,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h).asSliver,
+          SizedBox(height: 16.h),
 
           /// Email Input Field
           CustomTextField(
@@ -49,17 +49,17 @@ class _ForgotScreenState extends State<ForgotScreen> {
             labelText: 'Enter your email',
             hintText: 'example@email.com',
             validatorType: ValidatorType.email,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
 
           /// Send Code Button
           CustomButton(
             label: 'Send Reset Code',
             onPressed:  _onSubmit,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
         ],
       ),
     );

@@ -74,7 +74,7 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
       ),
       bodyList: [
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         /// PinCode Input Field
         Center(
@@ -84,18 +84,18 @@ class _OtpScreenState extends State<OtpScreen> {
               _onConfirm(context);
             },
           ),
-        ).asSliverWithPadding(horizontal: 24.w),
+        ).horizontal(24),
 
-        SizedBox(height: 32.h).asSliver,
+        SizedBox(height: 32.h),
 
         /// Confirm CTA Button
         CustomButton(
           label: 'Confirm & Submit',
           isLoading: widget.args.isLoading,
           onPressed: widget.args.isLoading ? null : () => _onConfirm(context),
-        ).asSliverWithPadding(horizontal: 24.w),
+        ).horizontal(24),
 
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         /// "Didn't receive code? Resend Code" Row with Timer
         Row(
@@ -126,9 +126,9 @@ class _OtpScreenState extends State<OtpScreen> {
               },
             ),
           ],
-        ).asSliverWithPadding(horizontal: 24.w),
+        ).horizontal(24),
 
-        SizedBox(height: 32.h).asSliver,
+        SizedBox(height: 32.h),
       ],
     );
   }

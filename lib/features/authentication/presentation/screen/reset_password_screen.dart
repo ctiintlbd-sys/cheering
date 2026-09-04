@@ -55,7 +55,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h).asSliver,
+          SizedBox(height: 16.h),
 
           /// New Password
           CustomTextField.password(
@@ -63,9 +63,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             labelText: 'Create New Password',
             hintText: 'Type your new password',
             validatorType: ValidatorType.password,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 12.h).asSliver,
+          SizedBox(height: 12.h),
 
           /// Confirm Password
           CustomTextField.password(
@@ -76,18 +76,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ValidatorType.confirmPassword,
               matchController: _passwordController,
             ),
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
 
           /// Confirm Button
         CustomButton(
           label: 'Reset Password',
           onPressed:  _onSubmit,
 
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
         ],
       ),
     );

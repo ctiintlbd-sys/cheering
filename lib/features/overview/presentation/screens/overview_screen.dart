@@ -119,7 +119,7 @@ class OverviewScreen extends StatelessWidget {
             ),
           ),
           bodyList: [
-            SizedBox(height: 10.h).asSliver,
+            SizedBox(height: 10.h),
 
             switch (state.status) {
               OverviewStatus.initial ||
@@ -152,7 +152,7 @@ class OverviewScreen extends StatelessWidget {
 
             SizedBox(
               height: MediaQuery.of(context).padding.bottom + 80.h,
-            ).asSliver,
+            ),
           ],
         );
       },

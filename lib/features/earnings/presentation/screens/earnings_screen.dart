@@ -29,7 +29,7 @@ class EarningsScreen extends StatelessWidget {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Total Earning Card ────────────────────────────────
         Container(
@@ -94,9 +94,9 @@ class EarningsScreen extends StatelessWidget {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         // ── 2. Recent Transactions Header ────────────────────────
         Row(
@@ -120,9 +120,9 @@ class EarningsScreen extends StatelessWidget {
               ),
             ),
           ],
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         // ── 3. Recent Transactions List ──────────────────────────
         ...earningsState.recentTransactions.map((tx) {
@@ -170,10 +170,10 @@ class EarningsScreen extends StatelessWidget {
                 thickness: 1,
               ),
             ],
-          ).asSliver;
+          );
         }),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

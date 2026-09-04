@@ -1,15 +1,11 @@
-import 'package:cheering/core/theme/app_theme_colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'custom_sliver_app_bar.dart';
-import 'keyboard_dismiss_on_tap.dart';
 
-/// Ultra-smooth, decoupled, production-grade SliverScaffold.
-/// - 100% decoupled from external services/controllers.
-/// - Highly optimized with RepaintBoundaries & 60fps/120fps scrolling physics.
-/// - Handles pull-to-refresh (`onRefresh`) & infinite pagination (`onLoadMore`).
-/// - Auto-safeguards non-sliver widgets in [bodyList] to prevent layout exceptions.
-class SliverScaffold extends StatelessWidget {
+import 'package:cheering/core/theme/app_theme_colors.dart';
+import 'custom_sliver_app_bar.dart';
+
+class SliverScaffold extends StatefulWidget {
   const SliverScaffold({
     super.key,
     this.appBar,
@@ -24,220 +20,246 @@ class SliverScaffold extends StatelessWidget {
     this.scrollPhysics,
     this.scrollController,
     this.onRefresh,
-    this.onLoadMore,
-    this.onScroll,
-    this.isLoading = false,
-    this.emptyState,
-    this.errorState,
+    this.sideContentPadding,
     this.extendBody = true,
-    this.extendBodyBehindAppBar = false,  this.refreshEdgeOffset = 56.0,
+    this.extendBodyBehindAppBar = false,
+  }) : onLoadMore = null,
+       threshold = 200;
+
+  const SliverScaffold.paginated({
+    super.key,
+    this.appBar,
+    required this.bodyList,
+    required this.onLoadMore,
+    this.threshold = 200,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.bottomNavigationBar,
+    this.endDrawer,
+    this.drawer,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+    this.scrollPhysics,
+    this.scrollController,
+    this.onRefresh,
+    this.sideContentPadding,
+    this.extendBody = true,
+    this.extendBodyBehindAppBar = false,
   });
 
-  /// The sliver app bar at the top of the scroll view.
   final CustomSliverAppBar? appBar;
-
-  /// The list of sliver widgets (or standard widgets wrapped with `.asSliver`).
   final List<Widget> bodyList;
 
-  /// Scaffold slots
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
+
   final Widget? bottomNavigationBar;
+
   final Widget? drawer;
   final Widget? endDrawer;
+
   final Color? backgroundColor;
+
   final bool? resizeToAvoidBottomInset;
+
   final bool extendBody;
   final bool extendBodyBehindAppBar;
-  final double refreshEdgeOffset;
 
-  /// Scroll & Gestures
   final ScrollPhysics? scrollPhysics;
   final ScrollController? scrollController;
+
   final Future<void> Function()? onRefresh;
+
+  final double? sideContentPadding;
+
+  /// Pagination
   final VoidCallback? onLoadMore;
-  final void Function(ScrollNotification)? onScroll;
+  final double threshold;
 
-  /// Full-screen or sliver state widgets
-  final bool isLoading;
-  final Widget? emptyState;
-  final Widget? errorState;
+  @override
+  State<SliverScaffold> createState() => _SliverScaffoldState();
+}
 
-  ScrollPhysics get _effectivePhysics =>
-      scrollPhysics ??
-      const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics());
+class _SliverScaffoldState extends State<SliverScaffold> {
+  ScrollController? _internalController;
 
-  List<Widget> _buildSlivers(BuildContext context) {
-    final slivers = <Widget>[];
+  ScrollController get _effectiveController =>
+      widget.scrollController ?? (_internalController ??= ScrollController());
 
-    // 1. App Bar
-    if (appBar != null) {
-      slivers.add(appBar!);
+  @override
+  void initState() {
+    super.initState();
+    if (widget.onLoadMore != null) {
+      _effectiveController.addListener(_onScroll);
     }
+  }
 
-    // 2. Loading State
-    if (isLoading) {
-      slivers.add(
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Center(
-            child: CircularProgressIndicator(color: context.colors.primary),
-          ),
+  void _onScroll() {
+    final position = _effectiveController.position;
+    if (position.pixels >= position.maxScrollExtent - widget.threshold) {
+      widget.onLoadMore!();
+    }
+  }
+
+  @override
+  void dispose() {
+    _internalController?.dispose();
+    super.dispose();
+  }
+
+  static const _defaultPhysics = AlwaysScrollableScrollPhysics(
+    parent: BouncingScrollPhysics(),
+  );
+
+  static bool _isSliver(Widget w) =>
+      w is SliverToBoxAdapter ||
+      w is SliverList ||
+      w is SliverGrid ||
+      w is SliverPadding ||
+      w is SliverFillRemaining ||
+      w is SliverFillViewport ||
+      w is SliverAppBar ||
+      w is CustomSliverAppBar ||
+      w is SliverFixedExtentList ||
+      w is SliverAnimatedList ||
+      w is SliverAnimatedGrid ||
+      w is SliverPersistentHeader;
+
+  List<Widget> _buildSlivers() {
+    final padding = widget.sideContentPadding != null
+        ? EdgeInsets.symmetric(horizontal: widget.sideContentPadding!.w)
+        : null;
+
+    return [
+      if (widget.appBar != null) widget.appBar!,
+
+      if (widget.onRefresh != null)
+        CupertinoSliverRefreshControl(
+          onRefresh: widget.onRefresh!,
+          builder:
+              (
+                context,
+                mode,
+                pulledExtent,
+                refreshTriggerPullDistance,
+                refreshIndicatorExtent,
+              ) => _RefreshIndicator(
+                mode: mode,
+                pulledExtent: pulledExtent,
+                refreshTriggerPullDistance: refreshTriggerPullDistance,
+                refreshIndicatorExtent: refreshIndicatorExtent,
+              ),
         ),
-      );
-      return slivers;
-    }
 
-    // 3. Error State
-    if (errorState != null) {
-      slivers.add(
-        SliverFillRemaining(hasScrollBody: false, child: errorState!),
-      );
-      return slivers;
-    }
-
-    // 4. Empty State
-    if (emptyState != null && bodyList.isEmpty) {
-      slivers.add(
-        SliverFillRemaining(hasScrollBody: false, child: emptyState!),
-      );
-      return slivers;
-    }
-
-    // 5. Body Widgets (Auto-safeguard non-sliver widgets to prevent runtime crashes)
-    for (final widget in bodyList) {
-      if (_isSliver(widget)) {
-        slivers.add(widget);
-      } else {
-        slivers.add(SliverToBoxAdapter(child: widget));
-      }
-    }
-
-    return slivers;
-  }
-
-  static bool _isSliver(Widget widget) {
-    return widget is RenderObjectWidget &&
-            widget is! SingleChildRenderObjectWidget ||
-        widget is SliverToBoxAdapter ||
-        widget is SliverList ||
-        widget is SliverGrid ||
-        widget is SliverPadding ||
-        widget is SliverFillRemaining ||
-        widget is SliverFillViewport ||
-        widget is SliverAppBar ||
-        widget is CustomSliverAppBar ||
-        widget is SliverFixedExtentList ||
-        widget is SliverAnimatedList ||
-        widget is SliverPersistentHeader;
-  }
-
-  bool _handleScrollNotification(ScrollNotification notification) {
-    onScroll?.call(notification);
-
-    if (onLoadMore != null &&
-        notification is ScrollUpdateNotification &&
-        notification.metrics.pixels >=
-            notification.metrics.maxScrollExtent - 200) {
-      onLoadMore!();
-    }
-
-    return false;
+      for (final w in widget.bodyList)
+        if (_isSliver(w))
+          w
+        else
+          SliverToBoxAdapter(
+            child: padding != null ? Padding(padding: padding, child: w) : w,
+          ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    final bg = backgroundColor ?? context.colors.background;
-
-    Widget body = CustomScrollView(
-      controller: scrollController,
-      physics: _effectivePhysics,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      slivers: _buildSlivers(context),
-    );
-
-    if (onRefresh != null) {
-      body = RefreshIndicator(
-        elevation: 0,
-        edgeOffset: refreshEdgeOffset,
-        backgroundColor: bg,
-        color: context.colors.primary,
-        onRefresh: onRefresh!,
-        child: body,
-      );
-    }
-
-    body = NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: body,
-    );
+    final bg = widget.backgroundColor ?? context.colors.background;
 
     return Scaffold(
       backgroundColor: bg,
-      extendBody: extendBody,
-      extendBodyBehindAppBar: extendBodyBehindAppBar,
-      drawer: drawer,
-      endDrawer: endDrawer,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset ?? true,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      floatingActionButton: floatingActionButton != null
-          ? RepaintBoundary(child: floatingActionButton!)
+      extendBody: widget.extendBody,
+      extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+      drawer: widget.drawer,
+      endDrawer: widget.endDrawer,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset ?? true,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      floatingActionButton: widget.floatingActionButton != null
+          ? RepaintBoundary(child: widget.floatingActionButton!)
           : null,
-      bottomNavigationBar: bottomNavigationBar != null
-          ? RepaintBoundary(child: Container(
-        color: context.colors.background.withValues(alpha: 0.6),
-        padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, MediaQuery.of(context).padding.bottom + 8.h),
-          child: bottomNavigationBar!))
+      bottomNavigationBar: widget.bottomNavigationBar != null
+          ? RepaintBoundary(
+              child: _BottomNavWrapper(child: widget.bottomNavigationBar!),
+            )
           : null,
-      body: KeyboardDismissOnTap(child: body),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: CustomScrollView(
+          controller: _effectiveController,
+          physics: widget.scrollPhysics ?? _defaultPhysics,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+          slivers: _buildSlivers(),
+        ),
+      ),
     );
   }
 }
 
-// ── Handy Ergonomic Sliver Extensions ────────────────────────────────────────
+class _RefreshIndicator extends StatelessWidget {
+  const _RefreshIndicator({
+    required this.mode,
+    required this.pulledExtent,
+    required this.refreshTriggerPullDistance,
+    required this.refreshIndicatorExtent,
+  });
 
-extension WidgetSliverExtension on Widget {
-  /// Wraps any standard widget into a SliverToBoxAdapter.
-  Widget get asSliver => SliverToBoxAdapter(child: this);
+  final RefreshIndicatorMode mode;
+  final double pulledExtent;
+  final double refreshTriggerPullDistance;
+  final double refreshIndicatorExtent;
 
-  /// Wraps this widget into a SliverPadding > SliverToBoxAdapter.
-  Widget asSliverWithPadding({
-    double? horizontal,
-    double? vertical,
-    EdgeInsets? padding,
-  }) => SliverPadding(
-    padding:
-        padding ??
-        EdgeInsets.symmetric(
-          horizontal: (horizontal ?? 0).w,
-          vertical: (vertical ?? 0).h,
+  @override
+  Widget build(BuildContext context) {
+    final progress = refreshTriggerPullDistance > 0
+        ? (pulledExtent / refreshTriggerPullDistance).clamp(0.0, 1.0)
+        : 0.0;
+
+    final isRefreshing = mode == RefreshIndicatorMode.refresh;
+
+    return SizedBox(
+      height: isRefreshing ? refreshIndicatorExtent : pulledExtent,
+      child: Center(
+        child: Opacity(
+          opacity: isRefreshing ? 1.0 : progress,
+          child: SizedBox(
+            height: 22.h,
+            width: 22.w,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.2,
+              value: isRefreshing ? null : progress,
+              color: context.colors.primary,
+            ),
+          ),
         ),
-    sliver: SliverToBoxAdapter(child: this),
-  );
-
-  /// Wraps this widget in SliverFillRemaining (for empty states, error states, etc.).
-  Widget asFillRemainingSliver({
-    bool hasScrollBody = false,
-    AlignmentGeometry? alignment,
-  }) => SliverFillRemaining(
-    hasScrollBody: hasScrollBody,
-    child: alignment != null ? Align(alignment: alignment, child: this) : this,
-  );
+      ),
+    );
+  }
 }
 
-extension SliverPaddingExtension on Widget {
-  /// Adds responsive padding to an existing sliver (e.g. SliverList).
-  Widget asPaddedSliver({
-    double? horizontal,
-    double? vertical,
-    EdgeInsets? padding,
-  }) => SliverPadding(
-    padding:
-        padding ??
-        EdgeInsets.symmetric(
-          horizontal: (horizontal ?? 0).w,
-          vertical: (vertical ?? 0).h,
+class _BottomNavWrapper extends StatelessWidget {
+  const _BottomNavWrapper({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: context.colors.background.withValues(alpha: 0.6),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          16.w,
+          10.h,
+          16.w,
+          MediaQuery.paddingOf(context).bottom + 8.h,
         ),
-    sliver: this,
+        child: child,
+      ),
+    );
+  }
+}
+
+extension WidgetPaddingExtension on Widget {
+  Widget horizontal([double padding = 16]) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: padding.w),
+    child: this,
   );
 }

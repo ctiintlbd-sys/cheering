@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
 
 import '../../../features/authentication/presentation/screen/forgot_screen.dart';
-import '../../../features/authentication/presentation/screen/login_screen.dart';
+import '../../../features/authentication/presentation/screen/email_screen.dart';
 import '../../../features/authentication/presentation/screen/reset_password_screen.dart';
 import '../route_paths.dart';
 
 final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.login,
-    builder: (context, state) => const LoginScreen(),
+    builder: (context, state) => const EmailScreen(),
   ),
   GoRoute(
     path: RoutePaths.forgotPassword,

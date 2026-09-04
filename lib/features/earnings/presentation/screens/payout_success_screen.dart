@@ -33,7 +33,7 @@ class PayoutSuccessScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       bodyList: [
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         // ── 1. Success Icon with Outer Ring ──────────────────────
         Center(
@@ -60,9 +60,9 @@ class PayoutSuccessScreen extends StatelessWidget {
               ),
             ),
           ),
-        ).asSliver,
+        ),
 
-        SizedBox(height: 20.h).asSliver,
+        SizedBox(height: 20.h),
 
         // ── 2. Success Title & Subtitle ──────────────────────────
         Column(
@@ -85,9 +85,9 @@ class PayoutSuccessScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ],
-        ).asSliverWithPadding(horizontal: 20.w),
+        ).horizontal(20),
 
-        SizedBox(height: 28.h).asSliver,
+        SizedBox(height: 28.h),
 
         // ── 3. Transaction Details Card ──────────────────────────
         Container(
@@ -114,9 +114,9 @@ class PayoutSuccessScreen extends StatelessWidget {
               _buildDetailRow(context, 'Date & Time', dateTime),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 32.h).asSliver,
+        SizedBox(height: 32.h),
       ],
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,

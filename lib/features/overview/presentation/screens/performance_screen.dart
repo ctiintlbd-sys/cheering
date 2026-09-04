@@ -17,7 +17,7 @@ class PerformanceScreen extends StatelessWidget {
           backgroundColor: context.colors.background,
           appBar: CustomSliverAppBar(title: 'Performance & ratings'),
           bodyList: [
-            SizedBox(height: 16.h).asSliver,
+            SizedBox(height: 16.h),
 
             switch (state.performanceStatus) {
               PerformanceStatus.initial ||
@@ -105,9 +105,9 @@ class PerformanceScreen extends StatelessWidget {
             ],
           ),
         ],
-      ).asSliverWithPadding(horizontal: 16.w),
+      ).horizontal(16),
 
-      SizedBox(height: 20.h).asSliver,
+      SizedBox(height: 20.h),
 
       // ── 2. Acceptance Rate Warning Callout ────────────────────
       if (accRate < 85)
@@ -135,7 +135,7 @@ class PerformanceScreen extends StatelessWidget {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
     ];
   }
 

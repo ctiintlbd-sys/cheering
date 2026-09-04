@@ -22,7 +22,7 @@ class PayoutHistoryScreen extends StatelessWidget {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         ...earningsState.payoutHistory.map((payout) {
           final formattedAmount =
@@ -59,10 +59,10 @@ class PayoutHistoryScreen extends StatelessWidget {
                 thickness: 1,
               ),
             ],
-          ).asSliver;
+          );
         }),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

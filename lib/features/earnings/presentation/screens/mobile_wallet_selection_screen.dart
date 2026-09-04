@@ -55,7 +55,7 @@ class _MobileWalletSelectionScreenState
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Withdraw all balance Checkbox ─────────────────────
         InkWell(
@@ -88,9 +88,9 @@ class _MobileWalletSelectionScreenState
               ],
             ),
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 2. Wallets List ──────────────────────────────────────
         ..._wallets.map((wallet) {
@@ -162,10 +162,10 @@ class _MobileWalletSelectionScreenState
                 thickness: 1,
               ),
             ],
-          ).asSliverWithPadding(horizontal: 16.w);
+          ).horizontal(16);
         }),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

@@ -16,12 +16,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailOrNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _emailOrNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -38,51 +38,51 @@ class _LoginScreenState extends State<LoginScreen> {
       child: SliverScaffold(
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 180.h,
+          expandedHeight: 134.h,
           flexibleChild: AppAuthTitle(
             title: 'Hi, Welcome Back! 👋',
             subtitle: 'Enter your email and password to sign in',
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h).asSliver,
+          SizedBox(height: 16.h),
 
           /// Email Input Field
           CustomTextField(
-            controller: _emailController,
+            controller: _emailOrNumberController,
             keyboardType: TextInputType.emailAddress,
             labelText: 'Enter your email',
             hintText: 'example@email.com',
             validatorType: ValidatorType.email,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 12.h).asSliver,
+          SizedBox(height: 12.h),
 
           /// Password Input Field
           CustomTextField.password(
             controller: _passwordController,
             labelText: 'Password',
             hintText: 'Enter your password',
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 12.h).asSliver,
+          SizedBox(height: 12.h),
 
           /// Forgot Password
           CustomText(
             onTap: () => context.push(RoutePaths.forgotPassword),
             text: 'Forgot Password?',
             color: context.colors.textSecondary,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
 
           /// Login Button
           CustomButton(
             label: 'Sign In',
             onPressed:  _onLogin,
-          ).asSliverWithPadding(horizontal: 24.w),
+          ).horizontal(24),
 
-          SizedBox(height: 24.h).asSliver,
+          SizedBox(height: 24.h),
         ],
       ),
     );

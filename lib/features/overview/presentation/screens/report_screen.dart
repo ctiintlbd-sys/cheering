@@ -35,7 +35,7 @@ class ReportScreen extends StatelessWidget {
       backgroundColor: context.colors.background,
       appBar: CustomSliverAppBar(title: 'Report'),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. From Date & To Date Pickers ───────────────────────
         BlocBuilder<OverviewBloc, OverviewState>(
@@ -57,9 +57,9 @@ class ReportScreen extends StatelessWidget {
               },
             );
           },
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         BlocBuilder<OverviewBloc, OverviewState>(
           buildWhen: (prev, curr) => prev.reportToDate != curr.reportToDate,
@@ -80,9 +80,9 @@ class ReportScreen extends StatelessWidget {
               },
             );
           },
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 20.h).asSliver,
+        SizedBox(height: 20.h),
 
         // ── 3. Report Stats ───────────────────────────────────────
         SliverToBoxAdapter(
@@ -160,7 +160,7 @@ class ReportScreen extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

@@ -112,7 +112,7 @@ class _WithdrawFormScreenState extends State<WithdrawFormScreen> {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Withdraw all balance Checkbox ─────────────────────
         InkWell(
@@ -152,9 +152,9 @@ class _WithdrawFormScreenState extends State<WithdrawFormScreen> {
               ],
             ),
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 2. Available Balance Header Card ─────────────────────
         Container(
@@ -188,9 +188,9 @@ class _WithdrawFormScreenState extends State<WithdrawFormScreen> {
               ),
             ],
           ),
-        ).asSliver,
+        ),
 
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         // ── 3. Input Fields ──────────────────────────────────────
         // Field 1: Account or Mobile number
@@ -202,9 +202,9 @@ class _WithdrawFormScreenState extends State<WithdrawFormScreen> {
               : 'Enter mobile number or Name',
           suffixIcon: Icons.perm_contact_calendar_outlined,
           keyboardType: TextInputType.phone,
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 14.h).asSliver,
+        SizedBox(height: 14.h),
 
         // Field 2: Amount
         Column(
@@ -263,18 +263,18 @@ class _WithdrawFormScreenState extends State<WithdrawFormScreen> {
               ),
             ),
           ],
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 14.h).asSliver,
+        SizedBox(height: 14.h),
 
         // Field 3: Beneficiary Name
         _buildInputField(
           label: 'Add Beneficiary Name',
           controller: _beneficiaryController,
           hintText: 'Type name here',
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 32.h).asSliver,
+        SizedBox(height: 32.h),
       ],
       bottomNavigationBar: CustomButton(
         text: 'Withdraw Money',

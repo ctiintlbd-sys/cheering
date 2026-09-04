@@ -65,7 +65,7 @@ class PayoutReviewScreen extends StatelessWidget {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Transaction Review Card ───────────────────────────
         Container(
@@ -161,9 +161,9 @@ class PayoutReviewScreen extends StatelessWidget {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
       bottomNavigationBar: CustomButton(
         text: 'Confirm',

@@ -31,7 +31,7 @@ class _CashoutMethodsScreenState extends State<CashoutMethodsScreen> {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Withdraw all balance Checkbox ─────────────────────
         InkWell(
@@ -64,9 +64,9 @@ class _CashoutMethodsScreenState extends State<CashoutMethodsScreen> {
               ],
             ),
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 2. Method Option 1: With via Bank Account ────────────
         _buildMethodTile(
@@ -82,13 +82,13 @@ class _CashoutMethodsScreenState extends State<CashoutMethodsScreen> {
               },
             );
           },
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
         Divider(
           color: context.colors.outline.withValues(alpha: 0.5),
           height: 1,
           thickness: 1,
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
         // ── 3. Method Option 2: Withdraw via Mobile wallet ───────
         _buildMethodTile(
@@ -102,15 +102,15 @@ class _CashoutMethodsScreenState extends State<CashoutMethodsScreen> {
               },
             );
           },
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
         Divider(
           color: context.colors.outline.withValues(alpha: 0.5),
           height: 1,
           thickness: 1,
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

@@ -30,7 +30,7 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Rating Summary Header ─────────────────────────────
         Container(
@@ -106,9 +106,9 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 2. Filter Chips ──────────────────────────────────────
         SingleChildScrollView(
@@ -149,9 +149,9 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
               );
             }).toList(),
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 3. Customer Reviews ──────────────────────────────────
         _buildReviewCard(
@@ -160,9 +160,9 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
           timeAgo: '2 days ago',
           content:
               'Chicken bucket was super crispy and hot on arrival. Delivery was quicker than the estimate too.',
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         _buildReviewCard(
           initials: 'MH',
@@ -170,13 +170,13 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
           timeAgo: '1 week ago',
           content:
               'Good taste, portion could be a bit bigger for the combo price.',
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         // ── 4. Hours Section ─────────────────────────────────────
-        _buildSectionTitle('Hours').asSliverWithPadding(horizontal: 16.w),
-        SizedBox(height: 8.h).asSliver,
+        _buildSectionTitle('Hours').horizontal(16),
+        SizedBox(height: 8.h),
 
         Container(
           decoration: BoxDecoration(
@@ -212,13 +212,13 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 20.h).asSliver,
+        SizedBox(height: 20.h),
 
         // ── 5. Location Section ──────────────────────────────────
-        _buildSectionTitle('Location').asSliverWithPadding(horizontal: 16.w),
-        SizedBox(height: 8.h).asSliver,
+        _buildSectionTitle('Location').horizontal(16),
+        SizedBox(height: 8.h),
 
         Container(
           decoration: BoxDecoration(
@@ -297,13 +297,13 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 20.h).asSliver,
+        SizedBox(height: 20.h),
 
         // ── 6. About Section ─────────────────────────────────────
-        _buildSectionTitle('About').asSliverWithPadding(horizontal: 16.w),
-        SizedBox(height: 8.h).asSliver,
+        _buildSectionTitle('About').horizontal(16),
+        SizedBox(height: 8.h),
 
         Container(
           width: double.infinity,
@@ -324,9 +324,9 @@ class _CustomerFeedbackScreenState extends State<CustomerFeedbackScreen> {
             color: context.colors.textPrimary,
             textHeight: 1.4,
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }

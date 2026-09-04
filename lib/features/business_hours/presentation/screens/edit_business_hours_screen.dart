@@ -82,7 +82,7 @@ class _EditBusinessHoursScreenState extends State<EditBusinessHoursScreen> {
                 color: context.colors.textSecondary,
               ),
             ],
-          ).asSliverWithPadding(horizontal: 16.w),
+          ).horizontal(16),
 
           SizedBox(height: 20.h),
 

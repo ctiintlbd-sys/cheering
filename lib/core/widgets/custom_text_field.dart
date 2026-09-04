@@ -585,8 +585,8 @@ class _CustomTextFieldState extends State<CustomTextField>
   Widget build(BuildContext context) {
     final colors = context.colors;
     final effectiveRadius = BorderRadius.circular(widget.borderRadius.r);
-    final defaultBorderColor = widget.borderColor ?? colors.borderSecondary;
-    final defaultFillColor = widget.fillColor ?? colors.bgSecondary;
+    final defaultBorderColor = widget.borderColor ?? colors.bgTertiary;
+    final defaultFillColor = widget.fillColor ?? colors.bgTertiary;
     final defaultHintColor = widget.hintColor ?? colors.textPlaceholder;
 
     final enabledBorder = widget.border ??

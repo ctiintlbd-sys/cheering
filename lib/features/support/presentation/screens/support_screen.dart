@@ -58,7 +58,7 @@ class _SupportScreenState extends State<SupportScreen> {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 1. Search Bar ────────────────────────────────────────
         Container(
@@ -103,9 +103,9 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
             ],
           ),
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 16.h).asSliver,
+        SizedBox(height: 16.h),
 
         // ── 2. Quick Actions (Chat / Call) ───────────────────────
         Row(
@@ -140,9 +140,9 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
             ),
           ],
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 24.h).asSliver,
+        SizedBox(height: 24.h),
 
         // ── 3. Frequently Asked Section ──────────────────────────
         CustomText(
@@ -150,9 +150,9 @@ class _SupportScreenState extends State<SupportScreen> {
           fontSize: 14.sp,
           fontWeight: FontWeight.w600,
           color: context.colors.textSecondary,
-        ).asSliverWithPadding(horizontal: 16.w),
+        ).horizontal(16),
 
-        SizedBox(height: 12.h).asSliver,
+        SizedBox(height: 12.h),
 
         ..._faqs.asMap().entries.map((entry) {
           final index = entry.key;
@@ -216,10 +216,10 @@ class _SupportScreenState extends State<SupportScreen> {
                 ),
               ),
             ),
-          ).asSliverWithPadding(horizontal: 16.w);
+          ).horizontal(16);
         }),
 
-        SizedBox(height: 40.h).asSliver,
+        SizedBox(height: 40.h),
       ],
     );
   }
