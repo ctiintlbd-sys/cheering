@@ -1,3 +1,4 @@
+import 'package:cheering/core/router/routes/main_routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class AppRouter {
 
       // ── 2. Auth Flow ─────────────────────────────────────────────────────
       ...authRoutes,
+      ...mainRoutes,
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(),

@@ -89,10 +89,6 @@ class _BottomNavItemState extends State<BottomNavItem>
                     iconPath,
                     width: 24.w,
                     height: 24.h,
-                    colorFilter: ColorFilter.mode(
-                      color ?? itemColor,
-                      BlendMode.srcIn,
-                    ),
                   );
                 },
               ),

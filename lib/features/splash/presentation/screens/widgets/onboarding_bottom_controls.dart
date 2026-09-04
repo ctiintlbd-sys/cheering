@@ -93,7 +93,7 @@ class OnboardingBottomControls extends StatelessWidget {
             CustomButton(
               label: "Get Started",
               onPressed: () {
-                context.go(RoutePaths.ordersTab);
+                context.go(RoutePaths.foodTab);
               },
             ),
           ],

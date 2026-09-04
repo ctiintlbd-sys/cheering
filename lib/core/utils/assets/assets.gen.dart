@@ -39,6 +39,13 @@ class $AssetsIconsGen {
   /// File path: assets/icons/clean.svg
   SvgGenImage get clean => const SvgGenImage('assets/icons/clean.svg');
 
+  /// File path: assets/icons/community.svg
+  SvgGenImage get community => const SvgGenImage('assets/icons/community.svg');
+
+  /// File path: assets/icons/community_fil.svg
+  SvgGenImage get communityFil =>
+      const SvgGenImage('assets/icons/community_fil.svg');
+
   /// File path: assets/icons/date.svg
   SvgGenImage get date => const SvgGenImage('assets/icons/date.svg');
 
@@ -54,6 +61,12 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/face.svg
   SvgGenImage get face => const SvgGenImage('assets/icons/face.svg');
+
+  /// File path: assets/icons/food.svg
+  SvgGenImage get food => const SvgGenImage('assets/icons/food.svg');
+
+  /// File path: assets/icons/food_fil.svg
+  SvgGenImage get foodFil => const SvgGenImage('assets/icons/food_fil.svg');
 
   /// File path: assets/icons/google.svg
   SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
@@ -94,6 +107,9 @@ class $AssetsIconsGen {
   SvgGenImage get orderCompleted =>
       const SvgGenImage('assets/icons/order_completed.svg');
 
+  /// File path: assets/icons/order_fil.svg
+  SvgGenImage get orderFil => const SvgGenImage('assets/icons/order_fil.svg');
+
   /// File path: assets/icons/overview_bd.svg
   SvgGenImage get overviewBd =>
       const SvgGenImage('assets/icons/overview_bd.svg');
@@ -119,6 +135,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile_feedback.svg
   SvgGenImage get profileFeedback =>
       const SvgGenImage('assets/icons/profile_feedback.svg');
+
+  /// File path: assets/icons/profile_fil.svg
+  SvgGenImage get profileFil =>
+      const SvgGenImage('assets/icons/profile_fil.svg');
 
   /// File path: assets/icons/profile_logout.svg
   SvgGenImage get profileLogout =>
@@ -147,6 +167,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/shop.svg
   SvgGenImage get shop => const SvgGenImage('assets/icons/shop.svg');
 
+  /// File path: assets/icons/store.svg
+  SvgGenImage get store => const SvgGenImage('assets/icons/store.svg');
+
   /// File path: assets/icons/store_address.svg
   SvgGenImage get storeAddress =>
       const SvgGenImage('assets/icons/store_address.svg');
@@ -158,6 +181,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/store_description.svg
   SvgGenImage get storeDescription =>
       const SvgGenImage('assets/icons/store_description.svg');
+
+  /// File path: assets/icons/store_fil.svg
+  SvgGenImage get storeFil => const SvgGenImage('assets/icons/store_fil.svg');
 
   /// File path: assets/icons/store_mail.svg
   SvgGenImage get storeMail => const SvgGenImage('assets/icons/store_mail.svg');
@@ -181,11 +207,15 @@ class $AssetsIconsGen {
     bikash,
     bike,
     clean,
+    community,
+    communityFil,
     date,
     delete,
     edit,
     emptyOrder,
     face,
+    food,
+    foodFil,
     google,
     locationPin,
     menu,
@@ -197,6 +227,7 @@ class $AssetsIconsGen {
     onboardingSecond,
     order,
     orderCompleted,
+    orderFil,
     overviewBd,
     percentage,
     phoneCall,
@@ -204,6 +235,7 @@ class $AssetsIconsGen {
     profileBusinessHour,
     profileEarnings,
     profileFeedback,
+    profileFil,
     profileLogout,
     profilePerformance,
     profilePromotions,
@@ -211,9 +243,11 @@ class $AssetsIconsGen {
     profileStore,
     profileSupport,
     shop,
+    store,
     storeAddress,
     storeCategory,
     storeDescription,
+    storeFil,
     storeMail,
     storeName,
     storeNumber,

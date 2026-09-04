@@ -19,9 +19,10 @@ abstract class RoutePaths {
   static const String applicationSubmitted = '/application-submitted';
 
   // ── Main Tabs (Stateful Shell) ─────────────────────────────
+  static const String foodTab = '/food';
+  static const String storeTab = '/store';
   static const String ordersTab = '/orders';
-  static const String overviewTab = '/overview';
-  static const String menuTab = '/menu';
+  static const String communityTab = '/community';
   static const String profileTab = '/profile';
 
   // ── Orders (Deep Link Support) ─────────────────────────────

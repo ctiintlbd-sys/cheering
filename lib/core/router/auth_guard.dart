@@ -18,6 +18,11 @@ abstract final class AppAuthGuard {
     RoutePaths.payoutMethod,
     RoutePaths.review,
     RoutePaths.applicationSubmitted,
+    RoutePaths.foodTab,
+    RoutePaths.storeTab,
+    RoutePaths.ordersTab,
+    RoutePaths.communityTab,
+    RoutePaths.profileTab,
   };
 
   static bool _isPublicRoute(String location) =>
