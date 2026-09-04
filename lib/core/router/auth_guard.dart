@@ -6,6 +6,7 @@ import 'route_paths.dart';
 abstract final class AppAuthGuard {
   static const _publicRoutes = {
     RoutePaths.login,
+    RoutePaths.password,
     RoutePaths.forgotPassword,
     RoutePaths.resetPassword,
     RoutePaths.onboarding,

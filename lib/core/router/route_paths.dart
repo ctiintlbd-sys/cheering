@@ -5,6 +5,7 @@ abstract class RoutePaths {
 
   // ── Auth & Onboarding (5 Steps) ───────────────────────────
   static const String login = '/login';
+  static const String password = '/password';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String otp = '/otp/:phone';

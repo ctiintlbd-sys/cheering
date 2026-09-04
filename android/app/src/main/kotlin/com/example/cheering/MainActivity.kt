@@ -1,4 +1,4 @@
-package com.example.cheering
+package com.kislabs.kis
 
 import io.flutter.embedding.android.FlutterActivity
 

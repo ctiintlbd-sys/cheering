@@ -1,3 +1,4 @@
+import 'package:cheering/features/authentication/presentation/screen/password_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/authentication/presentation/screen/forgot_screen.dart';
@@ -14,6 +15,14 @@ final List<RouteBase> authRoutes = [
     path: RoutePaths.forgotPassword,
     builder: (context, state) => const ForgotScreen(),
   ),
+
+  GoRoute(
+    path: RoutePaths.password,
+    builder: (context, state) => const PasswordScreen(),
+  ),
+
+
+
   GoRoute(
     path: RoutePaths.resetPassword,
     builder: (context, state) {

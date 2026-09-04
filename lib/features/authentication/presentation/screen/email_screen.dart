@@ -1,9 +1,12 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/utils/validators.dart';
 import 'package:cheering/core/widgets/app_auth_title.dart';
+import 'package:cheering/features/authentication/presentation/screen/widgets/touch_face_id_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({super.key});
@@ -24,6 +27,7 @@ class _EmailScreenState extends State<EmailScreen> {
 
   void _onContinueWithEmail() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.push(RoutePaths.password);
   }
 
   @override
@@ -58,6 +62,23 @@ class _EmailScreenState extends State<EmailScreen> {
         CustomButton(
           label: 'Continue with Email',
           onPressed: _onContinueWithEmail,
+        ),
+
+        SizedBox(height: 12.h),
+        CustomButton(
+          prefixIcon: Assets.icons.face.svg(),
+          backgroundColor: context.colors.background,
+          foregroundColor: context.colors.textPrimary,
+          bordersColor: context.colors.borderSecondary,
+          label: 'Continue with Touch ID',
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => const TouchFaceIdSheet(),
+            );
+          },
         ),
 
         SizedBox(height: 34.h),

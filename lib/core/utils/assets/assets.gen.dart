@@ -52,6 +52,9 @@ class $AssetsIconsGen {
   SvgGenImage get emptyOrder =>
       const SvgGenImage('assets/icons/empty_order.svg');
 
+  /// File path: assets/icons/face.svg
+  SvgGenImage get face => const SvgGenImage('assets/icons/face.svg');
+
   /// File path: assets/icons/google.svg
   SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
 
@@ -166,6 +169,9 @@ class $AssetsIconsGen {
   SvgGenImage get storeNumber =>
       const SvgGenImage('assets/icons/store_number.svg');
 
+  /// File path: assets/icons/touch.svg
+  SvgGenImage get touch => const SvgGenImage('assets/icons/touch.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     appLogo,
@@ -179,6 +185,7 @@ class $AssetsIconsGen {
     delete,
     edit,
     emptyOrder,
+    face,
     google,
     locationPin,
     menu,
@@ -210,6 +217,7 @@ class $AssetsIconsGen {
     storeMail,
     storeName,
     storeNumber,
+    touch,
   ];
 }
 
