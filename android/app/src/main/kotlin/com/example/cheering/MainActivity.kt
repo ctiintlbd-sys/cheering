@@ -1,4 +1,4 @@
-package com.kislabs.kis
+package com.groupmate.groupmate
 
 import io.flutter.embedding.android.FlutterActivity
 
