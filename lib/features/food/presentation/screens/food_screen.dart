@@ -19,9 +19,9 @@ class FoodScreen extends StatelessWidget {
         flexibleChild: const DeliveryTitleWidget(address: 'House 25, Banani Rd 11...',),
         flexibleBackground: const FoodFlexibleBackground(),
         bottom:  PreferredSize(
-          preferredSize: Size.fromHeight(52.h),
+          preferredSize: Size.fromHeight(58.h),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.h),
             child: CustomTextField(
               onTap: () {},
               readOnly: true,

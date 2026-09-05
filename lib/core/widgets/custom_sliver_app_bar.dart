@@ -127,11 +127,10 @@ class CustomSliverAppBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context, Color foreground, bool isCollapsed) {
-    final child =
-        titleWidget ??
+  Widget _buildTitleWidget(Color foreground) {
+    return titleWidget ??
         Text(
-          isCollapsed ? (collapsedTitle ?? title ?? '') : (title ?? ''),
+          title ?? '',
           style: TextStyle(
             fontFamily: FontFamily.sFPro,
             fontWeight: FontWeight.w400,
@@ -139,15 +138,19 @@ class CustomSliverAppBar extends StatelessWidget {
             color: foreground,
           ),
         );
+  }
 
-    if (collapsedTitle == null) {
-      return child;
-    }
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      child: KeyedSubtree(key: ValueKey(isCollapsed), child: child),
-    );
+  Widget _buildCollapsedTitleWidget(Color foreground) {
+    return titleWidget ??
+        Text(
+          collapsedTitle ?? title ?? '',
+          style: TextStyle(
+            fontFamily: FontFamily.sFPro,
+            fontWeight: FontWeight.w400,
+            fontSize: titleSize.sp,
+            color: foreground,
+          ),
+        );
   }
 
   @override
@@ -160,6 +163,25 @@ class CustomSliverAppBar extends StatelessWidget {
     final flexibleContent = _buildFlexibleContent();
     final builtLeading = _buildLeading(context);
 
+    // Pre-build scroll-independent widgets
+    final expandedTitle = _buildTitleWidget(foreground);
+    final collapsedTitleWidget = _buildCollapsedTitleWidget(foreground);
+    final titleSpacingWithLeading = 0.0;
+    final titleSpacingWithout = 16.w;
+
+    final resolvedShape = borderColor != null
+        ? Border(
+            bottom: BorderSide(color: borderColor!, width: borderWidth ?? 1),
+          )
+        : null;
+
+    final resolvedFlexibleSpace = flexibleContent != null
+        ? FlexibleSpaceBar(
+            collapseMode: CollapseMode.parallax,
+            background: flexibleContent,
+          )
+        : null;
+
     return SliverLayoutBuilder(
       builder: (context, constraints) {
         final collapseOffset = (_expandedH ?? _toolbarH) - _toolbarH;
@@ -169,6 +191,17 @@ class CustomSliverAppBar extends StatelessWidget {
             : (isCollapsed ? 1.0 : 0.0);
         final bg = Color.lerp(baseColor, targetColor, t)!;
         final resolvedLeading = isCollapsed ? null : builtLeading;
+
+        final titleChild = isCollapsed ? collapsedTitleWidget : expandedTitle;
+        final resolvedTitle = collapsedTitle != null
+            ? AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: KeyedSubtree(
+                  key: ValueKey(isCollapsed),
+                  child: titleChild,
+                ),
+              )
+            : titleChild;
 
         return SliverAppBar(
           pinned: pinned || bottom != null,
@@ -185,38 +218,21 @@ class CustomSliverAppBar extends StatelessWidget {
           foregroundColor: foreground,
 
           toolbarHeight: _toolbarH,
-
           expandedHeight: _expandedH,
 
           automaticallyImplyLeading: false,
 
-          titleSpacing: resolvedLeading == null ? 16.w : 0,
+          titleSpacing: resolvedLeading == null
+              ? titleSpacingWithout
+              : titleSpacingWithLeading,
 
           centerTitle: centerTitle,
-
           leading: resolvedLeading,
-
-          title: _buildTitle(context, foreground, isCollapsed),
-
+          title: resolvedTitle,
           actions: isCollapsed ? null : actions,
-
           bottom: bottom,
-
-          shape: borderColor != null
-              ? Border(
-                  bottom: BorderSide(
-                    color: borderColor!,
-                    width: borderWidth ?? 1,
-                  ),
-                )
-              : null,
-
-          flexibleSpace: flexibleContent != null
-              ? FlexibleSpaceBar(
-                  collapseMode: CollapseMode.parallax,
-                  background: flexibleContent,
-                )
-              : null,
+          shape: resolvedShape,
+          flexibleSpace: resolvedFlexibleSpace,
         );
       },
     );
