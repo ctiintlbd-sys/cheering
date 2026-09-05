@@ -36,6 +36,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bike.svg
   SvgGenImage get bike => const SvgGenImage('assets/icons/bike.svg');
 
+  /// File path: assets/icons/cart.svg
+  SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
+
   /// File path: assets/icons/clean.svg
   SvgGenImage get clean => const SvgGenImage('assets/icons/clean.svg');
 
@@ -62,11 +65,21 @@ class $AssetsIconsGen {
   /// File path: assets/icons/face.svg
   SvgGenImage get face => const SvgGenImage('assets/icons/face.svg');
 
+  /// File path: assets/icons/filtter.svg
+  SvgGenImage get filtter => const SvgGenImage('assets/icons/filtter.svg');
+
   /// File path: assets/icons/food.svg
   SvgGenImage get food => const SvgGenImage('assets/icons/food.svg');
 
   /// File path: assets/icons/food_fil.svg
   SvgGenImage get foodFil => const SvgGenImage('assets/icons/food_fil.svg');
+
+  /// File path: assets/icons/food_location.svg
+  SvgGenImage get foodLocation =>
+      const SvgGenImage('assets/icons/food_location.svg');
+
+  /// File path: assets/icons/food_love.svg
+  SvgGenImage get foodLove => const SvgGenImage('assets/icons/food_love.svg');
 
   /// File path: assets/icons/google.svg
   SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
@@ -164,6 +177,9 @@ class $AssetsIconsGen {
   SvgGenImage get profileSupport =>
       const SvgGenImage('assets/icons/profile_support.svg');
 
+  /// File path: assets/icons/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
+
   /// File path: assets/icons/shop.svg
   SvgGenImage get shop => const SvgGenImage('assets/icons/shop.svg');
 
@@ -206,6 +222,7 @@ class $AssetsIconsGen {
     bell,
     bikash,
     bike,
+    cart,
     clean,
     community,
     communityFil,
@@ -214,8 +231,11 @@ class $AssetsIconsGen {
     edit,
     emptyOrder,
     face,
+    filtter,
     food,
     foodFil,
+    foodLocation,
+    foodLove,
     google,
     locationPin,
     menu,
@@ -242,6 +262,7 @@ class $AssetsIconsGen {
     profileReport,
     profileStore,
     profileSupport,
+    search,
     shop,
     store,
     storeAddress,
@@ -262,12 +283,16 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/food_banner.png
+  AssetGenImage get foodBanner =>
+      const AssetGenImage('assets/images/food_banner.png');
+
   /// File path: assets/images/map_location.png
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [appIcon, mapLocation];
+  List<AssetGenImage> get values => [appIcon, foodBanner, mapLocation];
 }
 
 class $AssetsLottiesGen {

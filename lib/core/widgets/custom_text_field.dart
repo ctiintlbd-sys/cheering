@@ -632,7 +632,10 @@ class _CustomTextFieldState extends State<CustomTextField>
         ),
       );
     } else {
-      resolvedSuffix = widget.suffixIcon;
+      resolvedSuffix = Padding(
+        padding:  EdgeInsets.only(right: 12.w),
+        child: widget.suffixIcon,
+      );
     }
 
     // ── Content padding ───────────────────────────────────────

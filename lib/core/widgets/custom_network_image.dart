@@ -200,15 +200,11 @@ class CustomNetworkImage extends StatelessWidget {
       height: height,
       width: width,
       decoration: _decoration(),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child:
-            fallbackAsset ??
-            Icon(
-              Icons.person,
-              color: Colors.grey.shade500,
-              size: ((height ?? 48) - 16).clamp(16.0, 64.0),
-            ),
+      child: fallbackAsset ??
+      Icon(
+        Icons.person,
+        color: Colors.grey.shade500,
+        size: ((height ?? 48) - 16).clamp(16.0, 64.0),
       ),
     );
   }
