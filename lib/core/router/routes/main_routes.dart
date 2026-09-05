@@ -14,7 +14,7 @@ final List<RouteBase> mainRoutes = [
         routes: [
           GoRoute(
             path: RoutePaths.foodTab,
-            builder: (context, state) => const FoodScreen(),
+            builder: (context, state) =>  FoodScreen(),
           ),
         ],
       ),

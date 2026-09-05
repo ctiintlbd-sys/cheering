@@ -12,11 +12,13 @@ class FoodScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverScaffold(
       appBar: CustomSliverAppBar(
+        toolbarHeight: 0,
+        //backgroundColor: context.colors.primary,
         expandedHeight: 234.h,
-        titleWidget: const DeliveryTitleWidget(address: 'House 25, Banani Rd 11...',),
+        flexibleChild: const DeliveryTitleWidget(address: 'House 25, Banani Rd 11...',),
         flexibleBackground: const FoodFlexibleBackground(),
         bottom:  PreferredSize(
-          preferredSize: Size.fromHeight(48.h),
+          preferredSize: Size.fromHeight(52.h),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: CustomTextField(
@@ -33,7 +35,8 @@ class FoodScreen extends StatelessWidget {
         ),
       ),
       bodyList: [
-        SizedBox(height: 44.h),
+        Container(
+            height: 1000.h),
       ],
     );
   }

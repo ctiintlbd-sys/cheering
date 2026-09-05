@@ -34,7 +34,10 @@ class CustomSliverAppBar extends StatelessWidget {
     this.snap = false,
     this.bottom,
     this.innerBoxIsScrolled = false,
+    this.collapseToolbar = false,
   });
+
+  // ── Fields ───────────────────────────────────────────────────
 
   final String? title;
   final double titleSize;
@@ -45,9 +48,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final Color? collapsedTitleColor;
 
   final bool showLeading;
-
   final List<Widget>? actions;
-
   final VoidCallback? backAction;
   final Widget? leading;
 
@@ -62,41 +63,33 @@ class CustomSliverAppBar extends StatelessWidget {
 
   final Widget? flexibleBackground;
   final Widget? flexibleChild;
-
   final double? flexiblePaddingTop;
   final AlignmentGeometry flexibleAlignment;
 
   final bool safeArea;
-
   final bool pinned;
   final bool floating;
   final bool snap;
 
   final PreferredSizeWidget? bottom;
-
   final bool innerBoxIsScrolled;
+  final bool collapseToolbar;
+
+  bool get _isCollapseMode => collapseToolbar && bottom != null;
 
   double get _toolbarH => toolbarHeight ?? 60;
 
-  bool get _hasFlexible => flexibleBackground != null || flexibleChild != null;
+  double? get _expandedH =>
+      (flexibleBackground != null || flexibleChild != null)
+      ? (expandedHeight ?? _toolbarH)
+      : null;
 
-  double? get _expandedH => _hasFlexible ? (expandedHeight ?? _toolbarH) : null;
-
-  double get effectiveToolbarHeight => _toolbarH;
-
-  double? get effectiveExpandedHeight => _expandedH;
+  // ── Builders ─────────────────────────────────────────────────
 
   Widget? _buildLeading(BuildContext context) {
-    if (leading != null) {
-      return leading;
-    }
-
-    final parentRoute = ModalRoute.of(context);
-
-    if (!showLeading || !(parentRoute?.canPop ?? false)) {
-      return null;
-    }
-
+    if (leading != null) return leading;
+    final canPop = ModalRoute.of(context)?.canPop ?? false;
+    if (!showLeading || !canPop) return null;
     return IconButton(
       padding: EdgeInsets.only(left: 8.w),
       onPressed: backAction ?? () => Navigator.maybePop(context),
@@ -104,41 +97,45 @@ class CustomSliverAppBar extends StatelessWidget {
     );
   }
 
-  Widget? _buildFlexibleContent() {
-    if (flexibleBackground != null) {
-      return flexibleBackground;
-    }
-
-    if (flexibleChild != null) {
-      final content = Align(
-        alignment: flexibleAlignment,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16.w,
-            right: 16.w,
-
-            // Use actual toolbar height.
-            top: _toolbarH + (flexiblePaddingTop ?? 0),
-          ),
-          child: flexibleChild,
+  Widget _buildChildOverlay() {
+    final overlay = Align(
+      alignment: flexibleAlignment,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16.w,
+          right: 16.w,
+          top: _isCollapseMode
+              ? (flexiblePaddingTop ?? 0)
+              : _toolbarH + (flexiblePaddingTop ?? 0),
         ),
-      );
-
-      return safeArea ? SafeArea(child: content) : content;
-    }
-
-    return null;
+        child: flexibleChild,
+      ),
+    );
+    return safeArea ? SafeArea(child: overlay) : overlay;
   }
 
-  Widget _buildTitle(BuildContext context, bool showCollapsedTitle, Color foreground) {
-    final fg = showCollapsedTitle
-        ? (collapsedTitleColor ?? foreground)
-        : foreground;
+  Widget? _buildFlexibleContent() {
+    if (flexibleBackground == null && flexibleChild == null) return null;
+
+    if (flexibleChild == null) return flexibleBackground;
+
+    if (flexibleBackground == null) return _buildChildOverlay();
+    return Stack(
+      children: [
+        Positioned.fill(child: flexibleBackground!),
+        _buildChildOverlay(),
+      ],
+    );
+  }
+
+  Widget _buildTitle(BuildContext context, Color foreground) {
+    final showCollapsed = innerBoxIsScrolled && collapsedTitle != null;
+    final fg = showCollapsed ? (collapsedTitleColor ?? foreground) : foreground;
 
     final child =
         titleWidget ??
         Text(
-          showCollapsedTitle ? (collapsedTitle ?? title ?? '') : (title ?? ''),
+          showCollapsed ? (collapsedTitle ?? title ?? '') : (title ?? ''),
           style: TextStyle(
             fontFamily: FontFamily.sFPro,
             fontWeight: FontWeight.w400,
@@ -147,13 +144,11 @@ class CustomSliverAppBar extends StatelessWidget {
           ),
         );
 
-    if (collapsedTitle == null) {
-      return child;
-    }
+    if (collapsedTitle == null) return child;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-      child: KeyedSubtree(key: ValueKey(showCollapsedTitle), child: child),
+      child: KeyedSubtree(key: ValueKey(showCollapsed), child: child),
     );
   }
 
@@ -161,11 +156,7 @@ class CustomSliverAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final foreground = foregroundColor ?? context.colors.textPrimary;
     final bg = backgroundColor ?? context.colors.background;
-
-    final showCollapsedTitle = innerBoxIsScrolled && collapsedTitle != null;
-
-    final resolvedLeading = _buildLeading(context);
-
+    final resolvedLeading = _isCollapseMode ? null : _buildLeading(context);
     final flexibleContent = _buildFlexibleContent();
 
     return SliverAppBar(
@@ -174,32 +165,25 @@ class CustomSliverAppBar extends StatelessWidget {
       snap: snap,
 
       elevation: 0,
-
-      scrolledUnderElevation: 10,
-
+      scrolledUnderElevation: _isCollapseMode ? 0 : 10,
       shadowColor: context.colors.background.withValues(alpha: 0.1),
-
       surfaceTintColor: context.colors.background.withValues(alpha: 0.1),
 
       backgroundColor: bg,
-
       foregroundColor: foreground,
 
-      toolbarHeight: _toolbarH,
-
-      expandedHeight: _expandedH,
+      toolbarHeight: _isCollapseMode ? 0 : _toolbarH,
+      expandedHeight: _isCollapseMode
+          ? (expandedHeight ?? _toolbarH)
+          : _expandedH,
 
       automaticallyImplyLeading: false,
-
       titleSpacing: resolvedLeading == null ? 16.w : 0,
-
       centerTitle: centerTitle,
 
       leading: resolvedLeading,
-
-      title: _buildTitle(context, showCollapsedTitle, foreground),
-
-      actions: actions,
+      title: _isCollapseMode ? null : _buildTitle(context, foreground),
+      actions: _isCollapseMode ? null : actions,
 
       bottom: bottom,
 
@@ -211,41 +195,10 @@ class CustomSliverAppBar extends StatelessWidget {
 
       flexibleSpace: flexibleContent != null
           ? FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
+              collapseMode: CollapseMode.parallax,
               background: flexibleContent,
             )
           : null,
-    );
-  }
-
-  CustomSliverAppBar copyWith({bool? innerBoxIsScrolled}) {
-    return CustomSliverAppBar(
-      title: title,
-      titleSize: titleSize,
-      centerTitle: centerTitle,
-      titleWidget: titleWidget,
-      collapsedTitle: collapsedTitle,
-      collapsedTitleColor: collapsedTitleColor,
-      showLeading: showLeading,
-      actions: actions,
-      backAction: backAction,
-      leading: leading,
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      borderColor: borderColor,
-      borderWidth: borderWidth,
-      toolbarHeight: toolbarHeight,
-      expandedHeight: expandedHeight,
-      flexibleBackground: flexibleBackground,
-      flexibleChild: flexibleChild,
-      flexiblePaddingTop: flexiblePaddingTop,
-      flexibleAlignment: flexibleAlignment,
-      safeArea: safeArea,
-      pinned: pinned,
-      floating: floating,
-      snap: snap,
-      bottom: bottom,
-      innerBoxIsScrolled: innerBoxIsScrolled ?? this.innerBoxIsScrolled,
     );
   }
 }

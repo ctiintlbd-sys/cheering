@@ -47,7 +47,7 @@ class SliverScaffold extends StatefulWidget {
     this.extendBodyBehindAppBar = false,
   });
 
-  final CustomSliverAppBar? appBar;
+  final Widget? appBar;
   final List<Widget> bodyList;
 
   final Widget? floatingActionButton;
