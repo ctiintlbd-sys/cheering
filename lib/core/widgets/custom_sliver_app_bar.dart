@@ -185,7 +185,7 @@ class CustomSliverAppBar extends StatelessWidget {
     return SliverLayoutBuilder(
       builder: (context, constraints) {
         final collapseOffset = (_expandedH ?? _toolbarH) - _toolbarH;
-        final isCollapsed = constraints.scrollOffset >= collapseOffset + 10.h;
+        final isCollapsed = constraints.scrollOffset >= collapseOffset;
         final t = collapseOffset > 0
             ? (constraints.scrollOffset / collapseOffset).clamp(0.0, 1.0)
             : (isCollapsed ? 1.0 : 0.0);
