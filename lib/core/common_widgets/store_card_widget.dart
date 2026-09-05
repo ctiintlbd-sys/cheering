@@ -2,8 +2,8 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TopRestaurantCard extends StatelessWidget {
-  const TopRestaurantCard({super.key});
+class StoreCardWidget extends StatelessWidget {
+  const StoreCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

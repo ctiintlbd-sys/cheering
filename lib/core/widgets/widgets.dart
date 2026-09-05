@@ -16,4 +16,4 @@ export 'sliver_scaffold.dart';
 export 'custom_search_field.dart';
 export 'custom_pill_dropdown.dart';
 export 'custom_segmented_pill.dart';
-export 'section_header_widget.dart';
+export '../common_widgets/section_header_widget.dart';

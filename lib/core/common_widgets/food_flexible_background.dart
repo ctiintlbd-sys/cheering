@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FoodFlexibleBackground extends StatelessWidget {
-  const FoodFlexibleBackground({super.key});
+  const FoodFlexibleBackground({
+    super.key,
+    required this.imageUrl,
+    this.fallbackAsset,
+  });
+
+  final String imageUrl;
+  final Widget? fallbackAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +26,14 @@ class FoodFlexibleBackground extends StatelessWidget {
           bottomLeft: Radius.circular(20.h),
         ),
         child: CustomNetworkImage(
-          imageUrl: '',
-          fallbackAsset: Assets.images.foodBanner.image(
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-          ),
+          imageUrl: imageUrl,
+          fallbackAsset:
+              fallbackAsset ??
+              Assets.images.foodBanner.image(
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+              ),
         ),
       ),
     );

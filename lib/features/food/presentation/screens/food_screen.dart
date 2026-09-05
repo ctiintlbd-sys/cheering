@@ -1,11 +1,9 @@
+import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/delivery_title_widget.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/food_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_categories_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/super_deals_card.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/bites_card.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/top_restaurant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,7 +22,7 @@ class FoodScreen extends StatelessWidget {
         flexibleChild: const DeliveryTitleWidget(
           address: 'House 25, Banani Rd 11...',
         ),
-        flexibleBackground: const FoodFlexibleBackground(),
+        flexibleBackground: const FoodFlexibleBackground(imageUrl: ''),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(58.h),
           child: Padding(
@@ -103,7 +101,7 @@ class FoodScreen extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
               padding:  EdgeInsets.symmetric(vertical: 4.h),
-              child: const TopRestaurantCard(),
+              child: const StoreCardWidget(),
             ),
           ),
         ),

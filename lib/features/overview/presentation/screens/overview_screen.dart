@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/models/weekly_chart_item.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -12,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'widgets/overview_earnings_card.dart';
-import '../../../../core/widgets/weekly_chart.dart';
 
 class OverviewScreen extends StatelessWidget {
   const OverviewScreen({super.key});

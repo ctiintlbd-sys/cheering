@@ -1,4 +1,5 @@
 import 'package:cheering/features/food/presentation/screens/food_screen.dart';
+import 'package:cheering/features/store/presentation/screens/store_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../../../features/bottom_nav_bar/presentation/screens/bottom_nav_screen.dart';
 import '../../../features/overview/presentation/screens/overview_screen.dart';
@@ -14,7 +15,7 @@ final List<RouteBase> mainRoutes = [
         routes: [
           GoRoute(
             path: RoutePaths.foodTab,
-            builder: (context, state) =>  FoodScreen(),
+            builder: (context, state) => const FoodScreen(),
           ),
         ],
       ),
@@ -22,7 +23,7 @@ final List<RouteBase> mainRoutes = [
         routes: [
           GoRoute(
             path: RoutePaths.storeTab,
-            builder: (context, state) => const OverviewScreen(),
+            builder: (context, state) => const StoreScreen(),
           ),
         ],
       ),

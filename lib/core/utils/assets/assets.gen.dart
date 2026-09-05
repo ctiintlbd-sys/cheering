@@ -291,8 +291,11 @@ class $AssetsImagesGen {
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
 
+  /// File path: assets/images/store.png
+  AssetGenImage get store => const AssetGenImage('assets/images/store.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [appIcon, foodBanner, mapLocation];
+  List<AssetGenImage> get values => [appIcon, foodBanner, mapLocation, store];
 }
 
 class $AssetsLottiesGen {
