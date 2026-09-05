@@ -13,7 +13,6 @@ class FoodScreen extends StatelessWidget {
     return SliverScaffold(
       appBar: CustomSliverAppBar(
         toolbarHeight: 0,
-        //backgroundColor: context.colors.primary,
         expandedHeight: 234.h,
         flexibleChild: const DeliveryTitleWidget(address: 'House 25, Banani Rd 11...',),
         flexibleBackground: const FoodFlexibleBackground(),
