@@ -41,7 +41,33 @@ class FoodScreen extends StatelessWidget {
       bodyList: [
         SizedBox(height: 20.h),
 
-        const FoodCategoriesWidget(),
+        SizedBox(
+          height: 98.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 20,
+            separatorBuilder: (context, index) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 4.h),
+                child: const FoodCategoriesWidget(),
+              );
+            },
+          ),
+        ),
+
+        SizedBox(height: 28.h),
+        SectionHeaderWidget(
+            title: 'Super Deals 🔥',
+          onTap: (){},
+        ).horizontal(16.w),
+
+        SizedBox(height: 14.h),
+
+
+
+        SizedBox(height: 120.h),
       ],
     );
   }
