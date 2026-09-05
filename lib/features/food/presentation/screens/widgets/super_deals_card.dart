@@ -8,15 +8,17 @@ class SuperDealsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      width: 290.w,
-      height: 200.h,
-      radiusAll: 16.r,
+      verticalMargin: 4.h,
+      width: 248.w,
+      height: 220.h,
+      radiusAll: 12.r,
       clipBehavior: Clip.hardEdge,
       child: Stack(
         children: [
           CustomNetworkImage(
-            imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591',
-            boxShape: BoxShape.rectangle,
+            borderRadius: 12.r,
+            imageUrl:
+                'https://images.unsplash.com/photo-1513104890138-7c749659a591',
           ),
           // Gradient overlay
           Container(
@@ -25,8 +27,8 @@ class SuperDealsCard extends StatelessWidget {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  Colors.black.withOpacity(0.85),
-                  Colors.transparent,
+                  context.colors.black.withValues(alpha: 0.85),
+                  context.colors.black.withValues(alpha: 0.0),
                 ],
                 stops: const [0.0, 0.7],
               ),
@@ -36,33 +38,23 @@ class SuperDealsCard extends StatelessWidget {
           Positioned(
             top: 12.h,
             left: 12.w,
-            right: 12.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomContainer(
-                  radiusAll: 16.r,
-                  child: CustomText(
-                    text: '20%Off',
-                    color: const Color(0xFFE91E63), // Pink text
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12.sp,
-                  ),
-                ),
-                CustomContainer(
-                  width: 32.r,
-                  height: 32.r,
-                  radiusAll: 16.r,
-                  color: Colors.black.withOpacity(0.4),
-                  alignment: Alignment.center,
-                  child: Icon(Icons.favorite_border, color: Colors.white, size: 18.r),
-                ),
-              ],
+            child: CustomContainer(
+              alignment: Alignment.center,
+              color: context.colors.primaryLight.withValues(alpha: 0.8),
+              radiusAll: 16.r,
+              paddingVertical: 4.h,
+              paddingHorizontal: 8.w,
+              child: CustomText(
+                text: '20%Off',
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12.sp,
+              ),
             ),
           ),
           // Bottom Info
           Positioned(
-            bottom: 14.h,
+            bottom: 12.h,
             left: 12.w,
             right: 12.w,
             child: Column(
@@ -75,50 +67,73 @@ class SuperDealsCard extends StatelessWidget {
                     Expanded(
                       child: CustomText(
                         text: 'Tandoori Pizza',
-                        color: Colors.white,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                        color: context.colors.white,
+                        fontWeight: FontWeight.w600,
                         maxLines: 1,
                         textOverflow: TextOverflow.ellipsis,
                       ),
                     ),
                     CustomText(
                       text: '৳350',
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+                      color: context.colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
                   ],
                 ),
                 SizedBox(height: 4.h),
                 CustomText(
                   text: 'Pizza House • Fast Food',
-                  color: Colors.white.withOpacity(0.8),
+                  color: context.colors.white.withValues(alpha: 0.66),
                   fontSize: 12.sp,
                 ),
-                SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: const Color(0xFFFFB300), size: 14.r),
-                    SizedBox(width: 4.w),
-                    CustomText(text: '4.5', color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.w600),
-                    SizedBox(width: 6.w),
-                    CustomText(text: '•', color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
-                    SizedBox(width: 6.w),
-                    Icon(Icons.directions_bike, color: Colors.white, size: 14.r),
-                    SizedBox(width: 4.w),
-                    CustomText(text: '৳65(1.5Km)', color: Colors.white, fontSize: 12.sp),
-                    SizedBox(width: 6.w),
-                    CustomText(text: '•', color: Colors.white.withOpacity(0.5), fontSize: 12.sp),
-                    SizedBox(width: 6.w),
-                    Icon(Icons.access_time, color: Colors.white, size: 14.r),
-                    SizedBox(width: 4.w),
-                    CustomText(text: '10-20 mins', color: Colors.white, fontSize: 12.sp),
-                  ],
+                SizedBox(height: 4.h),
+                RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: context.colors.white.withValues(alpha: 0.8),
+                      fontSize: 12.sp,
+                    ),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.star,
+                          color: const Color(0xFFFF9D00),
+                          size: 12.r,
+                        ),
+                      ),
+                      TextSpan(text: ' 4.5 '),
+                      TextSpan(text: '•'),
+                      TextSpan(text: ' '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.directions_bike,
+                          color: context.colors.white.withValues(alpha: 0.8),
+                          size: 12.r,
+                        ),
+                      ),
+                      TextSpan(text: ' ৳65(1.5Km) '),
+                      TextSpan(text: '•'),
+                      TextSpan(text: ' '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.access_time,
+                          color: context.colors.white.withValues(alpha: 0.8),
+                          size: 12.r,
+                        ),
+                      ),
+                      TextSpan(text: ' 10-20 mins'),
+                    ],
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

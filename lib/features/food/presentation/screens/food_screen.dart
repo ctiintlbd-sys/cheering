@@ -61,14 +61,14 @@ class FoodScreen extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 28.h),
+        SizedBox(height: 24.h),
         SectionHeaderWidget(
           title: 'Super Deals 🔥',
           onTap: () {},
         ).horizontal(16.w),
-        SizedBox(height: 14.h),
+        SizedBox(height: 10.h),
         SizedBox(
-          height: 200.h,
+          height: 228.h,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -84,32 +84,27 @@ class FoodScreen extends StatelessWidget {
           subtitle: 'Discover what everyone\'s eating',
           onTap: () {},
         ).horizontal(16.w),
-        SizedBox(height: 14.h),
+        SizedBox(height: 8.h),
+
+        BitesItems(),
+
+        SizedBox(height: 20.h),
+        SectionHeaderWidget(
+          title: 'Top Restaurants',
+          onTap: () {},
+        ).horizontal(16.w),
+        SizedBox(height: 10.h),
         SizedBox(
-          height: 180.h,
+          height: 202.h,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
             itemCount: 5,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
-            itemBuilder: (context, index) => const BitesCard(),
-          ),
-        ),
-
-        SizedBox(height: 28.h),
-        SectionHeaderWidget(
-          title: 'Top Restaurants',
-          onTap: () {},
-        ).horizontal(16.w),
-        SizedBox(height: 14.h),
-        SizedBox(
-          height: 240.h,
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            separatorBuilder: (context, index) => SizedBox(width: 16.w),
-            itemBuilder: (context, index) => const TopRestaurantCard(),
+            itemBuilder: (context, index) => Padding(
+              padding:  EdgeInsets.symmetric(vertical: 4.h),
+              child: const TopRestaurantCard(),
+            ),
           ),
         ),
 
