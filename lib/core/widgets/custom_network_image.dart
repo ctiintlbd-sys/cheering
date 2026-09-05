@@ -199,7 +199,7 @@ class CustomNetworkImage extends StatelessWidget {
       alignment: Alignment.center,
       height: height,
       width: width,
-      decoration: _decoration(),
+      //decoration: _decoration(),
       child: fallbackAsset ??
       Icon(
         Icons.person,
