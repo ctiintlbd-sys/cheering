@@ -3,6 +3,9 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/delivery_title_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_categories_widget.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/super_deals_card.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/bites_card.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/top_restaurant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,6 +15,7 @@ class FoodScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
+      onRefresh: ()async{},
       appBar: CustomSliverAppBar(
         toolbarHeight: 0,
         expandedHeight: 234.h,
@@ -59,13 +63,55 @@ class FoodScreen extends StatelessWidget {
 
         SizedBox(height: 28.h),
         SectionHeaderWidget(
-            title: 'Super Deals 🔥',
-          onTap: (){},
+          title: 'Super Deals 🔥',
+          onTap: () {},
         ).horizontal(16.w),
-
         SizedBox(height: 14.h),
+        SizedBox(
+          height: 200.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (context, index) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) => const SuperDealsCard(),
+          ),
+        ),
 
+        SizedBox(height: 28.h),
+        SectionHeaderWidget(
+          title: 'Bites 🔥',
+          subtitle: 'Discover what everyone\'s eating',
+          onTap: () {},
+        ).horizontal(16.w),
+        SizedBox(height: 14.h),
+        SizedBox(
+          height: 180.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (context, index) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) => const BitesCard(),
+          ),
+        ),
 
+        SizedBox(height: 28.h),
+        SectionHeaderWidget(
+          title: 'Top Restaurants',
+          onTap: () {},
+        ).horizontal(16.w),
+        SizedBox(height: 14.h),
+        SizedBox(
+          height: 240.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (context, index) => SizedBox(width: 16.w),
+            itemBuilder: (context, index) => const TopRestaurantCard(),
+          ),
+        ),
 
         SizedBox(height: 120.h),
       ],
