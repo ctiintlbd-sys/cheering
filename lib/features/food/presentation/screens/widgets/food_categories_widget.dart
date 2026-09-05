@@ -23,13 +23,13 @@ class FoodCategoriesWidget extends StatelessWidget {
               BoxShadow(
                 offset: const Offset(0, 0),
                 blurRadius: 6,
-                color: context.colors.black.withValues(alpha: 0.09),
+                color: context.colors.black.withValues(alpha: 0.009),
               ),
             ],
             child: CustomNetworkImage(
               width: 50.r,
               height: 50.r,
-              boxShape: BoxShape.circle,
+              fit: BoxFit.contain,
               imageUrl: '',
               fallbackAsset: Assets.icons.menu.svg(),
             ),
