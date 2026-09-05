@@ -1,11 +1,5 @@
-import 'package:cheering/core/theme/app_theme_colors.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
-import 'package:cheering/core/widgets/custom_container.dart';
-import 'package:cheering/core/widgets/custom_network_image.dart';
-import 'package:cheering/core/widgets/custom_sliver_app_bar.dart';
-import 'package:cheering/core/widgets/custom_text.dart';
-import 'package:cheering/core/widgets/custom_text_field.dart';
-import 'package:cheering/core/widgets/sliver_scaffold.dart';
+import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/delivery_title_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_flexible_background.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +15,22 @@ class FoodScreen extends StatelessWidget {
         expandedHeight: 234.h,
         titleWidget: const DeliveryTitleWidget(address: 'House 25, Banani Rd 11...',),
         flexibleBackground: const FoodFlexibleBackground(),
+        bottom:  PreferredSize(
+          preferredSize: Size.fromHeight(48.h),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: CustomTextField(
+              onTap: () {},
+              readOnly: true,
+              prefixIcon: Assets.icons.search.svg(),
+              suffixIcon: Assets.icons.filtter.svg(),
+              borderRadius: 99.r,
+              fillColor: context.colors.background,
+              borderColor: context.colors.borderSecondary,
+              hintText: 'Search food...',
+            ),
+          ),
+        ),
       ),
       bodyList: [
         SizedBox(height: 44.h),

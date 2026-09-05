@@ -85,7 +85,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  file_picker_darwin: 5c32d1a83c7cd2e4e2d2eaea629cf830b3b5dc49
+  file_picker_darwin: 4c2b9a50ea44cb3b071381ea0cf48591bdd80251
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_secure_storage_darwin: acdb3f316ed05a3e68f856e0353b133eec373a23
   geocoding_darwin: 968545604e6896deeef55517d53a81b3b9801971
