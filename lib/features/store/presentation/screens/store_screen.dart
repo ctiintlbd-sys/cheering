@@ -88,7 +88,7 @@ class StoreScreen extends StatelessWidget {
         ).horizontal(16.w),
         SizedBox(height: 10.h),
         SizedBox(
-          height: 202.h,
+          height: 184.h,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -96,7 +96,7 @@ class StoreScreen extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              child: const StoreCardWidget(),
+              child: const ProductCardWidget(),
             ),
           ),
         ),

@@ -1,73 +1,56 @@
+import 'package:cheering/core/utils/assets/fonts.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TopRestaurantCard extends StatelessWidget {
-  const TopRestaurantCard({super.key});
+class ProductCardWidget extends StatelessWidget {
+  const ProductCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 174.w,
-      height: 194.h,
+      width: 138.w,
+      height: 176.h,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomNetworkImage(
+            backgroundColor: context.colors.bgSecondary,
             height: 124.h,
             borderRadius: 12.r,
             imageUrl:
-            'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4',
+                'https://images.unsplash.com/photo-1513104890138-7c749659a591',
           ),
-          CustomText(
-            top: 10.h,
-            text: 'KFC - Badda',
-            fontWeight: FontWeight.w500,
-            maxLines: 1,
-            textOverflow: TextOverflow.ellipsis,
-          ),
+
+          SizedBox(height: 10.h),
           RichText(
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
               style: TextStyle(
-                height: 1.55,
-                fontSize: 12.sp,
-                color: context.colors.textTertiary,
+                fontWeight: FontWeight.w600,
+                color: context.colors.primary,
+                fontFamily: FontFamily.sFPro,
               ),
               children: [
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: Icon(
-                    Icons.directions_bike,
-                    color: context.colors.iconSecondary,
-                    size: 12.r,
+                TextSpan(text: '৳150  '),
+                TextSpan(
+                  text: '৳110',
+                  style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    fontWeight: FontWeight.w400,
+                    color: context.colors.textPrimary,
                   ),
                 ),
-                TextSpan(text: ' ৳40 '),
-                TextSpan(text: '•'),
-                TextSpan(text: ' 1.2Km\n'),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: Icon(
-                    Icons.star,
-                    color: const Color(0xFFFF9D00),
-                    size: 12.r,
-                  ),
-                ),
-                TextSpan(text: ' 4.3 (27) '),
-                TextSpan(text: '•'),
-                WidgetSpan(
-                  alignment: PlaceholderAlignment.middle,
-                  child: Icon(
-                    Icons.access_time,
-                    color: context.colors.iconSecondary,
-                    size: 12.r,
-                  ),
-                ),
-                TextSpan(text: ' 15-30 mins'),
               ],
             ),
+          ),
+
+          CustomText(
+            text: 'Pizza (4pcs)',
+            maxLines: 1,
+            color: context.colors.textSecondary,
+            textOverflow: TextOverflow.ellipsis,
           ),
         ],
       ),
