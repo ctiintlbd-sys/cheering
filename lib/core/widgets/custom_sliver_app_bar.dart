@@ -13,7 +13,7 @@ class CustomSliverAppBar extends StatelessWidget {
     this.centerTitle = false,
     this.titleWidget,
     this.collapsedTitle,
-    this.collapsedTitleColor,
+    this.collapsedBgColor,
     this.showLeading = true,
     this.actions,
     this.backAction,
@@ -33,11 +33,7 @@ class CustomSliverAppBar extends StatelessWidget {
     this.floating = false,
     this.snap = false,
     this.bottom,
-    this.innerBoxIsScrolled = false,
-    this.collapseToolbar = false,
   });
-
-  // ── Fields ───────────────────────────────────────────────────
 
   final String? title;
   final double titleSize;
@@ -45,7 +41,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final Widget? titleWidget;
 
   final String? collapsedTitle;
-  final Color? collapsedTitleColor;
+  final Color? collapsedBgColor;
 
   final bool showLeading;
   final List<Widget>? actions;
@@ -72,10 +68,6 @@ class CustomSliverAppBar extends StatelessWidget {
   final bool snap;
 
   final PreferredSizeWidget? bottom;
-  final bool innerBoxIsScrolled;
-  final bool collapseToolbar;
-
-  bool get _isCollapseMode => collapseToolbar && bottom != null;
 
   double get _toolbarH => toolbarHeight ?? 60;
 
@@ -84,12 +76,13 @@ class CustomSliverAppBar extends StatelessWidget {
       ? (expandedHeight ?? _toolbarH)
       : null;
 
-  // ── Builders ─────────────────────────────────────────────────
-
   Widget? _buildLeading(BuildContext context) {
     if (leading != null) return leading;
+
     final canPop = ModalRoute.of(context)?.canPop ?? false;
+
     if (!showLeading || !canPop) return null;
+
     return IconButton(
       padding: EdgeInsets.only(left: 8.w),
       onPressed: backAction ?? () => Navigator.maybePop(context),
@@ -104,22 +97,28 @@ class CustomSliverAppBar extends StatelessWidget {
         padding: EdgeInsets.only(
           left: 16.w,
           right: 16.w,
-          top: _isCollapseMode
-              ? (flexiblePaddingTop ?? 0)
-              : _toolbarH + (flexiblePaddingTop ?? 0),
+          top: _toolbarH + (flexiblePaddingTop ?? 0),
         ),
         child: flexibleChild,
       ),
     );
+
     return safeArea ? SafeArea(child: overlay) : overlay;
   }
 
   Widget? _buildFlexibleContent() {
-    if (flexibleBackground == null && flexibleChild == null) return null;
+    if (flexibleBackground == null && flexibleChild == null) {
+      return null;
+    }
 
-    if (flexibleChild == null) return flexibleBackground;
+    if (flexibleChild == null) {
+      return flexibleBackground;
+    }
 
-    if (flexibleBackground == null) return _buildChildOverlay();
+    if (flexibleBackground == null) {
+      return _buildChildOverlay();
+    }
+
     return Stack(
       children: [
         Positioned.fill(child: flexibleBackground!),
@@ -128,77 +127,98 @@ class CustomSliverAppBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context, Color foreground) {
-    final showCollapsed = innerBoxIsScrolled && collapsedTitle != null;
-    final fg = showCollapsed ? (collapsedTitleColor ?? foreground) : foreground;
-
+  Widget _buildTitle(BuildContext context, Color foreground, bool isCollapsed) {
     final child =
         titleWidget ??
         Text(
-          showCollapsed ? (collapsedTitle ?? title ?? '') : (title ?? ''),
+          isCollapsed ? (collapsedTitle ?? title ?? '') : (title ?? ''),
           style: TextStyle(
             fontFamily: FontFamily.sFPro,
             fontWeight: FontWeight.w400,
             fontSize: titleSize.sp,
-            color: fg,
+            color: foreground,
           ),
         );
 
-    if (collapsedTitle == null) return child;
+    if (collapsedTitle == null) {
+      return child;
+    }
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-      child: KeyedSubtree(key: ValueKey(showCollapsed), child: child),
+      child: KeyedSubtree(key: ValueKey(isCollapsed), child: child),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final foreground = foregroundColor ?? context.colors.textPrimary;
-    final bg = backgroundColor ?? context.colors.background;
-    final resolvedLeading = _isCollapseMode ? null : _buildLeading(context);
+    final colors = context.colors;
+    final foreground = foregroundColor ?? colors.textPrimary;
+    final baseColor = backgroundColor ?? colors.background;
+    final targetColor = collapsedBgColor ?? baseColor;
+    final fadedBg = colors.background.withValues(alpha: 0.1);
     final flexibleContent = _buildFlexibleContent();
+    final builtLeading = _buildLeading(context);
 
-    return SliverAppBar(
-      pinned: pinned || bottom != null,
-      floating: floating,
-      snap: snap,
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        final collapseOffset = (_expandedH ?? _toolbarH) - _toolbarH;
+        final isCollapsed = constraints.scrollOffset >= collapseOffset + 10.h;
+        final t = collapseOffset > 0
+            ? (constraints.scrollOffset / collapseOffset).clamp(0.0, 1.0)
+            : (isCollapsed ? 1.0 : 0.0);
+        final bg = Color.lerp(baseColor, targetColor, t)!;
+        final resolvedLeading = isCollapsed ? null : builtLeading;
 
-      elevation: 0,
-      scrolledUnderElevation: _isCollapseMode ? 0 : 10,
-      shadowColor: context.colors.background.withValues(alpha: 0.1),
-      surfaceTintColor: context.colors.background.withValues(alpha: 0.1),
+        return SliverAppBar(
+          pinned: pinned || bottom != null,
+          floating: floating,
+          snap: snap,
 
-      backgroundColor: bg,
-      foregroundColor: foreground,
+          elevation: 0,
+          scrolledUnderElevation: 0,
 
-      toolbarHeight: _isCollapseMode ? 0 : _toolbarH,
-      expandedHeight: _isCollapseMode
-          ? (expandedHeight ?? _toolbarH)
-          : _expandedH,
+          shadowColor: fadedBg,
+          surfaceTintColor: fadedBg,
 
-      automaticallyImplyLeading: false,
-      titleSpacing: resolvedLeading == null ? 16.w : 0,
-      centerTitle: centerTitle,
+          backgroundColor: bg,
+          foregroundColor: foreground,
 
-      leading: resolvedLeading,
-      title: _isCollapseMode ? null : _buildTitle(context, foreground),
-      actions: _isCollapseMode ? null : actions,
+          toolbarHeight: _toolbarH,
 
-      bottom: bottom,
+          expandedHeight: _expandedH,
 
-      shape: borderColor != null
-          ? Border(
-              bottom: BorderSide(color: borderColor!, width: borderWidth ?? 1),
-            )
-          : null,
+          automaticallyImplyLeading: false,
 
-      flexibleSpace: flexibleContent != null
-          ? FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
-              background: flexibleContent,
-            )
-          : null,
+          titleSpacing: resolvedLeading == null ? 16.w : 0,
+
+          centerTitle: centerTitle,
+
+          leading: resolvedLeading,
+
+          title: _buildTitle(context, foreground, isCollapsed),
+
+          actions: isCollapsed ? null : actions,
+
+          bottom: bottom,
+
+          shape: borderColor != null
+              ? Border(
+                  bottom: BorderSide(
+                    color: borderColor!,
+                    width: borderWidth ?? 1,
+                  ),
+                )
+              : null,
+
+          flexibleSpace: flexibleContent != null
+              ? FlexibleSpaceBar(
+                  collapseMode: CollapseMode.parallax,
+                  background: flexibleContent,
+                )
+              : null,
+        );
+      },
     );
   }
 }
