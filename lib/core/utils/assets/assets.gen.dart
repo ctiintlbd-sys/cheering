@@ -146,45 +146,49 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile.svg
   SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
-  /// File path: assets/icons/profile_business_hour.svg
-  SvgGenImage get profileBusinessHour =>
-      const SvgGenImage('assets/icons/profile_business_hour.svg');
+  /// File path: assets/icons/profile_about.svg
+  SvgGenImage get profileAbout =>
+      const SvgGenImage('assets/icons/profile_about.svg');
 
-  /// File path: assets/icons/profile_earnings.svg
-  SvgGenImage get profileEarnings =>
-      const SvgGenImage('assets/icons/profile_earnings.svg');
+  /// File path: assets/icons/profile_address.svg
+  SvgGenImage get profileAddress =>
+      const SvgGenImage('assets/icons/profile_address.svg');
 
-  /// File path: assets/icons/profile_feedback.svg
-  SvgGenImage get profileFeedback =>
-      const SvgGenImage('assets/icons/profile_feedback.svg');
+  /// File path: assets/icons/profile_appearance.svg
+  SvgGenImage get profileAppearance =>
+      const SvgGenImage('assets/icons/profile_appearance.svg');
 
   /// File path: assets/icons/profile_fil.svg
   SvgGenImage get profileFil =>
       const SvgGenImage('assets/icons/profile_fil.svg');
 
+  /// File path: assets/icons/profile_help.svg
+  SvgGenImage get profileHelp =>
+      const SvgGenImage('assets/icons/profile_help.svg');
+
+  /// File path: assets/icons/profile_language.svg
+  SvgGenImage get profileLanguage =>
+      const SvgGenImage('assets/icons/profile_language.svg');
+
   /// File path: assets/icons/profile_logout.svg
   SvgGenImage get profileLogout =>
       const SvgGenImage('assets/icons/profile_logout.svg');
 
-  /// File path: assets/icons/profile_performance.svg
-  SvgGenImage get profilePerformance =>
-      const SvgGenImage('assets/icons/profile_performance.svg');
+  /// File path: assets/icons/profile_notification.svg
+  SvgGenImage get profileNotification =>
+      const SvgGenImage('assets/icons/profile_notification.svg');
 
-  /// File path: assets/icons/profile_promotions.svg
-  SvgGenImage get profilePromotions =>
-      const SvgGenImage('assets/icons/profile_promotions.svg');
+  /// File path: assets/icons/profile_offer.svg
+  SvgGenImage get profileOffer =>
+      const SvgGenImage('assets/icons/profile_offer.svg');
 
-  /// File path: assets/icons/profile_report.svg
-  SvgGenImage get profileReport =>
-      const SvgGenImage('assets/icons/profile_report.svg');
+  /// File path: assets/icons/profile_payment.svg
+  SvgGenImage get profilePayment =>
+      const SvgGenImage('assets/icons/profile_payment.svg');
 
-  /// File path: assets/icons/profile_store.svg
-  SvgGenImage get profileStore =>
-      const SvgGenImage('assets/icons/profile_store.svg');
-
-  /// File path: assets/icons/profile_support.svg
-  SvgGenImage get profileSupport =>
-      const SvgGenImage('assets/icons/profile_support.svg');
+  /// File path: assets/icons/profile_security.svg
+  SvgGenImage get profileSecurity =>
+      const SvgGenImage('assets/icons/profile_security.svg');
 
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
@@ -197,10 +201,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/store.svg
   SvgGenImage get store => const SvgGenImage('assets/icons/store.svg');
-
-  /// File path: assets/icons/store_address.svg
-  SvgGenImage get storeAddress =>
-      const SvgGenImage('assets/icons/store_address.svg');
 
   /// File path: assets/icons/store_category.svg
   SvgGenImage get storeCategory =>
@@ -267,21 +267,21 @@ class $AssetsIconsGen {
     percentage,
     phoneCall,
     profile,
-    profileBusinessHour,
-    profileEarnings,
-    profileFeedback,
+    profileAbout,
+    profileAddress,
+    profileAppearance,
     profileFil,
+    profileHelp,
+    profileLanguage,
     profileLogout,
-    profilePerformance,
-    profilePromotions,
-    profileReport,
-    profileStore,
-    profileSupport,
+    profileNotification,
+    profileOffer,
+    profilePayment,
+    profileSecurity,
     search,
     share,
     shop,
     store,
-    storeAddress,
     storeCategory,
     storeDescription,
     storeFil,
@@ -299,10 +299,6 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
-  /// File path: assets/images/coming_soon.jpg
-  AssetGenImage get comingSoon =>
-      const AssetGenImage('assets/images/coming_soon.jpg');
-
   /// File path: assets/images/food_banner.png
   AssetGenImage get foodBanner =>
       const AssetGenImage('assets/images/food_banner.png');
@@ -315,13 +311,7 @@ class $AssetsImagesGen {
   AssetGenImage get store => const AssetGenImage('assets/images/store.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [
-    appIcon,
-    comingSoon,
-    foodBanner,
-    mapLocation,
-    store,
-  ];
+  List<AssetGenImage> get values => [appIcon, foodBanner, mapLocation, store];
 }
 
 class $AssetsLottiesGen {

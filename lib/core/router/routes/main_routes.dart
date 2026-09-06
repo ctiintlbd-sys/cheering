@@ -1,6 +1,7 @@
 import 'package:cheering/features/community/presentation/screens/community_screen.dart';
 import 'package:cheering/features/food/presentation/screens/food_screen.dart';
 import 'package:cheering/features/order/presentation/screens/order_screen.dart';
+import 'package:cheering/features/profile/presentation/screens/profile_screen.dart';
 import 'package:cheering/features/store/presentation/screens/store_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../../../features/bottom_nav_bar/presentation/screens/bottom_nav_screen.dart';
@@ -49,7 +50,7 @@ final List<RouteBase> mainRoutes = [
         routes: [
           GoRoute(
             path: RoutePaths.profileTab,
-            builder: (context, state) => const OverviewScreen(),
+            builder: (context, state) => const ProfileScreen(),
           ),
         ],
       ),

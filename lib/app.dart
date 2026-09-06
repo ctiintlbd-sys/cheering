@@ -1,3 +1,4 @@
+import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
 import 'package:cheering/features/overview/presentation/bloc/overview_bloc.dart';
@@ -18,6 +19,9 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (_) => getIt<ThemeCubit>(),
+        ),
+        BlocProvider(
           create: (_) => getIt<OverviewBloc>()..add(const LoadOverview()),
         ),
       ],
@@ -25,20 +29,25 @@ class App extends StatelessWidget {
         designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, child) => MaterialApp.router(
-          scaffoldMessengerKey: ToastMessageHelper.messengerKey,
-          debugShowCheckedModeBanner: false,
-          title: 'Cheering Partner',
-          theme: AppTheme.light(),
-          //darkTheme: AppTheme.dark(),
-          routerConfig: AppRouter.router,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+        builder: (context, child) => BlocBuilder<ThemeCubit, ThemeMode>(
+          builder: (context, themeMode) {
+            return MaterialApp.router(
+              scaffoldMessengerKey: ToastMessageHelper.messengerKey,
+              debugShowCheckedModeBanner: false,
+              title: 'Cheering Partner',
+              themeMode: themeMode,
+              theme: AppTheme.light(),
+              darkTheme: AppTheme.dark(),
+              routerConfig: AppRouter.router,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+            );
+          },
         ),
       ),
     );

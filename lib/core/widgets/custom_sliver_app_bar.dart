@@ -69,7 +69,7 @@ class CustomSliverAppBar extends StatelessWidget {
 
   final PreferredSizeWidget? bottom;
 
-  double get _toolbarH => toolbarHeight ?? 60;
+  double get _toolbarH => toolbarHeight ?? kToolbarHeight;
 
   double? get _expandedH =>
       (flexibleBackground != null || flexibleChild != null)

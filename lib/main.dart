@@ -5,12 +5,14 @@ import 'app.dart';
 import 'core/config/app_config.dart';
 import 'core/di/service_locator.dart';
 import 'core/storage/token_storage.dart';
+import 'core/storage/theme_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppConfig.initialize();
   await TokenStorage.init();
   await HiveCacheService.init();
+  await ThemeStorage.init();
   await setupServiceLocator();
 
   await SystemChrome.setPreferredOrientations([
@@ -21,7 +23,6 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
     ),
   );
 
