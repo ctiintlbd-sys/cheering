@@ -20,7 +20,6 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.textColor,
-    this.borderColor,
     this.bordersColor,
     this.borderWidth,
     // ── Dimensions & Radius ──────────────────────────────────────
@@ -55,7 +54,6 @@ class CustomButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? textColor;
-  final Color? borderColor;
   final Color? bordersColor;
   final double? borderWidth;
 
@@ -87,7 +85,7 @@ class CustomButton extends StatelessWidget {
 
   double get _effectiveRadius => (radius ?? borderRadius ?? 48).r;
 
-  Color? get _effectiveBorderColor => borderColor ?? bordersColor;
+  Color? get _effectiveBorderColor =>   bordersColor;
 
   Color _resolveFgColor(BuildContext context, bool isTransparentBg) {
     if (textColor != null) return textColor!;

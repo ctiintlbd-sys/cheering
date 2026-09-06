@@ -10,7 +10,7 @@ class CustomSliverAppBar extends StatelessWidget {
     super.key,
     this.title,
     this.titleSize = 18,
-    this.centerTitle = false,
+    this.centerTitle = true,
     this.titleWidget,
     this.collapsedTitle,
     this.collapsedBgColor,
@@ -133,7 +133,7 @@ class CustomSliverAppBar extends StatelessWidget {
           title ?? '',
           style: TextStyle(
             fontFamily: FontFamily.sFPro,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w600,
             fontSize: titleSize.sp,
             color: foreground,
           ),
@@ -146,7 +146,7 @@ class CustomSliverAppBar extends StatelessWidget {
           collapsedTitle ?? title ?? '',
           style: TextStyle(
             fontFamily: FontFamily.sFPro,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w600,
             fontSize: titleSize.sp,
             color: foreground,
           ),

@@ -36,11 +36,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bike.svg
   SvgGenImage get bike => const SvgGenImage('assets/icons/bike.svg');
 
+  /// File path: assets/icons/bookmark.svg
+  SvgGenImage get bookmark => const SvgGenImage('assets/icons/bookmark.svg');
+
   /// File path: assets/icons/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
 
   /// File path: assets/icons/clean.svg
   SvgGenImage get clean => const SvgGenImage('assets/icons/clean.svg');
+
+  /// File path: assets/icons/comment.svg
+  SvgGenImage get comment => const SvgGenImage('assets/icons/comment.svg');
 
   /// File path: assets/icons/community.svg
   SvgGenImage get community => const SvgGenImage('assets/icons/community.svg');
@@ -87,6 +93,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/location_pin.svg
   SvgGenImage get locationPin =>
       const SvgGenImage('assets/icons/location_pin.svg');
+
+  /// File path: assets/icons/love.svg
+  SvgGenImage get love => const SvgGenImage('assets/icons/love.svg');
 
   /// File path: assets/icons/menu.svg
   SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
@@ -180,6 +189,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
+  /// File path: assets/icons/share.svg
+  SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
+
   /// File path: assets/icons/shop.svg
   SvgGenImage get shop => const SvgGenImage('assets/icons/shop.svg');
 
@@ -222,8 +234,10 @@ class $AssetsIconsGen {
     bell,
     bikash,
     bike,
+    bookmark,
     cart,
     clean,
+    comment,
     community,
     communityFil,
     date,
@@ -238,6 +252,7 @@ class $AssetsIconsGen {
     foodLove,
     google,
     locationPin,
+    love,
     menu,
     menuBd,
     menuCategory,
@@ -263,6 +278,7 @@ class $AssetsIconsGen {
     profileStore,
     profileSupport,
     search,
+    share,
     shop,
     store,
     storeAddress,
@@ -283,6 +299,10 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/coming_soon.jpg
+  AssetGenImage get comingSoon =>
+      const AssetGenImage('assets/images/coming_soon.jpg');
+
   /// File path: assets/images/food_banner.png
   AssetGenImage get foodBanner =>
       const AssetGenImage('assets/images/food_banner.png');
@@ -295,7 +315,13 @@ class $AssetsImagesGen {
   AssetGenImage get store => const AssetGenImage('assets/images/store.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [appIcon, foodBanner, mapLocation, store];
+  List<AssetGenImage> get values => [
+    appIcon,
+    comingSoon,
+    foodBanner,
+    mapLocation,
+    store,
+  ];
 }
 
 class $AssetsLottiesGen {

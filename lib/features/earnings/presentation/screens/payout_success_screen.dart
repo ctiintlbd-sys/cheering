@@ -139,7 +139,7 @@ class PayoutSuccessScreen extends StatelessWidget {
             height: 48.h,
             backgroundColor: Colors.transparent,
             textColor: context.colors.textPrimary,
-            borderColor: context.colors.borderSecondary,
+            bordersColor: context.colors.borderSecondary,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

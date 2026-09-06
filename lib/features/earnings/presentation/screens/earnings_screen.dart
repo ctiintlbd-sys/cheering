@@ -84,7 +84,7 @@ class EarningsScreen extends StatelessWidget {
                       fontSize: 14.sp,
                       backgroundColor: Colors.transparent,
                       textColor: context.colors.textPrimary,
-                      borderColor: context.colors.borderSecondary,
+                      bordersColor: context.colors.borderSecondary,
                       onPressed: () {
                         context.pushNamed(RoutePaths.payoutHistory);
                       },
