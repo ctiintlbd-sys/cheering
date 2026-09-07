@@ -1,6 +1,8 @@
 import 'package:cheering/core/common_widgets/common_widgets.dart';
+import 'package:cheering/core/helpers/bottom_sheet_helper.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/all_categories_bottom_sheet.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_categories_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/super_deals_card.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/bites_card.dart';
@@ -13,7 +15,7 @@ class FoodScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      onRefresh: ()async{},
+      onRefresh: () async {},
       appBar: CustomSliverAppBar(
         toolbarHeight: 0,
         expandedHeight: 234.h,
@@ -54,7 +56,10 @@ class FoodScreen extends StatelessWidget {
               if (15 > 10 && index == 10) {
                 return SeeAllCategoriesWidget(
                   onTap: () {
-                    // Handle see all tap
+                    BottomSheetHelper.showCustomBottomSheet(
+                      context: context,
+                      child: const AllCategoriesBottomSheet(),
+                    );
                   },
                 );
               }
@@ -107,7 +112,7 @@ class FoodScreen extends StatelessWidget {
             itemCount: 5,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
-              padding:  EdgeInsets.symmetric(vertical: 4.h),
+              padding: EdgeInsets.symmetric(vertical: 4.h),
               child: const StoreCardWidget(),
             ),
           ),
