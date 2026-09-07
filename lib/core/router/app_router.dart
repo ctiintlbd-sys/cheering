@@ -11,6 +11,7 @@ import 'app_router_notifier.dart';
 import 'auth_guard.dart';
 import 'route_paths.dart';
 import 'routes/auth_routes.dart';
+import 'routes/food_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -41,6 +42,7 @@ class AppRouter {
       // ── 2. Auth Flow ─────────────────────────────────────────────────────
       ...authRoutes,
       ...mainRoutes,
+      ...foodRoutes,
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(),

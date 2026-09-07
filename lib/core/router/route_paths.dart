@@ -18,6 +18,8 @@ abstract class RoutePaths {
   static const String review = '/review';
   static const String applicationSubmitted = '/application-submitted';
 
+  static const String categoryDetails = '/category-details';
+
   // ── Main Tabs (Stateful Shell) ─────────────────────────────
   static const String foodTab = '/food';
   static const String storeTab = '/store';

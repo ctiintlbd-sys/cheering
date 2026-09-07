@@ -1,17 +1,25 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class FoodCategoriesWidget extends StatelessWidget {
+
   const FoodCategoriesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      width: 74.w,
-      height: 90.h,
-      child: Column(
+    return GestureDetector(
+      onTap: (){
+        context.push(RoutePaths.categoryDetails);
+      },
+      child: CustomContainer(
+        width: 74.w,
+        height: 90.h,
+        color: Colors.transparent,
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CustomContainer(
@@ -50,14 +58,14 @@ class FoodCategoriesWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
 class SeeAllCategoriesWidget extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const SeeAllCategoriesWidget({super.key, this.onTap});
+  const SeeAllCategoriesWidget({super.key ,this.onTap});
 
   @override
   Widget build(BuildContext context) {

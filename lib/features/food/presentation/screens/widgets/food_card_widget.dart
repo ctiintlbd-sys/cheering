@@ -1,0 +1,117 @@
+import 'package:cheering/core/widgets/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class FoodCardWidget extends StatelessWidget {
+  const FoodCardWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          CustomNetworkImage(
+            width: 100.w,
+            height: 100.w, // square image
+            borderRadius: 12.r,
+            imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Dummy pizza image
+          ),
+          SizedBox(width: 14.w),
+          
+          // Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title & Heart
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: CustomText(
+                        text: 'Pizza House',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(
+                      Icons.favorite_border,
+                      color: context.colors.primary,
+                      size: 22.r,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4.h),
+                
+                // Subtitle
+                CustomText(
+                  text: 'Italian · Fast food',
+                  color: context.colors.textSecondary,
+                  fontSize: 12.sp,
+                ),
+                SizedBox(height: 6.h),
+                
+                // Stats Row
+                RichText(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: context.colors.textSecondary,
+                    ),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(Icons.star, color: const Color(0xFFFF9D00), size: 14.r),
+                      ),
+                      const TextSpan(text: ' 4.5  ·  '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(Icons.directions_bike, color: context.colors.iconSecondary, size: 14.r),
+                      ),
+                      const TextSpan(text: ' ৳65(1.5Km)  ·  '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(Icons.access_time, color: context.colors.iconSecondary, size: 14.r),
+                      ),
+                      const TextSpan(text: ' 10-20 mins'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                
+                // Discount Tag
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: context.colors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.local_offer_outlined, color: context.colors.primary, size: 12.r),
+                      SizedBox(width: 4.w),
+                      CustomText(
+                        text: '20% OFF',
+                        color: context.colors.primary,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
