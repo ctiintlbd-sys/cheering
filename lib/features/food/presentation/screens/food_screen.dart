@@ -56,7 +56,7 @@ class FoodScreen extends StatelessWidget {
               if (15 > 10 && index == 10) {
                 return SeeAllCategoriesWidget(
                   onTap: () {
-                    BottomSheetHelper.showCustomBottomSheet(
+                    BottomSheetHelper.showSheet(
                       context: context,
                       child: const AllCategoriesBottomSheet(),
                     );

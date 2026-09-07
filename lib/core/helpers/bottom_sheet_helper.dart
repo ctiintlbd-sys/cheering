@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BottomSheetHelper {
-  static void showCustomBottomSheet({
+  static void showSheet({
     required BuildContext context,
     required Widget child,
     bool barrierDismissible = true,
