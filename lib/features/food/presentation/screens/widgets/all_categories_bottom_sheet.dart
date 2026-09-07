@@ -49,7 +49,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           // Grid
           Expanded(
             child: GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+              padding: EdgeInsets.fromLTRB(16.w,8.h ,16.w,44.h ,),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 mainAxisSpacing: 24.h,

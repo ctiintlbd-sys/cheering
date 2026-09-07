@@ -15,7 +15,7 @@ class CustomItemAnimator extends StatefulWidget {
     required this.child,
     this.index,
     this.animationType = CustomItemAnimationType.scale,
-    this.delayBase = const Duration(milliseconds: 40),
+    this.delayBase = const Duration(milliseconds: 16),
     this.animationDuration = const Duration(milliseconds: 350),
     this.maxStaggerIndex = 10,
   });

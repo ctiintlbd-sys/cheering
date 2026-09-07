@@ -65,7 +65,9 @@ class FoodScreen extends StatelessWidget {
               }
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.h),
-                child: const FoodCategoriesWidget(),
+                child: CustomItemAnimator(
+                  index: index,
+                    child: const FoodCategoriesWidget()),
               );
             },
           ),
@@ -84,7 +86,9 @@ class FoodScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: 5,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
-            itemBuilder: (context, index) => const SuperDealsCard(),
+            itemBuilder: (context, index) => CustomItemAnimator(
+              index: index,
+                child: const SuperDealsCard()),
           ),
         ),
 
@@ -113,7 +117,9 @@ class FoodScreen extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              child: const StoreCardWidget(),
+              child: CustomItemAnimator(
+                index: index,
+                  child: const StoreCardWidget()),
             ),
           ),
         ),

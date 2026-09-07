@@ -35,10 +35,12 @@ class _OrderScreenState extends State<OrderScreen> {
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           sliver: SliverList.separated(
-            itemCount: 5,
+            itemCount: 50,
             separatorBuilder: (_, _) => SizedBox(height: 12.h),
             itemBuilder: (context, index) {
-              return OrderCard();
+              return CustomItemAnimator(
+                index: index,
+                  child: OrderCard());
             },
           ),
         ),
