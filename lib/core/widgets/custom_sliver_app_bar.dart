@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:cheering/core/theme/app_theme_colors.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
@@ -79,13 +80,20 @@ class CustomSliverAppBar extends StatelessWidget {
   Widget? _buildLeading(BuildContext context) {
     if (leading != null) return leading;
 
-    final canPop = ModalRoute.of(context)?.canPop ?? false;
+    // go_router এর context.canPop() অথবা ফ্ল্যাটারের ডিফল্ট Navigator check
+    final canPop = context.canPop() || (ModalRoute.of(context)?.canPop ?? false);
 
     if (!showLeading || !canPop) return null;
 
     return IconButton(
       padding: EdgeInsets.only(left: 8.w),
-      onPressed: backAction ?? () => Navigator.maybePop(context),
+      onPressed: backAction ?? () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          Navigator.maybePop(context);
+        }
+      },
       icon: Assets.icons.arrowBack.svg(height: 24.h, width: 24.w),
     );
   }
@@ -190,7 +198,7 @@ class CustomSliverAppBar extends StatelessWidget {
             ? (constraints.scrollOffset / collapseOffset).clamp(0.0, 1.0)
             : (isCollapsed ? 1.0 : 0.0);
         final bg = Color.lerp(baseColor, targetColor, t)!;
-        final resolvedLeading = isCollapsed ? null : builtLeading;
+        final resolvedLeading = builtLeading; // ফিক্স: কলাপ্স হলেও ব্যাক বাটন হাইড হবে না
 
         final titleChild = isCollapsed ? collapsedTitleWidget : expandedTitle;
         final resolvedTitle = collapsedTitle != null

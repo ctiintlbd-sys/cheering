@@ -1,3 +1,4 @@
+import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -11,43 +12,47 @@ class CategoryDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
+      sideContentPadding: 16.w,
       appBar: CustomSliverAppBar(
         title: categoryName,
-      ),
-      bodyList: [
-        SizedBox(height: 8.h),
-        
-        // Filter Chips
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            children: [
-              _buildFilterChip(context, 'Sort', false),
-              SizedBox(width: 8.w),
-              _buildFilterChip(context, 'Under ৳300', false),
-              SizedBox(width: 8.w),
-              _buildFilterChip(context, 'Rating 4+', true),
-              SizedBox(width: 8.w),
-              _buildFilterChip(context, 'Fastest', false),
-            ],
+        expandedHeight: 96.h,
+        flexibleChild: SizedBox.shrink(),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(28.h),
+          child: SizedBox(
+            height: 40.h,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              scrollDirection: Axis.horizontal,
+              itemCount: 4,
+              separatorBuilder: (_, _) => SizedBox(width: 8.w),
+              itemBuilder: (context, index) {
+                final isSelected = index == 2;
+                return CustomFilterChip(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  label: 'Sort',
+                  labelSize: 14.sp,
+                  isSelected: isSelected,
+                  onTap: () {},
+                );
+              },
+            ),
           ),
         ),
-        SizedBox(height: 24.h),
-        
-        // Subtitle
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: CustomText(
-            text: '36 places serving $categoryName',
-            fontSize: 14.sp,
-            color: context.colors.textSecondary,
-            fontWeight: FontWeight.w500,
-          ),
+      ),
+      bodyList: [
+        SizedBox(height: 26.h),
+        CustomText(
+          text: '36 places serving $categoryName',
+          color: context.colors.textSecondary,
+          fontWeight: FontWeight.w500,
         ),
         SizedBox(height: 12.h),
 
-        // Store List (SliverList is recognized natively by SliverScaffold)
         SliverList.separated(
           itemCount: 10,
           separatorBuilder: (context, index) => SizedBox(height: 4.h),
@@ -60,29 +65,8 @@ class CategoryDetailsScreen extends StatelessWidget {
           },
         ),
 
-        SizedBox(height: 40.h),
+        SizedBox(height: 120.h),
       ],
-    );
-  }
-
-  Widget _buildFilterChip(BuildContext context, String label, bool isSelected) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: isSelected ? context.colors.primary : context.colors.background,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: isSelected 
-              ? context.colors.primary 
-              : (context.colors.borderSecondary ?? Colors.grey.shade300),
-        ),
-      ),
-      child: CustomText(
-        text: label,
-        color: isSelected ? Colors.white : context.colors.textSecondary,
-        fontSize: 13.sp,
-        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-      ),
     );
   }
 }

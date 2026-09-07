@@ -4,3 +4,4 @@ export 'product_card_widget.dart';
 export 'section_header_widget.dart';
 export 'store_card_widget.dart';
 export 'weekly_chart.dart';
+export 'custom_filter_chip.dart';
