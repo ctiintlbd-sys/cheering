@@ -32,7 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage(int currentIndex) {
-    if (currentIndex < onboardingList.length - 1) {
+    if (currentIndex < getOnboardingList(context).length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -57,12 +57,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // ── PageView ───────────────────────────────────────────────
           PageView.builder(
             controller: _pageController,
-            itemCount: onboardingList.length,
+            itemCount: getOnboardingList(context).length,
             onPageChanged: (index) {
               context.read<OnboardingBloc>().add(OnboardingPageChanged(index));
             },
             itemBuilder: (context, index) {
-              final item = onboardingList[index];
+              final item = getOnboardingList(context)[index];
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

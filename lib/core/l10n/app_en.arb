@@ -1,8 +1,6 @@
 {
   "@@locale": "en",
   "appName": "Cheering Partner",
-  "@appName": { "description": "Application name" },
-
   "loginTitle": "Welcome back",
   "loginSubtitle": "Sign in to continue",
   "loginButton": "Sign In",
@@ -16,12 +14,10 @@
       "phone": { "type": "String" }
     }
   },
-
   "emailLabel": "Email",
   "passwordLabel": "Password",
   "phoneLabel": "Phone number",
   "nameLabel": "Full name",
-
   "homeTitle": "Home",
   "settingsTitle": "Settings",
   "languageLabel": "Language",
@@ -29,10 +25,20 @@
   "themeDark": "Dark",
   "themeLight": "Light",
   "themeSystem": "System",
-
   "errorGeneric": "Something went wrong. Please try again.",
   "errorNetwork": "No internet connection.",
   "errorUnauthorized": "Session expired. Please login again.",
   "retryButton": "Retry",
-  "loadingText": "Loading..."
+  "loadingText": "Loading...",
+  "getStartedButton": "Get Started",
+
+  "splashTitle": "CHEERING",
+  "splashSubtitle": "Order everything",
+
+  "onboardingTitle1": "Order Food & Book Rides",
+  "onboardingSubtitle1": "Enjoy fast food delivery, instant ride booking, and trusted everyday services with just a few simple taps.",
+  "onboardingTitle2": "Pay & Top Up Instantly",
+  "onboardingSubtitle2": "Add money, make secure payments, and manage your wallet anytime with a smooth and simple experience.",
+  "onboardingTitle3": "Shop & Save Every Day",
+  "onboardingSubtitle3": "Buy groceries, order medicines, explore great deals, and enjoy everything you need in one convenient app."
 }

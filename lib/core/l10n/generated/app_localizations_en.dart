@@ -84,4 +84,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingText => 'Loading...';
+
+  @override
+  String get getStartedButton => 'Get Started';
+
+  @override
+  String get splashTitle => 'CHEERING';
+
+  @override
+  String get splashSubtitle => 'Order everything';
+
+  @override
+  String get onboardingTitle1 => 'Order Food & Book Rides';
+
+  @override
+  String get onboardingSubtitle1 =>
+      'Enjoy fast food delivery, instant ride booking, and trusted everyday services with just a few simple taps.';
+
+  @override
+  String get onboardingTitle2 => 'Pay & Top Up Instantly';
+
+  @override
+  String get onboardingSubtitle2 =>
+      'Add money, make secure payments, and manage your wallet anytime with a smooth and simple experience.';
+
+  @override
+  String get onboardingTitle3 => 'Shop & Save Every Day';
+
+  @override
+  String get onboardingSubtitle3 =>
+      'Buy groceries, order medicines, explore great deals, and enjoy everything you need in one convenient app.';
 }

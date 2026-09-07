@@ -9,22 +9,22 @@ class AppLocalizationsBn extends AppLocalizations {
   AppLocalizationsBn([String locale = 'bn']) : super(locale);
 
   @override
-  String get appName => 'চিয়ারিং ভেন্ডর';
+  String get appName => 'চিয়ারিং পার্টনার';
 
   @override
   String get loginTitle => 'স্বাগতম';
 
   @override
-  String get loginSubtitle => 'চালিয়ে যেতে সাইন ইন করুন';
+  String get loginSubtitle => 'এগিয়ে যেতে লগইন করুন';
 
   @override
-  String get loginButton => 'সাইন ইন';
+  String get loginButton => 'লগইন করুন';
 
   @override
   String get registerTitle => 'অ্যাকাউন্ট তৈরি করুন';
 
   @override
-  String get registerButton => 'নিবন্ধন করুন';
+  String get registerButton => 'সাইন আপ';
 
   @override
   String get logoutButton => 'লগ আউট';
@@ -34,7 +34,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String otpSubtitle(String phone) {
-    return '$phone নম্বরে পাঠানো ৬ সংখ্যার কোড দিন';
+    return '$phone নম্বরে পাঠানো ৬-ডিজিটের কোডটি লিখুন';
   }
 
   @override
@@ -47,7 +47,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get phoneLabel => 'ফোন নম্বর';
 
   @override
-  String get nameLabel => 'পূর্ণ নাম';
+  String get nameLabel => 'পুরো নাম';
 
   @override
   String get homeTitle => 'হোম';
@@ -77,11 +77,41 @@ class AppLocalizationsBn extends AppLocalizations {
   String get errorNetwork => 'ইন্টারনেট সংযোগ নেই।';
 
   @override
-  String get errorUnauthorized => 'সেশন শেষ হয়ে গেছে। আবার লগ ইন করুন।';
+  String get errorUnauthorized => 'সেশন শেষ হয়ে গেছে। আবার লগইন করুন।';
 
   @override
   String get retryButton => 'আবার চেষ্টা করুন';
 
   @override
   String get loadingText => 'লোড হচ্ছে...';
+
+  @override
+  String get getStartedButton => 'শুরু করুন';
+
+  @override
+  String get splashTitle => 'চিয়ারিং';
+
+  @override
+  String get splashSubtitle => 'সবকিছু অর্ডার করুন';
+
+  @override
+  String get onboardingTitle1 => 'খাবার অর্ডার ও রাইড বুকিং';
+
+  @override
+  String get onboardingSubtitle1 =>
+      'খুব সহজেই ফাস্ট ফুড ডেলিভারি, ইনস্ট্যান্ট রাইড বুকিং এবং বিশ্বস্ত দৈনন্দিন সেবা উপভোগ করুন।';
+
+  @override
+  String get onboardingTitle2 => 'মুহূর্তেই পে ও টপ আপ করুন';
+
+  @override
+  String get onboardingSubtitle2 =>
+      'সহজে ও নিরাপদে ওয়ালেটে টাকা যোগ করুন, পেমেন্ট করুন এবং যেকোনো সময় আপনার ওয়ালেট ম্যানেজ করুন।';
+
+  @override
+  String get onboardingTitle3 => 'প্রতিদিন শপিং করুন ও সেভ করুন';
+
+  @override
+  String get onboardingSubtitle3 =>
+      'গ্রোসারি কিনুন, ওষুধ অর্ডার করুন, দারুণ সব ডিলস এক্সপ্লোর করুন এবং আপনার প্রয়োজনীয় সবকিছু এক অ্যাপেই পান।';
 }

@@ -5,6 +5,7 @@ import 'package:cheering/features/profile/presentation/screens/widgets/profile_m
 import 'package:cheering/features/profile/presentation/screens/widgets/trailing_dropdown.dart';
 import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cheering/core/l10n/locale_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -92,22 +93,26 @@ class ProfileScreen extends StatelessWidget {
               icon: Assets.icons.profileNotification.svg(),
               onTap: () {},
             ),
-            ProfileMenuTile(
-              title: 'Language',
-              icon: Assets.icons.profileLanguage.svg(),
-              onTap: () {},
-              trailingWidget: TrailingDropdown(
-                items: const ['English', 'Bangla'],
-                initialValue: 'English',
-                onChanged: (value) {},
-              ),
+            BlocBuilder<LocaleCubit, Locale>(
+              builder: (context, locale) {
+                final localeCubit = context.read<LocaleCubit>();
+                return ProfileMenuTile(
+                  title: 'Language',
+                  icon: Assets.icons.profileLanguage.svg(),
+                  onTap: () {},
+                  trailingWidget: TrailingDropdown(
+                    items: const ['English', 'Bangla'],
+                    initialValue: localeCubit.currentLanguageName,
+                    onChanged: (value) {
+                      localeCubit.updateLocaleFromName(value.toString());
+                    },
+                  ),
+                );
+              }
             ),
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, themeMode) {
-                String currentMode = 'System';
-                if (themeMode == ThemeMode.light) currentMode = 'Light';
-                if (themeMode == ThemeMode.dark) currentMode = 'Dark';
-                
+                final themeCubit = context.read<ThemeCubit>();
                 return ProfileMenuTile(
                   title: 'Appearance',
                   icon: Assets.icons.profileAppearance.svg(),
@@ -115,12 +120,9 @@ class ProfileScreen extends StatelessWidget {
                   isBorder: false,
                   trailingWidget: TrailingDropdown(
                     items: const ['System', 'Light', 'Dark'],
-                    initialValue: currentMode,
+                    initialValue: themeCubit.currentThemeName,
                     onChanged: (value) {
-                      ThemeMode newMode = ThemeMode.system;
-                      if (value == 'Light') newMode = ThemeMode.light;
-                      if (value == 'Dark') newMode = ThemeMode.dark;
-                      context.read<ThemeCubit>().updateTheme(newMode);
+                      themeCubit.updateThemeFromName(value.toString());
                     },
                   ),
                 );

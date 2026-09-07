@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             CustomText(
               top: 4.h,
-              text: 'Order everything',
+              text: context.l10n.splashSubtitle,
               fontWeight: FontWeight.w500,
               fontSize: 14.sp,
               color: context.colors.primary,

@@ -67,8 +67,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -98,7 +98,7 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
-  /// Application name
+  /// No description provided for @appName.
   ///
   /// In en, this message translates to:
   /// **'Cheering Partner'**
@@ -247,6 +247,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading...'**
   String get loadingText;
+
+  /// No description provided for @getStartedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStartedButton;
+
+  /// No description provided for @splashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'CHEERING'**
+  String get splashTitle;
+
+  /// No description provided for @splashSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order everything'**
+  String get splashSubtitle;
+
+  /// No description provided for @onboardingTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Food & Book Rides'**
+  String get onboardingTitle1;
+
+  /// No description provided for @onboardingSubtitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy fast food delivery, instant ride booking, and trusted everyday services with just a few simple taps.'**
+  String get onboardingSubtitle1;
+
+  /// No description provided for @onboardingTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay & Top Up Instantly'**
+  String get onboardingTitle2;
+
+  /// No description provided for @onboardingSubtitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Add money, make secure payments, and manage your wallet anytime with a smooth and simple experience.'**
+  String get onboardingSubtitle2;
+
+  /// No description provided for @onboardingTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop & Save Every Day'**
+  String get onboardingTitle3;
+
+  /// No description provided for @onboardingSubtitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy groceries, order medicines, explore great deals, and enjoy everything you need in one convenient app.'**
+  String get onboardingSubtitle3;
 }
 
 class _AppLocalizationsDelegate

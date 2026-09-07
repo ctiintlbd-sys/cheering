@@ -6,6 +6,7 @@ import 'core/config/app_config.dart';
 import 'core/di/service_locator.dart';
 import 'core/storage/token_storage.dart';
 import 'core/storage/theme_storage.dart';
+import 'core/storage/locale_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
   await TokenStorage.init();
   await HiveCacheService.init();
   await ThemeStorage.init();
+  await LocaleStorage.init();
   await setupServiceLocator();
 
   await SystemChrome.setPreferredOrientations([

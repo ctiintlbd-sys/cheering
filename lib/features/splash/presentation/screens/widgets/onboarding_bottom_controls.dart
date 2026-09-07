@@ -20,7 +20,7 @@ class OnboardingBottomControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isFirstPage = currentIndex == 0;
-    final isLastPage = currentIndex == onboardingList.length - 1;
+    final isLastPage = currentIndex == getOnboardingList(context).length - 1;
     return Positioned(
       left: 16.w,
       right: 16.w,
@@ -53,7 +53,7 @@ class OnboardingBottomControls extends StatelessWidget {
 
                 // Dots
                 ...List.generate(
-                  onboardingList.length,
+                  getOnboardingList(context).length,
                   (index) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
@@ -91,7 +91,7 @@ class OnboardingBottomControls extends StatelessWidget {
             SizedBox(height: 30.h),
 
             CustomButton(
-              label: "Get Started",
+              label: context.l10n.getStartedButton,
               onPressed: () {
                 context.go(RoutePaths.foodTab);
               },

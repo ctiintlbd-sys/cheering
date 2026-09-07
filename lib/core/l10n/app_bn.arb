@@ -1,23 +1,18 @@
 {
   "@@locale": "bn",
-  "appName": "চিয়ারিং ভেন্ডর",
+  "appName": "চিয়ারিং পার্টনার",
   "loginTitle": "স্বাগতম",
-  "loginSubtitle": "চালিয়ে যেতে সাইন ইন করুন",
-  "loginButton": "সাইন ইন",
+  "loginSubtitle": "এগিয়ে যেতে লগইন করুন",
+  "loginButton": "লগইন করুন",
   "registerTitle": "অ্যাকাউন্ট তৈরি করুন",
-  "registerButton": "নিবন্ধন করুন",
+  "registerButton": "সাইন আপ",
   "logoutButton": "লগ আউট",
   "otpTitle": "নম্বর যাচাই করুন",
-  "otpSubtitle": "{phone} নম্বরে পাঠানো ৬ সংখ্যার কোড দিন",
-  "@otpSubtitle": {
-    "placeholders": {
-      "phone": { "type": "String" }
-    }
-  },
+  "otpSubtitle": "{phone} নম্বরে পাঠানো ৬-ডিজিটের কোডটি লিখুন",
   "emailLabel": "ইমেইল",
   "passwordLabel": "পাসওয়ার্ড",
   "phoneLabel": "ফোন নম্বর",
-  "nameLabel": "পূর্ণ নাম",
+  "nameLabel": "পুরো নাম",
   "homeTitle": "হোম",
   "settingsTitle": "সেটিংস",
   "languageLabel": "ভাষা",
@@ -27,7 +22,17 @@
   "themeSystem": "সিস্টেম",
   "errorGeneric": "কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।",
   "errorNetwork": "ইন্টারনেট সংযোগ নেই।",
-  "errorUnauthorized": "সেশন শেষ হয়ে গেছে। আবার লগ ইন করুন।",
+  "errorUnauthorized": "সেশন শেষ হয়ে গেছে। আবার লগইন করুন।",
   "retryButton": "আবার চেষ্টা করুন",
-  "loadingText": "লোড হচ্ছে..."
+  "loadingText": "লোড হচ্ছে...",
+  "getStartedButton": "শুরু করুন",
+  
+  "splashTitle": "চিয়ারিং",
+  "splashSubtitle": "সবকিছু অর্ডার করুন",
+  "onboardingTitle1": "খাবার অর্ডার ও রাইড বুকিং",
+  "onboardingSubtitle1": "খুব সহজেই ফাস্ট ফুড ডেলিভারি, ইনস্ট্যান্ট রাইড বুকিং এবং বিশ্বস্ত দৈনন্দিন সেবা উপভোগ করুন।",
+  "onboardingTitle2": "মুহূর্তেই পে ও টপ আপ করুন",
+  "onboardingSubtitle2": "সহজে ও নিরাপদে ওয়ালেটে টাকা যোগ করুন, পেমেন্ট করুন এবং যেকোনো সময় আপনার ওয়ালেট ম্যানেজ করুন।",
+  "onboardingTitle3": "প্রতিদিন শপিং করুন ও সেভ করুন",
+  "onboardingSubtitle3": "গ্রোসারি কিনুন, ওষুধ অর্ডার করুন, দারুণ সব ডিলস এক্সপ্লোর করুন এবং আপনার প্রয়োজনীয় সবকিছু এক অ্যাপেই পান।"
 }

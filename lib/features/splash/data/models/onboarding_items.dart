@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
+import 'package:cheering/core/l10n/l10n.dart';
 
 class OnboardingItem {
   final String image;
@@ -12,23 +14,23 @@ class OnboardingItem {
   });
 }
 
-final onboardingList = [
-  OnboardingItem(
-    image: Assets.icons.onboardingOne.path,
-    title: "Order Food & Book Rides",
-    subtitle:
-    "Enjoy fast food delivery, instant ride booking, and trusted everyday services with just a few simple taps.",
-  ),
-  OnboardingItem(
-    image: Assets.icons.onboardingSecond.path,
-    title: "Pay & Top Up Instantly",
-    subtitle:
-    "Add money, make secure payments, and manage your wallet anytime with a smooth and simple experience.",
-  ),
-  OnboardingItem(
-    image: Assets.icons.onboardingLast.path,
-    title: "Shop & Save Every Day",
-    subtitle:
-    "Buy groceries, order medicines, explore great deals, and enjoy everything you need in one convenient app.",
-  ),
-];
+List<OnboardingItem> getOnboardingList(BuildContext context) {
+  final l10n = context.l10n;
+  return [
+    OnboardingItem(
+      image: Assets.icons.onboardingOne.path,
+      title: l10n.onboardingTitle1,
+      subtitle: l10n.onboardingSubtitle1,
+    ),
+    OnboardingItem(
+      image: Assets.icons.onboardingSecond.path,
+      title: l10n.onboardingTitle2,
+      subtitle: l10n.onboardingSubtitle2,
+    ),
+    OnboardingItem(
+      image: Assets.icons.onboardingLast.path,
+      title: l10n.onboardingTitle3,
+      subtitle: l10n.onboardingSubtitle3,
+    ),
+  ];
+}
