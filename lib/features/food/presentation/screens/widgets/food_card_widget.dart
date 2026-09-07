@@ -14,8 +14,8 @@ class FoodCardWidget extends StatelessWidget {
         children: [
           // Image
           CustomNetworkImage(
-            width: 100.w,
-            height: 100.w, // square image
+            width: 102.w,
+            height: 84.w,
             borderRadius: 12.r,
             imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Dummy pizza image
           ),
@@ -26,7 +26,6 @@ class FoodCardWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title & Heart
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -34,15 +33,18 @@ class FoodCardWidget extends StatelessWidget {
                       child: CustomText(
                         text: 'Pizza House',
                         fontWeight: FontWeight.w600,
-                        fontSize: 16.sp,
                         maxLines: 1,
-                        textOverflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Icon(
-                      Icons.favorite_border,
-                      color: context.colors.primary,
-                      size: 22.r,
+                    CustomContainer(
+                      paddingAll: 6.r,
+                      shape: BoxShape.circle,
+                      color: context.colors.bgSecondary,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: context.colors.primary,
+                        size: 16.r,
+                      ),
                     ),
                   ],
                 ),
