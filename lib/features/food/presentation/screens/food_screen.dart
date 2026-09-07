@@ -48,7 +48,7 @@ class FoodScreen extends StatelessWidget {
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
-            itemCount: 15 > 10 ? 11 : 15, // Assuming 15 is your total item count from API/State
+            itemCount: 15 > 10 ? 11 : 15,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
               if (15 > 10 && index == 10) {
