@@ -8,53 +8,44 @@ class AllCategoriesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return CustomContainer(
       height: MediaQuery.of(context).size.height * 0.64,
-      decoration: BoxDecoration(
         color: context.colors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
+      topLeftRadius: 24.r,
+      topRightRadius: 24.r,
       child: Column(
         children: [
-          // Drag handle
-          SizedBox(height: 12.h),
-          Container(
-            width: 48.w,
+          SizedBox(height: 14.h),
+          CustomContainer(
+            width: 54.w,
             height: 4.h,
-            decoration: BoxDecoration(
               color: context.colors.textSecondary.withValues(alpha: 0.2), // using textSecondary for the gray drag handle
-              borderRadius: BorderRadius.circular(4.r),
-            ),
+              radiusAll: 4.r,
+
           ),
-          
-          SizedBox(height: 20.h),
-          
-          // Header: "Category" and "Close"
+
+          SizedBox(height: 12.h),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
                   text: 'Category',
-                  fontSize: 18.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: context.colors.textPrimary,
                 ),
-                GestureDetector(
+                CustomText(
                   onTap: () => Navigator.pop(context),
-                  child: CustomText(
-                    text: 'Close',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: context.colors.primary,
-                  ),
+                  text: 'Close',
+                  fontWeight: FontWeight.w500,
+                  color: context.colors.primary,
                 ),
               ],
             ),
           ),
-          SizedBox(height: 24.h),
-          
+          SizedBox(height: 14.h),
+
           // Grid
           Expanded(
             child: GridView.builder(
@@ -63,11 +54,15 @@ class AllCategoriesBottomSheet extends StatelessWidget {
                 crossAxisCount: 4,
                 mainAxisSpacing: 24.h,
                 crossAxisSpacing: 12.w,
-                childAspectRatio: 74 / 90, // using ratio directly
+                childAspectRatio: 74 / 90,
               ),
-              itemCount: 20, // Dummy item count
+              itemCount: 20,
               itemBuilder: (context, index) {
-                return const FoodCategoriesWidget();
+                return CustomItemAnimator(
+                  index: index,
+                  animationType: CustomItemAnimationType.scale,
+                  child: const FoodCategoriesWidget(),
+                );
               },
             ),
           ),
