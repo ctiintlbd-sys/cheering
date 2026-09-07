@@ -53,3 +53,29 @@ class FoodCategoriesWidget extends StatelessWidget {
     );
   }
 }
+
+class SeeAllCategoriesWidget extends StatelessWidget {
+  final VoidCallback? onTap;
+
+  const SeeAllCategoriesWidget({super.key, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CustomContainer(
+        verticalMargin: 4.h,
+        width: 32.r,
+        height: 32.r,
+        shape: BoxShape.circle,
+        alignment: Alignment.center,
+        color: context.colors.primary.withValues(alpha: 0.08),
+        child: Icon(
+          Icons.arrow_forward_rounded,
+          size: 18.r,
+          color: context.colors.primary,
+        ),
+      ),
+    );
+  }
+}
