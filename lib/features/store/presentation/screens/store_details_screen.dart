@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class StoreDetailsScreen extends StatelessWidget {
   const StoreDetailsScreen({super.key});
@@ -22,12 +23,11 @@ class StoreDetailsScreen extends StatelessWidget {
         onTap: () {},
       ),
       appBar: CustomSliverAppBar(
-        toolbarHeight: kToolbarHeight + 6.h,
-        leading: IconButton(
-          onPressed: () {},
-          icon: _buildActionIcon(context, Assets.icons.arrowBack.path, () {}),
-        ),
-        expandedHeight: 394.h,
+        toolbarHeight: kToolbarHeight - 6.h,
+        leading: _buildActionIcon(context, Assets.icons.arrowBack.path, () {
+          context.pop();
+        }),
+        expandedHeight: 400.h,
         flexibleBackground: Stack(
           children: [
             CustomNetworkImage(
@@ -51,38 +51,42 @@ class StoreDetailsScreen extends StatelessWidget {
           SizedBox(width: 16.w),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(52.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: CustomTextField(
-                  hintText: 'Search Menu',
-                  prefixIcon: Assets.icons.search.svg(),
-                  fillColor: context.colors.background,
-                  borderColor: context.colors.borderSecondary,
-                  borderRadius: 99.r,
+          preferredSize: Size.fromHeight(74.h),
+          child: CustomContainer(
+            topLeftRadius: 32.r,
+            topRightRadius: 32.r,
+            color: context.colors.background,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: CustomTextField(
+                    contentPaddingVertical: 10.h,
+                    hintText: 'Search Menu',
+                    prefixIcon: Assets.icons.search.svg(),
+                    fillColor: context.colors.background,
+                    borderColor: context.colors.borderSecondary,
+                    borderRadius: 99.r,
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 12.h),
-              const MenuCategoryTabs(),
-            ],
+                SizedBox(height: 20.h),
+                const MenuCategoryTabs(),
+              ],
+            ),
           ),
         ),
       ),
       bodyList: [
-        // Section Title
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: CustomText(
-            text: 'Pizza',
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        SizedBox(height: 20.h),
+        CustomText(
+          text: 'Pizza',
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w700,
+        ).horizontal(16.w),
         SizedBox(height: 12.h),
 
         // Menu Items
@@ -98,7 +102,7 @@ class StoreDetailsScreen extends StatelessWidget {
           },
         ),
 
-        SizedBox(height: 100.h), // Padding for Floating button
+        SizedBox(height: 140.h),
       ],
     );
   }

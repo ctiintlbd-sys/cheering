@@ -19,6 +19,7 @@ class CustomSliverAppBar extends StatelessWidget {
     this.actions,
     this.backAction,
     this.leading,
+    this.leadingWidth,
     this.backgroundColor,
     this.foregroundColor,
     this.borderColor,
@@ -69,6 +70,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final bool snap;
 
   final PreferredSizeWidget? bottom;
+  final double? leadingWidth;
 
   double get _toolbarH => toolbarHeight ?? kToolbarHeight;
 
@@ -78,9 +80,9 @@ class CustomSliverAppBar extends StatelessWidget {
       : null;
 
   Widget? _buildLeading(BuildContext context) {
-    if (leading != null) return leading;
-
-    // go_router এর context.canPop() অথবা ফ্ল্যাটারের ডিফল্ট Navigator check
+    if (leading != null) {
+      return leading;
+    }
     final canPop = context.canPop() || (ModalRoute.of(context)?.canPop ?? false);
 
     if (!showLeading || !canPop) return null;
@@ -236,6 +238,7 @@ class CustomSliverAppBar extends StatelessWidget {
 
           centerTitle: centerTitle,
           leading: resolvedLeading,
+          leadingWidth: leadingWidth ?? (resolvedLeading != null ? 72.w : null),
           title: resolvedTitle,
           actions: isCollapsed ? null : actions,
           bottom: bottom,
