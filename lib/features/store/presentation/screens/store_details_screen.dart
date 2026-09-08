@@ -5,7 +5,6 @@ import 'package:cheering/features/store/presentation/screens/widgets/menu_item_w
 import 'package:cheering/features/store/presentation/screens/widgets/store_details_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -51,7 +50,7 @@ class StoreDetailsScreen extends StatelessWidget {
           SizedBox(width: 16.w),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(74.h),
+          preferredSize: Size.fromHeight(78.h),
           child: CustomContainer(
             topLeftRadius: 32.r,
             topRightRadius: 32.r,
@@ -64,11 +63,11 @@ class StoreDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: CustomTextField(
-                    contentPaddingVertical: 10.h,
+                    contentPaddingVertical: 12.h,
                     hintText: 'Search Menu',
                     prefixIcon: Assets.icons.search.svg(),
-                    fillColor: context.colors.background,
-                    borderColor: context.colors.borderSecondary,
+                    fillColor: context.colors.bgSecondary,
+                    borderColor: context.colors.background,
                     borderRadius: 99.r,
                   ),
                 ),
