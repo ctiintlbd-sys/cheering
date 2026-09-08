@@ -19,7 +19,7 @@ class FoodCardWidget extends StatelessWidget {
             borderRadius: 12.r,
             imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Dummy pizza image
           ),
-          SizedBox(width: 14.w),
+          SizedBox(width: 16.w),
           
           // Details
           Expanded(
@@ -93,17 +93,18 @@ class FoodCardWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: context.colors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20.r),
+                    borderRadius: BorderRadius.circular(32.r),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.local_offer_outlined, color: context.colors.primary, size: 12.r),
-                      SizedBox(width: 4.w),
                       CustomText(
+                        left: 4.w,
                         text: '20% OFF',
                         color: context.colors.primary,
-                        fontSize: 11.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ],
