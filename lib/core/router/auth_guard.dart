@@ -24,6 +24,7 @@ abstract final class AppAuthGuard {
     RoutePaths.communityTab,
     RoutePaths.profileTab,
     RoutePaths.categoryDetails,
+    RoutePaths.storeDetails,
   };
 
   static bool _isPublicRoute(String location) =>

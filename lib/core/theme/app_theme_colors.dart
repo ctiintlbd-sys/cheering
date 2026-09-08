@@ -48,6 +48,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color warning;
   final Color info;
   final Color blue500;
+  final Color ratingColor;
 
   // ── Icon Colors ────────────────────────────────────
   final Color iconPrimary;
@@ -89,6 +90,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     required this.warning,
     required this.info,
     required this.blue500,
+    required this.ratingColor,
     required this.iconPrimary,
     required this.iconSecondary,
     required this.iconTertiary,

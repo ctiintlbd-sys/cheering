@@ -70,7 +70,7 @@ class FoodCardWidget extends StatelessWidget {
                     children: [
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
-                        child: Icon(Icons.star, color: const Color(0xFFFF9D00), size: 14.r),
+                        child: Icon(Icons.star, color: context.colors.ratingColor, size: 14.r),
                       ),
                       const TextSpan(text: ' 4.5  ·  '),
                       WidgetSpan(

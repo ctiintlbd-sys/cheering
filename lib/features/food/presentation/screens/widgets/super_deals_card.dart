@@ -101,7 +101,7 @@ class SuperDealsCard extends StatelessWidget {
                         alignment: PlaceholderAlignment.middle,
                         child: Icon(
                           Icons.star,
-                          color: const Color(0xFFFF9D00),
+                          color: context.colors.ratingColor,
                           size: 12.r,
                         ),
                       ),

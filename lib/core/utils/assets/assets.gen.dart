@@ -87,6 +87,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/food_love.svg
   SvgGenImage get foodLove => const SvgGenImage('assets/icons/food_love.svg');
 
+  /// File path: assets/icons/food_share.svg
+  SvgGenImage get foodShare => const SvgGenImage('assets/icons/food_share.svg');
+
   /// File path: assets/icons/google.svg
   SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
 
@@ -250,6 +253,7 @@ class $AssetsIconsGen {
     foodFil,
     foodLocation,
     foodLove,
+    foodShare,
     google,
     locationPin,
     love,
