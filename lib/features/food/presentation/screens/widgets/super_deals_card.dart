@@ -2,12 +2,18 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:go_router/go_router.dart';
+import 'package:cheering/core/router/route_paths.dart';
+
 class SuperDealsCard extends StatelessWidget {
   const SuperDealsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
+      onTap: () {
+        context.push(RoutePaths.itemDetails);
+      },
       verticalMargin: 4.h,
       width: 248.w,
       height: 220.h,

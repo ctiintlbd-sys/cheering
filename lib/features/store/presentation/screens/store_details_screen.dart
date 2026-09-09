@@ -9,7 +9,7 @@ import 'package:cheering/features/store/presentation/screens/widgets/menu_item_w
 import 'package:cheering/features/store/presentation/screens/widgets/store_details_header.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_reviews_view.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_app_bar_bottom.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/store_details_actions.dart';
+import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 
 class StoreDetailsScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
       appBar: CustomSliverAppBar(
         leading: Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: StoreActionIcon(
+          child: CommonActionIcon(
             icon: Assets.icons.arrowBack.path,
             onTap: () => context.pop(),
           ),
@@ -38,7 +38,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
         collapsedTitle: _showReviews ? 'KFC - Badda' : null,
         expandedHeight: _showReviews ? 458.h : 416.h,
         flexibleBackground: _buildFlexibleBackground(),
-        actions: [StoreDetailsActions(onShareTap: () {}, onLoveTap: () {})],
+        actions: [CommonDetailsActions(onShareTap: () {}, onLoveTap: () {})],
         bottom: StoreAppBarBottom(showReviews: _showReviews),
       ),
 

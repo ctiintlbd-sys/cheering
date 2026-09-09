@@ -4,11 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 
-class StoreDetailsActions extends StatelessWidget {
+class CommonDetailsActions extends StatelessWidget {
   final VoidCallback onShareTap;
   final VoidCallback onLoveTap;
 
-  const StoreDetailsActions({
+  const CommonDetailsActions({
     super.key,
     required this.onShareTap,
     required this.onLoveTap,
@@ -19,20 +19,24 @@ class StoreDetailsActions extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        StoreActionIcon(icon: Assets.icons.foodShare.path, onTap: onShareTap),
+        CommonActionIcon(icon: Assets.icons.foodShare.path, onTap: onShareTap),
         SizedBox(width: 8.w),
-        StoreActionIcon(icon: Assets.icons.foodLove.path, onTap: onLoveTap),
+        CommonActionIcon(icon: Assets.icons.foodLove.path, onTap: onLoveTap),
         SizedBox(width: 16.w),
       ],
     );
   }
 }
 
-class StoreActionIcon extends StatelessWidget {
+class CommonActionIcon extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
 
-  const StoreActionIcon({super.key, required this.icon, required this.onTap});
+  const CommonActionIcon({
+    super.key,
+    required this.icon,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
