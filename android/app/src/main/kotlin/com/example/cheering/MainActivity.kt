@@ -1,4 +1,4 @@
-package com.groupmate.groupmate
+package com.ctibd.cheering
 
 import io.flutter.embedding.android.FlutterActivity
 
