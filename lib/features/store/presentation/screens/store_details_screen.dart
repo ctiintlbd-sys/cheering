@@ -1,32 +1,43 @@
+import 'package:cheering/core/common_widgets/custom_filter_chip.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_category_tabs.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_item_widget.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_details_header.dart';
+import 'package:cheering/features/store/presentation/screens/widgets/store_reviews_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class StoreDetailsScreen extends StatelessWidget {
+class StoreDetailsScreen extends StatefulWidget {
   const StoreDetailsScreen({super.key});
+
+  @override
+  State<StoreDetailsScreen> createState() => _StoreDetailsScreenState();
+}
+
+class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
+  bool _showReviews = false;
+
+  void _toggleReviews() => setState(() => _showReviews = !_showReviews);
 
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ViewCartButton(
-        itemCount: 1,
-        totalPrice: 650,
-        onTap: () {},
-      ),
+      floatingActionButton: _showReviews
+          ? null
+          : ViewCartButton(itemCount: 1, totalPrice: 650, onTap: () {}),
       appBar: CustomSliverAppBar(
-        toolbarHeight: kToolbarHeight - 6.h,
-        leading: _buildActionIcon(context, Assets.icons.arrowBack.path, () {
-          context.pop();
-        }),
-        expandedHeight: 400.h,
+        leading: Padding(
+          padding:  EdgeInsets.symmetric(vertical: 6.h),
+          child: _buildActionIcon(context, Assets.icons.arrowBack.path, () {
+            context.pop();
+          }),
+        ),
+        expandedHeight:  416.h,
         flexibleBackground: Stack(
           children: [
             CustomNetworkImage(
@@ -39,7 +50,10 @@ class StoreDetailsScreen extends StatelessWidget {
               top: 190.h,
               right: 0,
               left: 0,
-              child: const StoreDetailsHeader(),
+              child: StoreDetailsHeader(
+                isExpanded: _showReviews,
+                onTap: _toggleReviews,
+              ),
             ),
           ],
         ),
@@ -49,61 +63,102 @@ class StoreDetailsScreen extends StatelessWidget {
           _buildActionIcon(context, Assets.icons.foodLove.path, () {}),
           SizedBox(width: 16.w),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(78.h),
-          child: CustomContainer(
-            topLeftRadius: 32.r,
-            topRightRadius: 32.r,
-            color: context.colors.background,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 16.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: CustomTextField(
-                    contentPaddingVertical: 12.h,
-                    hintText: 'Search Menu',
-                    prefixIcon: Assets.icons.search.svg(),
-                    fillColor: context.colors.bgSecondary,
-                    borderColor: context.colors.background,
-                    borderRadius: 99.r,
-                  ),
-                ),
+        bottom: _showReviews ? null : _buildMenuSearchBar(context),
+      ),
+      bodyList: _showReviews ? _buildReviewsBody() : _buildMenuBody(),
+    );
+  }
 
-                SizedBox(height: 20.h),
-                const MenuCategoryTabs(),
-              ],
+  PreferredSize _buildMenuSearchBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(78.h),
+      child: _showReviews ? SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Row(
+          children: [
+              CustomFilterChip(
+                label: 'All',
+                isSelected: true,
+                onTap: () {},
+              ),
+
+          ],
+        ),
+      ) : CustomContainer(
+        topLeftRadius: 32.r,
+        topRightRadius: 32.r,
+        color: context.colors.background,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 16.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: CustomTextField(
+                validator: (_) => null,
+                contentPaddingVertical: 12.h,
+                hintText: 'Search Menu',
+                prefixIcon: Assets.icons.search.svg(),
+                fillColor: context.colors.bgSecondary,
+                borderColor: context.colors.background,
+                borderRadius: 99.r,
+              ),
             ),
-          ),
+
+            SizedBox(height: 20.h),
+            const MenuCategoryTabs(),
+          ],
         ),
       ),
-      bodyList: [
-        SizedBox(height: 20.h),
-        CustomText(
-          text: 'Pizza',
-          fontSize: 20.sp,
-          fontWeight: FontWeight.w700,
-        ).horizontal(16.w),
-        SizedBox(height: 12.h),
-
-        // Menu Items
-        SliverList.separated(
-          itemCount: 10,
-          separatorBuilder: (context, index) => SizedBox(height: 16.h),
-          itemBuilder: (context, index) {
-            return CustomItemAnimator(
-              index: index,
-              animationType: CustomItemAnimationType.slide,
-              child: MenuItemWidget(index: index),
-            );
-          },
-        ),
-
-        SizedBox(height: 140.h),
-      ],
     );
+  }
+
+  List<Widget> _buildMenuBody() {
+    return [
+      SizedBox(height: 20.h),
+      CustomText(
+        text: 'Pizza',
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w700,
+      ).horizontal(16.w),
+      SizedBox(height: 12.h),
+
+      // Menu Items
+      SliverList.separated(
+        itemCount: 10,
+        separatorBuilder: (context, index) => SizedBox(height: 16.h),
+        itemBuilder: (context, index) {
+          return CustomItemAnimator(
+            index: index,
+            animationType: CustomItemAnimationType.slide,
+            child: MenuItemWidget(index: index),
+          );
+        },
+      ),
+
+      SizedBox(height: 140.h),
+    ];
+  }
+
+  List<Widget> _buildReviewsBody() {
+    return [
+      SizedBox(height: 20.h),
+      SliverList.separated(
+        itemCount: 10,
+        separatorBuilder: (context, index) => SizedBox(height: 16.h),
+        itemBuilder: (context, index) {
+          return CustomItemAnimator(
+            index: index,
+            animationType: CustomItemAnimationType.slide,
+            child: ReviewCardWidget(),
+          );
+        },
+      ),
+
+      SizedBox(height: 140.h),
+    ];
   }
 
   Widget _buildActionIcon(

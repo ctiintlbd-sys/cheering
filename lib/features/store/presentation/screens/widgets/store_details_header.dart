@@ -1,9 +1,14 @@
+import 'package:cheering/core/utils/assets/fonts.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StoreDetailsHeader extends StatelessWidget {
-  const StoreDetailsHeader({super.key});
+  const StoreDetailsHeader({super.key, this.onTap, this.isExpanded = false});
+
+  /// Toggles between the menu view and the reviews view.
+  final VoidCallback? onTap;
+  final bool isExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -15,20 +20,28 @@ class StoreDetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomText(
-                text: 'KFC - Badda',
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: context.colors.iconSecondary,
-                size: 24.r,
-              ),
-            ],
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomText(
+                  text: 'KFC - Badda',
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+                AnimatedRotation(
+                  turns: isExpanded ? 0.25 : 0,
+                  duration: const Duration(milliseconds: 250),
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: context.colors.iconSecondary,
+                    size: 24.r,
+                  ),
+                ),
+              ],
+            ),
           ).horizontal(16.w),
           SizedBox(height: 4.h),
 
@@ -107,8 +120,97 @@ class StoreDetailsHeader extends StatelessWidget {
               ],
             ).horizontal(16.w),
           ),
+          SizedBox(height: 24.h),
+
+          _buildRatingSummary(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildRatingSummary(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontFamily: FontFamily.sFPro,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: context.colors.textPrimary,
+                    height: 1.7,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '4.3\n',
+                      style: TextStyle(
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const TextSpan(text: '4.3 '),
+                    TextSpan(
+                      text: '(27)\n27 ratings',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: context.colors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: Column(
+              children: [
+                _buildRatingBar(context, star: '5', ratio: 1),
+                _buildRatingBar(context, star: '4', ratio: 0.8),
+                _buildRatingBar(context, star: '3', ratio: 0.6),
+                _buildRatingBar(context, star: '2', ratio: 0.4),
+                _buildRatingBar(context, star: '1', ratio: 0.2),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRatingBar(
+    BuildContext context, {
+    required String star,
+    required double ratio,
+  }) {
+    return Row(
+      children: [
+        CustomText(
+          text: star,
+          fontSize: 12.sp,
+          color: context.colors.textTertiary,
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(99.r),
+            child: LinearProgressIndicator(
+              value: ratio,
+              minHeight: 6.h,
+              backgroundColor: context.colors.borderTertiary,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                context.colors.ratingColor,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
