@@ -39,6 +39,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
             },
           ),
         ),
+        collapsedTitle: _showReviews ? 'KFC - Badda' : null,
         expandedHeight: _showReviews ? 458.h : 416.h,
         flexibleBackground: Stack(
           children: [
@@ -47,7 +48,6 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
               imageUrl:
                   'https://images.unsplash.com/photo-1513104890138-7c749659a591',
             ),
-
             Positioned(
               top: 190.h,
               right: 0,
