@@ -1,14 +1,13 @@
-import 'package:cheering/core/common_widgets/custom_filter_chip.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/menu_category_tabs.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_item_widget.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_details_header.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_reviews_view.dart';
+import 'package:cheering/features/store/presentation/screens/widgets/store_app_bar_bottom.dart';
+import 'package:cheering/features/store/presentation/screens/widgets/store_details_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class StoreDetailsScreen extends StatefulWidget {
@@ -32,12 +31,15 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
           : ViewCartButton(itemCount: 1, totalPrice: 650, onTap: () {}),
       appBar: CustomSliverAppBar(
         leading: Padding(
-          padding:  EdgeInsets.symmetric(vertical: 6.h),
-          child: _buildActionIcon(context, Assets.icons.arrowBack.path, () {
-            context.pop();
-          }),
+          padding: EdgeInsets.symmetric(vertical: 6.h),
+          child: StoreActionIcon(
+            icon: Assets.icons.arrowBack.path,
+            onTap: () {
+              context.pop();
+            },
+          ),
         ),
-        expandedHeight:  416.h,
+        expandedHeight: _showReviews ? 458.h : 416.h,
         flexibleBackground: Stack(
           children: [
             CustomNetworkImage(
@@ -57,61 +59,10 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
             ),
           ],
         ),
-        actions: [
-          _buildActionIcon(context, Assets.icons.foodShare.path, () {}),
-          SizedBox(width: 8.w),
-          _buildActionIcon(context, Assets.icons.foodLove.path, () {}),
-          SizedBox(width: 16.w),
-        ],
-        bottom: _showReviews ? null : _buildMenuSearchBar(context),
+        actions: [StoreDetailsActions(onShareTap: () {}, onLoveTap: () {})],
+        bottom: StoreAppBarBottom(showReviews: _showReviews),
       ),
       bodyList: _showReviews ? _buildReviewsBody() : _buildMenuBody(),
-    );
-  }
-
-  PreferredSize _buildMenuSearchBar(BuildContext context) {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(78.h),
-      child: _showReviews ? SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Row(
-          children: [
-              CustomFilterChip(
-                label: 'All',
-                isSelected: true,
-                onTap: () {},
-              ),
-
-          ],
-        ),
-      ) : CustomContainer(
-        topLeftRadius: 32.r,
-        topRightRadius: 32.r,
-        color: context.colors.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: 16.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: CustomTextField(
-                validator: (_) => null,
-                contentPaddingVertical: 12.h,
-                hintText: 'Search Menu',
-                prefixIcon: Assets.icons.search.svg(),
-                fillColor: context.colors.bgSecondary,
-                borderColor: context.colors.background,
-                borderRadius: 99.r,
-              ),
-            ),
-
-            SizedBox(height: 20.h),
-            const MenuCategoryTabs(),
-          ],
-        ),
-      ),
     );
   }
 
@@ -159,28 +110,5 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
       SizedBox(height: 140.h),
     ];
-  }
-
-  Widget _buildActionIcon(
-    BuildContext context,
-    String icon,
-    VoidCallback onTap,
-  ) {
-    return CustomContainer(
-      onTap: onTap,
-      paddingAll: 10.r,
-      shape: BoxShape.circle,
-      color: context.colors.white,
-      alignment: Alignment.center,
-      child: SvgPicture.asset(
-        icon,
-        height: 24.r,
-        width: 24.r,
-        colorFilter: ColorFilter.mode(
-          context.colors.textPrimary,
-          BlendMode.srcIn,
-        ),
-      ),
-    );
   }
 }
