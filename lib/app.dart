@@ -39,11 +39,11 @@ class App extends StatelessWidget {
               return MaterialApp.router(
                 scaffoldMessengerKey: ToastMessageHelper.messengerKey,
                 debugShowCheckedModeBanner: false,
-                title: 'Cheering Partner',
+                title: 'Cheering',
                 locale: locale,
-                themeMode: themeMode,
+                themeMode: ThemeMode.light,
                 theme: AppTheme.light(),
-                darkTheme: AppTheme.dark(),
+                //darkTheme: AppTheme.dark(),
                 routerConfig: AppRouter.router,
                 supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: const [

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/item_size_options_widget.dart';
@@ -40,13 +38,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           ),
         ),
         expandedHeight: 210.h,
+        collapsedTitle: 'Fried Chicken Bucket',
         flexibleBackground: CustomNetworkImage(
           height: 280.h,
           imageUrl:
               'https://images.unsplash.com/photo-1513104890138-7c749659a591',
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(24),
+          preferredSize: Size.fromHeight(0),
           child: Container(
             height: 32.h,
             decoration: BoxDecoration(
@@ -93,8 +92,4 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ],
     );
   }
-
-
-
-
 }

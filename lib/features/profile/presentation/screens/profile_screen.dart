@@ -3,7 +3,6 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/feedback/presentation/screens/widgets/profile_menu_tile.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/profile_menu_content.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/trailing_dropdown.dart';
-import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cheering/core/l10n/locale_cubit.dart';
 import 'package:flutter/material.dart';
@@ -70,11 +69,11 @@ class ProfileScreen extends StatelessWidget {
               icon: Assets.icons.profileAddress.svg(),
               onTap: () {},
             ),
-            ProfileMenuTile(
+            /*ProfileMenuTile(
               title: 'Coupons and Offer',
               icon: Assets.icons.profileOffer.svg(),
               onTap: () {},
-            ),
+            ),*/
             ProfileMenuTile(
               title: 'Payment Method',
               icon: Assets.icons.profilePayment.svg(),
@@ -110,6 +109,7 @@ class ProfileScreen extends StatelessWidget {
                 );
               }
             ),
+/*
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, themeMode) {
                 final themeCubit = context.read<ThemeCubit>();
@@ -128,6 +128,7 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
+*/
           ],
         ),
 
