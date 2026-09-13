@@ -1,6 +1,7 @@
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/feedback/presentation/screens/widgets/profile_menu_tile.dart';
+import 'package:cheering/features/profile/presentation/screens/widgets/profile_header_card.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/profile_menu_content.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/trailing_dropdown.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,44 +20,11 @@ class ProfileScreen extends StatelessWidget {
       bodyList: [
         SizedBox(height: 16.h),
 
-        CustomContainer(
-          paddingVertical: 8.h,
-          paddingHorizontal: 12.w,
-          radiusAll: 8.r,
-          color: context.colors.bgSecondary,
-          child: Row(
-            children: [
-              CustomNetworkImage(
-                boxShape: BoxShape.circle,
-                height: 64.r,
-                width: 64.r,
-                imageUrl: '',
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      text: 'Jenia Rahman',
-                    ),
-                    CustomText(
-                      top: 4.h,
-                      color: context.colors.textTertiary,
-                      text: 'Jenia Rahman',
-                    ),
-                  ],
-                ),
-              ),
-
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: context.colors.iconTertiary,
-              ),
-            ],
-          ),
+        ProfileHeaderCard(
+          name: 'Jenia Rahman',
+          subtitle: 'Jenia Rahman',
+          imageUrl: '',
+          onTap: () {},
         ),
 
         SizedBox(height: 20.h),
@@ -69,11 +37,6 @@ class ProfileScreen extends StatelessWidget {
               icon: Assets.icons.profileAddress.svg(),
               onTap: () {},
             ),
-            /*ProfileMenuTile(
-              title: 'Coupons and Offer',
-              icon: Assets.icons.profileOffer.svg(),
-              onTap: () {},
-            ),*/
             ProfileMenuTile(
               title: 'Payment Method',
               icon: Assets.icons.profilePayment.svg(),
@@ -109,26 +72,6 @@ class ProfileScreen extends StatelessWidget {
                 );
               }
             ),
-/*
-            BlocBuilder<ThemeCubit, ThemeMode>(
-              builder: (context, themeMode) {
-                final themeCubit = context.read<ThemeCubit>();
-                return ProfileMenuTile(
-                  title: 'Appearance',
-                  icon: Assets.icons.profileAppearance.svg(),
-                  onTap: () {},
-                  isBorder: false,
-                  trailingWidget: TrailingDropdown(
-                    items: const ['System', 'Light', 'Dark'],
-                    initialValue: themeCubit.currentThemeName,
-                    onChanged: (value) {
-                      themeCubit.updateThemeFromName(value.toString());
-                    },
-                  ),
-                );
-              },
-            ),
-*/
           ],
         ),
 

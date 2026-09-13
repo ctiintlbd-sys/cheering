@@ -17,8 +17,7 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.login,
       body: {'email': email, 'password': password},
-      fromJson: (json) =>
-          LoginResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
@@ -29,8 +28,7 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.forgotPassword,
       body: {'email': email},
-      fromJson: (json) =>
-          ForgotPasswordResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) => ForgotPasswordResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
