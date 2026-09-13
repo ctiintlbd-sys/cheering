@@ -47,18 +47,15 @@ class _EmailScreenState extends State<EmailScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.failure &&
-            (state.action == AuthAction.sendOtp ||
-                state.action == AuthAction.googleLogin)) {
-          ToastMessageHelper.show(
-            state.errorMessage ?? 'An unexpected error occurred.',
-          );
-        } else if (state.status == AuthStatus.success &&
-            state.action == AuthAction.sendOtp) {
-          ToastMessageHelper.show(
-            state.successMessage ?? 'Verification code sent to your email.',
-          );
-          context.push(RoutePaths.otp, extra: _emailController.text.trim());
+        switch ((state.status, state.action)) {
+          case (AuthStatus.failure, AuthAction.sendOtp || AuthAction.googleLogin):
+            ToastMessageHelper.show(
+              state.errorMessage ?? 'An unexpected error occurred.',
+            );
+          case (AuthStatus.success, AuthAction.sendOtp):
+            context.push(RoutePaths.otp, extra: _emailController.text.trim());
+          default:
+            break;
         }
       },
       child: SliverScaffold(
@@ -145,10 +142,7 @@ class _EmailScreenState extends State<EmailScreen> {
                   thickness: 1.0,
                 ),
               ),
-              CustomText(
-                text: '   Or   ',
-                color: context.colors.textTertiary,
-              ),
+              CustomText(text: '   Or   ', color: context.colors.textTertiary),
               Expanded(
                 child: Divider(
                   color: context.colors.borderSecondary,

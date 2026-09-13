@@ -86,11 +86,11 @@ class ResetPasswordRequested extends AuthEvent {
 
 /// Triggered when user logs out of their account
 class LogoutRequested extends AuthEvent {
-  final String refreshToken;
+  final String? refreshToken;
   final bool allDevices;
 
   const LogoutRequested({
-    required this.refreshToken,
+    this.refreshToken,
     this.allDevices = false,
   });
 

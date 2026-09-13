@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/storage/token_storage.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/login_with_google_usecase.dart';
@@ -230,11 +231,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       clearError: true,
     ));
 
+    final token = event.refreshToken ?? TokenStorage.refreshToken ?? '';
+
     try {
-      await logoutUseCase(
-        refreshToken: event.refreshToken,
-        allDevices: event.allDevices,
-      );
+      if (token.isNotEmpty) {
+        await logoutUseCase(
+          refreshToken: token,
+          allDevices: event.allDevices,
+        );
+      } else {
+        await TokenStorage.clearTokens();
+      }
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(const AuthState(
         status: AuthStatus.success,
@@ -242,6 +249,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         successMessage: 'Logged out successfully',
       ));
     } catch (e) {
+      await TokenStorage.clearTokens();
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(state.copyWith(
         status: AuthStatus.failure,

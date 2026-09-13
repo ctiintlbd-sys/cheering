@@ -53,6 +53,16 @@ abstract final class AppAuthGuard {
 
     // ── 3. Unauthenticated user trying to access a protected route ─────────
     if (!isAuth && !_isAuthRoute(location)) {
+      final isTabRoute = location == RoutePaths.foodTab ||
+          location == RoutePaths.storeTab ||
+          location == RoutePaths.ordersTab ||
+          location == RoutePaths.communityTab ||
+          location == RoutePaths.profileTab;
+
+      if (isTabRoute) {
+        return RoutePaths.login;
+      }
+
       final targetUri = Uri.encodeComponent(state.uri.toString());
       return '${RoutePaths.login}?redirect=$targetUri';
     }
