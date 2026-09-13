@@ -1,9 +1,4 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-
 import '../../../../core/config/api_endpoints.dart';
-import '../../../../core/config/app_config.dart';
-import '../../../../core/errors/app_exception.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/i_api_client.dart';
 import '../models/forgot_password_response_model.dart';
@@ -57,45 +52,6 @@ class AuthRemoteSource {
       fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
-  }
-
-  Future<AuthTokensModel> loginWithGoogle() async {
-    try {
-      final baseUrl = AppConfig.instance.baseUrl;
-      final redirectUri = Uri.encodeComponent(ApiEndpoints.googleRedirectUri);
-      final authorizeUrl = '$baseUrl${ApiEndpoints.googleAuthorize}?redirect=$redirectUri';
-
-      final result = await FlutterWebAuth2.authenticate(
-        url: authorizeUrl,
-        callbackUrlScheme: ApiEndpoints.googleCallbackScheme,
-      );
-
-      final uri = Uri.parse(result.replaceFirst('#', '?'));
-      final accessToken = uri.queryParameters['access_token'] ?? '';
-      final refreshToken = uri.queryParameters['refresh_token'] ?? '';
-
-      if (accessToken.isEmpty || refreshToken.isEmpty) {
-        final error = uri.queryParameters['error'];
-        throw BadRequestException(
-          error ?? 'Failed to retrieve authentication tokens from Google login.',
-        );
-      }
-
-      return AuthTokensModel(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        tokenType: uri.queryParameters['token_type'] ?? 'Bearer',
-        expiresIn: int.tryParse(uri.queryParameters['expires_in'] ?? '') ?? 1800,
-      );
-    } on PlatformException catch (e) {
-      if (e.code == 'CANCELED') {
-        throw const CancelledException('Google sign-in was cancelled.');
-      }
-      throw BadRequestException(e.message ?? 'Google sign-in failed.');
-    } catch (e) {
-      if (e is AppException) rethrow;
-      throw UnknownException(e.toString());
-    }
   }
 
   Future<ApiResult<ForgotPasswordResponseModel>> forgotPassword({

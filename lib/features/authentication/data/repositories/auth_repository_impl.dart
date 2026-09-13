@@ -5,11 +5,13 @@ import '../../domain/entities/login_result_entity.dart';
 import '../../domain/entities/reset_password_result_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../datasources/auth_remote_source.dart';
+import '../services/google_auth_service.dart';
 
 class AuthRepositoryImpl implements IAuthRepository {
   final AuthRemoteSource _source;
+  final GoogleAuthService _googleAuthService;
 
-  AuthRepositoryImpl(this._source);
+  AuthRepositoryImpl(this._source, this._googleAuthService);
 
   @override
   Future<String> sendOtp({
@@ -68,7 +70,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
   @override
   Future<AuthTokensEntity> loginWithGoogle() async {
-    final tokens = await _source.loginWithGoogle();
+    final tokens = await _googleAuthService.signIn();
     await TokenStorage.saveTokens(
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,

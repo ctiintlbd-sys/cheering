@@ -1,10 +1,18 @@
-import 'package:cheering/core/utils/assets/assets.gen.dart';
-import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/core/utils/validators.dart';
-import 'package:cheering/core/widgets/app_auth_title.dart';
-import 'package:cheering/features/authentication/presentation/screen/widgets/touch_face_id_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/di/service_locator.dart';
+import '../../../../core/helpers/toast_message_helper.dart';
+import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/router/route_paths.dart';
+import '../../../../core/utils/assets/assets.gen.dart';
+import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/app_auth_title.dart';
+import '../../../../core/widgets/widgets.dart';
+import '../../domain/usecases/login_with_google_usecase.dart';
+import '../../domain/usecases/send_otp_usecase.dart';
+import 'widgets/touch_face_id_sheet.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({super.key});
@@ -16,6 +24,8 @@ class EmailScreen extends StatefulWidget {
 class _EmailScreenState extends State<EmailScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+
+  bool _isSignUp = false;
 
   @override
   void dispose() {
@@ -36,7 +46,9 @@ class _EmailScreenState extends State<EmailScreen> {
         expandedHeight: 144.h,
         flexibleChild: AppAuthTitle(
           title: 'Hi, Welcome Back! 👋',
-          subtitle: 'Enter your email and password to sign in',
+          subtitle: _isSignUp
+              ? 'Enter your email to receive a verification code'
+              : 'Enter your email and password to sign in',
         ),
       ),
       bodyList: [
@@ -46,7 +58,6 @@ class _EmailScreenState extends State<EmailScreen> {
         Form(
           key: _formKey,
           child: CustomTextField(
-
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             labelText: 'Enter your email',
@@ -56,28 +67,30 @@ class _EmailScreenState extends State<EmailScreen> {
         ),
         SizedBox(height: 12.h),
 
-        /// Login Button
+        /// Primary Action Button
         CustomButton(
-          label: 'Continue with Email',
+          label: _isSignUp ? 'Send Verification Code' : 'Continue with Email',
           onPressed: _onContinueWithEmail,
         ),
 
-        SizedBox(height: 12.h),
-        CustomButton(
-          prefixIcon: Assets.icons.face.svg(),
-          backgroundColor: context.colors.background,
-          foregroundColor: context.colors.textPrimary,
-          bordersColor: context.colors.borderSecondary,
-          label: 'Continue with Touch ID',
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (context) => const TouchFaceIdSheet(),
-            );
-          },
-        ),
+        if (!_isSignUp) ...[
+          SizedBox(height: 12.h),
+          CustomButton(
+            prefixIcon: Assets.icons.face.svg(),
+            backgroundColor: context.colors.background,
+            foregroundColor: context.colors.textPrimary,
+            bordersColor: context.colors.borderSecondary,
+            label: 'Continue with Touch ID',
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const TouchFaceIdSheet(),
+              );
+            },
+          ),
+        ],
 
         SizedBox(height: 34.h),
         Row(
@@ -105,8 +118,44 @@ class _EmailScreenState extends State<EmailScreen> {
           foregroundColor: context.colors.textPrimary,
           bordersColor: context.colors.borderSecondary,
           label: 'Continue with Google',
-          onPressed: () {},
+          onPressed: (){},
         ),
+
+        SizedBox(height: 28.h),
+
+        /// Switch between Sign In and Sign Up
+        Center(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _isSignUp = !_isSignUp;
+              });
+            },
+            child: RichText(
+              text: TextSpan(
+                text: _isSignUp
+                    ? 'Already have an account? '
+                    : "Don't have an account? ",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: context.colors.textSecondary,
+                ),
+                children: [
+                  TextSpan(
+                    text: _isSignUp ? 'Sign In' : 'Sign Up',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        SizedBox(height: 24.h),
       ],
     );
   }

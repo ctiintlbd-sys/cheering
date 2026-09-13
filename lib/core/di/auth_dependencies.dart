@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../network/i_api_client.dart';
 import '../../features/authentication/data/datasources/auth_remote_source.dart';
 import '../../features/authentication/data/repositories/auth_repository_impl.dart';
+import '../../features/authentication/data/services/google_auth_service.dart';
 import '../../features/authentication/domain/repositories/i_auth_repository.dart';
 import '../../features/authentication/domain/usecases/forgot_password_usecase.dart';
 import '../../features/authentication/domain/usecases/login_usecase.dart';
@@ -17,8 +18,15 @@ void setupAuthDependencies(GetIt getIt) {
     () => AuthRemoteSource(getIt<IApiClient>()),
   );
 
+  getIt.registerLazySingleton<GoogleAuthService>(
+    () => GoogleAuthService(),
+  );
+
   getIt.registerLazySingleton<IAuthRepository>(
-    () => AuthRepositoryImpl(getIt<AuthRemoteSource>()),
+    () => AuthRepositoryImpl(
+      getIt<AuthRemoteSource>(),
+      getIt<GoogleAuthService>(),
+    ),
   );
 
   getIt.registerLazySingleton<SendOtpUseCase>(
