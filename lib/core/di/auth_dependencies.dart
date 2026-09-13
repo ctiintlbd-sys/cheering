@@ -1,8 +1,11 @@
 import 'package:get_it/get_it.dart';
 
 import '../network/i_api_client.dart';
+import '../router/app_router_notifier.dart';
 import '../../features/authentication/data/datasources/auth_remote_source.dart';
+import '../../features/authentication/presentation/bloc/auth_bloc.dart';
 import '../../features/authentication/data/repositories/auth_repository_impl.dart';
+import '../../features/authentication/data/services/biometric_service.dart';
 import '../../features/authentication/data/services/google_auth_service.dart';
 import '../../features/authentication/domain/repositories/i_auth_repository.dart';
 import '../../features/authentication/domain/usecases/forgot_password_usecase.dart';
@@ -14,6 +17,10 @@ import '../../features/authentication/domain/usecases/send_otp_usecase.dart';
 import '../../features/authentication/domain/usecases/verify_otp_usecase.dart';
 
 void setupAuthDependencies(GetIt getIt) {
+  getIt.registerLazySingleton<BiometricService>(
+    () => BiometricService(),
+  );
+
   getIt.registerLazySingleton<AuthRemoteSource>(
     () => AuthRemoteSource(getIt<IApiClient>()),
   );
@@ -55,5 +62,18 @@ void setupAuthDependencies(GetIt getIt) {
 
   getIt.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(getIt<IAuthRepository>()),
+  );
+
+  getIt.registerFactory<AuthBloc>(
+    () => AuthBloc(
+      sendOtpUseCase: getIt<SendOtpUseCase>(),
+      verifyOtpUseCase: getIt<VerifyOtpUseCase>(),
+      loginUseCase: getIt<LoginUseCase>(),
+      loginWithGoogleUseCase: getIt<LoginWithGoogleUseCase>(),
+      forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
+      resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
+      logoutUseCase: getIt<LogoutUseCase>(),
+      routerNotifier: getIt<AppRouterNotifier>(),
+    ),
   );
 }

@@ -6,15 +6,19 @@ import 'core/config/app_config.dart';
 import 'core/di/service_locator.dart';
 import 'core/storage/token_storage.dart';
 import 'core/storage/theme_storage.dart';
+import 'core/storage/biometric_storage.dart';
 import 'core/storage/locale_storage.dart';
+import 'core/storage/onboarding_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppConfig.initialize();
   await TokenStorage.init();
+  await BiometricStorage.init();
   await HiveCacheService.init();
   await ThemeStorage.init();
   await LocaleStorage.init();
+  await OnboardingStorage.init();
   await setupServiceLocator();
 
   await SystemChrome.setPreferredOrientations([

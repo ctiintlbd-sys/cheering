@@ -1,9 +1,12 @@
+import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/core/router/app_router_notifier.dart';
+import 'package:cheering/core/router/route_paths.dart';
+import 'package:cheering/core/storage/onboarding_storage.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/splash/data/models/onboarding_items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cheering/core/router/route_paths.dart';
 
 class OnboardingBottomControls extends StatelessWidget {
   final int currentIndex;
@@ -92,8 +95,12 @@ class OnboardingBottomControls extends StatelessWidget {
 
             CustomButton(
               label: context.l10n.getStartedButton,
-              onPressed: () {
-                context.go(RoutePaths.login);
+              onPressed: () async {
+                await OnboardingStorage.setOnboardingCompleted(true);
+                getIt<AppRouterNotifier>().completeOnboarding();
+                if (context.mounted) {
+                  context.go(RoutePaths.login);
+                }
               },
             ),
           ],

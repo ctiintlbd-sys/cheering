@@ -10,7 +10,8 @@ abstract class RoutePaths {
   static const String resetPassword = '/reset-password';
   static const String otp = '/otp/:phone';
   static const String setPassword = '/set-password';
-  static const String businessInformation = '/business-information';
+  static const String about = '/about';
+  static const String enableBiometrics = '/enable-biometrics';
   static const String location = '/location';
   static const String ownerInformation = '/owner-information';
   static const String document = '/document';

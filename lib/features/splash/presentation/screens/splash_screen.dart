@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/storage/biometric_storage.dart';
+import '../../../../core/storage/onboarding_storage.dart';
 import '../../../../core/storage/token_storage.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -25,10 +27,16 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
+    final isOnboardingSeen = OnboardingStorage.isOnboardingCompleted;
+    if (!isOnboardingSeen) {
+      await TokenStorage.clearTokens();
+      await BiometricStorage.clear();
+    }
     final isAuthenticated = TokenStorage.accessToken != null;
 
     getIt<AppRouterNotifier>().updateAuth(
       isAuthenticated: isAuthenticated,
+      isOnboardingSeen: isOnboardingSeen,
     );
   }
 

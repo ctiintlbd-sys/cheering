@@ -1,6 +1,5 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_categories_widget.dart';
-import 'package:cheering/features/food/presentation/screens/category_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

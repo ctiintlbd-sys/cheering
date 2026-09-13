@@ -4,32 +4,20 @@ import 'app_router_notifier.dart';
 import 'route_paths.dart';
 
 abstract final class AppAuthGuard {
-  static const _publicRoutes = {
+  /// Routes that are only meant for unauthenticated guests (Login, Signup, OTP, Password Reset, Onboarding).
+  static const _authRoutes = {
     RoutePaths.login,
     RoutePaths.password,
     RoutePaths.setPassword,
+    RoutePaths.about,
+    RoutePaths.enableBiometrics,
     RoutePaths.forgotPassword,
     RoutePaths.resetPassword,
     RoutePaths.onboarding,
-    RoutePaths.businessInformation,
-    RoutePaths.location,
-    RoutePaths.ownerInformation,
-    RoutePaths.document,
-    RoutePaths.payoutMethod,
-    RoutePaths.review,
-    RoutePaths.applicationSubmitted,
-    RoutePaths.foodTab,
-    RoutePaths.storeTab,
-    RoutePaths.ordersTab,
-    RoutePaths.communityTab,
-    RoutePaths.profileTab,
-    RoutePaths.categoryDetails,
-    RoutePaths.storeDetails,
-    RoutePaths.itemDetails,
   };
 
-  static bool _isPublicRoute(String location) =>
-      _publicRoutes.contains(location) || location.startsWith(RoutePaths.otp);
+  static bool _isAuthRoute(String location) =>
+      _authRoutes.contains(location) || location.startsWith('/otp');
 
   static String? redirect(
     BuildContext context,
@@ -40,31 +28,45 @@ abstract final class AppAuthGuard {
     final isInit = notifier.isInitialized;
     final location = state.uri.path;
 
-    // ── Splash redirect ───────────────────────────────────────────────────
+    // ── 1. Splash redirect ─────────────────────────────────────────────────
     if (!isInit) {
       return location == RoutePaths.splash ? null : RoutePaths.splash;
     }
 
     if (location == RoutePaths.splash) {
-      if (!isAuth) return RoutePaths.onboarding;
-      return RoutePaths.ordersTab;
+      if (!isAuth) {
+        // Jodi first install / onboarding dekha na hoye thake -> Onboarding
+        // Jodi agei onboarding dekha hoye thake -> Login
+        return notifier.isOnboardingSeen
+            ? RoutePaths.login
+            : RoutePaths.onboarding;
+      }
+      return RoutePaths.foodTab;
     }
 
-    // ── Unauthenticated deep link — preserve target URL ───────────────────
-    if (!isAuth && !_isPublicRoute(location)) {
+    // ── 2. Unauthenticated user on onboarding route but already completed it
+    if (!isAuth &&
+        location == RoutePaths.onboarding &&
+        notifier.isOnboardingSeen) {
+      return RoutePaths.login;
+    }
+
+    // ── 3. Unauthenticated user trying to access a protected route ─────────
+    if (!isAuth && !_isAuthRoute(location)) {
       final targetUri = Uri.encodeComponent(state.uri.toString());
       return '${RoutePaths.login}?redirect=$targetUri';
     }
 
-    // ── Authenticated on public route — resume deep link or go home ───────
-    if (isAuth && _isPublicRoute(location)) {
+    // ── 4. Authenticated user trying to access an auth/guest route ─────────
+    if (isAuth && _isAuthRoute(location)) {
       final redirect = state.uri.queryParameters['redirect'];
       if (redirect != null && redirect.isNotEmpty) {
         return Uri.decodeComponent(redirect);
       }
-      return RoutePaths.ordersTab;
+      return RoutePaths.foodTab;
     }
 
+    // ── 5. Allow navigation ────────────────────────────────────────────────
     return null;
   }
 }

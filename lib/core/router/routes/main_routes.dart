@@ -5,7 +5,6 @@ import 'package:cheering/features/profile/presentation/screens/profile_screen.da
 import 'package:cheering/features/store/presentation/screens/store_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../../../features/bottom_nav_bar/presentation/screens/bottom_nav_screen.dart';
-import '../../../features/overview/presentation/screens/overview_screen.dart';
 import '../route_paths.dart';
 
 final List<RouteBase> mainRoutes = [
