@@ -1,3 +1,4 @@
+import '../entities/reset_password_result_entity.dart';
 import '../repositories/i_auth_repository.dart';
 
 class ResetPasswordUseCase {
@@ -5,7 +6,7 @@ class ResetPasswordUseCase {
 
   ResetPasswordUseCase(this._repository);
 
-  Future<String> call({
+  Future<ResetPasswordResultEntity> call({
     required String email,
     required String code,
     required String newPassword,

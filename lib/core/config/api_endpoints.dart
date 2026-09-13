@@ -8,11 +8,15 @@ class ApiEndpoints {
 
   // ── Auth ───────────────────────────────────────────────────
   static const String sendOtp = '/auth/otp/send';
+  static const String verifyOtp = '/auth/otp/verify';
   static const String refreshToken = '/auth/refresh';
   static const String login = '/auth/login';
   static const String forgotPassword = '/auth/password/forgot';
   static const String resetPassword = '/auth/password/reset';
   static const String logout = '/auth/logout';
+  static const String googleAuthorize = '/auth/google/authorize';
+  static const String googleRedirectUri = 'cheering://callback';
+  static const String googleCallbackScheme = 'cheering';
 
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/vendor/profile';

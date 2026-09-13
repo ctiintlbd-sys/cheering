@@ -6,12 +6,16 @@ class AuthTokensModel extends AuthTokensEntity {
   const AuthTokensModel({
     required super.accessToken,
     required super.refreshToken,
+    super.tokenType,
+    super.expiresIn,
   });
 
   factory AuthTokensModel.fromJson(Map<String, dynamic> json) {
     return AuthTokensModel(
       accessToken: json['access_token']?.toString() ?? '',
       refreshToken: json['refresh_token']?.toString() ?? '',
+      tokenType: json['token_type']?.toString() ?? 'Bearer',
+      expiresIn: json['expires_in'] is int ? json['expires_in'] as int : 1800,
     );
   }
 }
@@ -21,7 +25,7 @@ class UserModel extends UserEntity {
     required super.id,
     required super.role,
     required super.email,
-    required super.phone,
+    super.phone,
     required super.fullName,
     super.avatarUrl,
     required super.isEmailVerified,
@@ -36,7 +40,7 @@ class UserModel extends UserEntity {
         orElse: () => UserRole.unknown,
       ),
       email: json['email']?.toString() ?? '',
-      phone: json['phone']?.toString() ?? '',
+      phone: json['phone']?.toString(),
       fullName: json['full_name']?.toString() ?? '',
       avatarUrl: json['avatar_url']?.toString(),
       isEmailVerified: json['is_email_verified'] == true,

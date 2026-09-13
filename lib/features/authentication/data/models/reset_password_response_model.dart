@@ -1,10 +1,9 @@
-class ResetPasswordResponseModel {
-  final String message;
-  final int sessionsRevoked;
+import '../../domain/entities/reset_password_result_entity.dart';
 
+class ResetPasswordResponseModel extends ResetPasswordResultEntity {
   const ResetPasswordResponseModel({
-    required this.message,
-    required this.sessionsRevoked,
+    required super.message,
+    required super.sessionsRevoked,
   });
 
   factory ResetPasswordResponseModel.fromJson(Map<String, dynamic> json) {

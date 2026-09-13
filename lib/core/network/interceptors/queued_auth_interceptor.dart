@@ -92,10 +92,15 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
       data: {'refresh_token': refreshToken},
     );
 
-    final data = response.data['data'] as Map<String, dynamic>?;
-    final tokens = data?['tokens'] as Map<String, dynamic>?;
-    final newAccess = tokens?['access_token']?.toString();
-    final newRefresh = tokens?['refresh_token']?.toString() ?? refreshToken;
+    final dynamic raw = response.data;
+    final Map<String, dynamic> body = raw is Map<String, dynamic> ? raw : {};
+    final dynamic dataNode = body['data'];
+    final Map<String, dynamic> data = dataNode is Map<String, dynamic> ? dataNode : body;
+    final dynamic tokensNode = data['tokens'];
+    final Map<String, dynamic> tokens = tokensNode is Map<String, dynamic> ? tokensNode : data;
+
+    final newAccess = tokens['access_token']?.toString();
+    final newRefresh = tokens['refresh_token']?.toString() ?? refreshToken;
 
     if (newAccess == null || newAccess.isEmpty) {
       throw Exception('Missing access token in refresh response');

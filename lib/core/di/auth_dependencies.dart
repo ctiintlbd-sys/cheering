@@ -6,8 +6,11 @@ import '../../features/authentication/data/repositories/auth_repository_impl.dar
 import '../../features/authentication/domain/repositories/i_auth_repository.dart';
 import '../../features/authentication/domain/usecases/forgot_password_usecase.dart';
 import '../../features/authentication/domain/usecases/login_usecase.dart';
-import '../../features/authentication/domain/usecases/reset_password_usecase.dart';
+import '../../features/authentication/domain/usecases/login_with_google_usecase.dart';
 import '../../features/authentication/domain/usecases/logout_usecase.dart';
+import '../../features/authentication/domain/usecases/reset_password_usecase.dart';
+import '../../features/authentication/domain/usecases/send_otp_usecase.dart';
+import '../../features/authentication/domain/usecases/verify_otp_usecase.dart';
 
 void setupAuthDependencies(GetIt getIt) {
   getIt.registerLazySingleton<AuthRemoteSource>(
@@ -18,8 +21,20 @@ void setupAuthDependencies(GetIt getIt) {
     () => AuthRepositoryImpl(getIt<AuthRemoteSource>()),
   );
 
+  getIt.registerLazySingleton<SendOtpUseCase>(
+    () => SendOtpUseCase(getIt<IAuthRepository>()),
+  );
+
+  getIt.registerLazySingleton<VerifyOtpUseCase>(
+    () => VerifyOtpUseCase(getIt<IAuthRepository>()),
+  );
+
   getIt.registerLazySingleton<LoginUseCase>(
     () => LoginUseCase(getIt<IAuthRepository>()),
+  );
+
+  getIt.registerLazySingleton<LoginWithGoogleUseCase>(
+    () => LoginWithGoogleUseCase(getIt<IAuthRepository>()),
   );
 
   getIt.registerLazySingleton<ForgotPasswordUseCase>(
@@ -33,5 +48,4 @@ void setupAuthDependencies(GetIt getIt) {
   getIt.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(getIt<IAuthRepository>()),
   );
-
 }
