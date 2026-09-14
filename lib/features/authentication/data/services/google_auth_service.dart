@@ -20,7 +20,7 @@ class GoogleAuthService {
       );
 
       // Extract tokens from URL fragment:
-      // cheering://callback#access_token=xxx&refresh_token=yyy&token_type=Bearer&expires_in=1800
+      // crshop://auth/callback#access_token=xxx&refresh_token=yyy&token_type=Bearer&expires_in=1800
       final uri = Uri.parse(result.replaceFirst('#', '?'));
       final accessToken = uri.queryParameters['access_token'] ?? '';
       final refreshToken = uri.queryParameters['refresh_token'] ?? '';

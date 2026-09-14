@@ -15,8 +15,8 @@ class ApiEndpoints {
   static const String resetPassword = '/auth/password/reset';
   static const String logout = '/auth/logout';
   static const String googleAuthorize = '/auth/google/authorize';
-  static const String googleRedirectUri = 'cheering://callback';
-  static const String googleCallbackScheme = 'cheering';
+  static const String googleRedirectUri = 'crshop://auth/callback';
+  static const String googleCallbackScheme = 'crshop';
 
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/vendor/profile';
