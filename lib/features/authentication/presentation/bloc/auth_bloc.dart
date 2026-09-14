@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/router/app_router_notifier.dart';
+import '../../domain/repositories/i_biometric_repository.dart';
 import '../../domain/usecases/enable_biometrics_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -23,6 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ForgotPasswordUseCase forgotPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final LogoutUseCase logoutUseCase;
+  final IBiometricRepository biometricRepository;
   final AppRouterNotifier routerNotifier;
 
   AuthBloc({
@@ -35,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.forgotPasswordUseCase,
     required this.resetPasswordUseCase,
     required this.logoutUseCase,
+    required this.biometricRepository,
     required this.routerNotifier,
   }) : super(const AuthState()) {
     on<SendOtpRequested>(_onSendOtpRequested);
@@ -128,7 +131,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-      routerNotifier.updateAuth(isAuthenticated: true);
+      await _finishSignIn(offerBiometricEnrollment: true);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.login,
@@ -156,7 +159,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final result = await loginWithGoogleUseCase();
-      routerNotifier.updateAuth(isAuthenticated: true);
+      await _finishSignIn(offerBiometricEnrollment: false);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.googleLogin,
@@ -184,7 +187,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final result = await loginWithBiometricsUseCase();
-      routerNotifier.updateAuth(isAuthenticated: true);
+      await _finishSignIn(offerBiometricEnrollment: false);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.biometricLogin,
@@ -345,5 +348,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       clearError: true,
       clearSuccess: true,
     ));
+  }
+
+  Future<void> _finishSignIn({required bool offerBiometricEnrollment}) async {
+    if (offerBiometricEnrollment &&
+        !biometricRepository.canUseBiometricLogin &&
+        await biometricRepository.isBiometricsAvailable()) {
+      routerNotifier.setPendingBiometricOffer(true);
+    }
+    routerNotifier.updateAuth(isAuthenticated: true);
   }
 }

@@ -67,6 +67,9 @@ abstract final class AppAuthGuard {
 
     // ── 4. Authenticated user trying to access an auth/guest route ─────────
     if (isAuth && _isAuthRoute(location)) {
+      if (notifier.pendingBiometricOffer) {
+        return RoutePaths.enableBiometrics;
+      }
       final redirect = state.uri.queryParameters['redirect'];
       if (redirect != null && redirect.isNotEmpty) {
         return Uri.decodeComponent(redirect);

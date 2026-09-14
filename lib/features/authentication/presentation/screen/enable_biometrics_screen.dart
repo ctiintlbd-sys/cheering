@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../../../core/router/app_router_notifier.dart';
 import '../../domain/repositories/i_biometric_repository.dart';
 import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
@@ -13,8 +14,24 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 
-class EnableBiometricsScreen extends StatelessWidget {
+class EnableBiometricsScreen extends StatefulWidget {
   const EnableBiometricsScreen({super.key});
+
+  @override
+  State<EnableBiometricsScreen> createState() => _EnableBiometricsScreenState();
+}
+
+class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getIt<AppRouterNotifier>().clearPendingBiometricOffer();
+  }
+
+  void _goToApp() {
+    getIt<AppRouterNotifier>().clearPendingBiometricOffer();
+    context.go(RoutePaths.foodTab);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +45,7 @@ class EnableBiometricsScreen extends StatelessWidget {
               state.errorMessage ?? 'Could not enable biometrics.',
             );
           case (AuthStatus.success, AuthAction.enableBiometrics):
-            context.go(RoutePaths.foodTab);
+            _goToApp();
           default:
             break;
         }
@@ -76,7 +93,7 @@ class EnableBiometricsScreen extends StatelessWidget {
                     backgroundColor: context.colors.background,
                     foregroundColor: context.colors.textPrimary,
                     label: 'Maybe Later',
-                    onPressed: () => context.go(RoutePaths.foodTab),
+                    onPressed: _goToApp,
                   ),
                 ],
               );

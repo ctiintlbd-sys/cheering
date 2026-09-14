@@ -119,6 +119,7 @@ void setupAuthDependencies(GetIt getIt) {
       forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
       resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
       logoutUseCase: getIt<LogoutUseCase>(),
+      biometricRepository: getIt<IBiometricRepository>(),
       routerNotifier: getIt<AppRouterNotifier>(),
     ),
   );

@@ -9,12 +9,27 @@ class AppRouterNotifier extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   bool get isOnboardingSeen => _isOnboardingSeen;
 
+  /// After password/Google sign-in, redirect to [RoutePaths.enableBiometrics] once.
+  bool _pendingBiometricOffer = false;
+  bool get pendingBiometricOffer => _pendingBiometricOffer;
+
+  void setPendingBiometricOffer(bool value) {
+    if (_pendingBiometricOffer == value) return;
+    _pendingBiometricOffer = value;
+    notifyListeners();
+  }
+
+  void clearPendingBiometricOffer() => setPendingBiometricOffer(false);
+
   void updateAuth({
     required bool isAuthenticated,
     bool? isOnboardingSeen,
   }) {
     _isInitialized = true;
     _isAuthenticated = isAuthenticated;
+    if (!isAuthenticated) {
+      _pendingBiometricOffer = false;
+    }
     if (isOnboardingSeen != null) {
       _isOnboardingSeen = isOnboardingSeen;
     }
