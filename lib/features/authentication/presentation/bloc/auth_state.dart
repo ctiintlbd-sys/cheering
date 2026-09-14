@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/auth_tokens_entity.dart';
 import '../../domain/entities/login_result_entity.dart';
 import '../../domain/entities/reset_password_result_entity.dart';
 
@@ -12,6 +11,9 @@ enum AuthAction {
   verifyOtp,
   login,
   googleLogin,
+  biometricLogin,
+  enableBiometrics,
+  skipBiometrics,
   forgotPassword,
   resetPassword,
   logout,
@@ -25,7 +27,6 @@ class AuthState extends Equatable {
   final String? successMessage;
   final LoginResultEntity? loginResult;
   final ResetPasswordResultEntity? resetPasswordResult;
-  final AuthTokensEntity? googleTokens;
 
   const AuthState({
     this.status = AuthStatus.initial,
@@ -35,7 +36,6 @@ class AuthState extends Equatable {
     this.successMessage,
     this.loginResult,
     this.resetPasswordResult,
-    this.googleTokens,
   });
 
   bool get isLoading => status == AuthStatus.loading;
@@ -47,6 +47,12 @@ class AuthState extends Equatable {
   bool get isLoginLoading => isLoading && action == AuthAction.login;
 
   bool get isGoogleLoading => isLoading && action == AuthAction.googleLogin;
+
+  bool get isBiometricLoginLoading =>
+      isLoading && action == AuthAction.biometricLogin;
+
+  bool get isEnableBiometricsLoading =>
+      isLoading && action == AuthAction.enableBiometrics;
 
   bool get isForgotPasswordLoading => isLoading && action == AuthAction.forgotPassword;
 
@@ -62,7 +68,6 @@ class AuthState extends Equatable {
     String? successMessage,
     LoginResultEntity? loginResult,
     ResetPasswordResultEntity? resetPasswordResult,
-    AuthTokensEntity? googleTokens,
     bool clearError = false,
     bool clearSuccess = false,
   }) {
@@ -76,7 +81,6 @@ class AuthState extends Equatable {
           : (successMessage ?? this.successMessage),
       loginResult: loginResult ?? this.loginResult,
       resetPasswordResult: resetPasswordResult ?? this.resetPasswordResult,
-      googleTokens: googleTokens ?? this.googleTokens,
     );
   }
 
@@ -89,6 +93,5 @@ class AuthState extends Equatable {
     successMessage,
     loginResult,
     resetPasswordResult,
-    googleTokens,
   ];
 }

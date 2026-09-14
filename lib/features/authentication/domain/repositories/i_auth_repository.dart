@@ -1,4 +1,3 @@
-import '../entities/auth_tokens_entity.dart';
 import '../entities/login_result_entity.dart';
 import '../entities/reset_password_result_entity.dart';
 
@@ -20,7 +19,11 @@ abstract class IAuthRepository {
     required String password,
   });
 
-  Future<AuthTokensEntity> loginWithGoogle();
+  Future<LoginResultEntity> loginWithGoogle();
+
+  Future<bool> hasStoredSession();
+
+  Future<void> clearLocalSession();
 
   Future<String> forgotPassword({
     required String email,
@@ -32,8 +35,5 @@ abstract class IAuthRepository {
     required String newPassword,
   });
 
-  Future<void> logout({
-    required String refreshToken,
-    required bool allDevices,
-  });
+  Future<void> logout({bool allDevices = false});
 }

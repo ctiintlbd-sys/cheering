@@ -42,6 +42,19 @@ class AuthRemoteSource {
     );
   }
 
+  Future<ApiResult<UserModel>> getCurrentUser() {
+    return _client.get(
+      ApiEndpoints.currentUser,
+      fromJson: (json) {
+        final map = json is Map<String, dynamic> ? json : <String, dynamic>{};
+        final data = map['data'] is Map<String, dynamic>
+            ? map['data'] as Map<String, dynamic>
+            : map;
+        return UserModel.fromJson(data);
+      },
+    );
+  }
+
   Future<ApiResult<LoginResponseModel>> login({
     required String email,
     required String password,

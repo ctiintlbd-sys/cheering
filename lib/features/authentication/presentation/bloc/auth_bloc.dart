@@ -1,13 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/router/app_router_notifier.dart';
-import '../../../../core/storage/token_storage.dart';
+import '../../domain/usecases/enable_biometrics_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/login_with_biometrics_usecase.dart';
 import '../../domain/usecases/login_with_google_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/reset_password_usecase.dart';
 import '../../domain/usecases/send_otp_usecase.dart';
+import '../../domain/usecases/skip_biometrics_usecase.dart';
 import '../../domain/usecases/verify_otp_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -17,6 +19,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final VerifyOtpUseCase verifyOtpUseCase;
   final LoginUseCase loginUseCase;
   final LoginWithGoogleUseCase loginWithGoogleUseCase;
+  final LoginWithBiometricsUseCase loginWithBiometricsUseCase;
+  final EnableBiometricsUseCase enableBiometricsUseCase;
+  final SkipBiometricsUseCase skipBiometricsUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final LogoutUseCase logoutUseCase;
@@ -27,6 +32,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.verifyOtpUseCase,
     required this.loginUseCase,
     required this.loginWithGoogleUseCase,
+    required this.loginWithBiometricsUseCase,
+    required this.enableBiometricsUseCase,
+    required this.skipBiometricsUseCase,
     required this.forgotPasswordUseCase,
     required this.resetPasswordUseCase,
     required this.logoutUseCase,
@@ -36,6 +44,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyOtpRequested>(_onVerifyOtpRequested);
     on<LoginRequested>(_onLoginRequested);
     on<GoogleLoginRequested>(_onGoogleLoginRequested);
+    on<BiometricLoginRequested>(_onBiometricLoginRequested);
+    on<EnableBiometricsRequested>(_onEnableBiometricsRequested);
+    on<SkipBiometricsRequested>(_onSkipBiometricsRequested);
     on<ForgotPasswordRequested>(_onForgotPasswordRequested);
     on<ResetPasswordRequested>(_onResetPasswordRequested);
     on<LogoutRequested>(_onLogoutRequested);
@@ -147,18 +158,100 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ));
 
     try {
-      final tokens = await loginWithGoogleUseCase();
+      final result = await loginWithGoogleUseCase();
       routerNotifier.updateAuth(isAuthenticated: true);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.googleLogin,
-        googleTokens: tokens,
+        loginResult: result,
         successMessage: 'Google login successful',
       ));
     } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.failure,
         action: AuthAction.googleLogin,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onBiometricLoginRequested(
+    BiometricLoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: AuthStatus.loading,
+      action: AuthAction.biometricLogin,
+      clearError: true,
+    ));
+
+    try {
+      await loginWithBiometricsUseCase();
+      routerNotifier.updateAuth(isAuthenticated: true);
+      emit(state.copyWith(
+        status: AuthStatus.success,
+        action: AuthAction.biometricLogin,
+        successMessage: 'Logged in successfully',
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.failure,
+        action: AuthAction.biometricLogin,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onEnableBiometricsRequested(
+    EnableBiometricsRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: AuthStatus.loading,
+      action: AuthAction.enableBiometrics,
+      clearError: true,
+    ));
+
+    try {
+      final enabled = await enableBiometricsUseCase();
+      routerNotifier.updateAuth(isAuthenticated: true);
+      emit(state.copyWith(
+        status: AuthStatus.success,
+        action: AuthAction.enableBiometrics,
+        successMessage: enabled
+            ? 'Biometric login enabled successfully!'
+            : null,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.failure,
+        action: AuthAction.enableBiometrics,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onSkipBiometricsRequested(
+    SkipBiometricsRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: AuthStatus.loading,
+      action: AuthAction.skipBiometrics,
+      clearError: true,
+    ));
+
+    try {
+      await skipBiometricsUseCase();
+      routerNotifier.updateAuth(isAuthenticated: true);
+      emit(state.copyWith(
+        status: AuthStatus.success,
+        action: AuthAction.skipBiometrics,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.failure,
+        action: AuthAction.skipBiometrics,
         errorMessage: e.toString(),
       ));
     }
@@ -231,17 +324,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       clearError: true,
     ));
 
-    final token = event.refreshToken ?? TokenStorage.refreshToken ?? '';
-
     try {
-      if (token.isNotEmpty) {
-        await logoutUseCase(
-          refreshToken: token,
-          allDevices: event.allDevices,
-        );
-      } else {
-        await TokenStorage.clearTokens();
-      }
+      await logoutUseCase(allDevices: event.allDevices);
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(const AuthState(
         status: AuthStatus.success,
@@ -249,7 +333,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         successMessage: 'Logged out successfully',
       ));
     } catch (e) {
-      await TokenStorage.clearTokens();
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(state.copyWith(
         status: AuthStatus.failure,

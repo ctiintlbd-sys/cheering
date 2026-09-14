@@ -54,6 +54,10 @@ class _EmailScreenState extends State<EmailScreen> {
             );
           case (AuthStatus.success, AuthAction.sendOtp):
             context.push(RoutePaths.otp, extra: _emailController.text.trim());
+          case (AuthStatus.success, AuthAction.googleLogin):
+            ToastMessageHelper.show(
+              state.successMessage ?? 'Google login successful',
+            );
           default:
             break;
         }

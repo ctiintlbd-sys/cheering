@@ -58,6 +58,21 @@ class GoogleLoginRequested extends AuthEvent {
   const GoogleLoginRequested();
 }
 
+/// Restore session after device biometric verification
+class BiometricLoginRequested extends AuthEvent {
+  const BiometricLoginRequested();
+}
+
+/// Post-signup: enable Touch ID / Face ID
+class EnableBiometricsRequested extends AuthEvent {
+  const EnableBiometricsRequested();
+}
+
+/// Post-signup: skip biometric setup
+class SkipBiometricsRequested extends AuthEvent {
+  const SkipBiometricsRequested();
+}
+
 /// Triggered in ForgotScreen to request reset code
 class ForgotPasswordRequested extends AuthEvent {
   final String email;
@@ -86,16 +101,12 @@ class ResetPasswordRequested extends AuthEvent {
 
 /// Triggered when user logs out of their account
 class LogoutRequested extends AuthEvent {
-  final String? refreshToken;
   final bool allDevices;
 
-  const LogoutRequested({
-    this.refreshToken,
-    this.allDevices = false,
-  });
+  const LogoutRequested({this.allDevices = false});
 
   @override
-  List<Object?> get props => [refreshToken, allDevices];
+  List<Object?> get props => [allDevices];
 }
 
 /// Triggered when toggling between Sign In and Sign Up mode

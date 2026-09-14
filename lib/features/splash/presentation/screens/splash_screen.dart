@@ -4,7 +4,8 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
 import '../../../../core/storage/biometric_storage.dart';
 import '../../../../core/storage/onboarding_storage.dart';
-import '../../../../core/storage/token_storage.dart';
+import '../../../authentication/domain/usecases/check_stored_session_usecase.dart';
+import '../../../authentication/domain/usecases/clear_local_session_usecase.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/widgets/widgets.dart';
 
@@ -29,10 +30,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final isOnboardingSeen = OnboardingStorage.isOnboardingCompleted;
     if (!isOnboardingSeen) {
-      await TokenStorage.clearTokens();
+      await getIt<ClearLocalSessionUseCase>()();
       await BiometricStorage.clear();
     }
-    final isAuthenticated = TokenStorage.accessToken != null;
+    final isAuthenticated = isOnboardingSeen
+        ? await getIt<CheckStoredSessionUseCase>()()
+        : false;
 
     getIt<AppRouterNotifier>().updateAuth(
       isAuthenticated: isAuthenticated,

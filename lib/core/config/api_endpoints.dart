@@ -18,6 +18,8 @@ class ApiEndpoints {
   static const String googleRedirectUri = 'crshop://auth/callback';
   static const String googleCallbackScheme = 'crshop';
 
+  static const String currentUser = '/users/me';
+
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/vendor/profile';
 

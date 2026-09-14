@@ -1,4 +1,4 @@
-import '../entities/auth_tokens_entity.dart';
+import '../entities/login_result_entity.dart';
 import '../repositories/i_auth_repository.dart';
 
 class LoginWithGoogleUseCase {
@@ -6,7 +6,5 @@ class LoginWithGoogleUseCase {
 
   LoginWithGoogleUseCase(this._repository);
 
-  Future<AuthTokensEntity> call() {
-    return _repository.loginWithGoogle();
-  }
+  Future<LoginResultEntity> call() => _repository.loginWithGoogle();
 }

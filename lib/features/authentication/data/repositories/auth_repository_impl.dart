@@ -1,6 +1,5 @@
 import '../../../../core/network/api_result.dart';
 import '../../../../core/storage/token_storage.dart';
-import '../../domain/entities/auth_tokens_entity.dart';
 import '../../domain/entities/login_result_entity.dart';
 import '../../domain/entities/reset_password_result_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
@@ -69,14 +68,28 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<AuthTokensEntity> loginWithGoogle() async {
+  Future<LoginResultEntity> loginWithGoogle() async {
     final tokens = await _googleAuthService.signIn();
     await TokenStorage.saveTokens(
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
     );
-    return tokens;
+
+    final userResult = await _source.getCurrentUser();
+    return userResult.fold(
+      onSuccess: (user) => LoginResultEntity(tokens: tokens, user: user),
+      onFailure: (e) => throw e,
+    );
   }
+
+  @override
+  Future<bool> hasStoredSession() async {
+    final token = TokenStorage.refreshToken;
+    return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<void> clearLocalSession() => TokenStorage.clearTokens();
 
   @override
   Future<String> forgotPassword({required String email}) async {
@@ -105,19 +118,22 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<void> logout({
-    required String refreshToken,
-    required bool allDevices,
-  }) async {
-    final result = await _source.logout(
-      refreshToken: refreshToken,
-      allDevices: allDevices,
-    );
-    return result.fold(
-      onSuccess: (_) async {
-        await TokenStorage.clearTokens();
-      },
-      onFailure: (e) => throw e,
-    );
+  Future<void> logout({bool allDevices = false}) async {
+    final refreshToken = TokenStorage.refreshToken ?? '';
+
+    try {
+      if (refreshToken.isNotEmpty) {
+        final result = await _source.logout(
+          refreshToken: refreshToken,
+          allDevices: allDevices,
+        );
+        result.fold(
+          onSuccess: (_) {},
+          onFailure: (e) => throw e,
+        );
+      }
+    } finally {
+      await TokenStorage.clearTokens();
+    }
   }
 }
