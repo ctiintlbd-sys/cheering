@@ -24,7 +24,7 @@ class ApiEndpoints {
   static const String biometricsLogin = '/auth/biometrics/login';
 
   // ── Profile ────────────────────────────────────────────────
-  static const String profile = '/vendor/profile';
+  static const String profile = '/users/me/profile';
 
   // ── Menu ───────────────────────────────────────────────────
   static const String menu = '/vendor/menu';
