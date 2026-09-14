@@ -103,11 +103,6 @@ class ProfileScreen extends StatelessWidget {
             state.errorMessage ??
                 'Logout failed. You have been logged out locally.',
           );
-        } else if (state.status == AuthStatus.success &&
-            state.action == AuthAction.logout) {
-          ToastMessageHelper.show(
-            state.successMessage ?? 'Logged out successfully.',
-          );
         }
       },
       child: SliverScaffold(
