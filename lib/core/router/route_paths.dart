@@ -46,7 +46,7 @@ abstract class RoutePaths {
 
   // ── Profile & Store ────────────────────────────────────────
   static const String storeProfile = '/profile/store';
-  static const String editStoreProfile = '/profile/edit';
+  static const String accountSettings = '/profile/edit';
   static const String updateLocation = '/profile/update-location';
   static const String businessHours = '/profile/business-hours';
   static const String editBusinessHours = '/profile/business-hours/edit';

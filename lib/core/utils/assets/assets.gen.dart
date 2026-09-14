@@ -93,6 +93,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/google.svg
   SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
 
+  /// File path: assets/icons/image_update.svg
+  SvgGenImage get imageUpdate =>
+      const SvgGenImage('assets/icons/image_update.svg');
+
   /// File path: assets/icons/location_pin.svg
   SvgGenImage get locationPin =>
       const SvgGenImage('assets/icons/location_pin.svg');
@@ -255,6 +259,7 @@ class $AssetsIconsGen {
     foodLove,
     foodShare,
     google,
+    imageUpdate,
     locationPin,
     love,
     menu,

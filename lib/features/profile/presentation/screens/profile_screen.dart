@@ -1,6 +1,8 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/l10n/locale_cubit.dart';
@@ -115,7 +117,9 @@ class ProfileScreen extends StatelessWidget {
             name: 'Jenia Rahman',
             subtitle: 'Jenia Rahman',
             imageUrl: '',
-            onTap: () {},
+            onTap: () {
+              context.push(RoutePaths.accountSettings);
+            },
           ),
 
           SizedBox(height: 20.h),
