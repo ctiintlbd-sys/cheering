@@ -2,12 +2,35 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../../core/storage/biometric_storage.dart';
+import '../../domain/entities/biometric_ui_kind.dart';
 
 class BiometricService {
   final LocalAuthentication _auth;
 
+  BiometricUiKind _uiKind = BiometricUiKind.combined;
+
   BiometricService({LocalAuthentication? auth})
       : _auth = auth ?? LocalAuthentication();
+
+  BiometricUiKind get uiKind => _uiKind;
+
+  /// Call once at app startup so UI can read [uiKind] synchronously.
+  Future<void> loadUiKind() async {
+    _uiKind = resolveUiKind(await getAvailableBiometrics());
+  }
+
+  static BiometricUiKind resolveUiKind(List<BiometricType> types) {
+    if (types.isEmpty) return BiometricUiKind.combined;
+
+    final hasFace = types.contains(BiometricType.face);
+    final hasFingerprint = types.contains(BiometricType.fingerprint);
+
+    if (hasFace && !hasFingerprint) return BiometricUiKind.face;
+    if (hasFingerprint && !hasFace) return BiometricUiKind.touch;
+    if (hasFace && hasFingerprint) return BiometricUiKind.touch;
+
+    return hasFace ? BiometricUiKind.face : BiometricUiKind.touch;
+  }
 
   /// Check if hardware supports biometrics
   Future<bool> isDeviceSupported() async {

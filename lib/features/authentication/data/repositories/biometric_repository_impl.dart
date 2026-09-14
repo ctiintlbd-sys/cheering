@@ -1,4 +1,5 @@
 import '../../../../core/storage/biometric_device_storage.dart';
+import '../../domain/entities/biometric_ui_kind.dart';
 import '../../domain/repositories/i_biometric_repository.dart';
 import '../services/biometric_service.dart';
 
@@ -6,6 +7,9 @@ class BiometricRepositoryImpl implements IBiometricRepository {
   final BiometricService _service;
 
   BiometricRepositoryImpl(this._service);
+
+  @override
+  BiometricUiKind get biometricUiKind => _service.uiKind;
 
   @override
   Future<bool> isBiometricsAvailable() => _service.isBiometricsAvailable();

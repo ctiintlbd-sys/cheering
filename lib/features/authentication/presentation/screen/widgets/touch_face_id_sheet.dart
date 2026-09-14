@@ -1,10 +1,12 @@
-import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../core/di/service_locator.dart';
 import '../../../../../core/helpers/toast_message_helper.dart';
+import '../../../domain/repositories/i_biometric_repository.dart';
+import '../../utils/biometric_ui_kind_assets.dart';
 import '../../bloc/auth_bloc.dart';
 import '../../bloc/auth_event.dart';
 import '../../bloc/auth_state.dart';
@@ -27,6 +29,8 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final biometricUi = getIt<IBiometricRepository>().biometricUiKind;
+
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (prev, curr) =>
           curr.action == AuthAction.biometricLogin &&
@@ -59,7 +63,7 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
               children: [
                 CustomText(
                   top: 22.h,
-                  text: 'Touch ID / Face ID',
+                  text: biometricUi.promptTitle,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
@@ -86,11 +90,11 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
                         color: context.colors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                         child: Center(
-                          child: Assets.icons.touch.svg(
-                                  width: 54.r,
-                                  height: 54.r,
-                                  color: context.colors.primary,
-                                ),
+                          child: biometricUi.icon.svg(
+                            width: 54.r,
+                            height: 54.r,
+                            color: context.colors.primary,
+                          ),
                         ),
                       ),
                     );

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../domain/repositories/i_biometric_repository.dart';
+import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
-import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/widgets/app_auth_title.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
@@ -16,6 +18,8 @@ class EnableBiometricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final biometricUi = getIt<IBiometricRepository>().biometricUiKind;
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         switch ((state.status, state.action)) {
@@ -35,7 +39,7 @@ class EnableBiometricsScreen extends StatelessWidget {
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
           expandedHeight: 180.h,
           flexibleChild: AppAuthTitle(
-            title: 'Enable Touch ID / Face ID',
+            title: biometricUi.enableScreenTitle,
             subtitle:
                 'Optional — enable for faster sign-in, or continue to the app.',
           ),
@@ -46,7 +50,7 @@ class EnableBiometricsScreen extends StatelessWidget {
             height: 120.r,
             width: 120.r,
             shape: BoxShape.circle,
-            child: Assets.icons.face.svg(),
+            child: biometricUi.icon.svg(),
           ),
           SizedBox(height: 24.h),
           BlocBuilder<AuthBloc, AuthState>(

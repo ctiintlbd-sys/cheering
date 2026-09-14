@@ -1,4 +1,8 @@
+import '../entities/biometric_ui_kind.dart';
+
 abstract class IBiometricRepository {
+  BiometricUiKind get biometricUiKind;
+
   Future<bool> isBiometricsAvailable();
 
   Future<bool> authenticate({required String localizedReason});

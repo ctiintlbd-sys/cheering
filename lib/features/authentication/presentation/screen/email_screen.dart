@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../domain/repositories/i_biometric_repository.dart';
+import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/utils/validators.dart';
@@ -117,17 +118,19 @@ class _EmailScreenState extends State<EmailScreen> {
             selector: (state) => state.isSignUp,
             builder: (context, isSignUp) {
               if (isSignUp) return const SizedBox.shrink();
-              if (!getIt<IBiometricRepository>().canUseBiometricLogin) {
+              final biometricRepo = getIt<IBiometricRepository>();
+              if (!biometricRepo.canUseBiometricLogin) {
                 return const SizedBox.shrink();
               }
+              final biometricUi = biometricRepo.biometricUiKind;
               return Padding(
                 padding: EdgeInsets.only(top: 12.h),
                 child: CustomButton(
-                  prefixIcon: Assets.icons.face.svg(),
+                  prefixIcon: biometricUi.icon.svg(),
                   backgroundColor: context.colors.background,
                   foregroundColor: context.colors.textPrimary,
                   bordersColor: context.colors.borderSecondary,
-                  label: 'Continue with Touch ID',
+                  label: biometricUi.continueWithLabel,
                   onPressed: () {
                     showModalBottomSheet(
                       context: context,
