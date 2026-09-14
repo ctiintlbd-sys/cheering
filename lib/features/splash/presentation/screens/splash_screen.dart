@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/storage/biometric_device_storage.dart';
 import '../../../../core/storage/biometric_storage.dart';
 import '../../../../core/storage/onboarding_storage.dart';
 import '../../../authentication/domain/usecases/check_stored_session_usecase.dart';
@@ -32,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!isOnboardingSeen) {
       await getIt<ClearLocalSessionUseCase>()();
       await BiometricStorage.clear();
+      await BiometricDeviceStorage.clear();
     }
     final isAuthenticated = isOnboardingSeen
         ? await getIt<CheckStoredSessionUseCase>()()

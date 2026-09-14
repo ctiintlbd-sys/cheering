@@ -1,12 +1,12 @@
-import '../../../../core/errors/app_exception.dart';
+import '../repositories/i_auth_repository.dart';
 import '../repositories/i_biometric_repository.dart';
 
-/// Returns `true` when biometrics was enabled, `false` when skipped because
-/// hardware is unavailable (caller may still complete sign-in).
+/// Returns `true` when biometrics was enabled on device and server.
 class EnableBiometricsUseCase {
+  final IAuthRepository _authRepository;
   final IBiometricRepository _biometricRepository;
 
-  EnableBiometricsUseCase(this._biometricRepository);
+  EnableBiometricsUseCase(this._authRepository, this._biometricRepository);
 
   Future<bool> call() async {
     if (!await _biometricRepository.isBiometricsAvailable()) {
@@ -14,16 +14,7 @@ class EnableBiometricsUseCase {
       return false;
     }
 
-    final success = await _biometricRepository.authenticate(
-      localizedReason:
-          'Please authenticate to enable biometric login for Cheering',
-    );
-
-    if (!success) {
-      throw const CancelledException('Biometric verification cancelled or failed.');
-    }
-
-    await _biometricRepository.setBiometricEnabled(true);
+    await _authRepository.enrollBiometricLogin();
     return true;
   }
 }

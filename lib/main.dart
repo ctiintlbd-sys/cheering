@@ -6,6 +6,7 @@ import 'core/config/app_config.dart';
 import 'core/di/service_locator.dart';
 import 'core/storage/token_storage.dart';
 import 'core/storage/theme_storage.dart';
+import 'core/storage/biometric_device_storage.dart';
 import 'core/storage/biometric_storage.dart';
 import 'core/storage/locale_storage.dart';
 import 'core/storage/onboarding_storage.dart';
@@ -15,6 +16,7 @@ void main() async {
   AppConfig.initialize();
   await TokenStorage.init();
   await BiometricStorage.init();
+  await BiometricDeviceStorage.init();
   await HiveCacheService.init();
   await ThemeStorage.init();
   await LocaleStorage.init();

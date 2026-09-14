@@ -1,6 +1,7 @@
 import '../../../../core/config/api_endpoints.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/i_api_client.dart';
+import '../models/biometric_challenge_model.dart';
 import '../models/forgot_password_response_model.dart';
 import '../models/login_response_model.dart';
 import '../models/reset_password_response_model.dart';
@@ -88,6 +89,48 @@ class AuthRemoteSource {
       body: {'email': email, 'code': code, 'new_password': newPassword},
       fromJson: (json) =>
           ResetPasswordResponseModel.fromJson(json as Map<String, dynamic>),
+      requiresAuth: false,
+    );
+  }
+
+  Future<ApiResult<void>> enableBiometrics({
+    required String deviceId,
+    required String publicKeySpkiBase64,
+    String? deviceName,
+  }) {
+    return _client.post(
+      ApiEndpoints.biometricsEnable,
+      body: {
+        'device_id': deviceId,
+        'public_key': publicKeySpkiBase64,
+        'algorithm': 'ES256',
+        if (deviceName != null) 'device_name': deviceName,
+      },
+      fromJson: (_) {},
+      requiresAuth: true,
+    );
+  }
+
+  Future<ApiResult<BiometricChallengeModel>> requestBiometricChallenge({
+    required String deviceId,
+  }) {
+    return _client.post(
+      ApiEndpoints.biometricsChallenge,
+      body: {'device_id': deviceId},
+      fromJson: (json) =>
+          BiometricChallengeModel.fromJson(json as Map<String, dynamic>),
+      requiresAuth: false,
+    );
+  }
+
+  Future<ApiResult<LoginResponseModel>> loginWithBiometrics({
+    required String deviceId,
+    required String signatureBase64,
+  }) {
+    return _client.post(
+      ApiEndpoints.biometricsLogin,
+      body: {'device_id': deviceId, 'signature': signatureBase64},
+      fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }

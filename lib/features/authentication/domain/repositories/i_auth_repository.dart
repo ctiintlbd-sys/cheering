@@ -21,6 +21,10 @@ abstract class IAuthRepository {
 
   Future<LoginResultEntity> loginWithGoogle();
 
+  Future<void> enrollBiometricLogin({String? deviceName});
+
+  Future<LoginResultEntity> loginWithBiometric();
+
   Future<bool> hasStoredSession();
 
   Future<void> clearLocalSession();

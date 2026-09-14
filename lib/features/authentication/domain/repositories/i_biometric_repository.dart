@@ -5,5 +5,9 @@ abstract class IBiometricRepository {
 
   bool get isBiometricEnabled;
 
+  bool get isDeviceEnrolled;
+
+  bool get canUseBiometricLogin;
+
   Future<void> setBiometricEnabled(bool enabled);
 }

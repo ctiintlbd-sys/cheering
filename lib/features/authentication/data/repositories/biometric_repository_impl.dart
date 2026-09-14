@@ -1,3 +1,4 @@
+import '../../../../core/storage/biometric_device_storage.dart';
 import '../../domain/repositories/i_biometric_repository.dart';
 import '../services/biometric_service.dart';
 
@@ -16,6 +17,12 @@ class BiometricRepositoryImpl implements IBiometricRepository {
 
   @override
   bool get isBiometricEnabled => _service.isBiometricEnabled;
+
+  @override
+  bool get isDeviceEnrolled => BiometricDeviceStorage.hasEnrollment;
+
+  @override
+  bool get canUseBiometricLogin => isBiometricEnabled && isDeviceEnrolled;
 
   @override
   Future<void> setBiometricEnabled(bool enabled) {

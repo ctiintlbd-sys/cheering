@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../domain/repositories/i_biometric_repository.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/utils/validators.dart';
@@ -110,11 +112,14 @@ class _EmailScreenState extends State<EmailScreen> {
             },
           ),
 
-          /// Biometric Login Button (visible only in Sign In mode)
+          /// Biometric login (sign-in only, after server enrollment)
           BlocSelector<AuthBloc, AuthState, bool>(
             selector: (state) => state.isSignUp,
             builder: (context, isSignUp) {
               if (isSignUp) return const SizedBox.shrink();
+              if (!getIt<IBiometricRepository>().canUseBiometricLogin) {
+                return const SizedBox.shrink();
+              }
               return Padding(
                 padding: EdgeInsets.only(top: 12.h),
                 child: CustomButton(

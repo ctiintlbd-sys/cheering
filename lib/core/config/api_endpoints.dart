@@ -19,6 +19,9 @@ class ApiEndpoints {
   static const String googleCallbackScheme = 'crshop';
 
   static const String currentUser = '/users/me';
+  static const String biometricsEnable = '/auth/biometrics/enable';
+  static const String biometricsChallenge = '/auth/biometrics/challenge';
+  static const String biometricsLogin = '/auth/biometrics/login';
 
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/vendor/profile';

@@ -183,11 +183,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ));
 
     try {
-      await loginWithBiometricsUseCase();
+      final result = await loginWithBiometricsUseCase();
       routerNotifier.updateAuth(isAuthenticated: true);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.biometricLogin,
+        loginResult: result,
         successMessage: 'Logged in successfully',
       ));
     } catch (e) {

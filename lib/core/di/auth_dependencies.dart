@@ -6,6 +6,8 @@ import '../../features/authentication/data/datasources/auth_remote_source.dart';
 import '../../features/authentication/presentation/bloc/auth_bloc.dart';
 import '../../features/authentication/data/repositories/auth_repository_impl.dart';
 import '../../features/authentication/data/repositories/biometric_repository_impl.dart';
+import '../../features/authentication/data/services/biometric_auth_service.dart';
+import '../../features/authentication/data/services/biometric_key_service.dart';
 import '../../features/authentication/data/services/biometric_service.dart';
 import '../../features/authentication/data/services/google_auth_service.dart';
 import '../../features/authentication/domain/repositories/i_auth_repository.dart';
@@ -27,6 +29,10 @@ void setupAuthDependencies(GetIt getIt) {
     () => BiometricService(),
   );
 
+  getIt.registerLazySingleton<BiometricKeyService>(
+    () => BiometricKeyService(),
+  );
+
   getIt.registerLazySingleton<IBiometricRepository>(
     () => BiometricRepositoryImpl(getIt<BiometricService>()),
   );
@@ -39,10 +45,19 @@ void setupAuthDependencies(GetIt getIt) {
     () => GoogleAuthService(),
   );
 
+  getIt.registerLazySingleton<BiometricAuthService>(
+    () => BiometricAuthService(
+      getIt<AuthRemoteSource>(),
+      getIt<BiometricKeyService>(),
+      getIt<BiometricService>(),
+    ),
+  );
+
   getIt.registerLazySingleton<IAuthRepository>(
     () => AuthRepositoryImpl(
       getIt<AuthRemoteSource>(),
       getIt<GoogleAuthService>(),
+      getIt<BiometricAuthService>(),
     ),
   );
 
@@ -63,14 +78,14 @@ void setupAuthDependencies(GetIt getIt) {
   );
 
   getIt.registerLazySingleton<LoginWithBiometricsUseCase>(
-    () => LoginWithBiometricsUseCase(
-      getIt<IAuthRepository>(),
-      getIt<IBiometricRepository>(),
-    ),
+    () => LoginWithBiometricsUseCase(getIt<IAuthRepository>()),
   );
 
   getIt.registerLazySingleton<EnableBiometricsUseCase>(
-    () => EnableBiometricsUseCase(getIt<IBiometricRepository>()),
+    () => EnableBiometricsUseCase(
+      getIt<IAuthRepository>(),
+      getIt<IBiometricRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<CheckStoredSessionUseCase>(

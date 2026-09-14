@@ -46,6 +46,8 @@ dependencies:
   photo_view: ^0.15.0
   flutter_web_auth_2: ^5.1.0
   local_auth: ^3.0.2
+  asn1lib: ^1.6.5
+  pointycastle: ^4.0.0
 
 dev_dependencies:
   flutter_test:
