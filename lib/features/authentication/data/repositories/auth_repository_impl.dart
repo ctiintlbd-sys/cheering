@@ -1,5 +1,6 @@
 import '../../../../core/network/api_result.dart';
 import '../../../../core/storage/token_storage.dart';
+import '../../../profile/data/datasources/profile_remote_source.dart';
 import '../../domain/entities/login_result_entity.dart';
 import '../../domain/entities/reset_password_result_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
@@ -11,11 +12,13 @@ class AuthRepositoryImpl implements IAuthRepository {
   final AuthRemoteSource _source;
   final GoogleAuthService _googleAuthService;
   final BiometricAuthService _biometricAuthService;
+  final ProfileRemoteSource _profileRemoteSource;
 
   AuthRepositoryImpl(
     this._source,
     this._googleAuthService,
     this._biometricAuthService,
+    this._profileRemoteSource,
   );
 
   @override
@@ -81,7 +84,7 @@ class AuthRepositoryImpl implements IAuthRepository {
       refreshToken: tokens.refreshToken,
     );
 
-    final userResult = await _source.getCurrentUser();
+    final userResult = await _profileRemoteSource.getProfile();
     return userResult.fold(
       onSuccess: (user) => LoginResultEntity(tokens: tokens, user: user),
       onFailure: (e) => throw e,
