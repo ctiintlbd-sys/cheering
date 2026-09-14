@@ -86,16 +86,7 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
                         color: context.colors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                         child: Center(
-                          child: state.isBiometricLoginLoading
-                              ? SizedBox(
-                                  width: 28.r,
-                                  height: 28.r,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: context.colors.primary,
-                                  ),
-                                )
-                              : Assets.icons.touch.svg(
+                          child: Assets.icons.touch.svg(
                                   width: 54.r,
                                   height: 54.r,
                                   color: context.colors.primary,
