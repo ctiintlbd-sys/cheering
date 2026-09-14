@@ -1,3 +1,4 @@
+import 'package:cheering/core/helpers/picker_helper.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,21 +14,21 @@ class AccountSettingsScreen extends StatefulWidget {
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _phoneController;
-  late final TextEditingController _descController;
+  late final TextEditingController _emailController;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: '');
+    _emailController = TextEditingController(text: '');
     _phoneController = TextEditingController(text: '');
-    _descController = TextEditingController(text: '');
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
-    _descController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -42,25 +43,31 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         SizedBox(height: 16.h),
         Align(
           alignment: Alignment.center,
-          child: GestureDetector(
-            onTap: () {},
-            behavior: HitTestBehavior.opaque,
-            child: Stack(
-              children: [
-                CustomNetworkImage(
-                  imageUrl: '',
-                  imageFile: null,
-                  width: 94.r,
-                  height: 94.r,
-                  boxShape: BoxShape.circle,
-                  border: Border.all(color: context.colors.borderSecondary),
+          child: Stack(
+            children: [
+              CustomNetworkImage.view(
+                imageUrl: '',
+                imageFile: null,
+                width: 94.r,
+                height: 94.r,
+                boxShape: BoxShape.circle,
+                border: Border.all(color: context.colors.borderSecondary),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    context.pickImageWithCrop(
+                      cropConfig: ImageCropHelper.profilePicture,
+                      onCropped: (value) {},
+                    );
+                  },
+                  child: Assets.icons.imageUpdate.svg(),
                 ),
-                Positioned(
-                  bottom: 0,
-                    right: 0,
-                    child: Assets.icons.imageUpdate.svg()),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         SizedBox(height: 24.h),
@@ -79,6 +86,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           controller: _phoneController,
           hintText: 'example.gmail.com',
           keyboardType: TextInputType.emailAddress,
+          enabled: false,
         ),
         SizedBox(height: 12.h),
 
