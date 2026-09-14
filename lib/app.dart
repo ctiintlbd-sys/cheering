@@ -4,6 +4,8 @@ import 'package:cheering/core/router/app_router.dart';
 import 'package:cheering/features/overview/presentation/bloc/overview_bloc.dart';
 import 'package:cheering/features/overview/presentation/bloc/overview_event.dart';
 import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:cheering/features/profile/presentation/bloc/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -32,6 +34,7 @@ class App extends StatelessWidget {
         BlocProvider(
           create: (_) => getIt<AuthBloc>(),
         ),
+        BlocProvider(create: (_) => getIt<ProfileBloc>()..add(const LoadProfileRequested())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),

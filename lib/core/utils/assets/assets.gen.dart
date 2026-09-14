@@ -101,6 +101,9 @@ class $AssetsIconsGen {
   SvgGenImage get locationPin =>
       const SvgGenImage('assets/icons/location_pin.svg');
 
+  /// File path: assets/icons/logout_pop.svg
+  SvgGenImage get logoutPop => const SvgGenImage('assets/icons/logout_pop.svg');
+
   /// File path: assets/icons/love.svg
   SvgGenImage get love => const SvgGenImage('assets/icons/love.svg');
 
@@ -261,6 +264,7 @@ class $AssetsIconsGen {
     google,
     imageUpdate,
     locationPin,
+    logoutPop,
     love,
     menu,
     menuBd,

@@ -35,27 +35,27 @@ class CustomDialog extends StatelessWidget {
 
     return Dialog(
       backgroundColor: context.colors.background,
-      insetPadding: EdgeInsets.symmetric(horizontal: 37.w),
+      insetPadding: EdgeInsets.symmetric(horizontal: 44.w),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(24.w, 32.h, 24.w, 24.h),
+            padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 24.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (icon != null) ...[icon!, SizedBox(height: 24.h)],
                 CustomText(
                   text: title,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
                   textAlign: TextAlign.center,
                   color: resolvedTitleColor,
                 ),
-                SizedBox(height: 8.h),
+                //SizedBox(height: 8.h),
                 if (description != null)
                   CustomText(
-                    top: 10.h,
+                    top: 8.h,
                     textAlign: TextAlign.center,
                     text: description!,
                     color: context.colors.textTertiary,

@@ -12,6 +12,8 @@ import '../../../authentication/presentation/bloc/auth_bloc.dart';
 import '../../../authentication/presentation/bloc/auth_event.dart';
 import '../../../authentication/presentation/bloc/auth_state.dart';
 import '../../../feedback/presentation/screens/widgets/profile_menu_tile.dart';
+import '../bloc/profile_bloc.dart';
+import '../bloc/profile_state.dart';
 import 'widgets/profile_header_card.dart';
 import 'widgets/profile_menu_content.dart';
 import 'widgets/trailing_dropdown.dart';
@@ -19,81 +21,6 @@ import 'widgets/trailing_dropdown.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => Dialog(
-        backgroundColor: dialogContext.colors.background,
-        insetPadding: EdgeInsets.symmetric(horizontal: 28.w),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 20.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomContainer(
-                height: 64.r,
-                width: 64.r,
-                shape: BoxShape.circle,
-                color:
-                    dialogContext.colors.bgErrorPrimary.withValues(alpha: 0.1),
-                child: Center(
-                  child: Assets.icons.profileLogout.svg(
-                    width: 32.r,
-                    height: 32.r,
-                    color: dialogContext.colors.bgErrorSecondary,
-                  ),
-                ),
-              ),
-              SizedBox(height: 18.h),
-              CustomText(
-                text: 'Log Out',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                textAlign: TextAlign.center,
-                color: dialogContext.colors.textPrimary,
-              ),
-              SizedBox(height: 8.h),
-              CustomText(
-                text: 'Are you sure you want to log out of your account?',
-                fontSize: 14.sp,
-                textAlign: TextAlign.center,
-                color: dialogContext.colors.textSecondary,
-              ),
-              SizedBox(height: 24.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      label: 'Cancel',
-                      backgroundColor: dialogContext.colors.background,
-                      foregroundColor: dialogContext.colors.textPrimary,
-                      bordersColor: dialogContext.colors.borderSecondary,
-                      onPressed: () => Navigator.of(dialogContext).pop(),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: CustomButton(
-                      label: 'Log Out',
-                      backgroundColor: dialogContext.colors.bgErrorSecondary,
-                      foregroundColor: Colors.white,
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                        context.read<AuthBloc>().add(const LogoutRequested());
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +40,11 @@ class ProfileScreen extends StatelessWidget {
         bodyList: [
           SizedBox(height: 16.h),
 
-          ProfileHeaderCard(
-            name: 'Jenia Rahman',
-            subtitle: 'Jenia Rahman',
-            imageUrl: '',
-            onTap: () {
-              context.push(RoutePaths.accountSettings);
+          BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, profileState) {
+              return ProfileHeaderCard(
+                user : profileState.user
+              );
             },
           ),
 
@@ -222,4 +148,24 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => CustomDialog(
+        icon: Assets.icons.logoutPop.svg(),
+        title: 'Are you sure want\nto logout?',
+        description: 'You will need to login again to access your account',
+        buttonLabel: 'Logout',
+        buttonBgColor: dialogContext.colors.bgErrorPrimary.withValues(alpha: 0.10),
+        buttonLabelColor: dialogContext.colors.bgErrorSecondary,
+        onTapButton: () {
+          Navigator.of(dialogContext).pop();
+          context.read<AuthBloc>().add(const LogoutRequested());
+        },
+      ),
+    );
+  }
+
 }

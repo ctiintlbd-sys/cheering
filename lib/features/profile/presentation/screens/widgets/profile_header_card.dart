@@ -1,33 +1,23 @@
-import 'dart:io';
-
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/authentication/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
-  final String name;
-  final String? subtitle;
-  final String? imageUrl;
-  final File? imageFile;
-  final VoidCallback? onTap;
-  final bool showTrailing;
-  final Widget? trailing;
-
   const ProfileHeaderCard({
-    super.key,
-    this.name = 'Jenia Rahman',
-    this.subtitle = 'Jenia Rahman',
-    this.imageUrl = '',
-    this.imageFile,
-    this.onTap,
-    this.showTrailing = true,
-    this.trailing,
+    super.key, this.user,
   });
+
+  final UserEntity? user;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      onTap: onTap,
+      onTap: () {
+        context.push(RoutePaths.accountSettings);
+      },
       paddingVertical: 8.h,
       paddingHorizontal: 12.w,
       radiusAll: 8.r,
@@ -38,8 +28,7 @@ class ProfileHeaderCard extends StatelessWidget {
             boxShape: BoxShape.circle,
             height: 64.r,
             width: 64.r,
-            imageUrl: imageUrl,
-            imageFile: imageFile,
+            imageUrl: user?.avatarUrl,
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -49,24 +38,20 @@ class ProfileHeaderCard extends StatelessWidget {
                 CustomText(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  text: name,
+                  text: user!.fullName,
                 ),
-                if (subtitle != null && subtitle!.isNotEmpty)
-                  CustomText(
-                    top: 4.h,
-                    color: context.colors.textTertiary,
-                    text: subtitle!,
-                  ),
+                CustomText(
+                  top: 4.h,
+                  color: context.colors.textTertiary,
+                  text: user!.email,
+                ),
               ],
             ),
           ),
-          if (trailing != null)
-            trailing!
-          else if (showTrailing)
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: context.colors.iconTertiary,
-            ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: context.colors.iconTertiary,
+          ),
         ],
       ),
     );

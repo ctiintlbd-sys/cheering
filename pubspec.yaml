@@ -66,9 +66,9 @@ flutter_gen:
     # rive: true
     lottie: true
     #===========>>>>>>>>>> Flutter Gen Code ==============>>>>>>>>>>>
-    # dart pub global activate flutter_gen
-    # flutter pub run build_runner build --delete-conflicting-outputs
-#    dart run build_runner build
+    # fvm dart pub global activate flutter_gen
+    # fvm flutter pub run build_runner build --delete-conflicting-outputs
+#   fvm dart run build_runner build
 
 
 flutter_launcher_icons:

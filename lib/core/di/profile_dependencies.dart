@@ -6,6 +6,7 @@ import '../../features/profile/domain/repositories/i_profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile_usecase.dart';
 import '../../features/profile/domain/usecases/update_profile_usecase.dart';
 import '../../features/profile/domain/usecases/upload_profile_image_usecase.dart';
+import '../../features/profile/presentation/bloc/profile_bloc.dart';
 import '../network/i_api_client.dart';
 
 void setupProfileDependencies(GetIt getIt) {
@@ -28,5 +29,14 @@ void setupProfileDependencies(GetIt getIt) {
   );
   getIt.registerLazySingleton<UploadProfileImageUseCase>(
     () => UploadProfileImageUseCase(getIt<IProfileRepository>()),
+  );
+
+  // Bloc
+  getIt.registerFactory<ProfileBloc>(
+    () => ProfileBloc(
+      getProfileUseCase: getIt<GetProfileUseCase>(),
+      updateProfileUseCase: getIt<UpdateProfileUseCase>(),
+      uploadProfileImageUseCase: getIt<UploadProfileImageUseCase>(),
+    ),
   );
 }
