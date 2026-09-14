@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/widgets/app_auth_title.dart';
@@ -59,61 +58,36 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void _onConfirm(BuildContext context) {
     final otp = _otpController.text.trim();
-    if (otp.isEmpty) {
-      ToastMessageHelper.show('Please enter the verification code');
-      return;
-    }
-
-    if (widget.isForgotPassword) {
-      context.push(
-        RoutePaths.resetPassword,
-        extra: {
-          'email': widget.email,
-          'code': otp,
-        },
-      );
-    } else {
-      context.push(
-        RoutePaths.setPassword,
-        extra: {
-          'email': widget.email,
-          'otp': otp,
-        },
-      );
-    }
+    context.push(
+      RoutePaths.setPassword,
+      extra: {
+        'email': widget.email,
+        'otp': otp,
+        'isForgotPassword': widget.isForgotPassword,
+      },
+    );
   }
 
   void _onResend(BuildContext context) {
     if (_countdownNotifier.value > 0) return;
     _startTimer();
     if (widget.isForgotPassword) {
-      context.read<AuthBloc>().add(
-            ForgotPasswordRequested(email: widget.email),
-          );
+      context.read<AuthBloc>().add(ForgotPasswordRequested(email: widget.email));
     } else {
-      context.read<AuthBloc>().add(
-            SendOtpRequested(email: widget.email),
-          );
+      context.read<AuthBloc>().add(SendOtpRequested(email: widget.email));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (prev, curr) =>
+          curr.status == AuthStatus.failure &&
+          (curr.action == AuthAction.sendOtp || curr.action == AuthAction.forgotPassword),
       listener: (context, state) {
-        if (state.status == AuthStatus.failure &&
-            (state.action == AuthAction.sendOtp ||
-                state.action == AuthAction.forgotPassword)) {
-          ToastMessageHelper.show(
-            state.errorMessage ?? 'Failed to resend code',
-          );
-        } else if (state.status == AuthStatus.success &&
-            (state.action == AuthAction.sendOtp ||
-                state.action == AuthAction.forgotPassword)) {
-          ToastMessageHelper.show(
-            state.successMessage ?? 'Verification code resent successfully',
-          );
-        }
+        ToastMessageHelper.show(
+          state.errorMessage ?? 'Failed to resend code',
+        );
       },
       child: SliverScaffold(
         sideContentPadding: 24.w,

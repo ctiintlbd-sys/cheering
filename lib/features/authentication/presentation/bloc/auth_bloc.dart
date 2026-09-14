@@ -9,7 +9,6 @@ import '../../domain/usecases/login_with_google_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/reset_password_usecase.dart';
 import '../../domain/usecases/send_otp_usecase.dart';
-import '../../domain/usecases/skip_biometrics_usecase.dart';
 import '../../domain/usecases/verify_otp_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -21,7 +20,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginWithGoogleUseCase loginWithGoogleUseCase;
   final LoginWithBiometricsUseCase loginWithBiometricsUseCase;
   final EnableBiometricsUseCase enableBiometricsUseCase;
-  final SkipBiometricsUseCase skipBiometricsUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final LogoutUseCase logoutUseCase;
@@ -34,7 +32,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.loginWithGoogleUseCase,
     required this.loginWithBiometricsUseCase,
     required this.enableBiometricsUseCase,
-    required this.skipBiometricsUseCase,
     required this.forgotPasswordUseCase,
     required this.resetPasswordUseCase,
     required this.logoutUseCase,
@@ -46,7 +43,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GoogleLoginRequested>(_onGoogleLoginRequested);
     on<BiometricLoginRequested>(_onBiometricLoginRequested);
     on<EnableBiometricsRequested>(_onEnableBiometricsRequested);
-    on<SkipBiometricsRequested>(_onSkipBiometricsRequested);
     on<ForgotPasswordRequested>(_onForgotPasswordRequested);
     on<ResetPasswordRequested>(_onResetPasswordRequested);
     on<LogoutRequested>(_onLogoutRequested);
@@ -101,6 +97,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
         fullName: event.fullName,
       );
+      routerNotifier.updateAuth(isAuthenticated: true);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.verifyOtp,
@@ -214,7 +211,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final enabled = await enableBiometricsUseCase();
-      routerNotifier.updateAuth(isAuthenticated: true);
       emit(state.copyWith(
         status: AuthStatus.success,
         action: AuthAction.enableBiometrics,
@@ -226,32 +222,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(
         status: AuthStatus.failure,
         action: AuthAction.enableBiometrics,
-        errorMessage: e.toString(),
-      ));
-    }
-  }
-
-  Future<void> _onSkipBiometricsRequested(
-    SkipBiometricsRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.skipBiometrics,
-      clearError: true,
-    ));
-
-    try {
-      await skipBiometricsUseCase();
-      routerNotifier.updateAuth(isAuthenticated: true);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.skipBiometrics,
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.skipBiometrics,
         errorMessage: e.toString(),
       ));
     }

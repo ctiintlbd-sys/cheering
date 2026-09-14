@@ -48,16 +48,15 @@ class _EmailScreenState extends State<EmailScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         switch ((state.status, state.action)) {
-          case (AuthStatus.failure, AuthAction.sendOtp || AuthAction.googleLogin):
+          case (
+            AuthStatus.failure,
+            AuthAction.sendOtp || AuthAction.googleLogin,
+          ):
             ToastMessageHelper.show(
               state.errorMessage ?? 'An unexpected error occurred.',
             );
           case (AuthStatus.success, AuthAction.sendOtp):
             context.push(RoutePaths.otp, extra: _emailController.text.trim());
-          case (AuthStatus.success, AuthAction.googleLogin):
-            ToastMessageHelper.show(
-              state.successMessage ?? 'Google login successful',
-            );
           default:
             break;
         }

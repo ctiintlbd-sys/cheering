@@ -13,7 +13,6 @@ enum AuthAction {
   googleLogin,
   biometricLogin,
   enableBiometrics,
-  skipBiometrics,
   forgotPassword,
   resetPassword,
   logout,

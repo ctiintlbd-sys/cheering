@@ -20,7 +20,6 @@ import '../../features/authentication/domain/usecases/login_with_google_usecase.
 import '../../features/authentication/domain/usecases/logout_usecase.dart';
 import '../../features/authentication/domain/usecases/reset_password_usecase.dart';
 import '../../features/authentication/domain/usecases/send_otp_usecase.dart';
-import '../../features/authentication/domain/usecases/skip_biometrics_usecase.dart';
 import '../../features/authentication/domain/usecases/verify_otp_usecase.dart';
 
 void setupAuthDependencies(GetIt getIt) {
@@ -74,10 +73,6 @@ void setupAuthDependencies(GetIt getIt) {
     () => EnableBiometricsUseCase(getIt<IBiometricRepository>()),
   );
 
-  getIt.registerLazySingleton<SkipBiometricsUseCase>(
-    () => SkipBiometricsUseCase(getIt<IBiometricRepository>()),
-  );
-
   getIt.registerLazySingleton<CheckStoredSessionUseCase>(
     () => CheckStoredSessionUseCase(getIt<IAuthRepository>()),
   );
@@ -106,7 +101,6 @@ void setupAuthDependencies(GetIt getIt) {
       loginWithGoogleUseCase: getIt<LoginWithGoogleUseCase>(),
       loginWithBiometricsUseCase: getIt<LoginWithBiometricsUseCase>(),
       enableBiometricsUseCase: getIt<EnableBiometricsUseCase>(),
-      skipBiometricsUseCase: getIt<SkipBiometricsUseCase>(),
       forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
       resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
       logoutUseCase: getIt<LogoutUseCase>(),

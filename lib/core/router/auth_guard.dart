@@ -10,9 +10,7 @@ abstract final class AppAuthGuard {
     RoutePaths.password,
     RoutePaths.setPassword,
     RoutePaths.about,
-    RoutePaths.enableBiometrics,
     RoutePaths.forgotPassword,
-    RoutePaths.resetPassword,
     RoutePaths.onboarding,
   };
 

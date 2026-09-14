@@ -68,11 +68,6 @@ class EnableBiometricsRequested extends AuthEvent {
   const EnableBiometricsRequested();
 }
 
-/// Post-signup: skip biometric setup
-class SkipBiometricsRequested extends AuthEvent {
-  const SkipBiometricsRequested();
-}
-
 /// Triggered in ForgotScreen to request reset code
 class ForgotPasswordRequested extends AuthEvent {
   final String email;
@@ -83,7 +78,7 @@ class ForgotPasswordRequested extends AuthEvent {
   List<Object?> get props => [email];
 }
 
-/// Triggered in ResetPasswordScreen to submit new password
+/// Triggered from [SetPasswordScreen] when resetting a forgotten password
 class ResetPasswordRequested extends AuthEvent {
   final String email;
   final String code;

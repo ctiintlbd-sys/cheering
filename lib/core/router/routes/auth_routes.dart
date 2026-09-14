@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../features/authentication/presentation/screen/forgot_screen.dart';
 import '../../../features/authentication/presentation/screen/email_screen.dart';
-import '../../../features/authentication/presentation/screen/reset_password_screen.dart';
 import '../route_paths.dart';
 
 final List<RouteBase> authRoutes = [
@@ -51,7 +50,8 @@ final List<RouteBase> authRoutes = [
       final args = state.extra as Map<String, dynamic>;
       return SetPasswordScreen(
         email: args['email'] as String,
-        otp: args['otp'] as String,
+        otp: args['otp'] as String? ?? args['code'] as String? ?? '',
+        isForgotPassword: args['isForgotPassword'] as bool? ?? false,
       );
     },
   ),
@@ -72,16 +72,5 @@ final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.enableBiometrics,
     builder: (context, state) => const EnableBiometricsScreen(),
-  ),
-
-  GoRoute(
-    path: RoutePaths.resetPassword,
-    builder: (context, state) {
-      final args = state.extra as Map<String, dynamic>;
-      return ResetPasswordScreen(
-        email: args['email'] as String,
-        code: args['code'] as String,
-      );
-    },
   ),
 ];
