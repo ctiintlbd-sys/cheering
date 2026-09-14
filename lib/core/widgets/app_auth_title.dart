@@ -33,6 +33,7 @@ class AppAuthTitle extends StatelessWidget {
             fontSize: 14.sp,
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.center,
+            maxLines: 2,
             color: context.colors.textSecondary,
             top: 8.h,
           ),

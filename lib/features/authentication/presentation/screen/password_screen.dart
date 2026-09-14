@@ -53,7 +53,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 134.h,
+          expandedHeight: 142.h,
           flexibleChild: AppAuthTitle(
             title: 'Hi, Welcome Back! 👋',
             subtitle: 'Enter your password for ${widget.email}',
