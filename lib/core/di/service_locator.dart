@@ -1,9 +1,6 @@
 import 'package:get_it/get_it.dart';
-
 import 'core_dependencies.dart';
 import 'auth_dependencies.dart';
-import 'feature_dependencies.dart';
-import 'business_hours_dependencies.dart';
 import 'profile_dependencies.dart';
 
 /// Global GetIt instance alias
@@ -14,6 +11,4 @@ Future<void> setupServiceLocator() async {
   setupCoreDependencies(getIt);
   setupProfileDependencies(getIt);
   setupAuthDependencies(getIt);
-  setupFeatureDependencies(getIt);
-  setupBusinessHoursDependencies(getIt);
 }

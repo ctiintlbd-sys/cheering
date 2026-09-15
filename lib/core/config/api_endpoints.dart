@@ -18,30 +18,16 @@ class ApiEndpoints {
   static const String googleRedirectUri = 'crshop://auth/callback';
   static const String googleCallbackScheme = 'crshop';
 
-  static const String currentUser = '/users/me';
   static const String biometricsEnable = '/auth/biometrics/enable';
   static const String biometricsChallenge = '/auth/biometrics/challenge';
   static const String biometricsLogin = '/auth/biometrics/login';
 
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/users/me/profile';
-
-  // ── Menu ───────────────────────────────────────────────────
-  static const String menu = '/vendor/menu';
-  static const String menuCategories = '/vendor/menu/categories';
-  static const String menuItems = '/vendor/menu/items';
-
-  // ── Orders ──────────────────────────────────────────────────
-  static const String orders = '/vendor/orders';
+  static const String currentUser = '/users/me';
 
   // ── Upload ─────────────────────────────────────────────────
   static const String presignedUpload = '/uploads/presigned-url';
   static const String uploadApplicationDoc = '/vendor/applications/uploads';
   static const String applicationsSubmit = '/vendor/applications';
-
-  // ── Promotions ─────────────────────────────────────────────
-  static const String promotions = '/vendor/promotions';
-
-  // ── Business Hours ─────────────────────────────────────────
-  static const String vendorHours = '/vendor/hours';
 }
