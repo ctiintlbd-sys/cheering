@@ -37,7 +37,7 @@ class _SupportScreenState extends State<SupportScreen> {
     {
       'question': 'How do I pause my store?',
       'answer':
-          'You can toggle store status from the top bar on the Home / Overview screen.',
+          'You can toggle store status from your store settings or dashboard.',
     },
   ];
 

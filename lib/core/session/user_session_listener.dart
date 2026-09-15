@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../di/service_locator.dart';
 import '../router/app_router_notifier.dart';
-import '../../features/overview/presentation/bloc/overview_bloc.dart';
-import '../../features/overview/presentation/bloc/overview_event.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
 import '../../features/profile/presentation/bloc/profile_event.dart';
 
@@ -45,10 +43,8 @@ class _UserSessionListenerState extends State<UserSessionListener> {
 
     if (authenticated) {
       context.read<ProfileBloc>().add(const LoadProfileRequested());
-      context.read<OverviewBloc>().add(const LoadOverview());
     } else {
       context.read<ProfileBloc>().add(const ProfileSessionCleared());
-      context.read<OverviewBloc>().add(const OverviewSessionCleared());
     }
   }
 

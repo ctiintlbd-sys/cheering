@@ -142,10 +142,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/order_fil.svg
   SvgGenImage get orderFil => const SvgGenImage('assets/icons/order_fil.svg');
 
-  /// File path: assets/icons/overview_bd.svg
-  SvgGenImage get overviewBd =>
-      const SvgGenImage('assets/icons/overview_bd.svg');
-
   /// File path: assets/icons/percentage.svg
   SvgGenImage get percentage =>
       const SvgGenImage('assets/icons/percentage.svg');
@@ -276,7 +272,6 @@ class $AssetsIconsGen {
     order,
     orderCompleted,
     orderFil,
-    overviewBd,
     percentage,
     phoneCall,
     profile,

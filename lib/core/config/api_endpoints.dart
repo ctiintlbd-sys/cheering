@@ -31,10 +31,6 @@ class ApiEndpoints {
   static const String menuCategories = '/vendor/menu/categories';
   static const String menuItems = '/vendor/menu/items';
 
-  // ── Overview / Dashboard ──────────────────────────────────
-  static const String dashboard = '/vendor/dashboard';
-  static const String performance = '/vendor/performance';
-  static const String analytics = '/vendor/analytics';
   // ── Orders ──────────────────────────────────────────────────
   static const String orders = '/vendor/orders';
 

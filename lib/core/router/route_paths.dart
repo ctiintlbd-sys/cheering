@@ -64,8 +64,7 @@ abstract class RoutePaths {
   static const String earnings = '/earnings';
 
 
-  // ── Performance & Promotions ───────────────────────────────
-  static const String performance = '/performance';
+  // ── Promotions ─────────────────────────────────────────────
   static const String promotions = '/promotions';
   static const String createPromotion = '/promotions/create';
   static const String promotionSuccess = '/promotions/success';
