@@ -8,6 +8,7 @@ import '../network/dio_api_client.dart';
 import '../network/i_api_client.dart';
 import '../network/request_manager.dart';
 import '../router/app_router_notifier.dart';
+import '../session/user_session_cleanup.dart';
 import '../storage/token_storage.dart';
 
 void setupCoreDependencies(GetIt getIt) {
@@ -16,6 +17,9 @@ void setupCoreDependencies(GetIt getIt) {
   getIt.registerLazySingleton<AppRouterNotifier>(() => AppRouterNotifier());
   getIt.registerLazySingleton<RequestManager>(() => RequestManager());
   getIt.registerLazySingleton<CacheService>(() => HiveCacheService.instance);
+  getIt.registerLazySingleton<UserSessionCleanup>(
+    () => UserSessionCleanup(getIt<CacheService>()),
+  );
   getIt.registerLazySingleton<IApiClient>(
     () => DioApiClient(
       baseUrl: AppConfig.instance.baseUrl,
@@ -28,8 +32,7 @@ void setupCoreDependencies(GetIt getIt) {
         );
       },
       onLogout: () async {
-        await TokenStorage.clearTokens();
-        await getIt<CacheService>().clear();
+        await getIt<UserSessionCleanup>()();
         getIt<AppRouterNotifier>().updateAuth(isAuthenticated: false);
       },
     ),

@@ -8,6 +8,10 @@ abstract class OverviewEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class OverviewSessionCleared extends OverviewEvent {
+  const OverviewSessionCleared();
+}
+
 class LoadOverview extends OverviewEvent {
   final Completer<void>? completer;
   const LoadOverview({this.completer});

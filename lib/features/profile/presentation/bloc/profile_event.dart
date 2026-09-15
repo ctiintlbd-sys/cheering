@@ -14,6 +14,11 @@ class LoadProfileRequested extends ProfileEvent {
   const LoadProfileRequested();
 }
 
+/// Clears in-memory profile after logout or forced local session clear.
+class ProfileSessionCleared extends ProfileEvent {
+  const ProfileSessionCleared();
+}
+
 /// Triggered when updating profile fields (PUT /users/me/profile).
 class UpdateProfileRequested extends ProfileEvent {
   final String fullName;

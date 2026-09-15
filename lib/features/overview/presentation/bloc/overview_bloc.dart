@@ -20,6 +20,9 @@ class OverviewBloc extends Bloc<OverviewEvent, OverviewState> {
     required this.getPerformance,
     required this.getReport,
   }) : super(const OverviewState()) {
+    on<OverviewSessionCleared>(
+      (event, emit) => emit(const OverviewState()),
+    );
     on<LoadOverview>(_onLoadOverview, transformer: restartable());
     on<LoadPerformance>(_onLoadPerformance, transformer: restartable());
     on<LoadReport>(_onLoadReport, transformer: restartable());

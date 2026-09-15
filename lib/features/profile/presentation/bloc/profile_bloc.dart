@@ -20,6 +20,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.uploadProfileImageUseCase,
   }) : super(const ProfileState()) {
     on<LoadProfileRequested>(_onLoadProfileRequested, transformer: restartable());
+    on<ProfileSessionCleared>(
+      (event, emit) => emit(const ProfileState()),
+    );
     on<UpdateProfileRequested>(_onUpdateProfileRequested);
     on<UploadProfileImage>(_onUploadProfileImage);
     on<UpdateUploadProgress>(_onUpdateUploadProgress);

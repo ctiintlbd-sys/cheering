@@ -28,7 +28,6 @@ class ProfileRepositoryImpl implements IProfileRepository {
         toJson: (e) => (e as ProfileModel).toJson(),
         fetch: () => _source.getProfile(),
         ttl: const Duration(hours: 24),
-        skipFetchIfCached: true,
       );
 
   @override

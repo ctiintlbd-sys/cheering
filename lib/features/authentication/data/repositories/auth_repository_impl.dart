@@ -1,4 +1,5 @@
 import '../../../../core/network/api_result.dart';
+import '../../../../core/session/user_session_cleanup.dart';
 import '../../../../core/storage/token_storage.dart';
 import '../../../profile/data/datasources/profile_remote_source.dart';
 import '../../domain/entities/login_result_entity.dart';
@@ -13,12 +14,14 @@ class AuthRepositoryImpl implements IAuthRepository {
   final GoogleAuthService _googleAuthService;
   final BiometricAuthService _biometricAuthService;
   final ProfileRemoteSource _profileRemoteSource;
+  final UserSessionCleanup _sessionCleanup;
 
   AuthRepositoryImpl(
     this._source,
     this._googleAuthService,
     this._biometricAuthService,
     this._profileRemoteSource,
+    this._sessionCleanup,
   );
 
   @override
@@ -113,7 +116,7 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<void> clearLocalSession() => TokenStorage.clearTokens();
+  Future<void> clearLocalSession() => _sessionCleanup();
 
   @override
   Future<String> forgotPassword({required String email}) async {
@@ -158,7 +161,7 @@ class AuthRepositoryImpl implements IAuthRepository {
         );
       }
     } finally {
-      await TokenStorage.clearTokens();
+      await _sessionCleanup();
     }
   }
 }
