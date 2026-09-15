@@ -12,7 +12,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
-import 'package:lottie/lottie.dart' as _lottie;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
 class $AssetsIconsGen {
@@ -24,26 +23,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow_back.svg
   SvgGenImage get arrowBack => const SvgGenImage('assets/icons/arrow_back.svg');
 
-  /// File path: assets/icons/bank.svg
-  SvgGenImage get bank => const SvgGenImage('assets/icons/bank.svg');
-
-  /// File path: assets/icons/bell.svg
-  SvgGenImage get bell => const SvgGenImage('assets/icons/bell.svg');
-
   /// File path: assets/icons/bikash.svg
   SvgGenImage get bikash => const SvgGenImage('assets/icons/bikash.svg');
-
-  /// File path: assets/icons/bike.svg
-  SvgGenImage get bike => const SvgGenImage('assets/icons/bike.svg');
 
   /// File path: assets/icons/bookmark.svg
   SvgGenImage get bookmark => const SvgGenImage('assets/icons/bookmark.svg');
 
   /// File path: assets/icons/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
-
-  /// File path: assets/icons/clean.svg
-  SvgGenImage get clean => const SvgGenImage('assets/icons/clean.svg');
 
   /// File path: assets/icons/comment.svg
   SvgGenImage get comment => const SvgGenImage('assets/icons/comment.svg');
@@ -54,15 +41,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/community_fil.svg
   SvgGenImage get communityFil =>
       const SvgGenImage('assets/icons/community_fil.svg');
-
-  /// File path: assets/icons/date.svg
-  SvgGenImage get date => const SvgGenImage('assets/icons/date.svg');
-
-  /// File path: assets/icons/delete.svg
-  SvgGenImage get delete => const SvgGenImage('assets/icons/delete.svg');
-
-  /// File path: assets/icons/edit.svg
-  SvgGenImage get edit => const SvgGenImage('assets/icons/edit.svg');
 
   /// File path: assets/icons/empty_order.svg
   SvgGenImage get emptyOrder =>
@@ -97,10 +75,6 @@ class $AssetsIconsGen {
   SvgGenImage get imageUpdate =>
       const SvgGenImage('assets/icons/image_update.svg');
 
-  /// File path: assets/icons/location_pin.svg
-  SvgGenImage get locationPin =>
-      const SvgGenImage('assets/icons/location_pin.svg');
-
   /// File path: assets/icons/lock.svg
   SvgGenImage get lock => const SvgGenImage('assets/icons/lock.svg');
 
@@ -112,13 +86,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/menu.svg
   SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
-
-  /// File path: assets/icons/menu_bd.svg
-  SvgGenImage get menuBd => const SvgGenImage('assets/icons/menu_bd.svg');
-
-  /// File path: assets/icons/menu_category.svg
-  SvgGenImage get menuCategory =>
-      const SvgGenImage('assets/icons/menu_category.svg');
 
   /// File path: assets/icons/nogod.svg
   SvgGenImage get nogod => const SvgGenImage('assets/icons/nogod.svg');
@@ -145,13 +112,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/order_fil.svg
   SvgGenImage get orderFil => const SvgGenImage('assets/icons/order_fil.svg');
 
-  /// File path: assets/icons/percentage.svg
-  SvgGenImage get percentage =>
-      const SvgGenImage('assets/icons/percentage.svg');
-
-  /// File path: assets/icons/phone_call.svg
-  SvgGenImage get phoneCall => const SvgGenImage('assets/icons/phone_call.svg');
-
   /// File path: assets/icons/profile.svg
   SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
@@ -162,10 +122,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile_address.svg
   SvgGenImage get profileAddress =>
       const SvgGenImage('assets/icons/profile_address.svg');
-
-  /// File path: assets/icons/profile_appearance.svg
-  SvgGenImage get profileAppearance =>
-      const SvgGenImage('assets/icons/profile_appearance.svg');
 
   /// File path: assets/icons/profile_fil.svg
   SvgGenImage get profileFil =>
@@ -187,17 +143,9 @@ class $AssetsIconsGen {
   SvgGenImage get profileNotification =>
       const SvgGenImage('assets/icons/profile_notification.svg');
 
-  /// File path: assets/icons/profile_offer.svg
-  SvgGenImage get profileOffer =>
-      const SvgGenImage('assets/icons/profile_offer.svg');
-
   /// File path: assets/icons/profile_payment.svg
   SvgGenImage get profilePayment =>
       const SvgGenImage('assets/icons/profile_payment.svg');
-
-  /// File path: assets/icons/profile_security.svg
-  SvgGenImage get profileSecurity =>
-      const SvgGenImage('assets/icons/profile_security.svg');
 
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
@@ -205,32 +153,11 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share.svg
   SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
 
-  /// File path: assets/icons/shop.svg
-  SvgGenImage get shop => const SvgGenImage('assets/icons/shop.svg');
-
   /// File path: assets/icons/store.svg
   SvgGenImage get store => const SvgGenImage('assets/icons/store.svg');
 
-  /// File path: assets/icons/store_category.svg
-  SvgGenImage get storeCategory =>
-      const SvgGenImage('assets/icons/store_category.svg');
-
-  /// File path: assets/icons/store_description.svg
-  SvgGenImage get storeDescription =>
-      const SvgGenImage('assets/icons/store_description.svg');
-
   /// File path: assets/icons/store_fil.svg
   SvgGenImage get storeFil => const SvgGenImage('assets/icons/store_fil.svg');
-
-  /// File path: assets/icons/store_mail.svg
-  SvgGenImage get storeMail => const SvgGenImage('assets/icons/store_mail.svg');
-
-  /// File path: assets/icons/store_name.svg
-  SvgGenImage get storeName => const SvgGenImage('assets/icons/store_name.svg');
-
-  /// File path: assets/icons/store_number.svg
-  SvgGenImage get storeNumber =>
-      const SvgGenImage('assets/icons/store_number.svg');
 
   /// File path: assets/icons/touch.svg
   SvgGenImage get touch => const SvgGenImage('assets/icons/touch.svg');
@@ -239,19 +166,12 @@ class $AssetsIconsGen {
   List<SvgGenImage> get values => [
     appLogo,
     arrowBack,
-    bank,
-    bell,
     bikash,
-    bike,
     bookmark,
     cart,
-    clean,
     comment,
     community,
     communityFil,
-    date,
-    delete,
-    edit,
     emptyOrder,
     face,
     filtter,
@@ -262,13 +182,10 @@ class $AssetsIconsGen {
     foodShare,
     google,
     imageUpdate,
-    locationPin,
     lock,
     logoutPop,
     love,
     menu,
-    menuBd,
-    menuCategory,
     nogod,
     onboardingLast,
     onboardingOne,
@@ -276,30 +193,19 @@ class $AssetsIconsGen {
     order,
     orderCompleted,
     orderFil,
-    percentage,
-    phoneCall,
     profile,
     profileAbout,
     profileAddress,
-    profileAppearance,
     profileFil,
     profileHelp,
     profileLanguage,
     profileLogout,
     profileNotification,
-    profileOffer,
     profilePayment,
-    profileSecurity,
     search,
     share,
-    shop,
     store,
-    storeCategory,
-    storeDescription,
     storeFil,
-    storeMail,
-    storeName,
-    storeNumber,
     touch,
   ];
 }
@@ -336,21 +242,9 @@ class $AssetsImagesGen {
   ];
 }
 
-class $AssetsLottiesGen {
-  const $AssetsLottiesGen();
-
-  /// File path: assets/lotties/empty data.json
-  LottieGenImage get emptyData =>
-      const LottieGenImage('assets/lotties/empty data.json');
-
-  /// List of all assets
-  List<LottieGenImage> get values => [emptyData];
-}
-
 abstract final class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
 }
 
 class AssetGenImage {
@@ -507,73 +401,6 @@ class SvgGenImage {
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
-    );
-  }
-
-  String get path => _assetName;
-
-  String get keyName => _assetName;
-}
-
-class LottieGenImage {
-  const LottieGenImage(this._assetName, {this.flavors = const {}});
-
-  final String _assetName;
-  final Set<String> flavors;
-
-  _lottie.LottieBuilder lottie({
-    Animation<double>? controller,
-    bool? animate,
-    _lottie.FrameRate? frameRate,
-    bool? repeat,
-    bool? reverse,
-    _lottie.LottieDelegates? delegates,
-    _lottie.LottieOptions? options,
-    void Function(_lottie.LottieComposition)? onLoaded,
-    _lottie.LottieImageProviderFactory? imageProviderFactory,
-    Key? key,
-    AssetBundle? bundle,
-    Widget Function(BuildContext, Widget, _lottie.LottieComposition?)?
-    frameBuilder,
-    ImageErrorWidgetBuilder? errorBuilder,
-    double? width,
-    double? height,
-    BoxFit? fit,
-    AlignmentGeometry? alignment,
-    String? package,
-    bool? addRepaintBoundary,
-    FilterQuality? filterQuality,
-    void Function(String)? onWarning,
-    _lottie.LottieDecoder? decoder,
-    _lottie.RenderCache? renderCache,
-    bool? backgroundLoading,
-  }) {
-    return _lottie.Lottie.asset(
-      _assetName,
-      controller: controller,
-      animate: animate,
-      frameRate: frameRate,
-      repeat: repeat,
-      reverse: reverse,
-      delegates: delegates,
-      options: options,
-      onLoaded: onLoaded,
-      imageProviderFactory: imageProviderFactory,
-      key: key,
-      bundle: bundle,
-      frameBuilder: frameBuilder,
-      errorBuilder: errorBuilder,
-      width: width,
-      height: height,
-      fit: fit,
-      alignment: alignment,
-      package: package,
-      addRepaintBoundary: addRepaintBoundary,
-      filterQuality: filterQuality,
-      onWarning: onWarning,
-      decoder: decoder,
-      renderCache: renderCache,
-      backgroundLoading: backgroundLoading,
     );
   }
 
