@@ -4,7 +4,7 @@ import '../../../authentication/domain/entities/user_entity.dart';
 
 abstract class IProfileRepository {
   /// Fetches the currently authenticated user's profile (/users/me).
-  Future<UserEntity> getProfile();
+  Stream<UserEntity> getProfile();
 
   /// Updates the mutable profile fields (/users/me/profile).
   ///

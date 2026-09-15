@@ -1,4 +1,7 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../authentication/domain/entities/user_entity.dart';
 
 import '../../domain/usecases/get_profile_usecase.dart';
 import '../../domain/usecases/update_profile_usecase.dart';
@@ -16,7 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.updateProfileUseCase,
     required this.uploadProfileImageUseCase,
   }) : super(const ProfileState()) {
-    on<LoadProfileRequested>(_onLoadProfileRequested);
+    on<LoadProfileRequested>(_onLoadProfileRequested, transformer: restartable());
     on<UpdateProfileRequested>(_onUpdateProfileRequested);
     on<UploadProfileImage>(_onUploadProfileImage);
     on<UpdateUploadProgress>(_onUpdateUploadProgress);
@@ -28,25 +31,42 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     LoadProfileRequested event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(
-      status: ProfileStatus.loading,
-      action: ProfileAction.loadProfile,
-      clearError: true,
-    ));
+    if (!state.hasUser) {
+      emit(state.copyWith(
+        status: ProfileStatus.loading,
+        action: ProfileAction.loadProfile,
+        clearError: true,
+      ));
+    }
 
     try {
-      final user = await getProfileUseCase();
-      emit(state.copyWith(
-        status: ProfileStatus.success,
-        action: ProfileAction.loadProfile,
-        user: user,
-      ));
+      await emit.forEach<UserEntity>(
+        getProfileUseCase(),
+        onData: (user) {
+          return state.copyWith(
+            status: ProfileStatus.success,
+            action: ProfileAction.loadProfile,
+            user: user,
+            clearError: true,
+          );
+        },
+        onError: (error, stackTrace) {
+          if (state.hasUser) return state;
+          return state.copyWith(
+            status: ProfileStatus.failure,
+            action: ProfileAction.loadProfile,
+            errorMessage: error.toString(),
+          );
+        },
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: ProfileStatus.failure,
-        action: ProfileAction.loadProfile,
-        errorMessage: e.toString(),
-      ));
+      if (!state.hasUser) {
+        emit(state.copyWith(
+          status: ProfileStatus.failure,
+          action: ProfileAction.loadProfile,
+          errorMessage: e.toString(),
+        ));
+      }
     }
   }
 

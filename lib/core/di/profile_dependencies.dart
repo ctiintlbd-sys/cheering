@@ -7,6 +7,7 @@ import '../../features/profile/domain/usecases/get_profile_usecase.dart';
 import '../../features/profile/domain/usecases/update_profile_usecase.dart';
 import '../../features/profile/domain/usecases/upload_profile_image_usecase.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
+import '../cache/cache_service.dart';
 import '../network/i_api_client.dart';
 
 void setupProfileDependencies(GetIt getIt) {
@@ -17,7 +18,10 @@ void setupProfileDependencies(GetIt getIt) {
 
   // Repository
   getIt.registerLazySingleton<IProfileRepository>(
-    () => ProfileRepositoryImpl(getIt<ProfileRemoteSource>()),
+    () => ProfileRepositoryImpl(
+          getIt<ProfileRemoteSource>(),
+          getIt<CacheService>(),
+        ),
   );
 
   // UseCases

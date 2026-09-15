@@ -1,25 +1,35 @@
 import 'dart:io';
 
-import '../../../../core/network/api_result.dart';
+import 'package:cheering/core/config/chache_keys.dart';
+import 'package:cheering/core/network/api_result.dart';
+
+import '../../../../core/cache/cache_service.dart';
 import '../../../../core/utils/mime_utils.dart';
 import '../../../authentication/domain/entities/user_entity.dart';
 import '../../domain/repositories/i_profile_repository.dart';
 import '../datasources/profile_remote_source.dart';
+import '../models/profile_model.dart';
 import '../models/update_profile_request_model.dart';
 
 class ProfileRepositoryImpl implements IProfileRepository {
-  final ProfileRemoteSource _remoteSource;
+  final ProfileRemoteSource _source;
+  final CacheService _cache;
 
-  ProfileRepositoryImpl(this._remoteSource);
+  ProfileRepositoryImpl(this._source, this._cache);
 
   @override
-  Future<UserEntity> getProfile() async {
-    final result = await _remoteSource.getProfile();
-    return result.fold(
-      onSuccess: (data) => data,
-      onFailure: (e) => throw e,
-    );
-  }
+  Stream<UserEntity> getProfile() => _cache.getOrFetch(
+        CacheKeys.profile,
+        fromJson: (json) {
+          final data =
+              json['data'] is Map<String, dynamic> ? json['data'] : json;
+          return ProfileModel.fromJson(data as Map<String, dynamic>);
+        },
+        toJson: (e) => (e as ProfileModel).toJson(),
+        fetch: () => _source.getProfile(),
+        ttl: const Duration(hours: 24),
+        skipFetchIfCached: true,
+      );
 
   @override
   Future<UserEntity> updateProfile({
@@ -27,7 +37,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
     String? avatarUrl,
     String? phone,
   }) async {
-    final result = await _remoteSource.updateProfile(
+    final result = await _source.updateProfile(
       UpdateProfileRequestModel(
         fullName: fullName,
         avatarUrl: avatarUrl,
@@ -35,7 +45,15 @@ class ProfileRepositoryImpl implements IProfileRepository {
       ),
     );
     return result.fold(
-      onSuccess: (data) => data,
+      onSuccess: (data) async {
+        await _cache.set<ProfileModel>(
+          CacheKeys.profile,
+          data,
+          toJson: (e) => e.toJson(),
+          ttl: const Duration(hours: 24),
+        );
+        return data;
+      },
       onFailure: (e) => throw e,
     );
   }
@@ -51,7 +69,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
         ? '${mediaType.type}/${mediaType.subtype}'
         : 'image/jpeg';
 
-    final presignResult = await _remoteSource.getPresignedUploadUrl(
+    final presignResult = await _source.getPresignedUploadUrl(
       fileName: fileName,
       fileType: contentType,
     );
@@ -64,7 +82,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
         ? model.contentType
         : contentType;
 
-    final putResult = await _remoteSource.uploadToR2(
+    final putResult = await _source.uploadToR2(
       url: model.presignedUrl,
       file: file,
       contentType: effectiveContentType,
@@ -75,4 +93,3 @@ class ProfileRepositoryImpl implements IProfileRepository {
     return model.publicUrl;
   }
 }
-

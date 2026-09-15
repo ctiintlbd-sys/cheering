@@ -6,7 +6,7 @@ class GetProfileUseCase {
 
   GetProfileUseCase(this._repository);
 
-  Future<UserEntity> call() {
+  Stream<UserEntity> call() {
     return _repository.getProfile();
   }
 }

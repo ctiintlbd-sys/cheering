@@ -29,6 +29,7 @@ void setupCoreDependencies(GetIt getIt) {
       },
       onLogout: () async {
         await TokenStorage.clearTokens();
+        await getIt<CacheService>().clear();
         getIt<AppRouterNotifier>().updateAuth(isAuthenticated: false);
       },
     ),
