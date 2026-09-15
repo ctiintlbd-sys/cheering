@@ -51,7 +51,8 @@ abstract final class AppAuthGuard {
 
     // ── 3. Unauthenticated user trying to access a protected route ─────────
     if (!isAuth && !_isAuthRoute(location)) {
-      final isTabRoute = location == RoutePaths.foodTab ||
+      final isTabRoute =
+          location == RoutePaths.foodTab ||
           location == RoutePaths.storeTab ||
           location == RoutePaths.ordersTab ||
           location == RoutePaths.communityTab ||
