@@ -1,13 +1,11 @@
-import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/l10n/locale_cubit.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/widgets/widgets.dart';
+import 'widgets/profile_empty_widget.dart';
 import '../../../authentication/presentation/bloc/auth_bloc.dart';
 import '../../../authentication/presentation/bloc/auth_event.dart';
 import '../../../authentication/presentation/bloc/auth_state.dart';
@@ -34,118 +32,120 @@ class ProfileScreen extends StatelessWidget {
           );
         }
       },
-      child: SliverScaffold(
-        sideContentPadding: 16.w,
-        appBar: const CustomSliverAppBar(title: 'Profile'),
-        bodyList: [
-          SizedBox(height: 16.h),
-          BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, profileState) {
-              if (profileState.isLoadProfileLoading && !profileState.hasUser) {
-                return const ProfileHeaderShimmer();
-              }
-              return ProfileHeaderCard(user: profileState.user);
-            },
-          ),
-          SizedBox(height: 20.h),
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, profileState) {
+          final isAuthenticated = profileState.hasUser;
+          return SliverScaffold(
+            sideContentPadding: 16.w,
+            appBar: CustomSliverAppBar(
+              expandedHeight: isAuthenticated ? 0 : 414.h,
+              title: 'Profile',
+              flexibleChild: isAuthenticated
+                  ? null
+                  : const ProfileEmptyWidget(),
+            ),
+            bodyList: [
+              // ── Profile Header (only when authenticated) ──
+              if (isAuthenticated) ...[
+                SizedBox(height: 16.h),
+                profileState.isLoadProfileLoading
+                    ? const ProfileHeaderShimmer()
+                    : ProfileHeaderCard(user: profileState.user),
+              ],
 
-          ProfileMenuContent(
-            title: 'My Account',
-            list: [
-              ProfileMenuTile(
-                title: 'Address',
-                icon: Assets.icons.profileAddress.svg(),
-                onTap: () {},
-              ),
-              ProfileMenuTile(
-                title: 'Payment Method',
-                icon: Assets.icons.profilePayment.svg(),
-                onTap: () {},
-                isBorder: false,
-              ),
-            ],
-          ),
+              SizedBox(height: 20.h),
 
-          SizedBox(height: 20.h),
-          ProfileMenuContent(
-            title: 'Preferences',
-            list: [
-              ProfileMenuTile(
-                title: 'Notification',
-                icon: Assets.icons.profileNotification.svg(),
-                onTap: () {},
-              ),
-              BlocBuilder<LocaleCubit, Locale>(
-                builder: (context, locale) {
-                  final localeCubit = context.read<LocaleCubit>();
-                  return ProfileMenuTile(
-                    title: 'Language',
-                    icon: Assets.icons.profileLanguage.svg(),
-                    onTap: () {},
-                    trailingWidget: TrailingDropdown(
-                      items: const ['English', 'Bangla'],
-                      initialValue: localeCubit.currentLanguageName,
-                      onChanged: (value) {
-                        localeCubit.updateLocaleFromName(value.toString());
-                      },
+              // ── My Account (only when authenticated) ──
+              if (isAuthenticated) ...[
+                ProfileMenuContent(
+                  title: 'My Account',
+                  list: [
+                    ProfileMenuTile(
+                      title: 'Address',
+                      icon: Assets.icons.profileAddress.svg(),
+                      onTap: () {},
                     ),
-                  );
-                },
+                    ProfileMenuTile(
+                      title: 'Payment Method',
+                      icon: Assets.icons.profilePayment.svg(),
+                      onTap: () {},
+                      isBorder: false,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+              ],
+
+              // ── Preferences (always visible) ──
+              ProfileMenuContent(
+                title: 'Preferences',
+                list: [
+                  if (isAuthenticated)
+                    ProfileMenuTile(
+                      title: 'Notification',
+                      icon: Assets.icons.profileNotification.svg(),
+                      onTap: () {},
+                    ),
+                  BlocBuilder<LocaleCubit, Locale>(
+                    builder: (context, locale) {
+                      final localeCubit = context.read<LocaleCubit>();
+                      return ProfileMenuTile(
+                        title: 'Language',
+                        icon: Assets.icons.profileLanguage.svg(),
+                        onTap: () {},
+                        isBorder: false,
+                        trailingWidget: TrailingDropdown(
+                          items: const ['English', 'Bangla'],
+                          initialValue: localeCubit.currentLanguageName,
+                          onChanged: (value) {
+                            localeCubit.updateLocaleFromName(value.toString());
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
+
+              SizedBox(height: 20.h),
+
+              // ── Support (always visible) ──
+              ProfileMenuContent(
+                title: 'Support',
+                list: [
+                  ProfileMenuTile(
+                    title: 'Help Center',
+                    icon: Assets.icons.profileHelp.svg(),
+                    onTap: () {},
+                  ),
+                  ProfileMenuTile(
+                    title: 'About us',
+                    icon: Assets.icons.profileAbout.svg(),
+                    onTap: () {},
+                    isBorder: false,
+                  ),
+                ],
+              ),
+
+              // ── Logout (only when authenticated) ──
+              if (isAuthenticated) ...[
+                SizedBox(height: 20.h),
+                ProfileMenuTile(
+                  bgColor:
+                      context.colors.bgErrorPrimary.withValues(alpha: 0.1),
+                  title: 'Logout',
+                  textColor: context.colors.bgErrorSecondary,
+                  icon: Assets.icons.profileLogout.svg(),
+                  onTap: () => _showLogoutDialog(context),
+                  isBorder: false,
+                  isTrailing: false,
+                ),
+              ],
+
+              SizedBox(height: 124.h),
             ],
-          ),
-
-          SizedBox(height: 20.h),
-          ProfileMenuContent(
-            title: 'Account & Security',
-            list: [
-              ProfileMenuTile(
-                title: 'Account Settings',
-                icon: Assets.icons.profile.svg(),
-                onTap: () {
-                  context.push(RoutePaths.accountSettings);
-                },
-              ),
-              ProfileMenuTile(
-                title: 'Security',
-                icon: Assets.icons.profileSecurity.svg(),
-                onTap: () {},
-                isBorder: false,
-              ),
-            ],
-          ),
-
-          SizedBox(height: 20.h),
-          ProfileMenuContent(
-            title: 'Support',
-            list: [
-              ProfileMenuTile(
-                title: 'Help Center',
-                icon: Assets.icons.profileHelp.svg(),
-                onTap: () {},
-              ),
-              ProfileMenuTile(
-                title: 'About us',
-                icon: Assets.icons.profileAbout.svg(),
-                onTap: () {},
-                isBorder: false,
-              ),
-            ],
-          ),
-
-          SizedBox(height: 20.h),
-          ProfileMenuTile(
-            bgColor: context.colors.bgErrorPrimary.withValues(alpha: 0.1),
-            title: 'Logout',
-            textColor: context.colors.bgErrorSecondary,
-            icon: Assets.icons.profileLogout.svg(),
-            onTap: () => _showLogoutDialog(context),
-            isBorder: false,
-            isTrailing: false,
-          ),
-
-          SizedBox(height: 124.h),
-        ],
+          );
+        },
       ),
     );
   }
