@@ -21,6 +21,14 @@ class AppRouterNotifier extends ChangeNotifier {
 
   void clearPendingBiometricOffer() => setPendingBiometricOffer(false);
 
+  /// Clears the post-login redirect flag without [notifyListeners].
+  ///
+  /// Call from [State.initState] on the enable-biometrics route so GoRouter is
+  /// not refreshed while that route is still building.
+  void consumePendingBiometricOffer() {
+    _pendingBiometricOffer = false;
+  }
+
   void updateAuth({
     required bool isAuthenticated,
     bool? isOnboardingSeen,

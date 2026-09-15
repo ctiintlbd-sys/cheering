@@ -25,7 +25,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
   @override
   void initState() {
     super.initState();
-    getIt<AppRouterNotifier>().clearPendingBiometricOffer();
+    getIt<AppRouterNotifier>().consumePendingBiometricOffer();
   }
 
   void _goToApp() {
