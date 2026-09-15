@@ -15,37 +15,44 @@ class LoadProfileRequested extends ProfileEvent {
 }
 
 /// Triggered when updating profile fields (PUT /users/me/profile).
-///
-/// If [avatarFile] is provided, it will first be uploaded to Cloudflare R2
-/// using the presigned URL, and the resulting public URL will be set as [avatarUrl].
 class UpdateProfileRequested extends ProfileEvent {
   final String fullName;
   final String? avatarUrl;
   final String? phone;
-  final File? avatarFile;
 
   const UpdateProfileRequested({
     required this.fullName,
     this.avatarUrl,
     this.phone,
-    this.avatarFile,
   });
 
   @override
-  List<Object?> get props => [fullName, avatarUrl, phone, avatarFile];
+  List<Object?> get props => [fullName, avatarUrl, phone];
 }
 
-/// Triggered to upload only the avatar file to Cloudflare R2 and update the profile.
-class UploadAvatarRequested extends ProfileEvent {
+/// Uploads a new avatar to R2; URL is stored until [UpdateProfileRequested].
+class UploadProfileImage extends ProfileEvent {
   final File file;
 
-  const UploadAvatarRequested(this.file);
+  const UploadProfileImage(this.file);
 
   @override
   List<Object?> get props => [file];
 }
 
-/// Triggered to clear transient error or success status after handling in UI.
-class ResetProfileStatus extends ProfileEvent {
-  const ResetProfileStatus();
+class UpdateUploadProgress extends ProfileEvent {
+  final double progress;
+
+  const UpdateUploadProgress(this.progress);
+
+  @override
+  List<Object?> get props => [progress];
+}
+
+class ResetUpdateProfileStatus extends ProfileEvent {
+  const ResetUpdateProfileStatus();
+}
+
+class ResetUploadProfileStatus extends ProfileEvent {
+  const ResetUploadProfileStatus();
 }

@@ -6,18 +6,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
-  const ProfileHeaderCard({
-    super.key, this.user,
-  });
+  const ProfileHeaderCard({super.key, this.user});
 
   final UserEntity? user;
 
   @override
   Widget build(BuildContext context) {
+    final profile = user;
+    if (profile == null) {
+      return const SizedBox.shrink();
+    }
+
     return CustomContainer(
-      onTap: () {
-        context.push(RoutePaths.accountSettings);
-      },
+      onTap: () => context.push(RoutePaths.accountSettings),
       paddingVertical: 8.h,
       paddingHorizontal: 12.w,
       radiusAll: 8.r,
@@ -28,7 +29,7 @@ class ProfileHeaderCard extends StatelessWidget {
             boxShape: BoxShape.circle,
             height: 64.r,
             width: 64.r,
-            imageUrl: user?.avatarUrl,
+            imageUrl: profile.avatarUrl,
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -38,18 +39,19 @@ class ProfileHeaderCard extends StatelessWidget {
                 CustomText(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  text: user!.fullName,
+                  text: profile.fullName,
                 ),
                 CustomText(
                   top: 4.h,
                   color: context.colors.textTertiary,
-                  text: user!.email,
+                  text: profile.email,
                 ),
               ],
             ),
           ),
           Icon(
             Icons.arrow_forward_ios_rounded,
+            size: 16.r,
             color: context.colors.iconTertiary,
           ),
         ],

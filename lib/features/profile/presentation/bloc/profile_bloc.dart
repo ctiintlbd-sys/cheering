@@ -18,8 +18,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }) : super(const ProfileState()) {
     on<LoadProfileRequested>(_onLoadProfileRequested);
     on<UpdateProfileRequested>(_onUpdateProfileRequested);
-    on<UploadAvatarRequested>(_onUploadAvatarRequested);
-    on<ResetProfileStatus>(_onResetProfileStatus);
+    on<UploadProfileImage>(_onUploadProfileImage);
+    on<UpdateUploadProgress>(_onUpdateUploadProgress);
+    on<ResetUpdateProfileStatus>(_onResetUpdateProfileStatus);
+    on<ResetUploadProfileStatus>(_onResetUploadProfileStatus);
   }
 
   Future<void> _onLoadProfileRequested(
@@ -53,57 +55,36 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     emit(state.copyWith(
-      status: ProfileStatus.loading,
-      action: ProfileAction.updateProfile,
+      updateProfileStatus: UpdateProfileStatus.loading,
       clearError: true,
     ));
 
     try {
-      String? avatarUrl = event.avatarUrl ?? state.user?.avatarUrl;
-
-      // 1. Upload avatar to Cloudflare R2 if a new file is provided
-      if (event.avatarFile != null) {
-        avatarUrl = await uploadProfileImageUseCase(
-          event.avatarFile!,
-          onProgress: (sent, total) {
-            if (total > 0) {
-              emit(state.copyWith(uploadProgress: sent / total));
-            }
-          },
-        );
-      }
-
-      // 2. Call PUT /users/me/profile to update mutable fields
       final updatedUser = await updateProfileUseCase(
         fullName: event.fullName,
-        avatarUrl: avatarUrl,
+        avatarUrl: event.avatarUrl,
         phone: event.phone,
       );
 
       emit(state.copyWith(
-        status: ProfileStatus.success,
-        action: ProfileAction.updateProfile,
+        updateProfileStatus: UpdateProfileStatus.success,
         user: updatedUser,
-        successMessage: 'Profile updated successfully',
-        uploadProgress: 0.0,
       ));
     } catch (e) {
       emit(state.copyWith(
-        status: ProfileStatus.failure,
-        action: ProfileAction.updateProfile,
+        updateProfileStatus: UpdateProfileStatus.failure,
         errorMessage: e.toString(),
-        uploadProgress: 0.0,
       ));
     }
   }
 
-  Future<void> _onUploadAvatarRequested(
-    UploadAvatarRequested event,
+  Future<void> _onUploadProfileImage(
+    UploadProfileImage event,
     Emitter<ProfileState> emit,
   ) async {
     emit(state.copyWith(
-      status: ProfileStatus.loading,
-      action: ProfileAction.uploadAvatar,
+      uploadStatus: ProfileUploadStatus.uploading,
+      uploadProgress: 0.0,
       clearError: true,
     ));
 
@@ -112,44 +93,41 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         event.file,
         onProgress: (sent, total) {
           if (total > 0) {
-            emit(state.copyWith(uploadProgress: sent / total));
+            add(UpdateUploadProgress(sent / total));
           }
         },
       );
 
-      // Persist the new avatar URL into profile
-      final updatedUser = await updateProfileUseCase(
-        fullName: state.user?.fullName ?? '',
-        avatarUrl: publicUrl,
-        phone: state.user?.phone,
-      );
-
       emit(state.copyWith(
-        status: ProfileStatus.success,
-        action: ProfileAction.uploadAvatar,
-        user: updatedUser,
-        successMessage: 'Avatar updated successfully',
-        uploadProgress: 0.0,
+        uploadStatus: ProfileUploadStatus.success,
+        uploadedImageUrl: publicUrl,
       ));
     } catch (e) {
       emit(state.copyWith(
-        status: ProfileStatus.failure,
-        action: ProfileAction.uploadAvatar,
+        uploadStatus: ProfileUploadStatus.failure,
         errorMessage: e.toString(),
-        uploadProgress: 0.0,
       ));
     }
   }
 
-  void _onResetProfileStatus(
-    ResetProfileStatus event,
+  void _onUpdateUploadProgress(
+    UpdateUploadProgress event,
     Emitter<ProfileState> emit,
   ) {
-    emit(state.copyWith(
-      status: ProfileStatus.initial,
-      action: ProfileAction.none,
-      clearError: true,
-      clearSuccess: true,
-    ));
+    emit(state.copyWith(uploadProgress: event.progress));
+  }
+
+  void _onResetUpdateProfileStatus(
+    ResetUpdateProfileStatus event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.initial));
+  }
+
+  void _onResetUploadProfileStatus(
+    ResetUploadProfileStatus event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(state.copyWith(uploadStatus: ProfileUploadStatus.initial));
   }
 }

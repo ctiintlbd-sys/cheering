@@ -11,16 +11,16 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../authentication/presentation/bloc/auth_bloc.dart';
 import '../../../authentication/presentation/bloc/auth_event.dart';
 import '../../../authentication/presentation/bloc/auth_state.dart';
-import '../../../feedback/presentation/screens/widgets/profile_menu_tile.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_state.dart';
 import 'widgets/profile_header_card.dart';
+import 'widgets/profile_header_shimmer.dart';
+import 'widgets/profile_menu_tile.dart';
 import 'widgets/profile_menu_content.dart';
 import 'widgets/trailing_dropdown.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +39,14 @@ class ProfileScreen extends StatelessWidget {
         appBar: const CustomSliverAppBar(title: 'Profile'),
         bodyList: [
           SizedBox(height: 16.h),
-
           BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, profileState) {
-              return ProfileHeaderCard(
-                user : profileState.user
-              );
+              if (profileState.isLoadProfileLoading && !profileState.hasUser) {
+                return const ProfileHeaderShimmer();
+              }
+              return ProfileHeaderCard(user: profileState.user);
             },
           ),
-
           SizedBox(height: 20.h),
 
           ProfileMenuContent(
@@ -103,7 +102,9 @@ class ProfileScreen extends StatelessWidget {
               ProfileMenuTile(
                 title: 'Account Settings',
                 icon: Assets.icons.profile.svg(),
-                onTap: () {},
+                onTap: () {
+                  context.push(RoutePaths.accountSettings);
+                },
               ),
               ProfileMenuTile(
                 title: 'Security',
@@ -149,7 +150,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-
   void _showLogoutDialog(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -158,7 +158,9 @@ class ProfileScreen extends StatelessWidget {
         title: 'Are you sure want\nto logout?',
         description: 'You will need to login again to access your account',
         buttonLabel: 'Logout',
-        buttonBgColor: dialogContext.colors.bgErrorPrimary.withValues(alpha: 0.10),
+        buttonBgColor: dialogContext.colors.bgErrorPrimary.withValues(
+          alpha: 0.10,
+        ),
         buttonLabelColor: dialogContext.colors.bgErrorSecondary,
         onTapButton: () {
           Navigator.of(dialogContext).pop();
@@ -167,5 +169,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
 }
