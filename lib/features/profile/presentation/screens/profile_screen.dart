@@ -56,36 +56,36 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 20.h),
 
               // ── My Account (only when authenticated) ──
-              if (isAuthenticated) ...[
-                ProfileMenuContent(
-                  title: 'My Account',
-                  list: [
-                    ProfileMenuTile(
-                      title: 'Address',
-                      icon: Assets.icons.profileAddress.svg(),
-                      onTap: () {},
-                    ),
-                    ProfileMenuTile(
-                      title: 'Payment Method',
-                      icon: Assets.icons.profilePayment.svg(),
-                      onTap: () {},
-                      isBorder: false,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-              ],
+              ProfileMenuContent(
+                title: 'My Account',
+                list: [
+                  ProfileMenuTile(
+                    title: 'Address',
+                    icon: Assets.icons.profileAddress.svg(),
+                    isLocked: isAuthenticated,
+                    onTap: () {},
+                  ),
+                  ProfileMenuTile(
+                    title: 'Payment Method',
+                    icon: Assets.icons.profilePayment.svg(),
+                    onTap: () {},
+                    isLocked: isAuthenticated,
+                    isBorder: false,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
 
               // ── Preferences (always visible) ──
               ProfileMenuContent(
                 title: 'Preferences',
                 list: [
-                  if (isAuthenticated)
-                    ProfileMenuTile(
-                      title: 'Notification',
-                      icon: Assets.icons.profileNotification.svg(),
-                      onTap: () {},
-                    ),
+                  ProfileMenuTile(
+                    title: 'Notification',
+                    icon: Assets.icons.profileNotification.svg(),
+                    onTap: () {},
+                    isLocked: isAuthenticated,
+                  ),
                   BlocBuilder<LocaleCubit, Locale>(
                     builder: (context, locale) {
                       final localeCubit = context.read<LocaleCubit>();
@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
 
               SizedBox(height: 20.h),
 
-              // ── Support (always visible) ──
+              // ── Support (only when authenticated) ──
               ProfileMenuContent(
                 title: 'Support',
                 list: [
@@ -117,11 +117,13 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Help Center',
                     icon: Assets.icons.profileHelp.svg(),
                     onTap: () {},
+                    isLocked: true,
                   ),
                   ProfileMenuTile(
                     title: 'About us',
                     icon: Assets.icons.profileAbout.svg(),
                     onTap: () {},
+                    isLocked: true,
                     isBorder: false,
                   ),
                 ],
@@ -131,8 +133,7 @@ class ProfileScreen extends StatelessWidget {
               if (isAuthenticated) ...[
                 SizedBox(height: 20.h),
                 ProfileMenuTile(
-                  bgColor:
-                      context.colors.bgErrorPrimary.withValues(alpha: 0.1),
+                  bgColor: context.colors.bgErrorPrimary.withValues(alpha: 0.1),
                   title: 'Logout',
                   textColor: context.colors.bgErrorSecondary,
                   icon: Assets.icons.profileLogout.svg(),
@@ -142,7 +143,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
 
-              SizedBox(height: 124.h),
+              SizedBox(height: 224.h),
             ],
           );
         },

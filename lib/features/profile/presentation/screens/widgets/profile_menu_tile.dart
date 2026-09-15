@@ -1,3 +1,4 @@
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ class ProfileMenuTile extends StatelessWidget {
   final Color? bgColor;
   final bool isBorder;
   final bool isTrailing;
+  final bool isLocked;
   final Widget? trailingWidget;
 
   const ProfileMenuTile({
@@ -24,21 +26,25 @@ class ProfileMenuTile extends StatelessWidget {
     this.isTrailing = true,
     this.bgColor,
     this.trailingWidget,
+    this.isLocked = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: InkWell(
+        borderRadius: BorderRadius.circular(12.r),
         onTap: () {
-          HapticFeedback.lightImpact();
-          onTap?.call();
-        },
+                HapticFeedback.lightImpact();
+                onTap?.call();
+              },
         child: CustomContainer(
           radiusAll: 12.r,
           color: bgColor,
           border: isBorder
-              ? Border(bottom: BorderSide(color: context.colors.borderTertiary))
+              ? Border(
+                  bottom: BorderSide(color: context.colors.borderTertiary),
+                )
               : null,
           height: 58.h,
           child: Padding(
@@ -57,11 +63,13 @@ class ProfileMenuTile extends StatelessWidget {
                 if (trailingWidget != null)
                   trailingWidget!
                 else if (isTrailing)
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    size: 20.r,
-                    color: context.colors.iconSecondary,
-                  ),
+                  !isLocked
+                      ? Assets.icons.lock.svg()
+                      : Icon(
+                          Icons.chevron_right_rounded,
+                          size: 20.r,
+                          color: context.colors.iconSecondary,
+                        ),
               ],
             ),
           ),

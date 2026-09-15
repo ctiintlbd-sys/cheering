@@ -1,5 +1,7 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../core/utils/assets/assets.gen.dart';
 import '../../../../../core/widgets/widgets.dart';
 
@@ -27,7 +29,9 @@ class ProfileEmptyWidget extends StatelessWidget {
           color: context.colors.textTertiary,
           bottom: 24.h,
         ),
-        CustomButton(onPressed: () {}, label: 'Login/ Sign up'),
+        CustomButton(onPressed: () {
+          context.push(RoutePaths.login);
+        }, label: 'Login/ Sign up'),
       ],
     );
   }
