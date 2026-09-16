@@ -1,88 +1,82 @@
+import '../../../../core/cache/cache_service.dart';
+import '../../../../core/config/chache_keys.dart';
 import '../../../../core/network/api_result.dart';
 import '../../domain/entities/address_entity.dart';
 import '../../domain/repositories/i_address_repository.dart';
+import '../../domain/usecases/address_params.dart';
 import '../datasources/address_remote_source.dart';
+import '../models/address_model.dart';
 import '../models/address_request_model.dart';
 
 class AddressRepositoryImpl implements IAddressRepository {
   final AddressRemoteSource _source;
+  final CacheService _cache;
 
-  AddressRepositoryImpl(this._source);
+  AddressRepositoryImpl(this._source, this._cache);
 
   @override
-  Future<List<AddressEntity>> getAddresses() async {
-    final result = await _source.getAddresses();
-    return result.fold(
-      onSuccess: (data) => data,
-      onFailure: (e) => throw e,
+  Stream<List<AddressEntity>> getAddresses() {
+    return _cache.getOrFetch<List<AddressModel>>(
+      CacheKeys.addresses,
+      fromJson: (json) {
+        final data = json['data'] as List;
+        return data.map((e) => AddressModel.fromJson(e as Map<String, dynamic>)).toList();
+      },
+      toJson: (list) => {
+        'data': list.map((e) => e.toJson()).toList(),
+      },
+      fetch: () => _source.getAddresses(),
+      ttl: const Duration(hours: 24),
     );
   }
 
   @override
-  Future<AddressEntity> createAddress({
-    required String type,
-    String? label,
-    String? streetAddress,
-    String? apartment,
-    String? landmark,
-    String? city,
-    String? postalCode,
-    String? contactPhone,
-    required double latitude,
-    required double longitude,
-    required bool isDefault,
-  }) async {
+  Future<AddressEntity> createAddress(AddressParams params) async {
     final request = AddressRequestModel(
-      type: type,
-      label: label,
-      streetAddress: streetAddress,
-      apartment: apartment,
-      landmark: landmark,
-      city: city,
-      postalCode: postalCode,
-      contactPhone: contactPhone,
-      latitude: latitude,
-      longitude: longitude,
-      isDefault: isDefault,
+      type: params.type.name.toUpperCase(),
+      label: params.label,
+      streetAddress: params.streetAddress,
+      apartment: params.apartment,
+      landmark: params.landmark,
+      city: params.city,
+      postalCode: params.postalCode,
+      contactPhone: params.contactPhone,
+      latitude: params.latitude,
+      longitude: params.longitude,
+      isDefault: params.isDefault,
     );
     final result = await _source.createAddress(request);
     return result.fold(
-      onSuccess: (data) => data,
+      onSuccess: (data) async {
+        // Invalidate cache so it fetches fresh next time, or just let Bloc handle it.
+        await _cache.remove(CacheKeys.addresses);
+        return data;
+      },
       onFailure: (e) => throw e,
     );
   }
 
   @override
-  Future<AddressEntity> updateAddress({
-    required String id,
-    required String type,
-    String? label,
-    String? streetAddress,
-    String? apartment,
-    String? landmark,
-    String? city,
-    String? postalCode,
-    String? contactPhone,
-    required double latitude,
-    required double longitude,
-    required bool isDefault,
-  }) async {
+  Future<AddressEntity> updateAddress(String id, AddressParams params) async {
     final request = AddressRequestModel(
-      type: type,
-      label: label,
-      streetAddress: streetAddress,
-      apartment: apartment,
-      landmark: landmark,
-      city: city,
-      postalCode: postalCode,
-      contactPhone: contactPhone,
-      latitude: latitude,
-      longitude: longitude,
-      isDefault: isDefault,
+      type: params.type.name.toUpperCase(),
+      label: params.label,
+      streetAddress: params.streetAddress,
+      apartment: params.apartment,
+      landmark: params.landmark,
+      city: params.city,
+      postalCode: params.postalCode,
+      contactPhone: params.contactPhone,
+      latitude: params.latitude,
+      longitude: params.longitude,
+      isDefault: params.isDefault,
     );
     final result = await _source.updateAddress(id, request);
     return result.fold(
-      onSuccess: (data) => data,
+      onSuccess: (data) async {
+        await _cache.remove(CacheKeys.addresses);
+        return data;
+      },
       onFailure: (e) => throw e,
     );
   }
@@ -91,7 +85,9 @@ class AddressRepositoryImpl implements IAddressRepository {
   Future<void> deleteAddress(String id) async {
     final result = await _source.deleteAddress(id);
     return result.fold(
-      onSuccess: (_) {},
+      onSuccess: (_) async {
+        await _cache.remove(CacheKeys.addresses);
+      },
       onFailure: (e) => throw e,
     );
   }
@@ -100,7 +96,10 @@ class AddressRepositoryImpl implements IAddressRepository {
   Future<AddressEntity> setDefaultAddress(String id) async {
     final result = await _source.setDefaultAddress(id);
     return result.fold(
-      onSuccess: (data) => data,
+      onSuccess: (data) async {
+        await _cache.remove(CacheKeys.addresses);
+        return data;
+      },
       onFailure: (e) => throw e,
     );
   }

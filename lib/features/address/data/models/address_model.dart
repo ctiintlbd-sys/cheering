@@ -36,6 +36,23 @@ class AddressModel extends AddressEntity {
     );
   }
 
+  factory AddressModel.fromEntity(AddressEntity entity) {
+    return AddressModel(
+      id: entity.id,
+      type: entity.type,
+      label: entity.label,
+      streetAddress: entity.streetAddress,
+      apartment: entity.apartment,
+      landmark: entity.landmark,
+      city: entity.city,
+      postalCode: entity.postalCode,
+      contactPhone: entity.contactPhone,
+      latitude: entity.latitude,
+      longitude: entity.longitude,
+      isDefault: entity.isDefault,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

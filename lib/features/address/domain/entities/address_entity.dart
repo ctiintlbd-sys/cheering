@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 enum AddressType { home, work, other, unknown }
 
-class AddressEntity extends Equatable {
+class AddressEntity {
   final String id;
   final AddressType type;
   final String? label;
@@ -31,19 +29,33 @@ class AddressEntity extends Equatable {
     required this.isDefault,
   });
 
-  @override
-  List<Object?> get props => [
-        id,
-        type,
-        label,
-        streetAddress,
-        apartment,
-        landmark,
-        city,
-        postalCode,
-        contactPhone,
-        latitude,
-        longitude,
-        isDefault,
-      ];
+  AddressEntity copyWith({
+    String? id,
+    AddressType? type,
+    String? label,
+    String? streetAddress,
+    String? apartment,
+    String? landmark,
+    String? city,
+    String? postalCode,
+    String? contactPhone,
+    double? latitude,
+    double? longitude,
+    bool? isDefault,
+  }) {
+    return AddressEntity(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      label: label ?? this.label,
+      streetAddress: streetAddress ?? this.streetAddress,
+      apartment: apartment ?? this.apartment,
+      landmark: landmark ?? this.landmark,
+      city: city ?? this.city,
+      postalCode: postalCode ?? this.postalCode,
+      contactPhone: contactPhone ?? this.contactPhone,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      isDefault: isDefault ?? this.isDefault,
+    );
+  }
 }
