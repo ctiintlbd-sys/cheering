@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/storage/biometric_device_storage.dart';
+import '../../../../core/storage/biometric_storage.dart';
 import '../../data/services/biometric_service.dart';
 import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
@@ -31,6 +33,15 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
   void _goToApp() {
     getIt<AppRouterNotifier>().clearPendingBiometricOffer();
     context.go(RoutePaths.foodTab);
+  }
+
+  Future<void> _onMaybeLater() async {
+    await Future.wait([
+      BiometricStorage.clear(),
+      BiometricDeviceStorage.clear(),
+    ]);
+    if (!mounted) return;
+    _goToApp();
   }
 
   @override
@@ -79,7 +90,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
               return Column(
                 children: [
                   CustomButton(
-                    label: 'Enable Biometrics',
+                    label: biometricUi.enableScreenTitle,
                     isLoading: isLoading,
                     onPressed: isLoading
                         ? null
@@ -93,7 +104,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
                     backgroundColor: context.colors.background,
                     foregroundColor: context.colors.textPrimary,
                     label: 'Maybe Later',
-                    onPressed: _goToApp,
+                    onPressed: isLoading ? null : _onMaybeLater,
                   ),
                 ],
               );
