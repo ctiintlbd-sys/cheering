@@ -42,6 +42,10 @@ class $AssetsIconsGen {
   SvgGenImage get communityFil =>
       const SvgGenImage('assets/icons/community_fil.svg');
 
+  /// File path: assets/icons/current_location.svg
+  SvgGenImage get currentLocation =>
+      const SvgGenImage('assets/icons/current_location.svg');
+
   /// File path: assets/icons/empty_location.svg
   SvgGenImage get emptyLocation =>
       const SvgGenImage('assets/icons/empty_location.svg');
@@ -87,6 +91,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/love.svg
   SvgGenImage get love => const SvgGenImage('assets/icons/love.svg');
+
+  /// File path: assets/icons/manual_location.svg
+  SvgGenImage get manualLocation =>
+      const SvgGenImage('assets/icons/manual_location.svg');
 
   /// File path: assets/icons/menu.svg
   SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
@@ -176,6 +184,7 @@ class $AssetsIconsGen {
     comment,
     community,
     communityFil,
+    currentLocation,
     emptyLocation,
     emptyOrder,
     face,
@@ -190,6 +199,7 @@ class $AssetsIconsGen {
     lock,
     logoutPop,
     love,
+    manualLocation,
     menu,
     nogod,
     onboardingLast,
