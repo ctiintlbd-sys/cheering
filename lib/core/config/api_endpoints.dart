@@ -25,6 +25,7 @@ class ApiEndpoints {
   // ── Profile ────────────────────────────────────────────────
   static const String profile = '/users/me/profile';
   static const String currentUser = '/users/me';
+  static const String addresses = '/users/me/addresses';
 
   // ── Upload ─────────────────────────────────────────────────
   static const String presignedUpload = '/uploads/presigned-url';

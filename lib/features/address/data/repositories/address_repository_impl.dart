@@ -1,16 +1,21 @@
+import '../../../../core/network/api_result.dart';
 import '../../domain/entities/address_entity.dart';
 import '../../domain/repositories/i_address_repository.dart';
 import '../datasources/address_remote_source.dart';
 import '../models/address_request_model.dart';
 
 class AddressRepositoryImpl implements IAddressRepository {
-  final IAddressRemoteSource remoteSource;
+  final AddressRemoteSource _source;
 
-  AddressRepositoryImpl(this.remoteSource);
+  AddressRepositoryImpl(this._source);
 
   @override
   Future<List<AddressEntity>> getAddresses() async {
-    return await remoteSource.getAddresses();
+    final result = await _source.getAddresses();
+    return result.fold(
+      onSuccess: (data) => data,
+      onFailure: (e) => throw e,
+    );
   }
 
   @override
@@ -40,7 +45,11 @@ class AddressRepositoryImpl implements IAddressRepository {
       longitude: longitude,
       isDefault: isDefault,
     );
-    return await remoteSource.createAddress(request);
+    final result = await _source.createAddress(request);
+    return result.fold(
+      onSuccess: (data) => data,
+      onFailure: (e) => throw e,
+    );
   }
 
   @override
@@ -71,16 +80,28 @@ class AddressRepositoryImpl implements IAddressRepository {
       longitude: longitude,
       isDefault: isDefault,
     );
-    return await remoteSource.updateAddress(id, request);
+    final result = await _source.updateAddress(id, request);
+    return result.fold(
+      onSuccess: (data) => data,
+      onFailure: (e) => throw e,
+    );
   }
 
   @override
   Future<void> deleteAddress(String id) async {
-    await remoteSource.deleteAddress(id);
+    final result = await _source.deleteAddress(id);
+    return result.fold(
+      onSuccess: (_) {},
+      onFailure: (e) => throw e,
+    );
   }
 
   @override
   Future<AddressEntity> setDefaultAddress(String id) async {
-    return await remoteSource.setDefaultAddress(id);
+    final result = await _source.setDefaultAddress(id);
+    return result.fold(
+      onSuccess: (data) => data,
+      onFailure: (e) => throw e,
+    );
   }
 }
