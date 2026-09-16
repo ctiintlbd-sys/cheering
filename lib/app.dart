@@ -1,9 +1,9 @@
+import 'package:cheering/core/session/profile_session_sync.dart';
 import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
 import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:cheering/features/profile/presentation/bloc/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,28 +23,30 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => getIt<LocaleCubit>()),
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
-        BlocProvider(create: (_) => getIt<ProfileBloc>()..add(LoadProfileRequested())),
+        BlocProvider(create: (_) => getIt<ProfileBloc>()),
       ],
-      child: ScreenUtilInit(
-        designSize: const Size(390, 844),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
-          builder: (context, locale) => MaterialApp.router(
-            scaffoldMessengerKey: ToastMessageHelper.messengerKey,
-            debugShowCheckedModeBanner: false,
-            title: 'Cheering',
-            locale: locale,
-            themeMode: ThemeMode.light,
-            theme: AppTheme.light(),
-            routerConfig: AppRouter.router,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
+      child: ProfileSessionSync(
+        child: ScreenUtilInit(
+          designSize: const Size(390, 844),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) => MaterialApp.router(
+              scaffoldMessengerKey: ToastMessageHelper.messengerKey,
+              debugShowCheckedModeBanner: false,
+              title: 'Cheering',
+              locale: locale,
+              themeMode: ThemeMode.light,
+              theme: AppTheme.light(),
+              routerConfig: AppRouter.router,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+            ),
           ),
         ),
       ),
