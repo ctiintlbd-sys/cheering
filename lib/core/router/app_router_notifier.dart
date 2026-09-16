@@ -6,11 +6,13 @@ class AppRouterNotifier extends ChangeNotifier {
   bool _isOnboardingSeen = false;
 
   bool get isInitialized => _isInitialized;
+
   bool get isAuthenticated => _isAuthenticated;
+
   bool get isOnboardingSeen => _isOnboardingSeen;
 
-  /// After password/Google sign-in, redirect to [RoutePaths.enableBiometrics] once.
   bool _pendingBiometricOffer = false;
+
   bool get pendingBiometricOffer => _pendingBiometricOffer;
 
   void setPendingBiometricOffer(bool value) {
@@ -21,18 +23,11 @@ class AppRouterNotifier extends ChangeNotifier {
 
   void clearPendingBiometricOffer() => setPendingBiometricOffer(false);
 
-  /// Clears the post-login redirect flag without [notifyListeners].
-  ///
-  /// Call from [State.initState] on the enable-biometrics route so GoRouter is
-  /// not refreshed while that route is still building.
   void consumePendingBiometricOffer() {
     _pendingBiometricOffer = false;
   }
 
-  void updateAuth({
-    required bool isAuthenticated,
-    bool? isOnboardingSeen,
-  }) {
+  void updateAuth({required bool isAuthenticated, bool? isOnboardingSeen}) {
     _isInitialized = true;
     _isAuthenticated = isAuthenticated;
     if (!isAuthenticated) {
