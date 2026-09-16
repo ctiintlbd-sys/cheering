@@ -26,4 +26,5 @@ abstract class RoutePaths {
   // ── Profile────────────────────────────────────────
   static const String accountSettings = '/profile/edit';
   static const String address = '/profile/address';
+  static const String manualAddressMap = '/profile/address/manual-map';
 }

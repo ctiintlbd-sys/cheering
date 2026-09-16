@@ -2,6 +2,8 @@ import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'widgets/empty_address_widget.dart';
 import 'widgets/address_action_buttons.dart';
 
@@ -32,7 +34,7 @@ class AddressScreen extends StatelessWidget {
         // Action Buttons Row
         AddressActionButtons(
           onTapCurrentLocation: () {},
-          onTapEnterManually: () {},
+          onTapEnterManually: () => context.push(RoutePaths.manualAddressMap),
         ),
         SizedBox(height: 32.h),
         // Empty State
