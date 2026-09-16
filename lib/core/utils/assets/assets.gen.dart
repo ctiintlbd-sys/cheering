@@ -42,6 +42,10 @@ class $AssetsIconsGen {
   SvgGenImage get communityFil =>
       const SvgGenImage('assets/icons/community_fil.svg');
 
+  /// File path: assets/icons/empty_location.svg
+  SvgGenImage get emptyLocation =>
+      const SvgGenImage('assets/icons/empty_location.svg');
+
   /// File path: assets/icons/empty_order.svg
   SvgGenImage get emptyOrder =>
       const SvgGenImage('assets/icons/empty_order.svg');
@@ -172,6 +176,7 @@ class $AssetsIconsGen {
     comment,
     community,
     communityFil,
+    emptyLocation,
     emptyOrder,
     face,
     filtter,

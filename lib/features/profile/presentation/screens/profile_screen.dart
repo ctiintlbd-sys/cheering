@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/route_paths.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/l10n/locale_cubit.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
@@ -63,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Address',
                     icon: Assets.icons.profileAddress.svg(),
                     isLocked: isAuthenticated,
-                    onTap: () {},
+                    onTap: () => context.push(RoutePaths.address),
                   ),
                   ProfileMenuTile(
                     title: 'Payment Method',
