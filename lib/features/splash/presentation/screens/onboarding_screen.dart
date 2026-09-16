@@ -68,7 +68,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   SizedBox(height: kToolbarHeight + 32.h),
                   SvgPicture.asset(item.image),
-
                   const Spacer(),
                   CustomText(
                     left: 32.w,
