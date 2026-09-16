@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:cheering/core/common_widgets/common_details_actions.dart';
+import 'package:cheering/core/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
-
 import '../../../../core/theme/app_theme_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_container.dart';
@@ -151,81 +152,23 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).padding.top + 10.h,
+            top: MediaQuery.of(context).padding.top + 16.h,
             left: 16.w,
             right: 16.w,
             child: Row(
               children: [
-                GestureDetector(
+                CommonActionIcon(
+                  icon: Assets.icons.arrowBack.path,
                   onTap: () => context.pop(),
-                  child: CustomContainer(
-                    width: 44.r,
-                    height: 44.r,
-                    color: Colors.white,
-                    radiusAll: 22.r,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                      ),
-                    ],
-                    child: Icon(Icons.arrow_back, color: context.colors.textPrimary),
-                  ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: CustomContainer(
-                    height: 44.h,
-                    color: Colors.white,
-                    radiusAll: 22.r,
-                    paddingHorizontal: 16.w,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                      ),
-                    ],
-                    child: Row(
-                      children: [
-                        Icon(Icons.search, color: context.colors.textSecondary, size: 20.r),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Search location...',
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              hintStyle: TextStyle(
-                                fontSize: 14.sp,
-                                color: context.colors.textTertiary,
-                              ),
-                            ),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: context.colors.textPrimary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: _searchController,
-                          builder: (context, value, _) {
-                            if (value.text.isEmpty) return const SizedBox.shrink();
-                            return GestureDetector(
-                              onTap: () => _searchController.clear(),
-                              child: CustomText(
-                                text: 'Clear',
-                                color: context.colors.primary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.sp,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                  child: CustomTextField(
+                    borderRadius: 99,
+                    controller: _searchController,
+                    prefixIcon: Assets.icons.search.svg(),
+                    fillColor: context.colors.background,
+                    suffixIcon: Assets.icons.search.svg(),
                   ),
                 ),
               ],
