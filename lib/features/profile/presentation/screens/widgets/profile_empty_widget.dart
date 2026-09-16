@@ -32,7 +32,7 @@ class ProfileEmptyWidget extends StatelessWidget {
         ),
         CustomButton(
           onPressed: () {
-            context.push(
+            context.go(
               AuthRedirect.loginPath(returnTo: RoutePaths.profileTab),
             );
           },

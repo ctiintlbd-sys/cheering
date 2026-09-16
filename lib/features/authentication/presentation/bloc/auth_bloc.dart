@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
         fullName: event.fullName,
       );
-      routerNotifier.updateAuth(isAuthenticated: true);
+      await _finishSignIn(offerBiometricEnrollment: true);
       emit(
         state.copyWith(
           status: AuthStatus.success,

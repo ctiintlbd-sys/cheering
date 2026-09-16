@@ -2,6 +2,7 @@ import 'package:cheering/core/session/profile_session_sync.dart';
 import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
+import 'package:cheering/core/router/auth_sign_in_navigation_listener.dart';
 import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,9 @@ class App extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
+              builder: (context, child) => AuthSignInNavigationListener(
+                child: child ?? const SizedBox.shrink(),
+              ),
             ),
           ),
         ),

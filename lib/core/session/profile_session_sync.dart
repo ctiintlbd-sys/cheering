@@ -2,14 +2,9 @@ import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/router/app_router_notifier.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_event.dart';
-import 'package:cheering/features/profile/presentation/bloc/profile_state.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Syncs [ProfileBloc] with [AppRouterNotifier] session (login, logout, 401).
-///
-/// Uses a single [ChangeNotifier] listener — no rebuilds, no duplicate handlers.
-/// Profile is loaded only after the session becomes authenticated (not at app start).
 class ProfileSessionSync extends StatefulWidget {
   const ProfileSessionSync({super.key, required this.child});
 
