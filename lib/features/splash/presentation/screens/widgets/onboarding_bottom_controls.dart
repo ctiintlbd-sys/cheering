@@ -99,7 +99,7 @@ class OnboardingBottomControls extends StatelessWidget {
                 await OnboardingStorage.setOnboardingCompleted(true);
                 getIt<AppRouterNotifier>().completeOnboarding();
                 if (context.mounted) {
-                  context.go(RoutePaths.login);
+                  context.go(RoutePaths.foodTab);
                 }
               },
             ),
