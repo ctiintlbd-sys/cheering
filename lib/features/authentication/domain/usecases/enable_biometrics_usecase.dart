@@ -1,16 +1,16 @@
+import '../../data/services/biometric_service.dart';
 import '../repositories/i_auth_repository.dart';
-import '../repositories/i_biometric_repository.dart';
 
 /// Returns `true` when biometrics was enabled on device and server.
 class EnableBiometricsUseCase {
   final IAuthRepository _authRepository;
-  final IBiometricRepository _biometricRepository;
+  final BiometricService _biometricService;
 
-  EnableBiometricsUseCase(this._authRepository, this._biometricRepository);
+  EnableBiometricsUseCase(this._authRepository, this._biometricService);
 
   Future<bool> call() async {
-    if (!await _biometricRepository.isBiometricsAvailable()) {
-      await _biometricRepository.setBiometricEnabled(false);
+    if (!await _biometricService.isBiometricsAvailable()) {
+      await _biometricService.setBiometricEnabled(false);
       return false;
     }
 

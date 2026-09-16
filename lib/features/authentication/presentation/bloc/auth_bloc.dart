@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/router/app_router_notifier.dart';
-import '../../domain/repositories/i_biometric_repository.dart';
+import '../../data/services/biometric_service.dart';
 import '../../domain/usecases/enable_biometrics_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ForgotPasswordUseCase forgotPasswordUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final LogoutUseCase logoutUseCase;
-  final IBiometricRepository biometricRepository;
+  final BiometricService biometricService;
   final AppRouterNotifier routerNotifier;
 
   AuthBloc({
@@ -37,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.forgotPasswordUseCase,
     required this.resetPasswordUseCase,
     required this.logoutUseCase,
-    required this.biometricRepository,
+    required this.biometricService,
     required this.routerNotifier,
   }) : super(const AuthState()) {
     on<SendOtpRequested>(_onSendOtpRequested);
@@ -58,28 +58,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SendOtpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.sendOtp,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.sendOtp,
+        clearError: true,
+      ),
+    );
 
     try {
       final message = await sendOtpUseCase(
         email: event.email,
         role: event.role,
       );
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.sendOtp,
-        successMessage: message,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.sendOtp,
+          successMessage: message,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.sendOtp,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.sendOtp,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -87,11 +93,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     VerifyOtpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.verifyOtp,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.verifyOtp,
+        clearError: true,
+      ),
+    );
 
     try {
       final result = await verifyOtpUseCase(
@@ -101,18 +109,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         fullName: event.fullName,
       );
       routerNotifier.updateAuth(isAuthenticated: true);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.verifyOtp,
-        loginResult: result,
-        successMessage: 'Account created successfully',
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.verifyOtp,
+          loginResult: result,
+          successMessage: 'Account created successfully',
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.verifyOtp,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.verifyOtp,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -120,11 +132,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.login,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.login,
+        clearError: true,
+      ),
+    );
 
     try {
       final result = await loginUseCase(
@@ -132,18 +146,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       await _finishSignIn(offerBiometricEnrollment: true);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.login,
-        loginResult: result,
-        successMessage: 'Logged in successfully',
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.login,
+          loginResult: result,
+          successMessage: 'Logged in successfully',
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.login,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.login,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -151,27 +169,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     GoogleLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.googleLogin,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.googleLogin,
+        clearError: true,
+      ),
+    );
 
     try {
       final result = await loginWithGoogleUseCase();
       await _finishSignIn(offerBiometricEnrollment: false);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.googleLogin,
-        loginResult: result,
-        successMessage: 'Google login successful',
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.googleLogin,
+          loginResult: result,
+          successMessage: 'Google login successful',
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.googleLogin,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.googleLogin,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -179,27 +203,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     BiometricLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.biometricLogin,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.biometricLogin,
+        clearError: true,
+      ),
+    );
 
     try {
       final result = await loginWithBiometricsUseCase();
       await _finishSignIn(offerBiometricEnrollment: false);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.biometricLogin,
-        loginResult: result,
-        successMessage: 'Logged in successfully',
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.biometricLogin,
+          loginResult: result,
+          successMessage: 'Logged in successfully',
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.biometricLogin,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.biometricLogin,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -207,27 +237,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     EnableBiometricsRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.enableBiometrics,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.enableBiometrics,
+        clearError: true,
+      ),
+    );
 
     try {
       final enabled = await enableBiometricsUseCase();
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.enableBiometrics,
-        successMessage: enabled
-            ? 'Biometric login enabled successfully!'
-            : null,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.enableBiometrics,
+          successMessage: enabled
+              ? 'Biometric login enabled successfully!'
+              : null,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.enableBiometrics,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.enableBiometrics,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -235,25 +271,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ForgotPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.forgotPassword,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.forgotPassword,
+        clearError: true,
+      ),
+    );
 
     try {
       final message = await forgotPasswordUseCase(email: event.email);
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.forgotPassword,
-        successMessage: message,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.forgotPassword,
+          successMessage: message,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.forgotPassword,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.forgotPassword,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -261,11 +303,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ResetPasswordRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.resetPassword,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.resetPassword,
+        clearError: true,
+      ),
+    );
 
     try {
       final result = await resetPasswordUseCase(
@@ -273,18 +317,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         code: event.code,
         newPassword: event.newPassword,
       );
-      emit(state.copyWith(
-        status: AuthStatus.success,
-        action: AuthAction.resetPassword,
-        resetPasswordResult: result,
-        successMessage: result.message,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          action: AuthAction.resetPassword,
+          resetPasswordResult: result,
+          successMessage: result.message,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.resetPassword,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.resetPassword,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -292,68 +340,71 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogoutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.loading,
-      action: AuthAction.logout,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        action: AuthAction.logout,
+        clearError: true,
+      ),
+    );
 
     try {
       await logoutUseCase(allDevices: event.allDevices);
       routerNotifier.updateAuth(isAuthenticated: false);
-      emit(const AuthState(
-        status: AuthStatus.success,
-        action: AuthAction.logout,
-        successMessage: 'Logged out successfully',
-      ));
+      emit(
+        const AuthState(
+          status: AuthStatus.success,
+          action: AuthAction.logout,
+          successMessage: 'Logged out successfully',
+        ),
+      );
     } catch (e) {
       routerNotifier.updateAuth(isAuthenticated: false);
-      emit(state.copyWith(
-        status: AuthStatus.failure,
-        action: AuthAction.logout,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          action: AuthAction.logout,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
-  void _onToggleAuthMode(
-    ToggleAuthMode event,
-    Emitter<AuthState> emit,
-  ) {
-    emit(state.copyWith(
-      isSignUp: !state.isSignUp,
-      clearError: true,
-      clearSuccess: true,
-    ));
+  void _onToggleAuthMode(ToggleAuthMode event, Emitter<AuthState> emit) {
+    emit(
+      state.copyWith(
+        isSignUp: !state.isSignUp,
+        clearError: true,
+        clearSuccess: true,
+      ),
+    );
   }
 
-  void _onSetAuthMode(
-    SetAuthMode event,
-    Emitter<AuthState> emit,
-  ) {
-    emit(state.copyWith(
-      isSignUp: event.isSignUp,
-      clearError: true,
-      clearSuccess: true,
-    ));
+  void _onSetAuthMode(SetAuthMode event, Emitter<AuthState> emit) {
+    emit(
+      state.copyWith(
+        isSignUp: event.isSignUp,
+        clearError: true,
+        clearSuccess: true,
+      ),
+    );
   }
 
-  void _onResetAuthStatus(
-    ResetAuthStatus event,
-    Emitter<AuthState> emit,
-  ) {
-    emit(state.copyWith(
-      status: AuthStatus.initial,
-      action: AuthAction.none,
-      clearError: true,
-      clearSuccess: true,
-    ));
+  void _onResetAuthStatus(ResetAuthStatus event, Emitter<AuthState> emit) {
+    emit(
+      state.copyWith(
+        status: AuthStatus.initial,
+        action: AuthAction.none,
+        clearError: true,
+        clearSuccess: true,
+      ),
+    );
   }
 
   Future<void> _finishSignIn({required bool offerBiometricEnrollment}) async {
     if (offerBiometricEnrollment &&
-        !biometricRepository.canUseBiometricLogin &&
-        await biometricRepository.isBiometricsAvailable()) {
+        !biometricService.canUseBiometricLogin &&
+        await biometricService.isBiometricsAvailable()) {
       routerNotifier.setPendingBiometricOffer(true);
     }
     routerNotifier.updateAuth(isAuthenticated: true);

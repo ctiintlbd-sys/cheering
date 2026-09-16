@@ -7,13 +7,11 @@ import '../../features/profile/data/datasources/profile_remote_source.dart';
 import '../../features/authentication/data/datasources/auth_remote_source.dart';
 import '../../features/authentication/presentation/bloc/auth_bloc.dart';
 import '../../features/authentication/data/repositories/auth_repository_impl.dart';
-import '../../features/authentication/data/repositories/biometric_repository_impl.dart';
 import '../../features/authentication/data/services/biometric_auth_service.dart';
 import '../../features/authentication/data/services/biometric_key_service.dart';
 import '../../features/authentication/data/services/biometric_service.dart';
 import '../../features/authentication/data/services/google_auth_service.dart';
 import '../../features/authentication/domain/repositories/i_auth_repository.dart';
-import '../../features/authentication/domain/repositories/i_biometric_repository.dart';
 import '../../features/authentication/domain/usecases/check_stored_session_usecase.dart';
 import '../../features/authentication/domain/usecases/clear_local_session_usecase.dart';
 import '../../features/authentication/domain/usecases/enable_biometrics_usecase.dart';
@@ -27,25 +25,15 @@ import '../../features/authentication/domain/usecases/send_otp_usecase.dart';
 import '../../features/authentication/domain/usecases/verify_otp_usecase.dart';
 
 void setupAuthDependencies(GetIt getIt) {
-  getIt.registerLazySingleton<BiometricService>(
-    () => BiometricService(),
-  );
+  getIt.registerLazySingleton<BiometricService>(() => BiometricService());
 
-  getIt.registerLazySingleton<BiometricKeyService>(
-    () => BiometricKeyService(),
-  );
-
-  getIt.registerLazySingleton<IBiometricRepository>(
-    () => BiometricRepositoryImpl(getIt<BiometricService>()),
-  );
+  getIt.registerLazySingleton<BiometricKeyService>(() => BiometricKeyService());
 
   getIt.registerLazySingleton<AuthRemoteSource>(
     () => AuthRemoteSource(getIt<IApiClient>()),
   );
 
-  getIt.registerLazySingleton<GoogleAuthService>(
-    () => GoogleAuthService(),
-  );
+  getIt.registerLazySingleton<GoogleAuthService>(() => GoogleAuthService());
 
   getIt.registerLazySingleton<BiometricAuthService>(
     () => BiometricAuthService(
@@ -88,7 +76,7 @@ void setupAuthDependencies(GetIt getIt) {
   getIt.registerLazySingleton<EnableBiometricsUseCase>(
     () => EnableBiometricsUseCase(
       getIt<IAuthRepository>(),
-      getIt<IBiometricRepository>(),
+      getIt<BiometricService>(),
     ),
   );
 
@@ -123,7 +111,7 @@ void setupAuthDependencies(GetIt getIt) {
       forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
       resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
       logoutUseCase: getIt<LogoutUseCase>(),
-      biometricRepository: getIt<IBiometricRepository>(),
+      biometricService: getIt<BiometricService>(),
       routerNotifier: getIt<AppRouterNotifier>(),
     ),
   );

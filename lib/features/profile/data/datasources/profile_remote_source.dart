@@ -3,8 +3,8 @@ import 'dart:io';
 import '../../../../core/config/api_endpoints.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/i_api_client.dart';
+import '../../../authentication/data/models/user_model.dart';
 import '../models/presigned_upload_model.dart';
-import '../models/profile_model.dart';
 import '../models/update_profile_request_model.dart';
 
 class ProfileRemoteSource {
@@ -13,7 +13,7 @@ class ProfileRemoteSource {
   ProfileRemoteSource(this._client);
 
   /// Calls GET /users/me to fetch the authenticated user profile.
-  Future<ApiResult<ProfileModel>> getProfile() {
+  Future<ApiResult<UserModel>> getProfile() {
     return _client.get(
       ApiEndpoints.currentUser,
       fromJson: (json) {
@@ -21,13 +21,13 @@ class ProfileRemoteSource {
         final data = map['data'] is Map<String, dynamic>
             ? map['data'] as Map<String, dynamic>
             : map;
-        return ProfileModel.fromJson(data);
+        return UserModel.fromJson(data);
       },
     );
   }
 
   /// Calls PUT /users/me/profile to update mutable profile fields.
-  Future<ApiResult<ProfileModel>> updateProfile(UpdateProfileRequestModel request) {
+  Future<ApiResult<UserModel>> updateProfile(UpdateProfileRequestModel request) {
     return _client.put(
       ApiEndpoints.profile,
       body: request.toJson(),
@@ -36,7 +36,7 @@ class ProfileRemoteSource {
         final data = map['data'] is Map<String, dynamic>
             ? map['data'] as Map<String, dynamic>
             : map;
-        return ProfileModel.fromJson(data);
+        return UserModel.fromJson(data);
       },
     );
   }

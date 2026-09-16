@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
-import '../../domain/repositories/i_biometric_repository.dart';
+import '../../data/services/biometric_service.dart';
 import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
@@ -118,11 +118,11 @@ class _EmailScreenState extends State<EmailScreen> {
             selector: (state) => state.isSignUp,
             builder: (context, isSignUp) {
               if (isSignUp) return const SizedBox.shrink();
-              final biometricRepo = getIt<IBiometricRepository>();
-              if (!biometricRepo.canUseBiometricLogin) {
+              final biometricService = getIt<BiometricService>();
+              if (!biometricService.canUseBiometricLogin) {
                 return const SizedBox.shrink();
               }
-              final biometricUi = biometricRepo.biometricUiKind;
+              final biometricUi = biometricService.biometricUiKind;
               return Padding(
                 padding: EdgeInsets.only(top: 12.h),
                 child: CustomButton(

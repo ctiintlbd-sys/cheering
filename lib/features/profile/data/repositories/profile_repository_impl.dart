@@ -5,10 +5,10 @@ import 'package:cheering/core/network/api_result.dart';
 
 import '../../../../core/cache/cache_service.dart';
 import '../../../../core/utils/mime_utils.dart';
+import '../../../authentication/data/models/user_model.dart';
 import '../../../authentication/domain/entities/user_entity.dart';
 import '../../domain/repositories/i_profile_repository.dart';
 import '../datasources/profile_remote_source.dart';
-import '../models/profile_model.dart';
 import '../models/update_profile_request_model.dart';
 
 class ProfileRepositoryImpl implements IProfileRepository {
@@ -23,9 +23,9 @@ class ProfileRepositoryImpl implements IProfileRepository {
         fromJson: (json) {
           final data =
               json['data'] is Map<String, dynamic> ? json['data'] : json;
-          return ProfileModel.fromJson(data as Map<String, dynamic>);
+          return UserModel.fromJson(data as Map<String, dynamic>);
         },
-        toJson: (e) => (e as ProfileModel).toJson(),
+        toJson: (e) => (e as UserModel).toJson(),
         fetch: () => _source.getProfile(),
         ttl: const Duration(hours: 24),
       );
@@ -45,7 +45,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
     );
     return result.fold(
       onSuccess: (data) async {
-        await _cache.set<ProfileModel>(
+        await _cache.set<UserModel>(
           CacheKeys.profile,
           data,
           toJson: (e) => e.toJson(),

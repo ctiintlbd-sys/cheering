@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../core/di/service_locator.dart';
 import '../../../../../core/helpers/toast_message_helper.dart';
-import '../../../domain/repositories/i_biometric_repository.dart';
+import '../../../data/services/biometric_service.dart';
 import '../../utils/biometric_ui_kind_assets.dart';
 import '../../bloc/auth_bloc.dart';
 import '../../bloc/auth_event.dart';
@@ -29,7 +29,7 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final biometricUi = getIt<IBiometricRepository>().biometricUiKind;
+    final biometricUi = getIt<BiometricService>().biometricUiKind;
 
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (prev, curr) =>

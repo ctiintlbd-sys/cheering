@@ -1,6 +1,6 @@
 import '../../domain/entities/auth_tokens_entity.dart';
 import '../../domain/entities/login_result_entity.dart';
-import '../../domain/entities/user_entity.dart';
+import 'user_model.dart';
 
 class AuthTokensModel extends AuthTokensEntity {
   const AuthTokensModel({
@@ -16,35 +16,6 @@ class AuthTokensModel extends AuthTokensEntity {
       refreshToken: json['refresh_token']?.toString() ?? '',
       tokenType: json['token_type']?.toString() ?? 'Bearer',
       expiresIn: json['expires_in'] is int ? json['expires_in'] as int : 1800,
-    );
-  }
-}
-
-class UserModel extends UserEntity {
-  const UserModel({
-    required super.id,
-    required super.role,
-    required super.email,
-    super.phone,
-    required super.fullName,
-    super.avatarUrl,
-    required super.isEmailVerified,
-    required super.isPhoneVerified,
-  });
-
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id']?.toString() ?? '',
-      role: UserRole.values.firstWhere(
-        (e) => e.name.toUpperCase() == json['role']?.toString().toUpperCase(),
-        orElse: () => UserRole.unknown,
-      ),
-      email: json['email']?.toString() ?? '',
-      phone: json['phone']?.toString(),
-      fullName: json['full_name']?.toString() ?? '',
-      avatarUrl: json['avatar_url']?.toString(),
-      isEmailVerified: json['is_email_verified'] == true,
-      isPhoneVerified: json['is_phone_verified'] == true,
     );
   }
 }

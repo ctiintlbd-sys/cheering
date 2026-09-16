@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../../../core/storage/biometric_device_storage.dart';
 import '../../../../core/storage/biometric_storage.dart';
 import '../../domain/entities/biometric_ui_kind.dart';
 
@@ -13,6 +14,12 @@ class BiometricService {
       : _auth = auth ?? LocalAuthentication();
 
   BiometricUiKind get uiKind => _uiKind;
+
+  BiometricUiKind get biometricUiKind => _uiKind;
+
+  bool get isDeviceEnrolled => BiometricDeviceStorage.hasEnrollment;
+
+  bool get canUseBiometricLogin => isBiometricEnabled && isDeviceEnrolled;
 
   /// Call once at app startup so UI can read [uiKind] synchronously.
   Future<void> loadUiKind() async {

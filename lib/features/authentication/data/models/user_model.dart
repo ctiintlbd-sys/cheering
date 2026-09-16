@@ -1,7 +1,8 @@
-import '../../../authentication/domain/entities/user_entity.dart';
+import '../../domain/entities/user_entity.dart';
 
-class ProfileModel extends UserEntity {
-  const ProfileModel({
+/// JSON DTO for user objects in login responses and profile APIs.
+class UserModel extends UserEntity {
+  const UserModel({
     required super.id,
     required super.role,
     required super.email,
@@ -12,8 +13,8 @@ class ProfileModel extends UserEntity {
     required super.isPhoneVerified,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    return ProfileModel(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['id']?.toString() ?? '',
       role: UserRole.values.firstWhere(
         (e) => e.name.toUpperCase() == json['role']?.toString().toUpperCase(),
@@ -28,8 +29,8 @@ class ProfileModel extends UserEntity {
     );
   }
 
-  factory ProfileModel.fromEntity(UserEntity entity) {
-    return ProfileModel(
+  factory UserModel.fromEntity(UserEntity entity) {
+    return UserModel(
       id: entity.id,
       role: entity.role,
       email: entity.email,

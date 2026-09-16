@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/router/app_router_notifier.dart';
-import '../../domain/repositories/i_biometric_repository.dart';
+import '../../data/services/biometric_service.dart';
 import '../utils/biometric_ui_kind_assets.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/widgets/app_auth_title.dart';
@@ -35,7 +35,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final biometricUi = getIt<IBiometricRepository>().biometricUiKind;
+    final biometricUi = getIt<BiometricService>().biometricUiKind;
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
