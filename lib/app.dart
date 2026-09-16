@@ -31,26 +31,22 @@ class App extends StatelessWidget {
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
-            builder: (context, locale) => BlocBuilder<ThemeCubit, ThemeMode>(
-              builder: (context, themeMode) {
-                return MaterialApp.router(
-                  scaffoldMessengerKey: ToastMessageHelper.messengerKey,
-                  debugShowCheckedModeBanner: false,
-                  title: 'Cheering',
-                  locale: locale,
-                  themeMode: ThemeMode.light,
-                  theme: AppTheme.light(),
-                  //darkTheme: AppTheme.dark(),
-                  routerConfig: AppRouter.router,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                );
-              },
+            builder: (context, locale) => MaterialApp.router(
+              scaffoldMessengerKey: ToastMessageHelper.messengerKey,
+              debugShowCheckedModeBanner: false,
+              title: 'Cheering',
+              locale: locale,
+              themeMode: ThemeMode.light,
+              theme: AppTheme.light(),
+              //darkTheme: AppTheme.dark(),
+              routerConfig: AppRouter.router,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
             ),
           ),
         ),

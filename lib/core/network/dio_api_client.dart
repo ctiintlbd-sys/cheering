@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-
 import '../config/api_endpoints.dart';
 import '../errors/app_exception.dart';
 import '../utils/mime_utils.dart';

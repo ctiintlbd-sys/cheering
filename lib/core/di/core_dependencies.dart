@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import '../config/app_config.dart';
 import '../network/dio_api_client.dart';
 import '../network/i_api_client.dart';
-import '../network/request_manager.dart';
 import '../router/app_router_notifier.dart';
 import '../session/user_session_cleanup.dart';
 import '../storage/token_storage.dart';
@@ -15,7 +14,6 @@ void setupCoreDependencies(GetIt getIt) {
   getIt.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
   getIt.registerLazySingleton<LocaleCubit>(() => LocaleCubit());
   getIt.registerLazySingleton<AppRouterNotifier>(() => AppRouterNotifier());
-  getIt.registerLazySingleton<RequestManager>(() => RequestManager());
   getIt.registerLazySingleton<CacheService>(() => HiveCacheService.instance);
   getIt.registerLazySingleton<UserSessionCleanup>(
     () => UserSessionCleanup(getIt<CacheService>()),
