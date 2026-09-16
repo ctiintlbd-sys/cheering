@@ -32,6 +32,11 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
 
   void _goToApp() {
     getIt<AppRouterNotifier>().clearPendingBiometricOffer();
+    final redirect = GoRouterState.of(context).uri.queryParameters['redirect'];
+    if (redirect != null && redirect.isNotEmpty) {
+      context.go(Uri.decodeComponent(redirect));
+      return;
+    }
     context.go(RoutePaths.foodTab);
   }
 
@@ -65,7 +70,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 180.h,
+          expandedHeight: 144.h,
           flexibleChild: AppAuthTitle(
             title: biometricUi.enableScreenTitle,
             subtitle:

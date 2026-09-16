@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_auth_title.dart';
@@ -47,7 +48,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
             );
           case (AuthStatus.success, AuthAction.forgotPassword):
             context.push(
-              RoutePaths.otp,
+              AuthRedirect.withRedirectFromContext(context, RoutePaths.otp),
               extra: {
                 'email': _emailController.text.trim(),
                 'isForgotPassword': true,
@@ -61,7 +62,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 180.h,
+          expandedHeight: 144.h,
           flexibleChild: AppAuthTitle(
             title: 'Forgot Password? 🔐',
             subtitle:

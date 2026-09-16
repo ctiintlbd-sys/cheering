@@ -6,6 +6,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../data/services/biometric_service.dart';
 import '../utils/biometric_ui_kind_assets.dart';
+import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/utils/validators.dart';
@@ -42,7 +43,10 @@ class _EmailScreenState extends State<EmailScreen> {
     if (isSignUp) {
       context.read<AuthBloc>().add(SendOtpRequested(email: email));
     } else {
-      context.push(RoutePaths.password, extra: email);
+      context.push(
+        AuthRedirect.withRedirectFromContext(context, RoutePaths.password),
+        extra: email,
+      );
     }
   }
 
@@ -59,7 +63,10 @@ class _EmailScreenState extends State<EmailScreen> {
               state.errorMessage ?? 'An unexpected error occurred.',
             );
           case (AuthStatus.success, AuthAction.sendOtp):
-            context.push(RoutePaths.otp, extra: _emailController.text.trim());
+            context.push(
+              AuthRedirect.withRedirectFromContext(context, RoutePaths.otp),
+              extra: _emailController.text.trim(),
+            );
           default:
             break;
         }

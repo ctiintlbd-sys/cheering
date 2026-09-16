@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/utils/validators.dart';
@@ -55,7 +56,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       return;
     }
     context.push(
-      RoutePaths.about,
+      AuthRedirect.withRedirectFromContext(context, RoutePaths.about),
       extra: {'email': widget.email, 'otp': widget.otp, 'password': _password},
     );
   }
@@ -99,7 +100,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 180.h,
+          expandedHeight: 144.h,
           flexibleChild: AppAuthTitle(
             title: 'Set Password',
             subtitle: 'Enter your desired password in both fields.',

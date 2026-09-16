@@ -1,3 +1,4 @@
+import 'package:cheering/core/router/auth_redirect.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,9 +30,14 @@ class ProfileEmptyWidget extends StatelessWidget {
           color: context.colors.textTertiary,
           bottom: 24.h,
         ),
-        CustomButton(onPressed: () {
-          context.push(RoutePaths.login);
-        }, label: 'Login/ Sign up'),
+        CustomButton(
+          onPressed: () {
+            context.push(
+              AuthRedirect.loginPath(returnTo: RoutePaths.profileTab),
+            );
+          },
+          label: 'Login/ Sign up',
+        ),
       ],
     );
   }

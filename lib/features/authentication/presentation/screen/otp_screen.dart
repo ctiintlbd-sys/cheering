@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
+import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/widgets/app_auth_title.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -59,7 +60,7 @@ class _OtpScreenState extends State<OtpScreen> {
   void _onConfirm(BuildContext context) {
     final otp = _otpController.text.trim();
     context.push(
-      RoutePaths.setPassword,
+      AuthRedirect.withRedirectFromContext(context, RoutePaths.setPassword),
       extra: {
         'email': widget.email,
         'otp': otp,
@@ -92,7 +93,7 @@ class _OtpScreenState extends State<OtpScreen> {
       child: SliverScaffold(
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
-          expandedHeight: 180.h,
+          expandedHeight: 144.h,
           flexibleChild: AppAuthTitle(
             title: 'Enter OTP',
             subtitle: 'We have sent a verification code to ${widget.email}',

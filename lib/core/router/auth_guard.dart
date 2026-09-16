@@ -55,7 +55,9 @@ abstract final class AppAuthGuard {
       return '${RoutePaths.login}?redirect=$encoded';
     }
     if (isAuth && _isGuestOnlyRoute(location)) {
-      if (notifier.pendingBiometricOffer) return RoutePaths.enableBiometrics;
+      if (notifier.pendingBiometricOffer) {
+        return _enableBiometricsLocation(state);
+      }
 
       final redirect = state.uri.queryParameters['redirect'];
       if (redirect != null && redirect.isNotEmpty) {
@@ -64,5 +66,13 @@ abstract final class AppAuthGuard {
       return RoutePaths.foodTab;
     }
     return null;
+  }
+
+  static String _enableBiometricsLocation(GoRouterState state) {
+    final redirect = state.uri.queryParameters['redirect'];
+    if (redirect != null && redirect.isNotEmpty) {
+      return '${RoutePaths.enableBiometrics}?redirect=${Uri.encodeComponent(redirect)}';
+    }
+    return RoutePaths.enableBiometrics;
   }
 }
