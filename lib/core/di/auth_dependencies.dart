@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 
 import '../network/i_api_client.dart';
 import '../router/app_router_notifier.dart';
-import '../session/user_session_cleanup.dart';
 import '../../features/profile/data/datasources/profile_remote_source.dart';
 import '../../features/authentication/data/datasources/auth_remote_source.dart';
 import '../../features/authentication/presentation/bloc/auth_bloc.dart';
@@ -49,7 +48,6 @@ void setupAuthDependencies(GetIt getIt) {
       getIt<GoogleAuthService>(),
       getIt<BiometricAuthService>(),
       getIt<ProfileRemoteSource>(),
-      getIt<UserSessionCleanup>(),
     ),
   );
 
