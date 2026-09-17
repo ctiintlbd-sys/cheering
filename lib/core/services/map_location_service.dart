@@ -55,8 +55,10 @@ class MapLocationService {
 
   final Geocoding _geocoding;
 
+  static const int _maxSearchResults = 5;
+
   // Search cache — lives for the app session
-  static final Map<String, MapSearchResult> _searchCache = {};
+  static final Map<String, List<MapSearchResult>> _searchCache = {};
 
   Timer? _searchDebounce;
   Timer? _reverseGeocodeDebounce;
@@ -110,67 +112,108 @@ class MapLocationService {
   /// Debounced address search. Ignores queries shorter than 3 chars.
   void scheduleAddressSearch({
     required String query,
-    required void Function(MapSearchResult result) onResult,
+    required void Function(List<MapSearchResult> results) onResults,
     Duration debounce = const Duration(milliseconds: 500),
   }) {
     _searchDebounce?.cancel();
     if (query.trim().length < 3) return;
 
     _searchDebounce = Timer(debounce, () async {
-      final result = await searchAddress(query.trim());
-      if (result != null) onResult(result);
+      final id = ++_searchRequestId;
+      final results = await searchAddresses(query.trim(), requestId: id);
+      if (id == _searchRequestId) onResults(results);
     });
   }
 
   void cancelSearchDebounce() => _searchDebounce?.cancel();
 
-  Future<MapSearchResult?> searchAddress(String query) async {
+  Future<List<MapSearchResult>> searchAddresses(
+    String query, {
+    int? requestId,
+  }) async {
     final key = query.toLowerCase();
-    if (_searchCache.containsKey(key)) return _searchCache[key];
+    if (_searchCache.containsKey(key)) {
+      final cached = _searchCache[key]!;
+      if (requestId != null && requestId != _searchRequestId) return [];
+      return cached;
+    }
 
-    final id = ++_searchRequestId;
+    final id = requestId ?? ++_searchRequestId;
 
     try {
-      final locations = await _geocoding.locationFromAddress(query);
-      if (id != _searchRequestId || locations.isEmpty) return null;
+      final locations = await _locationsForQuery(query);
+      if (id != _searchRequestId || locations.isEmpty) return [];
 
-      final loc = locations.first;
-      final latLng = LatLng(loc.latitude, loc.longitude);
+      final results = <MapSearchResult>[];
+      final seen = <String>{};
+      for (final loc in locations.take(_maxSearchResults)) {
+        if (id != _searchRequestId) return [];
 
-      var address = query;
-      var area = '';
+        final latLng = LatLng(loc.latitude, loc.longitude);
+        var address = query;
+        var area = '';
 
-      try {
-        final placemarks = await _geocoding.placemarkFromCoordinates(
-          loc.latitude,
-          loc.longitude,
-        );
-        if (id != _searchRequestId) return null;
+        try {
+          final placemarks = await _geocoding.placemarkFromCoordinates(
+            loc.latitude,
+            loc.longitude,
+          );
+          if (id != _searchRequestId) return [];
 
-        if (placemarks.isNotEmpty) {
-          final place = placemarks.first;
-          final resolved = addressFromPlacemark(place);
-          address = resolved == MapLocationDefaults.selectedFallbackLabel
-              ? query
-              : resolved;
-          area = areaFromPlacemark(place);
+          if (placemarks.isNotEmpty) {
+            final place = placemarks.first;
+            final resolved = addressFromPlacemark(place);
+            address = resolved == MapLocationDefaults.selectedFallbackLabel
+                ? query
+                : resolved;
+            area = areaFromPlacemark(place);
+          }
+        } catch (_) {
+          // keep address = query if reverse lookup fails
         }
-      } catch (_) {
-        // keep address = query if reverse lookup fails
+
+        final dedupeKey =
+            '${latLng.latitude.toStringAsFixed(5)},${latLng.longitude.toStringAsFixed(5)}';
+        if (seen.contains(dedupeKey)) continue;
+        seen.add(dedupeKey);
+
+        results.add(
+          MapSearchResult(
+            query: query,
+            formattedAddress: address,
+            area: area,
+            position: latLng,
+          ),
+        );
       }
 
-      final result = MapSearchResult(
-        query: query,
-        formattedAddress: address,
-        area: area,
-        position: latLng,
-      );
-      if (id == _searchRequestId) _searchCache[key] = result;
-      return id == _searchRequestId ? result : null;
+      if (id == _searchRequestId && results.isNotEmpty) {
+        _searchCache[key] = results;
+      }
+      return id == _searchRequestId ? results : [];
     } catch (e) {
-      debugPrint('[MapLocationService] searchAddress error: $e');
-      return null;
+      debugPrint('[MapLocationService] searchAddresses error: $e');
+      return [];
     }
+  }
+
+  Future<List<Location>> _locationsForQuery(String query) async {
+    final lower = query.toLowerCase();
+    final candidates = <String>[
+      query,
+      if (!lower.contains('dhaka')) '$query, Dhaka, Bangladesh',
+      if (!lower.contains('bangladesh')) '$query, Bangladesh',
+    ];
+
+    for (final candidate in candidates) {
+      try {
+        final locations = await _geocoding.locationFromAddress(candidate);
+        if (locations.isNotEmpty) return locations;
+      } catch (_) {
+        // try next candidate
+      }
+    }
+    return [];
   }
 
   // ─── Reverse geocode ─────────────────────────────────────────

@@ -13,10 +13,14 @@ class ManualAddressMapSearchBar extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onClear,
+    this.focusNode,
+    this.searchResults,
   });
 
   final TextEditingController controller;
   final VoidCallback onClear;
+  final FocusNode? focusNode;
+  final Widget? searchResults;
 
   @override
   Widget build(BuildContext context) {
@@ -26,30 +30,44 @@ class ManualAddressMapSearchBar extends StatelessWidget {
       top: top,
       left: 16.w,
       right: 16.w,
-      child: Row(
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          CommonActionIcon(
-            icon: Assets.icons.arrowBack.path,
-            onTap: () => context.pop(),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: CustomTextField(
-              maxLines: 1,
-              validator: (_) => null,
-              borderRadius: 99,
-              controller: controller,
-              prefixIcon: Assets.icons.search.svg(),
-              fillColor: context.colors.background,
-              suffixIcon: CustomText(
-                onTap: onClear,
-                text: 'Clear',
-                color: context.colors.primary,
-                fontWeight: FontWeight.w500,
+          Row(
+            children: [
+              CommonActionIcon(
+                icon: Assets.icons.arrowBack.path,
+                onTap: () => context.pop(),
               ),
-            ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: CustomTextField(
+                  maxLines: 1,
+                  validator: (_) => null,
+                  borderRadius: 99,
+                  controller: controller,
+                  focusNode: focusNode,
+                  prefixIcon: Assets.icons.search.svg(),
+                  fillColor: context.colors.background,
+                  suffixIcon: CustomText(
+                    onTap: onClear,
+                    text: 'Clear',
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
+          if (searchResults != null) ...[
+            SizedBox(height: 16.h),
+            searchResults!,
+          ],
         ],
+        ),
       ),
     );
   }

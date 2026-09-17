@@ -14,6 +14,7 @@ import '../../../../core/theme/app_theme_colors.dart';
 import 'widgets/manual_address_location_sheet.dart';
 import 'widgets/manual_address_map_pin.dart';
 import 'widgets/manual_address_map_search_bar.dart';
+import 'widgets/manual_address_map_search_results_sheet.dart';
 
 class ManualAddressMapScreen extends StatefulWidget {
   const ManualAddressMapScreen({super.key});
@@ -26,6 +27,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
   // Owned by this screen — NOT from DI, so safe to dispose
   final _mapService = MapLocationService();
   final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
 
   GoogleMapController? _mapController;
   LatLng _cameraPosition = MapLocationDefaults.dhaka;
@@ -42,18 +44,25 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
   String _address = MapLocationDefaults.locatingLabel;
   String _area = '';
 
+  List<MapSearchResult> _searchResults = [];
+  bool _searchLoading = false;
+  bool _showSearchResults = false;
+
   // ─── Lifecycle ──────────────────────────────────────────────
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    _searchFocusNode.addListener(_onSearchFocusChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) => _goToCurrentLocation());
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
+    _searchFocusNode.removeListener(_onSearchFocusChanged);
+    _searchFocusNode.dispose();
     _searchController.dispose();
     _mapService.cancelPendingWork(); // cancel timers/requests only, no DI teardown
     _mapController?.dispose();
@@ -62,20 +71,62 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   // ─── Search ─────────────────────────────────────────────────
 
+  void _onSearchFocusChanged() {
+    if (_searchFocusNode.hasFocus &&
+        _searchController.text.trim().length >= 3) {
+      setState(() => _showSearchResults = true);
+    }
+  }
+
+  void _dismissSearchResults() {
+    _searchFocusNode.unfocus();
+    setState(() => _showSearchResults = false);
+  }
+
+  void _clearSearchResults() {
+    setState(() {
+      _searchResults = [];
+      _searchLoading = false;
+      _showSearchResults = false;
+    });
+  }
+
   void _onSearchChanged() {
     if (_suppressSearchEvents > 0) {
       _suppressSearchEvents--;
       return;
     }
-    if (_loadingGps) return;
+    final query = _searchController.text.trim();
+    if (query.length < 3) {
+      _mapService.cancelSearchDebounce();
+      _clearSearchResults();
+      return;
+    }
+
+    setState(() {
+      _searchLoading = true;
+      _showSearchResults = true;
+    });
 
     _mapService.scheduleAddressSearch(
       query: _searchController.text,
-      onResult: (result) {
+      onResults: (results) {
         if (!mounted) return;
-        unawaited(_applySearchResult(result));
+        setState(() {
+          _searchLoading = false;
+          _searchResults = results;
+          if (_searchController.text.trim().length >= 3) {
+            _showSearchResults = true;
+          }
+        });
       },
     );
+  }
+
+  Future<void> _onSearchResultSelected(MapSearchResult result) async {
+    _clearSearchResults();
+    _searchFocusNode.unfocus();
+    await _applySearchResult(result);
   }
 
   Future<void> _applySearchResult(MapSearchResult result) async {
@@ -178,6 +229,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
   }
 
   void _onMapTap(LatLng latLng) {
+    _dismissSearchResults();
     _cameraPosition = latLng;
     _mapService.moveCamera(controller: _mapController, target: latLng);
   }
@@ -201,9 +253,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
+    return Scaffold(
         extendBody: true,
         body: Stack(
           children: [
@@ -225,10 +275,22 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
             ManualAddressMapPin(isMoving: _pinMoving),
             ManualAddressMapSearchBar(
               controller: _searchController,
+              focusNode: _searchFocusNode,
               onClear: () {
                 _mapService.cancelSearchDebounce();
                 _searchController.clear();
+                _clearSearchResults();
               },
+              searchResults: _showSearchResults &&
+                      _searchController.text.trim().length >= 3
+                  ? ManualAddressMapSearchResultsSheet(
+                      loading: _searchLoading,
+                      results: _searchResults,
+                      onResultTap: (result) {
+                        unawaited(_onSearchResultSelected(result));
+                      },
+                    )
+                  : null,
             ),
           ],
         ),
@@ -253,7 +315,6 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
           area: _area,
           onConfirm: _confirm,
         ),
-      ),
     );
   }
 }
