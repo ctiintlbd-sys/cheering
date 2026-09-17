@@ -1,6 +1,12 @@
+import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
+import 'package:cheering/features/address/presentation/bloc/address_event.dart';
+import 'package:cheering/features/address/presentation/models/add_address_route_args.dart';
+import 'package:cheering/features/address/presentation/screens/add_address_screen.dart';
+import 'package:cheering/features/address/presentation/screens/manual_address_map_screen.dart';
 import 'package:cheering/features/profile/presentation/screens/account_settings_screen.dart';
 import 'package:cheering/features/address/presentation/screens/address_screen.dart';
-import 'package:cheering/features/address/presentation/screens/manual_address_map_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../route_paths.dart';
 
@@ -11,10 +17,33 @@ final List<RouteBase> profileRoutes = [
   ),
   GoRoute(
     path: RoutePaths.address,
-    builder: (context, state) => const AddressScreen(),
-  ),
-  GoRoute(
-    path: RoutePaths.manualAddressMap,
-    builder: (context, state) => const ManualAddressMapScreen(),
+    builder: (context, state) => BlocProvider(
+      create: (_) => getIt<AddressBloc>()..add(const LoadAddressesRequested()),
+      child: const AddressScreen(),
+    ),
+    routes: [
+      GoRoute(
+        path: 'manual-map',
+        builder: (context, state) => const ManualAddressMapScreen(),
+      ),
+      GoRoute(
+        path: 'add',
+        builder: (context, state) {
+          final args = state.extra as AddAddressRouteArgs?;
+          return BlocProvider(
+            create: (_) => getIt<AddressBloc>(),
+            child: AddAddressScreen(
+              args: args ??
+                  const AddAddressRouteArgs(
+                    latitude: 0,
+                    longitude: 0,
+                    primaryLine: '',
+                    secondaryLine: '',
+                  ),
+            ),
+          );
+        },
+      ),
+    ],
   ),
 ];
