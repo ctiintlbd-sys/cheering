@@ -1,15 +1,12 @@
 import 'dart:async';
-
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/services/current_location_service.dart';
 import 'package:cheering/core/services/map_location_service.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../../../core/theme/app_theme_colors.dart';
 import 'widgets/manual_address_location_sheet.dart';
 import 'widgets/manual_address_map_pin.dart';
@@ -24,21 +21,14 @@ class ManualAddressMapScreen extends StatefulWidget {
 }
 
 class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
-  // Owned by this screen — NOT from DI, so safe to dispose
   final _mapService = MapLocationService();
   final _searchController = TextEditingController();
   final _searchFocusNode = FocusNode();
 
   GoogleMapController? _mapController;
   LatLng _cameraPosition = MapLocationDefaults.dhaka;
-
   bool _pinMoving = false;
-  bool _loadingGps = false;
-
-  // True after a programmatic camera move so onCameraIdle skips geocode
   bool _suppressNextIdleGeocode = false;
-
-  // Suppresses search listener during programmatic text updates
   int _suppressSearchEvents = 0;
 
   String _address = MapLocationDefaults.locatingLabel;
@@ -58,18 +48,64 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _goToCurrentLocation());
   }
 
-  @override
-  void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchFocusNode.removeListener(_onSearchFocusChanged);
-    _searchFocusNode.dispose();
-    _searchController.dispose();
-    _mapService.cancelPendingWork(); // cancel timers/requests only, no DI teardown
-    _mapController?.dispose();
-    super.dispose();
-  }
+  // ─── Build ──────────────────────────────────────────────────
 
-  // ─── Search ─────────────────────────────────────────────────
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: const CameraPosition(
+              target: MapLocationDefaults.dhaka,
+              zoom: 15,
+            ),
+            onMapCreated: (c) => _mapController = c,
+            onCameraMove: _onCameraMove,
+            onCameraIdle: _onCameraIdle,
+            onTap: _onMapTap,
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            compassEnabled: false,
+            mapToolbarEnabled: false,
+          ),
+          ManualAddressMapPin(isMoving: _pinMoving),
+          ManualAddressMapSearchBar(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            onClear: () {
+              _mapService.cancelSearchDebounce();
+              _searchController.clear();
+              _clearSearchResults();
+            },
+            searchResults:
+                _showSearchResults && _searchController.text.trim().length >= 3
+                ? ManualAddressMapSearchResultsSheet(
+                    loading: _searchLoading,
+                    results: _searchResults,
+                    onResultTap: (result) {
+                      unawaited(_onSearchResultSelected(result));
+                    },
+                  )
+                : null,
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 0.5,
+        backgroundColor: context.colors.background,
+        onPressed: _goToCurrentLocation,
+        child: Assets.icons.currentLocation.svg(),
+      ),
+      bottomNavigationBar: ManualAddressLocationSheet(
+        address: _address,
+        area: _area,
+        onConfirm: _confirm,
+      ),
+    );
+  }
 
   void _onSearchFocusChanged() {
     if (_searchFocusNode.hasFocus &&
@@ -162,12 +198,9 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
   // ─── GPS ────────────────────────────────────────────────────
 
   Future<void> _goToCurrentLocation() async {
-    if (_loadingGps) return;
-    setState(() => _loadingGps = true);
-
     try {
-      final result =
-      await getIt<CurrentLocationService>().fetchCurrentLocation();
+      final result = await getIt<CurrentLocationService>()
+          .fetchCurrentLocation();
 
       if (!mounted) return;
 
@@ -197,9 +230,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
       } else {
         _setUnknownAddress();
       }
-    } finally {
-      if (mounted) setState(() => _loadingGps = false);
-    }
+    } finally {}
   }
 
   // ─── Camera callbacks ────────────────────────────────────────
@@ -249,72 +280,14 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
     });
   }
 
-  // ─── Build ──────────────────────────────────────────────────
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        extendBody: true,
-        body: Stack(
-          children: [
-            GoogleMap(
-              initialCameraPosition: const CameraPosition(
-                target: MapLocationDefaults.dhaka,
-                zoom: 15,
-              ),
-              onMapCreated: (c) => _mapController = c,
-              onCameraMove: _onCameraMove,
-              onCameraIdle: _onCameraIdle,
-              onTap: _onMapTap,
-              myLocationEnabled: false,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              compassEnabled: false,
-              mapToolbarEnabled: false,
-            ),
-            ManualAddressMapPin(isMoving: _pinMoving),
-            ManualAddressMapSearchBar(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              onClear: () {
-                _mapService.cancelSearchDebounce();
-                _searchController.clear();
-                _clearSearchResults();
-              },
-              searchResults: _showSearchResults &&
-                      _searchController.text.trim().length >= 3
-                  ? ManualAddressMapSearchResultsSheet(
-                      loading: _searchLoading,
-                      results: _searchResults,
-                      onResultTap: (result) {
-                        unawaited(_onSearchResultSelected(result));
-                      },
-                    )
-                  : null,
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          elevation: 0.5,
-          backgroundColor: context.colors.background,
-          onPressed: _loadingGps ? null : _goToCurrentLocation,
-          child: _loadingGps
-              ? SizedBox(
-            width: 22.r,
-            height: 22.r,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor:
-              AlwaysStoppedAnimation(context.colors.primary),
-            ),
-          )
-              : Assets.icons.currentLocation.svg(),
-        ),
-        bottomNavigationBar: ManualAddressLocationSheet(
-          address: _address,
-          area: _area,
-          onConfirm: _confirm,
-        ),
-    );
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchFocusNode.removeListener(_onSearchFocusChanged);
+    _searchFocusNode.dispose();
+    _searchController.dispose();
+    _mapService.cancelPendingWork();
+    _mapController?.dispose();
+    super.dispose();
   }
 }
