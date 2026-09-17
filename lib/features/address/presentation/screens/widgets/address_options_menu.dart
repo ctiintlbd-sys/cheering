@@ -22,6 +22,7 @@ Future<AddressMenuAction?> showAddressOptionsMenu({
     elevation: 4,
     constraints: BoxConstraints(
       maxWidth: 200.w,
+      minWidth: 160.w
     ),
     shadowColor: context.colors.black.withValues(alpha: 0.04),
     color: context.colors.background,
