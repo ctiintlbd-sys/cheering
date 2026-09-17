@@ -28,7 +28,14 @@ class SavedAddressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _handleTap(context),
+      onTap: () {
+        onSetDefault?.call();
+        if (!_isCurrentLocation && !address.isDefault) {
+          context.read<AddressBloc>().add(
+            SetDefaultAddressRequested(address.id),
+          );
+        }
+      },
       child: CustomContainer(
         color: context.colors.background,
         bordersColor: context.colors.borderTertiary,
@@ -126,14 +133,6 @@ class SavedAddressCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _handleTap(BuildContext context) {
-    onSetDefault?.call();
-
-    if (!_isCurrentLocation && !address.isDefault) {
-      context.read<AddressBloc>().add(SetDefaultAddressRequested(address.id));
-    }
   }
 
   Future<void> _showAddressMenu(BuildContext context, Offset position) async {
