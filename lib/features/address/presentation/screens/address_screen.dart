@@ -183,9 +183,6 @@ class _AddressScreenState extends State<AddressScreen> {
                       final address = displayAddresses[index];
                       return SavedAddressCard(
                         address: address,
-                        title: address.id == 'current_location'
-                            ? 'Current Location'
-                            : null,
                         onSetDefault: () {
                           context.read<AddressBloc>().add(UpdateActiveDefaultId(address.id));
                         },

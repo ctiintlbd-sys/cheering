@@ -13,17 +13,15 @@ class SavedAddressCard extends StatelessWidget {
   const SavedAddressCard({
     super.key,
     required this.address,
-    this.title,
     this.onSetDefault,
   });
 
   final AddressEntity address;
-  final String? title;
   final VoidCallback? onSetDefault;
 
   bool get _isCurrentLocation => address.id == 'current_location';
 
-  String get _displayTitle => title ?? address.type.name.toUpperCase();
+  String get _displayTitle => _isCurrentLocation ? 'Current Location' : address.type.name.toUpperCase();
 
   @override
   Widget build(BuildContext context) {
