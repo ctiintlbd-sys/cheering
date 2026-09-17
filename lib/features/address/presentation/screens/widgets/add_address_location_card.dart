@@ -1,23 +1,22 @@
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/address/domain/entities/address_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddAddressLocationCard extends StatelessWidget {
   const AddAddressLocationCard({
     super.key,
-    required this.fullAddress,
-    required this.city,
-    required this.onChangeTap,
+    required this.onChangeTap, required this.address,
   });
 
-  final String fullAddress;
-  final String city;
+  final AddressEntity address;
   final VoidCallback onChangeTap;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
+      onTap: onChangeTap,
       color: context.colors.bgSecondary,
       radiusAll: 12.r,
       paddingAll: 16.r,
@@ -42,14 +41,13 @@ class AddAddressLocationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: fullAddress.isEmpty ? 'Selected location' : fullAddress,
+                  text: address.city ?? 'Dhaka',
                   fontWeight: FontWeight.w500,
                   maxLines: 1,
                 ),
-                if (city.isNotEmpty)
                   CustomText(
                     top: 2.h,
-                    text: city,
+                    text: address.formattedAddress,
                     fontSize: 12.sp,
                     color: context.colors.textTertiary,
                     maxLines: 1,

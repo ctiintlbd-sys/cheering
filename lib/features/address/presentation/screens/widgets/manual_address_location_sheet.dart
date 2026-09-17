@@ -3,7 +3,6 @@ import 'package:cheering/core/widgets/custom_container.dart';
 import 'package:cheering/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../core/theme/app_theme_colors.dart';
 
 class ManualAddressLocationSheet extends StatelessWidget {

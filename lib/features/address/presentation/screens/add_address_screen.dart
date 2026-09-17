@@ -89,8 +89,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         bodyList: [
           SizedBox(height: 8.h),
           AddAddressLocationCard(
-            fullAddress: address.label ?? '',
-            city: address.city ?? '',
+            address: address,
             onChangeTap: _changeLocation,
           ),
           SizedBox(height: 24.h),

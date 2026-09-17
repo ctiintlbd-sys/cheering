@@ -12,17 +12,12 @@ import 'address_state.dart';
 
 class AddressBloc extends Bloc<AddressEvent, AddressState> {
   AddressBloc({
-    required GetAddressesUseCase getAddressesUseCase,
-    required CreateAddressUseCase createAddressUseCase,
-    required UpdateAddressUseCase updateAddressUseCase,
-    required DeleteAddressUseCase deleteAddressUseCase,
-    required SetDefaultAddressUseCase setDefaultAddressUseCase,
-  })  : _getAddressesUseCase = getAddressesUseCase,
-        _createAddressUseCase = createAddressUseCase,
-        _updateAddressUseCase = updateAddressUseCase,
-        _deleteAddressUseCase = deleteAddressUseCase,
-        _setDefaultAddressUseCase = setDefaultAddressUseCase,
-        super(const AddressState()) {
+    required this._getAddressesUseCase,
+    required this._createAddressUseCase,
+    required this._updateAddressUseCase,
+    required this._deleteAddressUseCase,
+    required this._setDefaultAddressUseCase,
+  })  : super(const AddressState()) {
     on<LoadAddressesRequested>(
       _onLoadAddresses,
       transformer: restartable(),
