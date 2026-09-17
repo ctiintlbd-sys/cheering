@@ -1,5 +1,4 @@
 import 'package:cheering/core/helpers/toast_message_helper.dart';
-import 'package:cheering/core/theme/app_theme_colors.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,20 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../domain/entities/address_entity.dart';
 import '../../domain/usecases/address_params.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
 import '../bloc/address_state.dart';
-import '../models/add_address_route_args.dart';
 import 'widgets/add_address_location_card.dart';
 import 'widgets/save_as_type_selector.dart';
 
 class AddAddressScreen extends StatefulWidget {
   const AddAddressScreen({super.key, required this.args});
 
-  final AddAddressRouteArgs args;
+  final AddressEntity args;
 
   @override
   State<AddAddressScreen> createState() => _AddAddressScreenState();
@@ -32,45 +29,20 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   late final TextEditingController _areaController;
   late final TextEditingController _landmarkController;
   late final TextEditingController _phoneController;
-
-  late double _latitude;
-  late double _longitude;
-  late String _primaryLine;
-  late String _secondaryLine;
-
   late AddressType _type;
-  late bool _isDefault;
-  String? _editId;
+
+  bool _isDefault = false;
 
   @override
   void initState() {
     super.initState();
-    final edit = widget.args.editAddress;
-    _latitude = widget.args.latitude;
-    _longitude = widget.args.longitude;
-    _primaryLine = widget.args.primaryLine;
-    _secondaryLine = widget.args.secondaryLine;
-    _editId = edit?.id;
-
-    _houseController = TextEditingController(text: edit?.streetAddress ?? '');
-    _areaController = TextEditingController(
-      text: edit?.city ?? _secondaryLine.split(',').first.trim(),
-    );
-    _landmarkController = TextEditingController(text: edit?.landmark ?? '');
-    _phoneController = TextEditingController(
-      text: _normalizePhone(edit?.contactPhone),
-    );
-    _type = edit?.type ?? AddressType.home;
+    final edit = widget.args;
+    _houseController = TextEditingController(text: edit.streetAddress ?? '');
+    _areaController = TextEditingController(text: edit.city ?? '');
+    _landmarkController = TextEditingController(text: edit.landmark ?? '');
+    _phoneController = TextEditingController(text: edit.contactPhone ?? '');
     if (_type == AddressType.unknown) _type = AddressType.home;
-    _isDefault = edit?.isDefault ?? false;
-  }
-
-  String _normalizePhone(String? raw) {
-    if (raw == null || raw.trim().isEmpty) return '';
-    var v = raw.trim();
-    if (v.startsWith('+880')) v = v.substring(4);
-    if (v.startsWith('880')) v = v.substring(3);
-    return v;
+    _isDefault = edit.isDefault;
   }
 
   @override
@@ -87,47 +59,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       RoutePaths.manualAddressMap,
     );
     if (result == null || !mounted) return;
-    setState(() {
-      _latitude = (result['latitude'] as num).toDouble();
-      _longitude = (result['longitude'] as num).toDouble();
-      _primaryLine = result['address']?.toString() ?? _primaryLine;
-      _secondaryLine = result['area']?.toString() ?? _secondaryLine;
-      if (_areaController.text.trim().isEmpty) {
-        _areaController.text = _secondaryLine.split(',').first.trim();
-      }
-    });
+
   }
 
-  void _save() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final phone = _phoneController.text.trim();
-    final fullPhone = phone.isEmpty ? null : '+880$phone';
-
-    context.read<AddressBloc>().add(
-      SaveAddressRequested(
-        addressId: _editId,
-        params: AddressParams(
-          type: _type,
-          label: _type == AddressType.other ? 'Other' : null,
-          streetAddress: _houseController.text.trim(),
-          city: _areaController.text.trim(),
-          landmark: _landmarkController.text.trim().isEmpty
-              ? null
-              : _landmarkController.text.trim(),
-          contactPhone: fullPhone,
-          latitude: _latitude,
-          longitude: _longitude,
-          isDefault: _isDefault,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final isEdit = _editId != null;
-
+    final address = widget.args;
     return BlocListener<AddressBloc, AddressState>(
       listenWhen: (prev, curr) =>
           prev.mutationStatus != curr.mutationStatus,
@@ -148,12 +86,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       },
       child: SliverScaffold(
         sideContentPadding: 16.w,
-        appBar: CustomSliverAppBar(title: isEdit ? 'Edit Address' : 'Add Address'),
+        appBar: CustomSliverAppBar(title:'Add Address'),
         bodyList: [
           SizedBox(height: 8.h),
           AddAddressLocationCard(
-            primaryLine: _primaryLine,
-            secondaryLine: _secondaryLine,
+            fullAddress: address.label ?? '',
+            city: address.city ?? '',
             onChangeTap: _changeLocation,
           ),
           SizedBox(height: 24.h),
@@ -191,12 +129,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 SizedBox(height: 12.h),
                 CustomTextField(
                   labelText: 'Phone Number',
-                  hintText: '017************',
+                  hintText: '01************',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
+                    LengthLimitingTextInputFormatter(11),
                   ],
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(left: 16.w, right: 8.w),
@@ -268,4 +206,32 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       ),
     );
   }
+
+
+  void _save() {
+    if (!_formKey.currentState!.validate()) return;
+
+    // final phone = _phoneController.text.trim();
+    // final fullPhone = phone.isEmpty ? null : '+880$phone';
+    //
+    // context.read<AddressBloc>().add(
+    //   SaveAddressRequested(
+    //     addressId: ,
+    //     params: AddressParams(
+    //       type: _type,
+    //       label: _type == AddressType.other ? 'Other' : null,
+    //       streetAddress: _houseController.text.trim(),
+    //       city: _areaController.text.trim(),
+    //       landmark: _landmarkController.text.trim().isEmpty
+    //           ? null
+    //           : _landmarkController.text.trim(),
+    //       contactPhone: fullPhone,
+    //       latitude: _latitude,
+    //       longitude: _longitude,
+    //       isDefault: _isDefault,
+    //     ),
+    //   ),
+    // );
+  }
+
 }

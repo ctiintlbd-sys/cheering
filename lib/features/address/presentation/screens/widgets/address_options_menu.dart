@@ -19,9 +19,16 @@ Future<AddressMenuAction?> showAddressOptionsMenu({
       position.dx,
       position.dy,
     ),
-    elevation: 8,
+    elevation: 4,
+    constraints: BoxConstraints(
+      maxWidth: 200.w,
+    ),
+    shadowColor: context.colors.black.withValues(alpha: 0.04),
     color: context.colors.background,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12.r),
+      side: BorderSide(color: context.colors.borderTertiary),
+    ),
     items: [
       _menuItem(
         context,

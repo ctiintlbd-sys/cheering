@@ -1,38 +1,39 @@
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../core/theme/app_theme_colors.dart';
-
 class AddAddressLocationCard extends StatelessWidget {
   const AddAddressLocationCard({
     super.key,
-    required this.primaryLine,
-    required this.secondaryLine,
+    required this.fullAddress,
+    required this.city,
     required this.onChangeTap,
   });
 
-  final String primaryLine;
-  final String secondaryLine;
+  final String fullAddress;
+  final String city;
   final VoidCallback onChangeTap;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       color: context.colors.bgSecondary,
-      radiusAll: 16.r,
+      radiusAll: 12.r,
       paddingAll: 16.r,
       child: Row(
         children: [
           CustomContainer(
-            width: 44.r,
-            height: 44.r,
-            color: context.colors.primary.withValues(alpha: 0.12),
-            radiusAll: 12.r,
-            child: Icon(
-              Icons.location_on_rounded,
-              color: context.colors.primary,
-              size: 22.r,
+            alignment: Alignment.center,
+            width: 32.r,
+            height: 32.r,
+            color: context.colors.primary.withValues(alpha: 0.10),
+            radiusAll: 8.r,
+            child: Assets.icons.foodLocation.svg(
+              colorFilter: ColorFilter.mode(
+                context.colors.primary,
+                BlendMode.dstIn,
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -41,28 +42,25 @@ class AddAddressLocationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: primaryLine.isEmpty ? 'Selected location' : primaryLine,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  maxLines: 2,
+                  text: fullAddress.isEmpty ? 'Selected location' : fullAddress,
+                  fontWeight: FontWeight.w500,
+                  maxLines: 1,
                 ),
-                if (secondaryLine.isNotEmpty) ...[
-                  SizedBox(height: 4.h),
+                if (city.isNotEmpty)
                   CustomText(
-                    text: secondaryLine,
-                    fontSize: 14.sp,
-                    color: context.colors.textSecondary,
+                    top: 2.h,
+                    text: city,
+                    fontSize: 12.sp,
+                    color: context.colors.textTertiary,
                     maxLines: 1,
                   ),
-                ],
               ],
             ),
           ),
           CustomText(
             onTap: onChangeTap,
             text: 'Change',
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             color: context.colors.primary,
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:cheering/core/widgets/custom_container.dart';
 import 'package:cheering/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,12 +21,7 @@ class SaveAsTypeSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomText(
-          text: 'Save As',
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: context.colors.textSecondary,
-        ),
+        CustomText(text: 'Save As', color: context.colors.textTertiary),
         SizedBox(height: 12.h),
         Row(
           children: [
@@ -77,36 +73,25 @@ class _TypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bg = selected
-        ? context.colors.primary.withValues(alpha: 0.12)
+        ? context.colors.primary.withValues(alpha: 0.1)
         : context.colors.bgSecondary;
-    final fg = selected
-        ? context.colors.primary
-        : context.colors.textSecondary;
+    final fg = selected ? context.colors.primary : context.colors.textSecondary;
 
-    return Material(
+    return CustomContainer(
+      onTap: onTap,
       color: bg,
-      borderRadius: BorderRadius.circular(12.r),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18.r, color: fg),
-                SizedBox(width: 6.w),
-              ],
-              CustomText(
-                text: label,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: fg,
-              ),
-            ],
-          ),
-        ),
+      radiusAll: 99,
+      paddingHorizontal: 12.w,
+      paddingVertical: 8.h,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18.r, color: fg),
+            SizedBox(width: 8.w),
+          ],
+          CustomText(text: label, fontWeight: FontWeight.w500, color: fg),
+        ],
       ),
     );
   }

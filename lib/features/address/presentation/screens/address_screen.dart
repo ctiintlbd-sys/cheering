@@ -9,15 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../domain/entities/address_entity.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
 import '../bloc/address_state.dart';
 import '../models/add_address_route_args.dart';
-import '../utils/address_display.dart';
 import 'widgets/address_action_buttons.dart';
-import 'widgets/address_options_menu.dart';
 import 'widgets/empty_address_widget.dart';
 import 'widgets/saved_address_card.dart';
 
@@ -81,6 +77,7 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
+
   Future<void> _openAddAddress(AddAddressRouteArgs args) async {
     final saved = await context.push<bool>(
       RoutePaths.addAddress,
@@ -88,39 +85,6 @@ class _AddressScreenState extends State<AddressScreen> {
     );
     if (saved == true && mounted) {
       context.read<AddressBloc>().add(const RefreshAddressesRequested());
-    }
-  }
-
-  Future<void> _onAddressMenu(
-    BuildContext context,
-    AddressEntity address,
-    Offset position,
-  ) async {
-    final action = await showAddressOptionsMenu(
-      context: context,
-      position: position,
-      isDefault: address.isDefault,
-    );
-    if (action == null || !context.mounted) return;
-
-    final bloc = context.read<AddressBloc>();
-    switch (action) {
-      case AddressMenuAction.edit:
-        await _openAddAddress(
-          AddAddressRouteArgs(
-            latitude: address.latitude,
-            longitude: address.longitude,
-            primaryLine: address.subtitleLine1.isNotEmpty
-                ? address.subtitleLine1
-                : address.titleLabel,
-            secondaryLine: address.subtitleLine2,
-            editAddress: address,
-          ),
-        );
-      case AddressMenuAction.setDefault:
-        bloc.add(SetDefaultAddressRequested(address.id));
-      case AddressMenuAction.delete:
-        bloc.add(DeleteAddressRequested(address.id));
     }
   }
 
@@ -172,22 +136,6 @@ class _AddressScreenState extends State<AddressScreen> {
                 );
               }
 
-              if (state.status == AddressStatus.failure &&
-                  state.addresses.isEmpty) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 32.h),
-                  child: CustomText(
-                    textAlign: TextAlign.center,
-                    text: state.errorMessage ?? 'Failed to load addresses',
-                    color: context.colors.textSecondary,
-                  ),
-                );
-              }
-
-              final filtered = state.addresses
-                  .where((a) => a.matchesSearch(_searchQuery))
-                  .toList();
-
               if (state.addresses.isEmpty) {
                 return const EmptyAddressWidget();
               }
@@ -201,29 +149,16 @@ class _AddressScreenState extends State<AddressScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(height: 16.h),
-                  if (filtered.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 24.h),
-                      child: CustomText(
-                        text: 'No address matches your search',
-                        color: context.colors.textSecondary,
-                      ),
-                    )
-                  else
                     ListView.separated(
+                      padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: filtered.length,
+                      itemCount: state.addresses.length,
                       separatorBuilder: (_, _) => SizedBox(height: 12.h),
                       itemBuilder: (context, index) {
-                        final address = filtered[index];
+                        final address = state.addresses[index];
                         return SavedAddressCard(
                           address: address,
-                          onMenuTap: (position) => _onAddressMenu(
-                            context,
-                            address,
-                            position,
-                          ),
                         );
                       },
                     ),

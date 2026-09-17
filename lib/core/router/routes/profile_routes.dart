@@ -1,7 +1,7 @@
 import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/features/address/domain/entities/address_entity.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_event.dart';
-import 'package:cheering/features/address/presentation/models/add_address_route_args.dart';
 import 'package:cheering/features/address/presentation/screens/add_address_screen.dart';
 import 'package:cheering/features/address/presentation/screens/manual_address_map_screen.dart';
 import 'package:cheering/features/profile/presentation/screens/account_settings_screen.dart';
@@ -29,17 +29,11 @@ final List<RouteBase> profileRoutes = [
       GoRoute(
         path: 'add',
         builder: (context, state) {
-          final args = state.extra as AddAddressRouteArgs?;
+          final args = state.extra as AddressEntity;
           return BlocProvider(
             create: (_) => getIt<AddressBloc>(),
             child: AddAddressScreen(
-              args: args ??
-                  const AddAddressRouteArgs(
-                    latitude: 0,
-                    longitude: 0,
-                    primaryLine: '',
-                    secondaryLine: '',
-                  ),
+              args: args
             ),
           );
         },
