@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'package:cheering/core/common_widgets/common_details_actions.dart';
-import 'package:cheering/core/widgets/custom_text_field.dart';
+
+import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/core/helpers/toast_message_helper.dart';
+import 'package:cheering/core/services/current_location_service.dart';
+import 'package:cheering/core/services/map_location_service.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart' as geo;
-import 'package:geolocator/geolocator.dart';
+
 import '../../../../core/theme/app_theme_colors.dart';
-import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_container.dart';
-import '../../../../core/widgets/custom_text.dart';
-import '../../../../core/utils/assets/assets.gen.dart';
+import 'widgets/manual_address_location_sheet.dart';
+import 'widgets/manual_address_map_pin.dart';
+import 'widgets/manual_address_map_search_bar.dart';
 
 class ManualAddressMapScreen extends StatefulWidget {
   const ManualAddressMapScreen({super.key});
@@ -21,249 +23,235 @@ class ManualAddressMapScreen extends StatefulWidget {
 }
 
 class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
-  static const LatLng _defaultPosition = LatLng(23.7937, 90.4066);
+  // Owned by this screen — NOT from DI, so safe to dispose
+  final _mapService = MapLocationService();
+  final _searchController = TextEditingController();
 
   GoogleMapController? _mapController;
-  LatLng _currentPosition = _defaultPosition;
-  bool _isMoving = false;
+  LatLng _cameraPosition = MapLocationDefaults.dhaka;
 
-  String _currentAddress = "Locating...";
-  String _currentArea = "";
+  bool _pinMoving = false;
+  bool _loadingGps = false;
 
-  Timer? _debounce;
-  final TextEditingController _searchController = TextEditingController();
+  // True after a programmatic camera move so onCameraIdle skips geocode
+  bool _suppressNextIdleGeocode = false;
+
+  // Suppresses search listener during programmatic text updates
+  int _suppressSearchEvents = 0;
+
+  String _address = MapLocationDefaults.locatingLabel;
+  String _area = '';
+
+  // ─── Lifecycle ──────────────────────────────────────────────
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentLocation();
-    });
+    _searchController.addListener(_onSearchChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _goToCurrentLocation());
   }
 
   @override
   void dispose() {
-    _mapController?.dispose();
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
-    _debounce?.cancel();
+    _mapService.cancelPendingWork(); // cancel timers/requests only, no DI teardown
+    _mapController?.dispose();
     super.dispose();
   }
 
-  void _onCameraMove(CameraPosition position) {
-    _currentPosition = position.target;
-    if (!_isMoving) {
-      setState(() {
-        _isMoving = true;
-      });
+  // ─── Search ─────────────────────────────────────────────────
+
+  void _onSearchChanged() {
+    if (_suppressSearchEvents > 0) {
+      _suppressSearchEvents--;
+      return;
     }
+    if (_loadingGps) return;
+
+    _mapService.scheduleAddressSearch(
+      query: _searchController.text,
+      onResult: (result) {
+        if (!mounted) return;
+        unawaited(_applySearchResult(result));
+      },
+    );
   }
 
-  void _onCameraIdle() {
-    if (mounted) {
-      setState(() {
-        _isMoving = false;
-      });
+  Future<void> _applySearchResult(MapSearchResult result) async {
+    _suppressNextIdleGeocode = true;
+    await _mapService.applySearchResult(
+      result: result,
+      mapController: _mapController,
+      onApplied: _applySnapshot,
+    );
+  }
+
+  // ─── Snapshot apply ─────────────────────────────────────────
+
+  void _applySnapshot(MapAddressSnapshot snapshot) {
+    _cameraPosition = snapshot.position;
+    if (_searchController.text != snapshot.address) {
+      _suppressSearchEvents++;
+      _searchController.text = snapshot.address;
     }
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 350), () {
-      _reverseGeocode(_currentPosition);
+    setState(() {
+      _address = snapshot.address;
+      _area = snapshot.area;
     });
   }
 
-  Future<void> _reverseGeocode(LatLng position) async {
+  void _setUnknownAddress() {
+    setState(() {
+      _address = MapLocationDefaults.unknownLabel;
+      _area = '';
+    });
+  }
+
+  // ─── GPS ────────────────────────────────────────────────────
+
+  Future<void> _goToCurrentLocation() async {
+    if (_loadingGps) return;
+    setState(() => _loadingGps = true);
+
     try {
-      final geocodingInstance = geo.Geocoding();
-      final placemarks = await geocodingInstance.placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
+      final result =
+      await getIt<CurrentLocationService>().fetchCurrentLocation();
+
+      if (!mounted) return;
+
+      if (!result.isSuccess) {
+        ToastMessageHelper.show(result.failure!.message);
+        // If we never got a real address, clear the locating label
+        if (_address == MapLocationDefaults.locatingLabel) {
+          _setUnknownAddress();
+        }
+        return;
+      }
+
+      final target = result.latLng!;
+      _cameraPosition = target;
+      _suppressNextIdleGeocode = true;
+
+      await _mapService.moveCamera(controller: _mapController, target: target);
+
+      final snapshot = await _mapService.reverseGeocode(
+        target,
+        ignoreDistanceCheck: true,
       );
-      if (placemarks.isNotEmpty && mounted) {
-        final place = placemarks.first;
-        setState(() {
-          _currentAddress = [
-            place.street,
-            place.subLocality,
-            place.locality,
-          ].whereType<String>().where((e) => e.trim().isNotEmpty).join(', ');
 
-          if (_currentAddress.isEmpty)
-            _currentAddress = place.name ?? "Unknown Location";
-
-          _currentArea = [
-            place.administrativeArea,
-            place.postalCode,
-          ].whereType<String>().where((e) => e.trim().isNotEmpty).join(', ');
-
-          _searchController.text = _currentAddress;
-        });
+      if (!mounted) return;
+      if (snapshot != null) {
+        _applySnapshot(snapshot);
+      } else {
+        _setUnknownAddress();
       }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _currentAddress = "Unknown Location";
-          _currentArea = "";
-        });
-      }
+    } finally {
+      if (mounted) setState(() => _loadingGps = false);
     }
   }
 
-  Future<void> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
+  // ─── Camera callbacks ────────────────────────────────────────
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return;
+  void _onCameraMove(CameraPosition camera) {
+    _cameraPosition = camera.target;
+    if (!_pinMoving) setState(() => _pinMoving = true);
+  }
+
+  void _onCameraIdle() {
+    setState(() => _pinMoving = false);
+
+    if (_suppressNextIdleGeocode) {
+      _suppressNextIdleGeocode = false;
+      return;
     }
-    if (permission == LocationPermission.deniedForever) return;
 
-    final position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+    _mapService.scheduleReverseGeocode(
+      position: _cameraPosition,
+      onResolved: (snapshot) {
+        if (mounted) _applySnapshot(snapshot);
+      },
+      onUnknown: () {
+        if (mounted) _setUnknownAddress();
+      },
     );
-    final latLng = LatLng(position.latitude, position.longitude);
-
-    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(latLng, 16));
   }
+
+  void _onMapTap(LatLng latLng) {
+    _cameraPosition = latLng;
+    _mapService.moveCamera(controller: _mapController, target: latLng);
+  }
+
+  // ─── Confirm ────────────────────────────────────────────────
+
+  void _confirm() {
+    if (!MapLocationDefaults.isConfirmableAddress(_address)) {
+      ToastMessageHelper.show('Please select your location on the map');
+      return;
+    }
+    context.pop(<String, dynamic>{
+      'address': _address.trim(),
+      'area': _area,
+      'latitude': _cameraPosition.latitude,
+      'longitude': _cameraPosition.longitude,
+    });
+  }
+
+  // ─── Build ──────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Focus.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBody: true,
         body: Stack(
           children: [
             GoogleMap(
               initialCameraPosition: const CameraPosition(
-                target: _defaultPosition,
+                target: MapLocationDefaults.dhaka,
                 zoom: 15,
               ),
-              onMapCreated: (controller) => _mapController = controller,
+              onMapCreated: (c) => _mapController = c,
               onCameraMove: _onCameraMove,
               onCameraIdle: _onCameraIdle,
+              onTap: _onMapTap,
               myLocationEnabled: false,
               myLocationButtonEnabled: false,
               zoomControlsEnabled: false,
               compassEnabled: false,
               mapToolbarEnabled: false,
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 35.h),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  transform: Matrix4.translationValues(
-                    0,
-                    _isMoving ? -15 : 0,
-                    0,
-                  ),
-                  child: Assets.images.mapLocation.image(height: 50.h),
-                ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 16.h,
-              left: 16.w,
-              right: 16.w,
-              child: Row(
-                children: [
-                  CommonActionIcon(
-                    icon: Assets.icons.arrowBack.path,
-                    onTap: () => context.pop(),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: CustomTextField(
-                      maxLines: 1,
-                      validator: (_) => null,
-                      borderRadius: 99,
-                      controller: _searchController,
-                      prefixIcon: Assets.icons.search.svg(),
-                      fillColor: context.colors.background,
-                      suffixIcon: CustomText(
-                        onTap: () => _searchController.clear(),
-                        text: 'Clear',
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            ManualAddressMapPin(isMoving: _pinMoving),
+            ManualAddressMapSearchBar(
+              controller: _searchController,
+              onClear: () {
+                _mapService.cancelSearchDebounce();
+                _searchController.clear();
+              },
             ),
           ],
         ),
-
         floatingActionButton: FloatingActionButton(
           elevation: 0.5,
           backgroundColor: context.colors.background,
-          onPressed: _getCurrentLocation,
-          child: Assets.icons.currentLocation.svg(),
+          onPressed: _loadingGps ? null : _goToCurrentLocation,
+          child: _loadingGps
+              ? SizedBox(
+            width: 22.r,
+            height: 22.r,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor:
+              AlwaysStoppedAnimation(context.colors.primary),
+            ),
+          )
+              : Assets.icons.currentLocation.svg(),
         ),
-
-        bottomNavigationBar: CustomContainer(
-          marginBottom: MediaQuery.of(context).padding.bottom + 8.h,
-          marginLeft: 16.w,
-          marginRight: 16.w,
-          color: context.colors.background,
-          radiusAll: 20.r,
-          paddingAll: 20.r,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CustomContainer(
-                    width: 44.r,
-                    height: 44.r,
-                    color: context.colors.bgSecondary,
-                    radiusAll: 12.r,
-                    child: Icon(
-                      Icons.location_on_outlined,
-                      color: context.colors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: _currentAddress.isEmpty
-                              ? 'Loading...'
-                              : _currentAddress,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          maxLines: 1,
-                        ),
-                        SizedBox(height: 4.h),
-                        CustomText(
-                          text: _currentArea,
-                          fontSize: 14.sp,
-                          color: context.colors.textSecondary,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              CustomButton(
-                onPressed: () {
-                  // Confirm Location logic
-                },
-                text: 'Confirm Location',
-                width: double.infinity,
-                height: 50.h,
-              ),
-            ],
-          ),
+        bottomNavigationBar: ManualAddressLocationSheet(
+          address: _address,
+          area: _area,
+          onConfirm: _confirm,
         ),
       ),
     );

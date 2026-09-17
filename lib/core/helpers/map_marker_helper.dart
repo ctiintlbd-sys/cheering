@@ -159,4 +159,59 @@ abstract final class MapMarkerHelper {
   static void clearCache() {
     _cachedLocationMarker = null;
   }
+
+  /// Same Figma pin as [createLocationMarker], for fixed center-pin map overlays.
+  static Widget buildLocationPinOverlay({
+    double width = 96,
+    double height = 96,
+    Color circleColor = const Color(0xFFEF4444),
+  }) {
+    final double cx = width / 2;
+    final double cy = height - 14;
+    final double scale = height / 96;
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: cx - (24 * scale),
+            top: cy - (24 * scale),
+            width: 48 * scale,
+            height: 48 * scale,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: circleColor.withValues(alpha: 0.10),
+              ),
+            ),
+          ),
+          Positioned(
+            left: cx - (10 * scale),
+            top: cy - (10 * scale),
+            width: 20 * scale,
+            height: 20 * scale,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: circleColor,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            height: cy,
+            child: Image.asset(
+              Assets.images.mapLocation.path,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
