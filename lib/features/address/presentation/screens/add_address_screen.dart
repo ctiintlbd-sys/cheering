@@ -2,12 +2,10 @@ import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/address_entity.dart';
-import '../../domain/usecases/address_params.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
 import '../bloc/address_state.dart';
@@ -37,10 +35,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   void initState() {
     super.initState();
     final edit = widget.args;
-    _houseController = TextEditingController(text: edit.streetAddress ?? '');
-    _areaController = TextEditingController(text: edit.city ?? '');
+    _houseController = TextEditingController();
+    _areaController = TextEditingController(text: '${edit.streetAddress}, ${edit.city}');
     _landmarkController = TextEditingController(text: edit.landmark ?? '');
     _phoneController = TextEditingController(text: edit.contactPhone ?? '');
+    _type = edit.type;
     if (_type == AddressType.unknown) _type = AddressType.home;
     _isDefault = edit.isDefault;
   }
@@ -111,13 +110,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 ),
                 SizedBox(height: 12.h),
                 CustomTextField(
-                  labelText: 'Area / thana',
-                  hintText: 'Banani',
+                  labelText: 'Area',
+                  hintText: 'type you location',
                   controller: _areaController,
-                  suffixIcon: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: context.colors.textSecondary,
-                  ),
                 ),
                 SizedBox(height: 12.h),
                 CustomTextField(
@@ -132,29 +127,23 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   hintText: '01************',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.only(left: 16.w, right: 8.w),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomText(
-                          text: '+880',
-                          fontWeight: FontWeight.w500,
-                        ),
-                        Container(
-                          width: 1,
-                          height: 20.h,
-                          margin: EdgeInsets.only(left: 8.w),
-                          color: context.colors.borderTertiary,
-                        ),
-                      ],
-                    ),
+                  validator: (_) => null,
+                  prefixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomText(
+                        text: '+880',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 20.h,
+                        margin: EdgeInsets.only(left: 8.w),
+                        color: context.colors.textPlaceholder,
+                      ),
+                    ],
                   ),
-                  prefixIconConstraints: BoxConstraints(minWidth: 88.w),
+                  prefixIconConstraints: BoxConstraints(minWidth: 60.w),
                 ),
               ],
             ),
@@ -210,28 +199,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   void _save() {
     if (!_formKey.currentState!.validate()) return;
-
-    // final phone = _phoneController.text.trim();
-    // final fullPhone = phone.isEmpty ? null : '+880$phone';
-    //
-    // context.read<AddressBloc>().add(
-    //   SaveAddressRequested(
-    //     addressId: ,
-    //     params: AddressParams(
-    //       type: _type,
-    //       label: _type == AddressType.other ? 'Other' : null,
-    //       streetAddress: _houseController.text.trim(),
-    //       city: _areaController.text.trim(),
-    //       landmark: _landmarkController.text.trim().isEmpty
-    //           ? null
-    //           : _landmarkController.text.trim(),
-    //       contactPhone: fullPhone,
-    //       latitude: _latitude,
-    //       longitude: _longitude,
-    //       isDefault: _isDefault,
-    //     ),
-    //   ),
-    // );
   }
 
 }

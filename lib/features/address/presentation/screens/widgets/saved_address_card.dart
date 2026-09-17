@@ -10,14 +10,28 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/entities/address_entity.dart';
 
 class SavedAddressCard extends StatelessWidget {
-  const SavedAddressCard({super.key, required this.address});
+  const SavedAddressCard({
+    super.key,
+    required this.address,
+    this.title,
+    this.onSetDefault,
+  });
 
   final AddressEntity address;
+  final String? title;
+  final VoidCallback? onSetDefault;
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      color: context.colors.background,
+    return GestureDetector(
+      onTap: () {
+        onSetDefault?.call();
+        if (address.id != 'current_location' && !address.isDefault) {
+          context.read<AddressBloc>().add(SetDefaultAddressRequested(address.id));
+        }
+      },
+      child: CustomContainer(
+        color: context.colors.background,
       bordersColor: context.colors.borderTertiary,
       radiusAll: 16.r,
       paddingVertical: 12.h,
@@ -59,7 +73,7 @@ class SavedAddressCard extends StatelessWidget {
                 Row(
                   children: [
                     CustomText(
-                      text: address.type.name,
+                      text: title ?? address.type.name,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                     ),
@@ -82,31 +96,53 @@ class SavedAddressCard extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 CustomText(
-                  text: address.label ?? '',
+                  text: _getFullAddress(address),
                   color: context.colors.textTertiary,
                   maxLines: 2,
                 ),
               ],
             ),
           ),
-          SizedBox(width: 8.w),
-          GestureDetector(
-            onTapDown: (details) =>
-                _onAddressMenu(context, details.globalPosition),
-            child: CustomContainer(
-              radiusAll: 12.r,
-              paddingAll: 10.r,
-              color: context.colors.bgSecondary,
-              child: Icon(
-                Icons.more_horiz,
-                size: 20.r,
-                color: context.colors.iconPrimary,
+          if (address.id != 'current_location') ...[
+            SizedBox(width: 8.w),
+            GestureDetector(
+              onTapDown: (details) =>
+                  _onAddressMenu(context, details.globalPosition),
+              child: CustomContainer(
+                radiusAll: 12.r,
+                paddingAll: 10.r,
+                color: context.colors.bgSecondary,
+                child: Icon(
+                  Icons.more_horiz,
+                  size: 20.r,
+                  color: context.colors.iconPrimary,
+                ),
               ),
             ),
-          ),
+          ],
         ],
       ),
-    );
+    ));
+  }
+
+  String _getFullAddress(AddressEntity address) {
+    final parts = <String>[];
+    if (address.streetAddress?.isNotEmpty == true) {
+      parts.add(address.streetAddress!);
+    }
+    if (address.apartment?.isNotEmpty == true) parts.add(address.apartment!);
+    if (address.landmark?.isNotEmpty == true) parts.add(address.landmark!);
+    if (address.city?.isNotEmpty == true) {
+      if (!parts.any(
+        (p) => p.toLowerCase().contains(address.city!.toLowerCase()),
+      )) {
+        parts.add(address.city!);
+      }
+    }
+    final addressText = parts.isNotEmpty
+        ? parts.join(', ')
+        : (address.label ?? '');
+    return addressText;
   }
 
   Future<void> _onAddressMenu(BuildContext context, Offset position) async {
@@ -128,6 +164,7 @@ class SavedAddressCard extends StatelessWidget {
           context.read<AddressBloc>().add(const RefreshAddressesRequested());
         }
       case AddressMenuAction.setDefault:
+        onSetDefault?.call();
         bloc.add(SetDefaultAddressRequested(address.id));
       case AddressMenuAction.delete:
         bloc.add(DeleteAddressRequested(address.id));

@@ -3,6 +3,7 @@ import 'package:cheering/core/cache/hive_cache_service.dart';
 import 'package:cheering/core/l10n/locale_cubit.dart';
 import 'package:cheering/core/services/current_location_service.dart';
 import 'package:cheering/core/services/map_location_service.dart';
+import 'package:cheering/core/services/active_location_service.dart';
 import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:get_it/get_it.dart';
 import '../config/app_config.dart';
@@ -12,6 +13,7 @@ import '../router/app_router_notifier.dart';
 import '../storage/token_storage.dart';
 
 void setupCoreDependencies(GetIt getIt) {
+  getIt.registerLazySingleton<ActiveLocationService>(() => ActiveLocationService());
   getIt.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
   getIt.registerLazySingleton<LocaleCubit>(() => LocaleCubit());
   getIt.registerLazySingleton<AppRouterNotifier>(() => AppRouterNotifier());
