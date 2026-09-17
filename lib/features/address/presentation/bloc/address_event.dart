@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../domain/usecases/address_params.dart';
+import '../../domain/entities/address_entity.dart';
 
 abstract class AddressEvent extends Equatable {
   const AddressEvent();
@@ -50,4 +51,24 @@ class SaveAddressRequested extends AddressEvent {
 
 class ResetAddressMutationStatus extends AddressEvent {
   const ResetAddressMutationStatus();
+}
+
+class InitializeAddressScreenData extends AddressEvent {
+  const InitializeAddressScreenData();
+}
+
+class UpdateLocalCurrentLocation extends AddressEvent {
+  const UpdateLocalCurrentLocation(this.address);
+  final AddressEntity address;
+
+  @override
+  List<Object?> get props => [address];
+}
+
+class UpdateActiveDefaultId extends AddressEvent {
+  const UpdateActiveDefaultId(this.id);
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
 }

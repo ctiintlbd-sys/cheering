@@ -2,6 +2,10 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/address_entity.dart';
+import '../../../../core/services/active_location_service.dart';
+import '../../../../core/services/current_location_service.dart';
+import '../../../../core/services/map_location_service.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../domain/usecases/create_address_usecase.dart';
 import '../../domain/usecases/delete_address_usecase.dart';
 import '../../domain/usecases/get_addresses_usecase.dart';
@@ -34,6 +38,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
         state.copyWith(mutationStatus: AddressMutationStatus.initial, clearError: true),
       ),
     );
+    on<InitializeAddressScreenData>(_onInitializeAddressScreenData);
+    on<UpdateLocalCurrentLocation>(_onUpdateLocalCurrentLocation);
+    on<UpdateActiveDefaultId>(_onUpdateActiveDefaultId);
   }
 
   final GetAddressesUseCase _getAddressesUseCase;
@@ -129,5 +136,72 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
         errorMessage: e.toString(),
       ));
     }
+  }
+  Future<void> _onInitializeAddressScreenData(
+    InitializeAddressScreenData event,
+    Emitter<AddressState> emit,
+  ) async {
+    final activeId = getIt<ActiveLocationService>().activeAddress?.id ?? 'current_location';
+    emit(state.copyWith(
+      activeDefaultId: activeId,
+      isFetchingLocation: true,
+    ));
+
+    try {
+      final result = await getIt<CurrentLocationService>().fetchCurrentLocation();
+      if (result.isSuccess && result.latLng != null) {
+        final snapshot = await MapLocationService().reverseGeocode(result.latLng!);
+        if (snapshot != null) {
+          final currentLoc = AddressEntity(
+            id: 'current_location',
+            type: AddressType.other,
+            label: snapshot.area,
+            streetAddress: snapshot.address,
+            latitude: snapshot.position.latitude,
+            longitude: snapshot.position.longitude,
+            isDefault: activeId == 'current_location',
+          );
+          emit(state.copyWith(
+            currentLocationAddress: currentLoc,
+            isFetchingLocation: false,
+          ));
+          return;
+        }
+      }
+    } catch (_) {}
+
+    // Fallback if failed
+    final fallbackLoc = AddressEntity(
+      id: 'current_location',
+      type: AddressType.other,
+      label: 'Current Location',
+      streetAddress: 'Tap to pick location',
+      latitude: 0.0,
+      longitude: 0.0,
+      isDefault: activeId == 'current_location',
+    );
+    emit(state.copyWith(
+      currentLocationAddress: fallbackLoc,
+      isFetchingLocation: false,
+    ));
+  }
+
+  void _onUpdateLocalCurrentLocation(
+    UpdateLocalCurrentLocation event,
+    Emitter<AddressState> emit,
+  ) {
+    emit(state.copyWith(
+      activeDefaultId: 'current_location',
+      currentLocationAddress: event.address,
+    ));
+  }
+
+  void _onUpdateActiveDefaultId(
+    UpdateActiveDefaultId event,
+    Emitter<AddressState> emit,
+  ) {
+    emit(state.copyWith(
+      activeDefaultId: event.id,
+    ));
   }
 }

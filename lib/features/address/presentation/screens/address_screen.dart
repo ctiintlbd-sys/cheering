@@ -2,8 +2,6 @@ import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router_notifier.dart';
 import 'package:cheering/core/router/route_paths.dart';
-import 'package:cheering/core/services/current_location_service.dart';
-import 'package:cheering/core/services/map_location_service.dart';
 import 'package:cheering/core/services/active_location_service.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -28,57 +26,11 @@ class AddressScreen extends StatefulWidget {
 
 class _AddressScreenState extends State<AddressScreen> {
   final _searchController = TextEditingController();
-  AddressEntity? _currentLocationAddress;
-  bool _isFetchingLocation = true;
-  late String _activeDefaultId;
 
   @override
   void initState() {
     super.initState();
-    _activeDefaultId = getIt<ActiveLocationService>().activeAddress?.id ?? 'current_location';
-    _fetchInitialLocation();
-  }
-
-  Future<void> _fetchInitialLocation() async {
-    try {
-      final result =
-          await getIt<CurrentLocationService>().fetchCurrentLocation();
-      if (result.isSuccess && result.latLng != null) {
-        final snapshot =
-            await MapLocationService().reverseGeocode(result.latLng!);
-        if (snapshot != null) {
-          if (mounted) {
-            setState(() {
-              _currentLocationAddress = AddressEntity(
-                id: 'current_location',
-                type: AddressType.other,
-                label: snapshot.area,
-                streetAddress: snapshot.address,
-                latitude: snapshot.position.latitude,
-                longitude: snapshot.position.longitude,
-                isDefault: _activeDefaultId == 'current_location',
-              );
-              _isFetchingLocation = false;
-            });
-          }
-          return;
-        }
-      }
-    } catch (_) {}
-    if (mounted) {
-      setState(() {
-        _currentLocationAddress = AddressEntity(
-          id: 'current_location',
-          type: AddressType.other,
-          label: 'Current Location',
-          streetAddress: 'Tap to pick location',
-          latitude: 0.0,
-          longitude: 0.0,
-          isDefault: _activeDefaultId == 'current_location',
-        );
-        _isFetchingLocation = false;
-      });
-    }
+    context.read<AddressBloc>().add(const InitializeAddressScreenData());
   }
 
   @override
@@ -95,18 +47,16 @@ class _AddressScreenState extends State<AddressScreen> {
     );
     if (mapResult == null || !mounted) return;
 
-    setState(() {
-      _activeDefaultId = 'current_location';
-      _currentLocationAddress = AddressEntity(
-        id: 'current_location',
-        type: AddressType.other,
-        label: mapResult['area'] as String? ?? 'Current Location',
-        streetAddress: mapResult['address'] as String?,
-        latitude: mapResult['latitude'] as double,
-        longitude: mapResult['longitude'] as double,
-        isDefault: true,
-      );
-    });
+    final updated = AddressEntity(
+      id: 'current_location',
+      type: AddressType.other,
+      label: mapResult['area'] as String? ?? 'Current Location',
+      streetAddress: mapResult['address'] as String?,
+      latitude: mapResult['latitude'] as double,
+      longitude: mapResult['longitude'] as double,
+      isDefault: true,
+    );
+    context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));
   }
 
   Future<void> _onTapEnterManually() async {
@@ -131,18 +81,16 @@ class _AddressScreenState extends State<AddressScreen> {
         context.read<AddressBloc>().add(const RefreshAddressesRequested());
       }
     } else {
-      setState(() {
-        _activeDefaultId = 'current_location';
-        _currentLocationAddress = AddressEntity(
-          id: 'current_location',
-          type: AddressType.other,
-          label: mapResult['area'] as String? ?? 'Current Location',
-          streetAddress: mapResult['address'] as String?,
-          latitude: mapResult['latitude'] as double,
-          longitude: mapResult['longitude'] as double,
-          isDefault: true,
-        );
-      });
+      final updated = AddressEntity(
+        id: 'current_location',
+        type: AddressType.other,
+        label: mapResult['area'] as String? ?? 'Current Location',
+        streetAddress: mapResult['address'] as String?,
+        latitude: mapResult['latitude'] as double,
+        longitude: mapResult['longitude'] as double,
+        isDefault: true,
+      );
+      context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));
     }
   }
 
@@ -183,10 +131,8 @@ class _AddressScreenState extends State<AddressScreen> {
           ),
           SizedBox(height: 28.h),
           BlocBuilder<AddressBloc, AddressState>(
-            buildWhen: (prev, curr) =>
-                prev.status != curr.status || prev.addresses != curr.addresses,
             builder: (context, state) {
-              if (state.isLoading || _isFetchingLocation) {
+              if (state.isLoading || state.isFetchingLocation) {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 48.h),
                   child: const Center(child: CircularProgressIndicator()),
@@ -195,14 +141,14 @@ class _AddressScreenState extends State<AddressScreen> {
 
               final addresses = state.addresses;
               final List<AddressEntity> displayAddresses = [];
-              if (_currentLocationAddress != null) {
-                displayAddresses.add(_currentLocationAddress!.copyWith(
-                  isDefault: _activeDefaultId == 'current_location',
+              if (state.currentLocationAddress != null) {
+                displayAddresses.add(state.currentLocationAddress!.copyWith(
+                  isDefault: state.activeDefaultId == 'current_location',
                 ));
               }
               for (final addr in addresses) {
                 displayAddresses.add(addr.copyWith(
-                  isDefault: _activeDefaultId == addr.id,
+                  isDefault: state.activeDefaultId == addr.id,
                 ));
               }
 
@@ -241,9 +187,7 @@ class _AddressScreenState extends State<AddressScreen> {
                             ? 'Current Location'
                             : null,
                         onSetDefault: () {
-                          setState(() {
-                            _activeDefaultId = address.id;
-                          });
+                          context.read<AddressBloc>().add(UpdateActiveDefaultId(address.id));
                         },
                       );
                     },
