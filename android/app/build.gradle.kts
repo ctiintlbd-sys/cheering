@@ -49,6 +49,10 @@ android {
             // TODO: Add your own signing config for the release build.
             signingConfig = signingConfigs.getByName("release")
         }
+        getByName("debug") {
+            applicationIdSuffix = ".test"
+            versionNameSuffix = "-test"
+        }
     }
 }
 
