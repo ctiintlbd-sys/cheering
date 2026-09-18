@@ -71,13 +71,30 @@ class CurrentLocationService {
       LocationAccuracy accuracy,
       ) async {
     try {
+      // Prothome current position try korbe 8 second er timeout diye
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(accuracy: accuracy),
+        locationSettings: LocationSettings(
+          accuracy: accuracy,
+          timeLimit: const Duration(seconds: 8),
+        ),
       );
+      
       final latLng = LatLng(position.latitude, position.longitude);
       _cachedLatLng = latLng;
       return CurrentLocationResult.success(latLng);
     } catch (_) {
+      // Current location pawa na gele ba time out hoye gele, device er last known location check korbe
+      try {
+        final lastKnown = await Geolocator.getLastKnownPosition();
+        if (lastKnown != null) {
+          final latLng = LatLng(lastKnown.latitude, lastKnown.longitude);
+          _cachedLatLng = latLng;
+          return CurrentLocationResult.success(latLng);
+        }
+      } catch (_) {
+        // Last known location o fail korle error dibe
+      }
+
       return const CurrentLocationResult.failure(
         CurrentLocationFailure.unavailable,
       );
