@@ -152,6 +152,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     ),
                     SizedBox(height: 12.h),
                     CustomTextField(
+                      onTap: _changeLocation,
+                      readOnly: true,
                       labelText: 'Area',
                       hintText: 'type you location',
                       controller: _areaController,
