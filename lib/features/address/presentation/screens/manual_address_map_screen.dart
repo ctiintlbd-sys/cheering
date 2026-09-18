@@ -19,7 +19,8 @@ import 'widgets/manual_address_map_search_bar.dart';
 import 'widgets/manual_address_map_search_results_sheet.dart';
 
 class ManualAddressMapScreen extends StatefulWidget {
-  const ManualAddressMapScreen({super.key});
+  final bool autoFocusSearch;
+  const ManualAddressMapScreen({super.key, this.autoFocusSearch = false});
 
   @override
   State<ManualAddressMapScreen> createState() => _ManualAddressMapScreenState();
@@ -42,7 +43,12 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     _searchFocusNode.addListener(_onSearchFocusChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _goToCurrentLocation());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _goToCurrentLocation();
+      if (widget.autoFocusSearch) {
+        _searchFocusNode.requestFocus();
+      }
+    });
   }
 
   // ─── Build ──────────────────────────────────────────────────
@@ -163,7 +169,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   void _applySnapshot(MapAddressSnapshot snapshot) {
     _cameraPosition = snapshot.position;
-    if (_searchController.text != snapshot.address) {
+    if (!_searchFocusNode.hasFocus && _searchController.text != snapshot.address) {
       _suppressSearchEvents++;
       _searchController.text = snapshot.address;
     }

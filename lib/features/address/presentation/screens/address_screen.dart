@@ -24,18 +24,7 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  final _searchController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
 
   bool get _isLoggedIn => getIt<AppRouterNotifier>().isAuthenticated;
 
@@ -47,8 +36,8 @@ class _AddressScreenState extends State<AddressScreen> {
     context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));
   }
 
-  Future<void> _onTapEnterManually() async {
-    final mapResult = await _getManualAddressFromMap();
+  Future<void> _onTapEnterManually([bool focusSearch = false]) async {
+    final mapResult = await _getManualAddressFromMap(focusSearch: focusSearch);
     if (mapResult == null || !mounted) return;
 
     if (_isLoggedIn) {
@@ -68,8 +57,8 @@ class _AddressScreenState extends State<AddressScreen> {
     }
   }
 
-  Future<Map<String, dynamic>?> _getManualAddressFromMap() async {
-    return context.push<Map<String, dynamic>>(RoutePaths.manualAddressMap);
+  Future<Map<String, dynamic>?> _getManualAddressFromMap({bool focusSearch = false}) async {
+    return context.push<Map<String, dynamic>>(RoutePaths.manualAddressMap, extra: focusSearch);
   }
 
   @override
@@ -90,7 +79,8 @@ class _AddressScreenState extends State<AddressScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
               child: CustomTextField(
-                controller: _searchController,
+                onTap: () => _onTapEnterManually(true),
+                readOnly: true,
                 validatorType: null,
                 borderRadius: 99,
                 fillColor: context.colors.bgSecondary,
@@ -105,7 +95,7 @@ class _AddressScreenState extends State<AddressScreen> {
           SizedBox(height: 20.h),
           AddressActionButtons(
             onTapCurrentLocation: _onTapCurrentLocation,
-            onTapEnterManually: _onTapEnterManually,
+            onTapEnterManually: () => _onTapEnterManually(),
           ),
           SizedBox(height: 28.h),
           BlocBuilder<AddressBloc, AddressState>(

@@ -21,7 +21,10 @@ final List<RouteBase> profileRoutes = [
     routes: [
       GoRoute(
         path: 'manual-map',
-        builder: (context, state) => const ManualAddressMapScreen(),
+        builder: (context, state) {
+          final autoFocusSearch = state.extra as bool? ?? false;
+          return ManualAddressMapScreen(autoFocusSearch: autoFocusSearch);
+        },
       ),
       GoRoute(
         path: 'add',

@@ -50,6 +50,7 @@ class ManualAddressMapSearchBar extends StatelessWidget {
                   borderRadius: 99,
                   controller: controller,
                   focusNode: focusNode,
+                  hintText: 'Search your area ...',
                   prefixIcon: Assets.icons.search.svg(),
                   fillColor: context.colors.background,
                   suffixIcon: CustomText(
