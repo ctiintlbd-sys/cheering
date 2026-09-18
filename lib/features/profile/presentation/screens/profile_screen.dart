@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                   ProfileMenuTile(
                     title: 'Address',
                     icon: Assets.icons.profileAddress.svg(),
-                    isLocked: isAuthenticated,
+                    isLocked: true,
                     onTap: () => context.push(RoutePaths.address),
                   ),
                   ProfileMenuTile(
@@ -145,7 +145,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
 
-              SizedBox(height: 224.h),
+              SizedBox(height: 124.h),
             ],
           );
         },
