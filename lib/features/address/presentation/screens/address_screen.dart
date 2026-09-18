@@ -47,10 +47,7 @@ class _AddressScreenState extends State<AddressScreen> {
         type: AddressType.home,
         isDefault: false,
       );
-      final saved = await context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
-      if (saved == true && mounted) {
-        context.read<AddressBloc>().add(const RefreshAddressesRequested());
-      }
+      await context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
     } else {
       final updated = AddressEntity.fromManualMap(mapResult);
       context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));

@@ -146,13 +146,10 @@ class SavedAddressCard extends StatelessWidget {
 
     switch (action) {
       case AddressMenuAction.edit:
-        final saved = await context.push<bool>(
+        await context.push<bool>(
           RoutePaths.addAddress,
           extra: address,
         );
-        if (saved == true && context.mounted) {
-          bloc.add(const RefreshAddressesRequested());
-        }
       case AddressMenuAction.setDefault:
         onSetDefault?.call();
         bloc.add(SetDefaultAddressRequested(address.id));
