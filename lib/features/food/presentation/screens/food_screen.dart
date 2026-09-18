@@ -21,9 +21,7 @@ class FoodScreen extends StatelessWidget {
         expandedHeight: 234.h,
         backgroundColor: context.colors.background,
         collapsedBgColor: context.colors.primary,
-        flexibleChild: const DeliveryTitleWidget(
-          address: 'House 25, Banani Rd 11...',
-        ),
+        flexibleChild: const DeliveryTitleWidget(),
         flexibleBackground: const FoodFlexibleBackground(imageUrl: ''),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(58.h),
