@@ -1,6 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/services/active_location_service.dart';
+import '../../../address/presentation/bloc/address_bloc.dart';
+import '../../../address/presentation/bloc/address_event.dart';
+import '../../../profile/presentation/bloc/profile_bloc.dart';
+import '../../../profile/presentation/bloc/profile_event.dart';
 import '../../data/services/biometric_service.dart';
 import '../../domain/usecases/enable_biometrics_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
@@ -350,6 +356,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       await logoutUseCase(allDevices: event.allDevices);
+      _clearDependenciesOnLogout();
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(
         const AuthState(
@@ -359,6 +366,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     } catch (e) {
+      _clearDependenciesOnLogout();
       routerNotifier.updateAuth(isAuthenticated: false);
       emit(
         state.copyWith(
@@ -368,6 +376,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  void _clearDependenciesOnLogout() {
+    try {
+      getIt<ActiveLocationService>().clear();
+      getIt<AddressBloc>().add(const ClearAddressesEvent());
+      getIt<ProfileBloc>().add(const ProfileSessionCleared());
+    } catch (_) {}
   }
 
   void _onToggleAuthMode(ToggleAuthMode event, Emitter<AuthState> emit) {

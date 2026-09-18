@@ -10,4 +10,9 @@ class ActiveLocationService extends ChangeNotifier {
     _activeAddress = address;
     notifyListeners();
   }
+
+  void clear() {
+    _activeAddress = null;
+    notifyListeners();
+  }
 }
