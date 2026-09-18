@@ -90,12 +90,7 @@ class UpdateFormTypeEvent extends AddressEvent {
   List<Object?> get props => [type];
 }
 
-class ToggleFormDefaultEvent extends AddressEvent {
-  const ToggleFormDefaultEvent(this.isDefault);
-  final bool isDefault;
-  @override
-  List<Object?> get props => [isDefault];
-}
+
 
 class UpdateFormLocationEvent extends AddressEvent {
   const UpdateFormLocationEvent(this.location);

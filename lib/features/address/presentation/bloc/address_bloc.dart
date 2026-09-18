@@ -45,7 +45,6 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     // Form Events
     on<InitFormEvent>(_onInitFormEvent);
     on<UpdateFormTypeEvent>(_onUpdateFormTypeEvent);
-    on<ToggleFormDefaultEvent>(_onToggleFormDefaultEvent);
     on<UpdateFormLocationEvent>(_onUpdateFormLocationEvent);
 
     // Map Events
@@ -266,7 +265,6 @@ void _onInitFormEvent(InitFormEvent event, Emitter<AddressState> emit) {
       formType: event.address.type == AddressType.unknown
           ? AddressType.home
           : event.address.type,
-      formIsDefault: event.address.isDefault,
       formLocation: event.address,
     ),
   );
@@ -278,14 +276,6 @@ void _onUpdateFormTypeEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(formType: event.type));
-
-}
-
-void _onToggleFormDefaultEvent(
-  ToggleFormDefaultEvent event,
-  Emitter<AddressState> emit,
-) {
-  emit(state.copyWith(formIsDefault: event.isDefault));
 
 }
 

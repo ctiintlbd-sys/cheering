@@ -37,14 +37,10 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     // Initialize form state in AddressBloc
     context.read<AddressBloc>().add(InitFormEvent(edit));
 
-    _houseController = TextEditingController();
-    
-    // Formatting the area gracefully
-    final areaText = [edit.streetAddress, edit.city]
-        .where((e) => e != null && e.isNotEmpty)
-        .join(', ');
+    _houseController = TextEditingController(text: edit.streetAddress ?? '');
+
         
-    _areaController = TextEditingController(text: areaText);
+    _areaController = TextEditingController(text: edit.city);
     _landmarkController = TextEditingController(text: edit.landmark ?? '');
     _phoneController = TextEditingController(text: edit.contactPhone ?? '');
   }
@@ -93,7 +89,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       contactPhone: _phoneController.text.trim(),
       latitude: formState.formLocation!.latitude,
       longitude: formState.formLocation!.longitude,
-      isDefault: formState.formIsDefault,
+      isDefault: widget.args.isDefault,
     );
 
     context.read<AddressBloc>().add(
@@ -192,38 +188,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 16.h),
-              InkWell(
-                borderRadius: BorderRadius.circular(8.r),
-                onTap: () => context.read<AddressBloc>().add(ToggleFormDefaultEvent(!state.formIsDefault)),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24.r,
-                        height: 24.r,
-                        child: Checkbox(
-                          value: state.formIsDefault,
-                          activeColor: context.colors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          onChanged: (v) => context.read<AddressBloc>().add(ToggleFormDefaultEvent(v ?? false)),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: CustomText(
-                          text: 'Set as default address',
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
               SizedBox(height: 24.h),
             ],
             bottomNavigationBar: CustomButton(

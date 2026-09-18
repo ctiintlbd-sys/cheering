@@ -19,7 +19,6 @@ class AddressState extends Equatable {
 
     // Form State
     this.formType = AddressType.home,
-    this.formIsDefault = false,
     this.formLocation,
 
     // Map State
@@ -40,9 +39,8 @@ class AddressState extends Equatable {
   final bool isFetchingLocation;
   final String? activeDefaultId;
 
-  // Form State
+  // Form Fields
   final AddressType formType;
-  final bool formIsDefault;
   final AddressEntity? formLocation;
 
   // Map State
@@ -87,7 +85,6 @@ class AddressState extends Equatable {
     String? activeDefaultId,
 
     AddressType? formType,
-    bool? formIsDefault,
     AddressEntity? formLocation,
 
     bool? isPinMoving,
@@ -107,7 +104,6 @@ class AddressState extends Equatable {
       activeDefaultId: activeDefaultId ?? this.activeDefaultId,
 
       formType: formType ?? this.formType,
-      formIsDefault: formIsDefault ?? this.formIsDefault,
       formLocation: formLocation ?? this.formLocation,
 
       isPinMoving: isPinMoving ?? this.isPinMoving,
@@ -130,7 +126,6 @@ class AddressState extends Equatable {
         activeDefaultId,
 
         formType,
-        formIsDefault,
         formLocation,
 
         isPinMoving,
