@@ -40,7 +40,7 @@ void setupAddressDependencies(GetIt getIt) {
     () => SetDefaultAddressUseCase(getIt<IAddressRepository>()),
   );
 
-  getIt.registerFactory<AddressBloc>(
+  getIt.registerLazySingleton<AddressBloc>(
     () => AddressBloc(
       getAddressesUseCase: getIt<GetAddressesUseCase>(),
       createAddressUseCase: getIt<CreateAddressUseCase>(),

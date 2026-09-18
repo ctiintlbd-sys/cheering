@@ -17,10 +17,7 @@ final List<RouteBase> profileRoutes = [
   ),
   GoRoute(
     path: RoutePaths.address,
-    builder: (context, state) => BlocProvider(
-      create: (_) => getIt<AddressBloc>()..add(const LoadAddressesRequested()),
-      child: const AddressScreen(),
-    ),
+    builder: (context, state) => const AddressScreen(),
     routes: [
       GoRoute(
         path: 'manual-map',
@@ -30,12 +27,7 @@ final List<RouteBase> profileRoutes = [
         path: 'add',
         builder: (context, state) {
           final args = state.extra as AddressEntity;
-          return BlocProvider(
-            create: (_) => getIt<AddressBloc>(),
-            child: AddAddressScreen(
-              args: args
-            ),
-          );
+          return AddAddressScreen(args: args);
         },
       ),
     ],

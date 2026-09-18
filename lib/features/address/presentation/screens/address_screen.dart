@@ -29,7 +29,6 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AddressBloc>().add(const InitializeAddressScreenData());
   }
 
   @override
@@ -110,6 +109,7 @@ class _AddressScreenState extends State<AddressScreen> {
           ),
           SizedBox(height: 28.h),
           BlocBuilder<AddressBloc, AddressState>(
+
             builder: (context, state) {
               if (state.isLoading || state.isFetchingLocation) {
                 return Padding(
