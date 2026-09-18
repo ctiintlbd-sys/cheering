@@ -148,7 +148,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     ));
 
     try {
-      final result = await getIt<CurrentLocationService>().fetchCurrentLocation();
+      final result = await getIt<CurrentLocationService>().fetchCurrentLocation(
+        requestPermission: false,
+      );
       if (result.isSuccess && result.latLng != null) {
         final snapshot = await MapLocationService().reverseGeocode(result.latLng!);
         if (snapshot != null) {
