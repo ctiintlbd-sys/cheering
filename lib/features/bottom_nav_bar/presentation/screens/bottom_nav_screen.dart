@@ -4,15 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'widgets/bottom_nav_bar.dart';
 
-class BottomNavScreen extends StatelessWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
+import 'package:cheering/features/address/presentation/bloc/address_event.dart';
+
+class BottomNavScreen extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
 
   const BottomNavScreen({super.key, required this.navigationShell});
 
+  @override
+  State<BottomNavScreen> createState() => _BottomNavScreenState();
+}
+
+class _BottomNavScreenState extends State<BottomNavScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddressBloc>().add(const InitializeAddressScreenData());
+    context.read<AddressBloc>().add(const LoadAddressesRequested());
+  }
+
   void _onTabSelected(int index) {
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
@@ -21,10 +37,10 @@ class BottomNavScreen extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       backgroundColor: context.colors.background,
-      body: navigationShell,
+      body: widget.navigationShell,
       bottomNavigationBar: BottomNavBar(
         navItems: NavItemModel.navItems,
-        selectedIndex: navigationShell.currentIndex,
+        selectedIndex: widget.navigationShell.currentIndex,
         onItemSelected: _onTabSelected,
       ),
     );
