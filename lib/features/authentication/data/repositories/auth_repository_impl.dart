@@ -1,3 +1,4 @@
+import '../../../../core/cache/cache_service.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/storage/token_storage.dart';
 import '../../../profile/data/datasources/profile_remote_source.dart';
@@ -13,12 +14,14 @@ class AuthRepositoryImpl implements IAuthRepository {
   final GoogleAuthService _googleAuthService;
   final BiometricAuthService _biometricAuthService;
   final ProfileRemoteSource _profileRemoteSource;
+  final CacheService _cacheService;
 
   AuthRepositoryImpl(
     this._source,
     this._googleAuthService,
     this._biometricAuthService,
     this._profileRemoteSource,
+    this._cacheService,
   );
 
   @override
@@ -161,6 +164,7 @@ class AuthRepositoryImpl implements IAuthRepository {
       }
     } finally {
       await TokenStorage.clearTokens();
+      await _cacheService.clear();
     }
   }
 }
