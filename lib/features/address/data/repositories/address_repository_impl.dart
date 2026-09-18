@@ -43,7 +43,7 @@ class AddressRepositoryImpl implements IAddressRepository {
       contactPhone: params.contactPhone,
       latitude: params.latitude,
       longitude: params.longitude,
-      isDefault: params.isDefault,
+      isDefault: false,
     );
     final result = await _source.createAddress(request);
     return result.fold(
@@ -68,7 +68,7 @@ class AddressRepositoryImpl implements IAddressRepository {
       contactPhone: params.contactPhone,
       latitude: params.latitude,
       longitude: params.longitude,
-      isDefault: params.isDefault,
+      isDefault: false,
     );
     final result = await _source.updateAddress(id, request);
     return result.fold(

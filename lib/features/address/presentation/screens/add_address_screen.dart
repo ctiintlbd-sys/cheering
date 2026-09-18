@@ -33,14 +33,19 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   void initState() {
     super.initState();
     final edit = widget.args;
-    
+
     // Initialize form state in AddressBloc
     context.read<AddressBloc>().add(InitFormEvent(edit));
 
-    _houseController = TextEditingController(text: edit.streetAddress ?? '');
+    _houseController = TextEditingController(text: edit.apartment);
 
-        
-    _areaController = TextEditingController(text: edit.city);
+    // Formatting the area gracefully
+    final areaText = [
+      edit.streetAddress,
+      edit.city,
+    ].where((e) => e != null && e.isNotEmpty).join(', ');
+
+    _areaController = TextEditingController(text: areaText);
     _landmarkController = TextEditingController(text: edit.landmark ?? '');
     _phoneController = TextEditingController(text: edit.contactPhone ?? '');
   }
@@ -62,11 +67,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
     final updatedLocation = AddressEntity.fromManualMap(result);
     context.read<AddressBloc>().add(UpdateFormLocationEvent(updatedLocation));
-    
+
     // Update the area controller when map location changes
-    final newAreaText = [updatedLocation.streetAddress, updatedLocation.city]
-        .where((e) => e != null && e.isNotEmpty)
-        .join(', ');
+    final newAreaText = [
+      updatedLocation.streetAddress,
+      updatedLocation.city,
+    ].where((e) => e != null && e.isNotEmpty).join(', ');
     if (newAreaText.isNotEmpty) {
       _areaController.text = newAreaText;
     }
@@ -74,22 +80,20 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   void _save(AddressState formState) {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (formState.formLocation == null) {
-       ToastMessageHelper.show('Location is missing');
-       return;
+      ToastMessageHelper.show('Location is missing');
+      return;
     }
 
     final params = AddressParams(
       type: formState.formType,
-      label: formState.formLocation!.label,
-      streetAddress: _houseController.text.trim(),
-      city: _areaController.text.trim(),
+      apartment: _houseController.text.trim(),
+      streetAddress: _areaController.text.trim(),
       landmark: _landmarkController.text.trim(),
       contactPhone: _phoneController.text.trim(),
       latitude: formState.formLocation!.latitude,
       longitude: formState.formLocation!.longitude,
-      isDefault: widget.args.isDefault,
     );
 
     context.read<AddressBloc>().add(
@@ -134,7 +138,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               SizedBox(height: 24.h),
               SaveAsTypeSelector(
                 selected: state.formType,
-                onChanged: (type) => context.read<AddressBloc>().add(UpdateFormTypeEvent(type)),
+                onChanged: (type) =>
+                    context.read<AddressBloc>().add(UpdateFormTypeEvent(type)),
               ),
               SizedBox(height: 24.h),
               Form(

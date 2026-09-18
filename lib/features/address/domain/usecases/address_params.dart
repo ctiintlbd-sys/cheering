@@ -11,7 +11,6 @@ class AddressParams {
   final String? contactPhone;
   final double latitude;
   final double longitude;
-  final bool isDefault;
 
   const AddressParams({
     required this.type,
@@ -24,6 +23,5 @@ class AddressParams {
     this.contactPhone,
     required this.latitude,
     required this.longitude,
-    required this.isDefault,
   });
 }

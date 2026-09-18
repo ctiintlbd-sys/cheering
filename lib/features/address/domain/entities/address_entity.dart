@@ -81,8 +81,8 @@ class AddressEntity {
 extension AddressFormatting on AddressEntity {
   String get formattedAddress {
     final parts = <String>[];
-    if (streetAddress?.isNotEmpty == true) parts.add(streetAddress!);
     if (apartment?.isNotEmpty == true) parts.add(apartment!);
+    if (streetAddress?.isNotEmpty == true) parts.add(streetAddress!);
     if (landmark?.isNotEmpty == true) parts.add(landmark!);
     if (city?.isNotEmpty == true) {
       final cityLower = city!.toLowerCase();
