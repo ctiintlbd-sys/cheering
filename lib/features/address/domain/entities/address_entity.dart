@@ -58,6 +58,24 @@ class AddressEntity {
       isDefault: isDefault ?? this.isDefault,
     );
   }
+
+  factory AddressEntity.fromManualMap(
+    Map<String, dynamic> map, {
+    String id = 'current_location',
+    AddressType type = AddressType.other,
+    bool isDefault = true,
+  }) {
+    return AddressEntity(
+      id: id,
+      type: type,
+      label: map['area'] as String? ?? 'Current Location',
+      streetAddress: map['address'] as String?,
+      city: map['area'] as String?,
+      latitude: map['latitude'] as double,
+      longitude: map['longitude'] as double,
+      isDefault: isDefault,
+    );
+  }
 }
 
 extension AddressFormatting on AddressEntity {

@@ -2,7 +2,6 @@ import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router_notifier.dart';
 import 'package:cheering/core/router/route_paths.dart';
-import 'package:cheering/core/services/active_location_service.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -42,38 +41,22 @@ class _AddressScreenState extends State<AddressScreen> {
   bool get _isLoggedIn => getIt<AppRouterNotifier>().isAuthenticated;
 
   Future<void> _onTapCurrentLocation() async {
-    final mapResult = await context.push<Map<String, dynamic>>(
-      RoutePaths.manualAddressMap,
-    );
+    final mapResult = await _getManualAddressFromMap();
     if (mapResult == null || !mounted) return;
 
-    final updated = AddressEntity(
-      id: 'current_location',
-      type: AddressType.other,
-      label: mapResult['area'] as String? ?? 'Current Location',
-      streetAddress: mapResult['address'] as String?,
-      latitude: mapResult['latitude'] as double,
-      longitude: mapResult['longitude'] as double,
-      isDefault: true,
-    );
+    final updated = AddressEntity.fromManualMap(mapResult);
     context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));
   }
 
   Future<void> _onTapEnterManually() async {
-    final mapResult = await context.push<Map<String, dynamic>>(
-      RoutePaths.manualAddressMap,
-    );
+    final mapResult = await _getManualAddressFromMap();
     if (mapResult == null || !mounted) return;
 
     if (_isLoggedIn) {
-      final addressToPass = AddressEntity(
+      final addressToPass = AddressEntity.fromManualMap(
+        mapResult,
         id: '',
         type: AddressType.home,
-        label: mapResult['area'] as String?,
-        streetAddress: mapResult['address'] as String?,
-        city: mapResult['area'] as String?,
-        latitude: mapResult['latitude'] as double,
-        longitude: mapResult['longitude'] as double,
         isDefault: false,
       );
       final saved = await context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
@@ -81,17 +64,13 @@ class _AddressScreenState extends State<AddressScreen> {
         context.read<AddressBloc>().add(const RefreshAddressesRequested());
       }
     } else {
-      final updated = AddressEntity(
-        id: 'current_location',
-        type: AddressType.other,
-        label: mapResult['area'] as String? ?? 'Current Location',
-        streetAddress: mapResult['address'] as String?,
-        latitude: mapResult['latitude'] as double,
-        longitude: mapResult['longitude'] as double,
-        isDefault: true,
-      );
+      final updated = AddressEntity.fromManualMap(mapResult);
       context.read<AddressBloc>().add(UpdateLocalCurrentLocation(updated));
     }
+  }
+
+  Future<Map<String, dynamic>?> _getManualAddressFromMap() async {
+    return context.push<Map<String, dynamic>>(RoutePaths.manualAddressMap);
   }
 
   @override
@@ -139,30 +118,11 @@ class _AddressScreenState extends State<AddressScreen> {
                 );
               }
 
-              final addresses = state.addresses;
-              final List<AddressEntity> displayAddresses = [];
-              if (state.currentLocationAddress != null) {
-                displayAddresses.add(state.currentLocationAddress!.copyWith(
-                  isDefault: state.activeDefaultId == 'current_location',
-                ));
-              }
-              for (final addr in addresses) {
-                displayAddresses.add(addr.copyWith(
-                  isDefault: state.activeDefaultId == addr.id,
-                ));
-              }
+              final displayAddresses = state.displayAddresses;
 
               if (displayAddresses.isEmpty) {
                 return const EmptyAddressWidget();
               }
-
-              // Update the global active address so other parts of the app can use it
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  final active = displayAddresses.firstWhere((a) => a.isDefault);
-                  getIt<ActiveLocationService>().setActiveAddress(active);
-                } catch (_) {}
-              });
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -204,4 +204,13 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       activeDefaultId: event.id,
     ));
   }
+
+  @override
+  void onChange(Change<AddressState> change) {
+    super.onChange(change);
+    final active = change.nextState.activeAddress;
+    if (active != null) {
+      getIt<ActiveLocationService>().setActiveAddress(active);
+    }
+  }
 }

@@ -29,6 +29,26 @@ class AddressState extends Equatable {
   bool get isLoading => status == AddressStatus.loading && addresses.isEmpty;
   bool get isSaving => mutationStatus == AddressMutationStatus.loading;
 
+  List<AddressEntity> get displayAddresses {
+    final List<AddressEntity> list = [];
+    if (currentLocationAddress != null) {
+      list.add(currentLocationAddress!.copyWith(
+        isDefault: activeDefaultId == 'current_location',
+      ));
+    }
+    for (final addr in addresses) {
+      list.add(addr.copyWith(
+        isDefault: activeDefaultId == addr.id,
+      ));
+    }
+    return list;
+  }
+
+  AddressEntity? get activeAddress {
+    final actives = displayAddresses.where((a) => a.isDefault);
+    return actives.isNotEmpty ? actives.first : null;
+  }
+
   AddressState copyWith({
     AddressStatus? status,
     AddressMutationStatus? mutationStatus,
