@@ -29,9 +29,11 @@ class AddAddressLocationCard extends StatelessWidget {
             color: context.colors.primary.withValues(alpha: 0.10),
             radiusAll: 8.r,
             child: Assets.icons.foodLocation.svg(
+              height: 20.r,
+              width: 20.r,
               colorFilter: ColorFilter.mode(
                 context.colors.primary,
-                BlendMode.dstIn,
+                BlendMode.srcIn,
               ),
             ),
           ),

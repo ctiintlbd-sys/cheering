@@ -53,11 +53,13 @@ class ManualAddressMapSearchBar extends StatelessWidget {
                   hintText: 'Search your area ...',
                   prefixIcon: Assets.icons.search.svg(),
                   fillColor: context.colors.background,
-                  suffixIcon: CustomText(
-                    onTap: onClear,
-                    text: 'Clear',
-                    color: context.colors.primary,
-                    fontWeight: FontWeight.w500,
+                  suffixIcon: IconButton(
+                    onPressed: onClear,
+                    icon: CustomText(
+                      text: 'Clear',
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
