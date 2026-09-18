@@ -126,7 +126,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   hintText: '01************',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  validator: (_) => null,
+                  validatorType: null,
                   prefixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
