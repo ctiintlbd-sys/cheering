@@ -1,3 +1,4 @@
+import "../../../../core/services/map_location_service.dart";
 import 'package:equatable/equatable.dart';
 
 import '../../domain/usecases/address_params.dart';
@@ -71,4 +72,82 @@ class UpdateActiveDefaultId extends AddressEvent {
 
   @override
   List<Object?> get props => [id];
+}
+
+// ─── Form Events ──────────────────────────────────────────────
+
+class InitFormEvent extends AddressEvent {
+  const InitFormEvent(this.address);
+  final AddressEntity address;
+  @override
+  List<Object?> get props => [address];
+}
+
+class UpdateFormTypeEvent extends AddressEvent {
+  const UpdateFormTypeEvent(this.type);
+  final AddressType type;
+  @override
+  List<Object?> get props => [type];
+}
+
+class ToggleFormDefaultEvent extends AddressEvent {
+  const ToggleFormDefaultEvent(this.isDefault);
+  final bool isDefault;
+  @override
+  List<Object?> get props => [isDefault];
+}
+
+class UpdateFormLocationEvent extends AddressEvent {
+  const UpdateFormLocationEvent(this.location);
+  final AddressEntity location;
+  @override
+  List<Object?> get props => [location];
+}
+
+// ─── Map Events ───────────────────────────────────────────────
+
+class UpdateMapPinEvent extends AddressEvent {
+  const UpdateMapPinEvent(this.isMoving);
+  final bool isMoving;
+  @override
+  List<Object?> get props => [isMoving];
+}
+
+class UpdateMapAddressEvent extends AddressEvent {
+  const UpdateMapAddressEvent(this.address, this.area);
+  final String address;
+  final String area;
+  @override
+  List<Object?> get props => [address, area];
+}
+
+class SetMapUnknownAddressEvent extends AddressEvent {
+  const SetMapUnknownAddressEvent();
+}
+
+class ShowMapSearchLoadingEvent extends AddressEvent {
+  const ShowMapSearchLoadingEvent();
+}
+
+class UpdateMapSearchResultsEvent extends AddressEvent {
+  const UpdateMapSearchResultsEvent(this.results, this.show);
+  final List<MapSearchResult> results;
+  final bool show;
+  @override
+  List<Object?> get props => [results, show];
+}
+
+class ClearMapSearchResultsEvent extends AddressEvent {
+  const ClearMapSearchResultsEvent();
+}
+
+class ShowMapSearchResultsEvent extends AddressEvent {
+  const ShowMapSearchResultsEvent(this.show);
+  final bool show;
+  @override
+  List<Object?> get props => [show];
+}
+
+class ClearAddressesEvent extends AddressEvent {
+  const ClearAddressesEvent();
 }

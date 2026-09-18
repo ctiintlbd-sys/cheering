@@ -21,26 +21,40 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     required this._updateAddressUseCase,
     required this._deleteAddressUseCase,
     required this._setDefaultAddressUseCase,
-  })  : super(const AddressState()) {
-    on<LoadAddressesRequested>(
-      _onLoadAddresses,
-      transformer: restartable(),
-    );
-    on<RefreshAddressesRequested>(
-      _onLoadAddresses,
-      transformer: restartable(),
-    );
+  }) : super(const AddressState()) {
+    on<LoadAddressesRequested>(_onLoadAddresses, transformer: restartable());
+    on<RefreshAddressesRequested>(_onLoadAddresses, transformer: restartable());
     on<DeleteAddressRequested>(_onDeleteAddress);
     on<SetDefaultAddressRequested>(_onSetDefaultAddress);
     on<SaveAddressRequested>(_onSaveAddress);
     on<ResetAddressMutationStatus>(
       (event, emit) => emit(
-        state.copyWith(mutationStatus: AddressMutationStatus.initial, clearError: true),
+        state.copyWith(
+          mutationStatus: AddressMutationStatus.initial,
+          clearError: true,
+        ),
       ),
     );
     on<InitializeAddressScreenData>(_onInitializeAddressScreenData);
     on<UpdateLocalCurrentLocation>(_onUpdateLocalCurrentLocation);
     on<UpdateActiveDefaultId>(_onUpdateActiveDefaultId);
+    on<ClearAddressesEvent>(_onClearAddressesEvent);
+
+
+    // Form Events
+    on<InitFormEvent>(_onInitFormEvent);
+    on<UpdateFormTypeEvent>(_onUpdateFormTypeEvent);
+    on<ToggleFormDefaultEvent>(_onToggleFormDefaultEvent);
+    on<UpdateFormLocationEvent>(_onUpdateFormLocationEvent);
+
+    // Map Events
+    on<UpdateMapPinEvent>(_onUpdateMapPinEvent);
+    on<UpdateMapAddressEvent>(_onUpdateMapAddressEvent);
+    on<SetMapUnknownAddressEvent>(_onSetMapUnknownAddressEvent);
+    on<ShowMapSearchLoadingEvent>(_onShowMapSearchLoadingEvent);
+    on<UpdateMapSearchResultsEvent>(_onUpdateMapSearchResultsEvent);
+    on<ClearMapSearchResultsEvent>(_onClearMapSearchResultsEvent);
+    on<ShowMapSearchResultsEvent>(_onShowMapSearchResultsEvent);
   }
 
   final GetAddressesUseCase _getAddressesUseCase;
@@ -75,10 +89,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       );
     } catch (e) {
       if (state.addresses.isEmpty) {
-        emit(state.copyWith(
-          status: AddressStatus.failure,
-          errorMessage: e.toString(),
-        ));
+        emit(
+          state.copyWith(
+            status: AddressStatus.failure,
+            errorMessage: e.toString(),
+          ),
+        );
       }
     }
   }
@@ -87,16 +103,23 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     DeleteAddressRequested event,
     Emitter<AddressState> emit,
   ) async {
-    emit(state.copyWith(mutationStatus: AddressMutationStatus.loading, clearError: true));
+    emit(
+      state.copyWith(
+        mutationStatus: AddressMutationStatus.loading,
+        clearError: true,
+      ),
+    );
     try {
       await _deleteAddressUseCase(event.id);
       add(const RefreshAddressesRequested());
       emit(state.copyWith(mutationStatus: AddressMutationStatus.success));
     } catch (e) {
-      emit(state.copyWith(
-        mutationStatus: AddressMutationStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          mutationStatus: AddressMutationStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -104,16 +127,23 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     SetDefaultAddressRequested event,
     Emitter<AddressState> emit,
   ) async {
-    emit(state.copyWith(mutationStatus: AddressMutationStatus.loading, clearError: true));
+    emit(
+      state.copyWith(
+        mutationStatus: AddressMutationStatus.loading,
+        clearError: true,
+      ),
+    );
     try {
       await _setDefaultAddressUseCase(event.id);
       add(const RefreshAddressesRequested());
       emit(state.copyWith(mutationStatus: AddressMutationStatus.success));
     } catch (e) {
-      emit(state.copyWith(
-        mutationStatus: AddressMutationStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          mutationStatus: AddressMutationStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -121,7 +151,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     SaveAddressRequested event,
     Emitter<AddressState> emit,
   ) async {
-    emit(state.copyWith(mutationStatus: AddressMutationStatus.loading, clearError: true));
+    emit(
+      state.copyWith(
+        mutationStatus: AddressMutationStatus.loading,
+        clearError: true,
+      ),
+    );
     try {
       if (event.addressId != null) {
         await _updateAddressUseCase(event.addressId!, event.params);
@@ -131,26 +166,30 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       add(const RefreshAddressesRequested());
       emit(state.copyWith(mutationStatus: AddressMutationStatus.success));
     } catch (e) {
-      emit(state.copyWith(
-        mutationStatus: AddressMutationStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          mutationStatus: AddressMutationStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
+
   Future<void> _onInitializeAddressScreenData(
     InitializeAddressScreenData event,
     Emitter<AddressState> emit,
   ) async {
-    final activeId = getIt<ActiveLocationService>().activeAddress?.id ?? 'current_location';
-    emit(state.copyWith(
-      activeDefaultId: activeId,
-      isFetchingLocation: true,
-    ));
+    final activeId =
+        getIt<ActiveLocationService>().activeAddress?.id ?? 'current_location';
+    emit(state.copyWith(activeDefaultId: activeId, isFetchingLocation: true));
 
     try {
-      final result = await getIt<CurrentLocationService>().fetchCurrentLocation();
+      final result = await getIt<CurrentLocationService>()
+          .fetchCurrentLocation();
       if (result.isSuccess && result.latLng != null) {
-        final snapshot = await MapLocationService().reverseGeocode(result.latLng!);
+        final snapshot = await MapLocationService().reverseGeocode(
+          result.latLng!,
+        );
         if (snapshot != null) {
           final currentLoc = AddressEntity(
             id: 'current_location',
@@ -161,10 +200,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
             longitude: snapshot.position.longitude,
             isDefault: activeId == 'current_location',
           );
-          emit(state.copyWith(
-            currentLocationAddress: currentLoc,
-            isFetchingLocation: false,
-          ));
+          emit(
+            state.copyWith(
+              currentLocationAddress: currentLoc,
+              isFetchingLocation: false,
+            ),
+          );
           return;
         }
       }
@@ -180,29 +221,31 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       longitude: 0.0,
       isDefault: activeId == 'current_location',
     );
-    emit(state.copyWith(
-      currentLocationAddress: fallbackLoc,
-      isFetchingLocation: false,
-    ));
+    emit(
+      state.copyWith(
+        currentLocationAddress: fallbackLoc,
+        isFetchingLocation: false,
+      ),
+    );
   }
 
   void _onUpdateLocalCurrentLocation(
     UpdateLocalCurrentLocation event,
     Emitter<AddressState> emit,
   ) {
-    emit(state.copyWith(
-      activeDefaultId: 'current_location',
-      currentLocationAddress: event.address,
-    ));
+    emit(
+      state.copyWith(
+        activeDefaultId: 'current_location',
+        currentLocationAddress: event.address,
+      ),
+    );
   }
 
   void _onUpdateActiveDefaultId(
     UpdateActiveDefaultId event,
     Emitter<AddressState> emit,
   ) {
-    emit(state.copyWith(
-      activeDefaultId: event.id,
-    ));
+    emit(state.copyWith(activeDefaultId: event.id));
   }
 
   @override
@@ -213,4 +256,161 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       getIt<ActiveLocationService>().setActiveAddress(active);
     }
   }
+
+// ─── Form Event Handlers ───────────────────────────────────────────
+
+void _onInitFormEvent(InitFormEvent event, Emitter<AddressState> emit) {
+  emit(
+    state.copyWith(
+      formType: event.address.type == AddressType.unknown
+          ? AddressType.home
+          : event.address.type,
+      formIsDefault: event.address.isDefault,
+      formLocation: event.address,
+    ),
+  );
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onUpdateFormTypeEvent(
+  UpdateFormTypeEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(formType: event.type));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onToggleFormDefaultEvent(
+  ToggleFormDefaultEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(formIsDefault: event.isDefault));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onUpdateFormLocationEvent(
+  UpdateFormLocationEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(formLocation: event.location));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+// ─── Map Event Handlers ────────────────────────────────────────────
+
+void _onUpdateMapPinEvent(UpdateMapPinEvent event, Emitter<AddressState> emit) {
+  emit(state.copyWith(isPinMoving: event.isMoving));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onUpdateMapAddressEvent(
+  UpdateMapAddressEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(mapAddress: event.address, mapArea: event.area));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onSetMapUnknownAddressEvent(
+  SetMapUnknownAddressEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(
+    state.copyWith(mapAddress: MapLocationDefaults.unknownLabel, mapArea: ''),
+  );
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onShowMapSearchLoadingEvent(
+  ShowMapSearchLoadingEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(isMapSearchLoading: true, showMapSearchResults: true));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onUpdateMapSearchResultsEvent(
+  UpdateMapSearchResultsEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(
+    state.copyWith(
+      isMapSearchLoading: false,
+      mapSearchResults: event.results,
+      showMapSearchResults: event.show,
+    ),
+  );
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onClearMapSearchResultsEvent(
+  ClearMapSearchResultsEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(
+    state.copyWith(
+      mapSearchResults: [],
+      isMapSearchLoading: false,
+      showMapSearchResults: false,
+    ),
+  );
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+
+void _onShowMapSearchResultsEvent(
+  ShowMapSearchResultsEvent event,
+  Emitter<AddressState> emit,
+) {
+  emit(state.copyWith(showMapSearchResults: event.show));
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
+}
+  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
+    emit(const AddressState());
+    add(const InitializeAddressScreenData());
+  }
+
 }

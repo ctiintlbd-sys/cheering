@@ -5,9 +5,13 @@ import 'package:cheering/core/services/current_location_service.dart';
 import 'package:cheering/core/services/map_location_service.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/theme/app_theme_colors.dart';
+import '../bloc/address_bloc.dart';
+import '../bloc/address_event.dart';
+import '../bloc/address_state.dart';
 import 'widgets/manual_address_location_sheet.dart';
 import 'widgets/manual_address_map_pin.dart';
 import 'widgets/manual_address_map_search_bar.dart';
@@ -27,16 +31,8 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   GoogleMapController? _mapController;
   LatLng _cameraPosition = MapLocationDefaults.dhaka;
-  bool _pinMoving = false;
   bool _suppressNextIdleGeocode = false;
   int _suppressSearchEvents = 0;
-
-  String _address = MapLocationDefaults.locatingLabel;
-  String _area = '';
-
-  List<MapSearchResult> _searchResults = [];
-  bool _searchLoading = false;
-  bool _showSearchResults = false;
 
   // ─── Lifecycle ──────────────────────────────────────────────
 
@@ -52,79 +48,75 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      body: Stack(
-        children: [
-          GoogleMap(
-            initialCameraPosition: const CameraPosition(
-              target: MapLocationDefaults.dhaka,
-              zoom: 15,
-            ),
-            onMapCreated: (c) => _mapController = c,
-            onCameraMove: _onCameraMove,
-            onCameraIdle: _onCameraIdle,
-            onTap: _onMapTap,
-            myLocationEnabled: false,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            compassEnabled: false,
-            mapToolbarEnabled: false,
+    return BlocBuilder<AddressBloc, AddressState>(
+      builder: (context, state) {
+        return Scaffold(
+          extendBody: true,
+          body: Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                  target: MapLocationDefaults.dhaka,
+                  zoom: 15,
+                ),
+                onMapCreated: (c) => _mapController = c,
+                onCameraMove: _onCameraMove,
+                onCameraIdle: _onCameraIdle,
+                onTap: _onMapTap,
+                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                compassEnabled: false,
+                mapToolbarEnabled: false,
+              ),
+              ManualAddressMapPin(isMoving: state.isPinMoving),
+              ManualAddressMapSearchBar(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                onClear: () {
+                  _mapService.cancelSearchDebounce();
+                  _searchController.clear();
+                  context.read<AddressBloc>().add(const ClearMapSearchResultsEvent());
+                },
+                searchResults: state.showMapSearchResults &&
+                        _searchController.text.trim().length >= 3
+                    ? ManualAddressMapSearchResultsSheet(
+                        loading: state.isMapSearchLoading,
+                        results: state.mapSearchResults,
+                        onResultTap: (result) {
+                          unawaited(_onSearchResultSelected(result));
+                        },
+                      )
+                    : null,
+              ),
+            ],
           ),
-          ManualAddressMapPin(isMoving: _pinMoving),
-          ManualAddressMapSearchBar(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            onClear: () {
-              _mapService.cancelSearchDebounce();
-              _searchController.clear();
-              _clearSearchResults();
-            },
-            searchResults:
-                _showSearchResults && _searchController.text.trim().length >= 3
-                ? ManualAddressMapSearchResultsSheet(
-                    loading: _searchLoading,
-                    results: _searchResults,
-                    onResultTap: (result) {
-                      unawaited(_onSearchResultSelected(result));
-                    },
-                  )
-                : null,
+          floatingActionButton: FloatingActionButton(
+            elevation: 0.5,
+            backgroundColor: context.colors.background,
+            onPressed: _goToCurrentLocation,
+            child: Assets.icons.currentLocation.svg(),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 0.5,
-        backgroundColor: context.colors.background,
-        onPressed: _goToCurrentLocation,
-        child: Assets.icons.currentLocation.svg(),
-      ),
-      bottomNavigationBar: ManualAddressLocationSheet(
-        address: _address,
-        area: _area,
-        onConfirm: _confirm,
-      ),
+          bottomNavigationBar: ManualAddressLocationSheet(
+            address: state.mapAddress,
+            area: state.mapArea,
+            onConfirm: () => _confirm(state),
+          ),
+        );
+      },
     );
   }
 
   void _onSearchFocusChanged() {
     if (_searchFocusNode.hasFocus &&
         _searchController.text.trim().length >= 3) {
-      setState(() => _showSearchResults = true);
+      context.read<AddressBloc>().add(const ShowMapSearchResultsEvent(true));
     }
   }
 
   void _dismissSearchResults() {
     _searchFocusNode.unfocus();
-    setState(() => _showSearchResults = false);
-  }
-
-  void _clearSearchResults() {
-    setState(() {
-      _searchResults = [];
-      _searchLoading = false;
-      _showSearchResults = false;
-    });
+    context.read<AddressBloc>().add(const ShowMapSearchResultsEvent(false));
   }
 
   void _onSearchChanged() {
@@ -135,32 +127,24 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
     final query = _searchController.text.trim();
     if (query.length < 3) {
       _mapService.cancelSearchDebounce();
-      _clearSearchResults();
+      context.read<AddressBloc>().add(const ClearMapSearchResultsEvent());
       return;
     }
 
-    setState(() {
-      _searchLoading = true;
-      _showSearchResults = true;
-    });
+    context.read<AddressBloc>().add(const ShowMapSearchLoadingEvent());
 
     _mapService.scheduleAddressSearch(
       query: _searchController.text,
       onResults: (results) {
         if (!mounted) return;
-        setState(() {
-          _searchLoading = false;
-          _searchResults = results;
-          if (_searchController.text.trim().length >= 3) {
-            _showSearchResults = true;
-          }
-        });
+        final queryStillValid = _searchController.text.trim().length >= 3;
+        context.read<AddressBloc>().add(UpdateMapSearchResultsEvent(results, queryStillValid));
       },
     );
   }
 
   Future<void> _onSearchResultSelected(MapSearchResult result) async {
-    _clearSearchResults();
+    context.read<AddressBloc>().add(const ClearMapSearchResultsEvent());
     _searchFocusNode.unfocus();
     await _applySearchResult(result);
   }
@@ -182,33 +166,23 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
       _suppressSearchEvents++;
       _searchController.text = snapshot.address;
     }
-    setState(() {
-      _address = snapshot.address;
-      _area = snapshot.area;
-    });
-  }
-
-  void _setUnknownAddress() {
-    setState(() {
-      _address = MapLocationDefaults.unknownLabel;
-      _area = '';
-    });
+    context.read<AddressBloc>().add(UpdateMapAddressEvent(snapshot.address, snapshot.area));
   }
 
   // ─── GPS ────────────────────────────────────────────────────
 
   Future<void> _goToCurrentLocation() async {
     try {
-      final result = await getIt<CurrentLocationService>()
-          .fetchCurrentLocation();
+      final result =
+          await getIt<CurrentLocationService>().fetchCurrentLocation();
 
       if (!mounted) return;
 
       if (!result.isSuccess) {
         ToastMessageHelper.show(result.failure!.message);
         // If we never got a real address, clear the locating label
-        if (_address == MapLocationDefaults.locatingLabel) {
-          _setUnknownAddress();
+        if (context.read<AddressBloc>().state.mapAddress == MapLocationDefaults.locatingLabel) {
+          context.read<AddressBloc>().add(const SetMapUnknownAddressEvent());
         }
         return;
       }
@@ -228,7 +202,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
       if (snapshot != null) {
         _applySnapshot(snapshot);
       } else {
-        _setUnknownAddress();
+        context.read<AddressBloc>().add(const SetMapUnknownAddressEvent());
       }
     } finally {}
   }
@@ -237,11 +211,11 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   void _onCameraMove(CameraPosition camera) {
     _cameraPosition = camera.target;
-    if (!_pinMoving) setState(() => _pinMoving = true);
+    context.read<AddressBloc>().add(const UpdateMapPinEvent(true));
   }
 
   void _onCameraIdle() {
-    setState(() => _pinMoving = false);
+    context.read<AddressBloc>().add(const UpdateMapPinEvent(false));
 
     if (_suppressNextIdleGeocode) {
       _suppressNextIdleGeocode = false;
@@ -254,7 +228,7 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
         if (mounted) _applySnapshot(snapshot);
       },
       onUnknown: () {
-        if (mounted) _setUnknownAddress();
+        if (mounted) context.read<AddressBloc>().add(const SetMapUnknownAddressEvent());
       },
     );
   }
@@ -267,14 +241,14 @@ class _ManualAddressMapScreenState extends State<ManualAddressMapScreen> {
 
   // ─── Confirm ────────────────────────────────────────────────
 
-  void _confirm() {
-    if (!MapLocationDefaults.isConfirmableAddress(_address)) {
+  void _confirm(AddressState state) {
+    if (!MapLocationDefaults.isConfirmableAddress(state.mapAddress)) {
       ToastMessageHelper.show('Please select your location on the map');
       return;
     }
     context.pop(<String, dynamic>{
-      'address': _address.trim(),
-      'area': _area,
+      'address': state.mapAddress.trim(),
+      'area': state.mapArea,
       'latitude': _cameraPosition.latitude,
       'longitude': _cameraPosition.longitude,
     });
