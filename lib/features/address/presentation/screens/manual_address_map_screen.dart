@@ -3,6 +3,7 @@ import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/services/current_location_service.dart';
 import 'package:cheering/core/services/map_location_service.dart';
+import '../../domain/entities/map_location_entities.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

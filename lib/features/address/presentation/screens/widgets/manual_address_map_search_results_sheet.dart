@@ -1,4 +1,4 @@
-import 'package:cheering/core/services/map_location_service.dart';
+import '../../../domain/entities/map_location_entities.dart';
 import 'package:cheering/core/widgets/custom_container.dart';
 import 'package:cheering/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';

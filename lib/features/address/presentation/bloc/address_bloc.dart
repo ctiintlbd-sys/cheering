@@ -5,6 +5,7 @@ import '../../domain/entities/address_entity.dart';
 import '../../../../core/services/active_location_service.dart';
 import '../../../../core/services/current_location_service.dart';
 import '../../../../core/services/map_location_service.dart';
+import '../../domain/entities/map_location_entities.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../domain/usecases/create_address_usecase.dart';
 import '../../domain/usecases/delete_address_usecase.dart';

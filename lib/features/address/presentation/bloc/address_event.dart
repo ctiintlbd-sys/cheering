@@ -1,4 +1,4 @@
-import "../../../../core/services/map_location_service.dart";
+import '../../domain/entities/map_location_entities.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/usecases/address_params.dart';
