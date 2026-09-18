@@ -269,10 +269,6 @@ void _onInitFormEvent(InitFormEvent event, Emitter<AddressState> emit) {
       formLocation: event.address,
     ),
   );
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -281,10 +277,6 @@ void _onUpdateFormTypeEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(formType: event.type));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -293,10 +285,6 @@ void _onToggleFormDefaultEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(formIsDefault: event.isDefault));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -305,10 +293,6 @@ void _onUpdateFormLocationEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(formLocation: event.location));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -316,10 +300,6 @@ void _onUpdateFormLocationEvent(
 
 void _onUpdateMapPinEvent(UpdateMapPinEvent event, Emitter<AddressState> emit) {
   emit(state.copyWith(isPinMoving: event.isMoving));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -328,10 +308,6 @@ void _onUpdateMapAddressEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(mapAddress: event.address, mapArea: event.area));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -342,10 +318,6 @@ void _onSetMapUnknownAddressEvent(
   emit(
     state.copyWith(mapAddress: MapLocationDefaults.unknownLabel, mapArea: ''),
   );
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -354,10 +326,6 @@ void _onShowMapSearchLoadingEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(isMapSearchLoading: true, showMapSearchResults: true));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -372,10 +340,6 @@ void _onUpdateMapSearchResultsEvent(
       showMapSearchResults: event.show,
     ),
   );
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -390,10 +354,6 @@ void _onClearMapSearchResultsEvent(
       showMapSearchResults: false,
     ),
   );
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
 
@@ -402,10 +362,6 @@ void _onShowMapSearchResultsEvent(
   Emitter<AddressState> emit,
 ) {
   emit(state.copyWith(showMapSearchResults: event.show));
-  void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
-    emit(const AddressState());
-    add(const InitializeAddressScreenData());
-  }
 
 }
   void _onClearAddressesEvent(ClearAddressesEvent event, Emitter<AddressState> emit) {
