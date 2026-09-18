@@ -36,7 +36,7 @@ class CurrentLocationService {
   static void clearCache() => _cachedLatLng = null;
 
   Future<CurrentLocationResult> fetchCurrentLocation({
-    LocationAccuracy accuracy = LocationAccuracy.high,
+    LocationAccuracy accuracy = LocationAccuracy.best,
     bool requestPermission = true,
   }) async {
     try {

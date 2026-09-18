@@ -9,8 +9,13 @@ class AppConfig {
 
   final Environment environment;
   final String baseUrl;
+  final String googleMapsKey;
 
-  const AppConfig._({required this.environment, required this.baseUrl});
+  const AppConfig._({
+    required this.environment, 
+    required this.baseUrl,
+    required this.googleMapsKey,
+  });
 
   factory AppConfig.initialize() {
     const env = String.fromEnvironment('ENV', defaultValue: 'dev');
@@ -19,14 +24,17 @@ class AppConfig {
       'prod' => const AppConfig._(
           environment: Environment.prod,
           baseUrl: 'https://api.cheeringshop.online/api/v1',
+          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
         ),
       'staging' => const AppConfig._(
           environment: Environment.staging,
           baseUrl: 'https://api.cheeringshop.online/api/v1',
+          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
         ),
       _ => const AppConfig._(
           environment: Environment.dev,
           baseUrl: 'https://api.cheeringshop.online/api/v1',
+          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
         ),
     };
 
