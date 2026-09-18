@@ -154,7 +154,9 @@ class SavedAddressCard extends StatelessWidget {
         onSetDefault?.call();
         bloc.add(SetDefaultAddressRequested(address.id));
       case AddressMenuAction.delete:
-        bloc.add(DeleteAddressRequested(address.id));
+        if(!address.isDefault) {
+          bloc.add(DeleteAddressRequested(address.id));
+        }
     }
   }
 }
