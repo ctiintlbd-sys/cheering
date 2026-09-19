@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:cheering/core/theme/app_theme.dart';
 import 'package:cheering/core/theme/app_theme_colors.dart';
 
 class HomeFeedLoadingWidget extends StatelessWidget {
@@ -10,7 +9,7 @@ class HomeFeedLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: context.colors.borderSecondary,
+      baseColor: context.colors.borderTertiary,
       highlightColor: context.colors.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,6 +57,32 @@ class HomeFeedLoadingWidget extends StatelessWidget {
               separatorBuilder: (context, index) => SizedBox(width: 12.w),
               itemBuilder: (context, index) => Container(
                 width: 280.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 30.h),
+
+          // Deals title shimmer
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Container(width: 150.w, height: 20.h, color: Colors.white),
+          ),
+          SizedBox(height: 16.h),
+
+          // Deals shimmer
+          SizedBox(
+            height: 194.h,
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              scrollDirection: Axis.horizontal,
+              itemCount: 3,
+              separatorBuilder: (context, index) => SizedBox(width: 12.w),
+              itemBuilder: (context, index) => Container(
+                width: 174.w,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.r),

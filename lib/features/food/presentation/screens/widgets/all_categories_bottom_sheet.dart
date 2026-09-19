@@ -51,6 +51,10 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           // Grid with BlocBuilder
           Expanded(
             child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
+              buildWhen: (previous, current) =>
+                  previous.allCategories != current.allCategories ||
+                  previous.status != current.status ||
+                  previous.errorMessage != current.errorMessage,
               builder: (context, state) {
                 if (state.status == HomeFeedStatus.failure &&
                     (state.allCategories == null ||

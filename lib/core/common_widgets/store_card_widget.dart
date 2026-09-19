@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 class StoreCardWidget extends StatelessWidget {
   const StoreCardWidget({super.key});
 
+  final
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
