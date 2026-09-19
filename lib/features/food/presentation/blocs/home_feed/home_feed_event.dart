@@ -16,7 +16,3 @@ class LoadHomeFeed extends HomeFeedEvent {
   @override
   List<Object?> get props => [lat, lng];
 }
-
-class LoadAllCategories extends HomeFeedEvent {
-  const LoadAllCategories();
-}

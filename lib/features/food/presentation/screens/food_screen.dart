@@ -81,25 +81,19 @@ class FoodScreen extends StatelessWidget {
                       if (state.feed!.categories.length > 10 && index == 10) {
                         return SeeAllCategoriesWidget(
                           onTap: () {
-                            final bloc = context.read<HomeFeedBloc>();
-                            bloc.add(const LoadAllCategories());
                             BottomSheetHelper.showSheet(
                               context: context,
-                              child: BlocProvider.value(
-                                value: bloc,
-                                child: const AllCategoriesBottomSheet(),
-                              ),
+                              child: const AllCategoriesBottomSheet(),
                             );
                           },
                         );
                       }
-                      
+
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 4.h),
                         child: CustomItemAnimator(
                           index: index,
-                          child:
-                              const FoodCategoriesWidget(), // Add category parameter to this widget later
+                          child: FoodCategoriesWidget(category: state.feed!.categories[index]), // Add category parameter to this widget later
                         ),
                       );
                     },
@@ -122,7 +116,6 @@ class FoodScreen extends StatelessWidget {
                     itemCount: state.feed!.promoted.length,
                     separatorBuilder: (context, index) => SizedBox(width: 12.w),
                     itemBuilder: (context, index) {
-                      
                       return CustomItemAnimator(
                         index: index,
                         child:
@@ -159,7 +152,6 @@ class FoodScreen extends StatelessWidget {
                     itemCount: state.feed!.topRated.length,
                     separatorBuilder: (context, index) => SizedBox(width: 12.w),
                     itemBuilder: (context, index) {
-                      
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 4.h),
                         child: CustomItemAnimator(

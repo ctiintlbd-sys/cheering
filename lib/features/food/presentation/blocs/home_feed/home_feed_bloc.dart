@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 import '../../../../food/domain/entities/home_feed_entity.dart';
 import '../../../../food/domain/entities/category_entity.dart';
 import '../../../../food/domain/usecases/get_home_feed_usecase.dart';
@@ -13,7 +14,6 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
   HomeFeedBloc(this._getHomeFeedUseCase, this._getCategoriesUseCase)
     : super(const HomeFeedState()) {
     on<LoadHomeFeed>(_onLoadHomeFeed);
-    on<LoadAllCategories>(_onLoadAllCategories);
   }
 
   Future<void> _onLoadHomeFeed(
@@ -23,12 +23,21 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
     emit(state.copyWith(status: HomeFeedStatus.loading, clearError: true));
 
     try {
-      await emit.forEach<HomeFeedEntity>(
+      // Merge both streams to fetch home feed and all categories simultaneously
+      final combinedStream = Rx.combineLatest2(
         _getHomeFeedUseCase(lat: event.lat, lng: event.lng),
-        onData: (feed) => HomeFeedState(
+        _getCategoriesUseCase(),
+        (HomeFeedEntity feed, List<CategoryEntity> categories) =>
+            (feed, categories),
+      );
+
+      await emit.forEach<(HomeFeedEntity, List<CategoryEntity>)>(
+        combinedStream,
+        onData: (data) => HomeFeedState(
           status: HomeFeedStatus.success,
-          feed: feed,
-          allCategories: state.allCategories,
+          feed: data.$1,
+          allCategories: data.$2,
+          errorMessage: state.errorMessage,
         ),
         onError: (error, _) => HomeFeedState(
           status: HomeFeedStatus.failure,
@@ -42,43 +51,6 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
         state.copyWith(
           status: HomeFeedStatus.failure,
           errorMessage: e.toString(),
-        ),
-      );
-    }
-  }
-
-  Future<void> _onLoadAllCategories(
-    LoadAllCategories event,
-    Emitter<HomeFeedState> emit,
-  ) async {
-    if (state.allCategories != null && state.allCategories!.isNotEmpty) return;
-
-    emit(state.copyWith(isLoadingAllCategories: true));
-
-    try {
-      await emit.forEach<List<CategoryEntity>>(
-        _getCategoriesUseCase(),
-        onData: (categories) => HomeFeedState(
-          status: state.status,
-          feed: state.feed,
-          allCategories: categories,
-          isLoadingAllCategories: false,
-          errorMessage: state.errorMessage,
-        ),
-        onError: (error, _) => HomeFeedState(
-          status: state.status,
-          feed: state.feed,
-          allCategories: state.allCategories,
-          isLoadingAllCategories: false,
-          categoriesErrorMessage: error.toString(),
-          errorMessage: state.errorMessage,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          isLoadingAllCategories: false,
-          categoriesErrorMessage: e.toString(),
         ),
       );
     }

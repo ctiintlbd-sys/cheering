@@ -52,23 +52,15 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           Expanded(
             child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
               builder: (context, state) {
-                if (state.isLoadingAllCategories) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (state.categoriesErrorMessage != null &&
+                if (state.status == HomeFeedStatus.failure &&
                     (state.allCategories == null ||
                         state.allCategories!.isEmpty)) {
                   return Center(
-                    child: Text(
-                      state.categoriesErrorMessage!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: context.colors.error,
-                      ),
+                    child: CustomText(
+                      text: state.errorMessage ?? 'Failed to load categories',
                     ),
                   );
                 }
-
                 final categories = state.allCategories ?? [];
 
                 return GridView.builder(
@@ -81,12 +73,10 @@ class AllCategoriesBottomSheet extends StatelessWidget {
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
-                    
                     return CustomItemAnimator(
                       index: index,
                       animationType: CustomItemAnimationType.scale,
-                      child:
-                          const FoodCategoriesWidget(), // Pass category here later
+                      child: FoodCategoriesWidget(category: categories[index]),
                     );
                   },
                 );

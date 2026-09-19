@@ -1,12 +1,15 @@
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class FoodCategoriesWidget extends StatelessWidget {
-  const FoodCategoriesWidget({super.key});
+  const FoodCategoriesWidget({super.key, required this.category});
+
+  final CategoryEntity category;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class FoodCategoriesWidget extends StatelessWidget {
                 width: 50.r,
                 height: 50.r,
                 fit: BoxFit.contain,
-                imageUrl: '',
+                imageUrl: category.imageUrl,
                 fallbackAsset: Assets.icons.menu.svg(),
               ),
             ),
@@ -48,7 +51,7 @@ class FoodCategoriesWidget extends StatelessWidget {
               width: 74.w,
               height: 16.h,
               child: CustomText(
-                text: 'Chicken',
+                text: category.name,
                 fontWeight: FontWeight.w500,
                 maxLines: 1,
                 textOverflow: TextOverflow.ellipsis,
