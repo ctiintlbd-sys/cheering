@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../domain/entities/address_entity.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
@@ -24,8 +25,6 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-
-
   bool get _isLoggedIn => getIt<AppRouterNotifier>().isAuthenticated;
 
   Future<void> _onTapCurrentLocation() async {
@@ -54,8 +53,13 @@ class _AddressScreenState extends State<AddressScreen> {
     }
   }
 
-  Future<Map<String, dynamic>?> _getManualAddressFromMap({bool focusSearch = false}) async {
-    return context.push<Map<String, dynamic>>(RoutePaths.manualAddressMap, extra: focusSearch);
+  Future<Map<String, dynamic>?> _getManualAddressFromMap({
+    bool focusSearch = false,
+  }) {
+    return context.push<Map<String, dynamic>>(
+      RoutePaths.manualAddressMap,
+      extra: focusSearch,
+    );
   }
 
   @override
@@ -96,53 +100,62 @@ class _AddressScreenState extends State<AddressScreen> {
           ),
           SizedBox(height: 28.h),
           BlocBuilder<AddressBloc, AddressState>(
-
+            buildWhen: (prev, curr) =>
+                prev.addresses != curr.addresses ||
+                prev.currentLocationAddress != curr.currentLocationAddress ||
+                prev.activeDefaultId != curr.activeDefaultId ||
+                prev.isLoading != curr.isLoading ||
+                prev.isFetchingLocation != curr.isFetchingLocation,
             builder: (context, state) {
-              if (state.isLoading || state.isFetchingLocation) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 48.h),
-                  child: const Center(child: CircularProgressIndicator()),
-                );
+              final addresses = state.displayAddresses;
+
+              if (addresses.isEmpty) {
+                // Only spin when there is genuinely nothing to show yet —
+                // cached addresses shouldn't wait on the GPS fix.
+                return state.isLoading || state.isFetchingLocation
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 48.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      )
+                    : const EmptyAddressWidget();
               }
 
-              final displayAddresses = state.displayAddresses;
-
-              if (displayAddresses.isEmpty) {
-                return const EmptyAddressWidget();
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: 'Saved Address',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  SizedBox(height: 16.h),
-                  ListView.separated(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: displayAddresses.length,
-                    separatorBuilder: (_, _) => SizedBox(height: 12.h),
-                    itemBuilder: (context, index) {
-                      final address = displayAddresses[index];
-                      return SavedAddressCard(
-                        address: address,
-                        onSetDefault: () {
-                          context.read<AddressBloc>().add(UpdateActiveDefaultId(address.id));
-                        },
-                      );
-                    },
-                  ),
-                  SizedBox(height: 104.h),
-                ],
-              );
+              return _SavedAddressList(addresses: addresses);
             },
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SavedAddressList extends StatelessWidget {
+  const _SavedAddressList({required this.addresses});
+
+  final List<AddressEntity> addresses;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(
+          text: 'Saved Address',
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        SizedBox(height: 16.h),
+        for (var i = 0; i < addresses.length; i++) ...[
+          if (i > 0) SizedBox(height: 12.h),
+          SavedAddressCard(
+            address: addresses[i],
+            onSetDefault: () => context.read<AddressBloc>().add(
+              UpdateActiveDefaultId(addresses[i].id),
+            ),
+          ),
+        ],
+        SizedBox(height: 104.h),
+      ],
     );
   }
 }

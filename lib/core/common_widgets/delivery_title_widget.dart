@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_state.dart';
 import 'package:cheering/features/address/domain/entities/address_entity.dart';
+
 class DeliveryTitleWidget extends StatelessWidget {
   const DeliveryTitleWidget({super.key});
 
@@ -21,9 +22,10 @@ class DeliveryTitleWidget extends StatelessWidget {
         _buildCircularIconButton(
           context: context,
           icon: Assets.icons.foodLocation.svg(),
-          backgroundColor: context.colors.white.withValues(alpha: 0.15), onTap: () {
+          backgroundColor: context.colors.white.withValues(alpha: 0.15),
+          onTap: () {
             context.push(RoutePaths.address);
-        },
+          },
         ),
         SizedBox(width: 12.w),
         Expanded(
@@ -38,13 +40,11 @@ class DeliveryTitleWidget extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: context.colors.white.withValues(alpha: 0.8),
               ),
-              BlocBuilder<AddressBloc, AddressState>(
-                builder: (context, state) {
-                  final activeAddress = state.activeAddress;
-                  final addressText = activeAddress != null 
-                      ? activeAddress.formattedAddress 
-                      : 'Getting location...';
-
+              BlocSelector<AddressBloc, AddressState, String>(
+                selector: (state) =>
+                    state.activeAddress?.formattedAddress ??
+                    'Getting location...',
+                builder: (context, addressText) {
                   return CustomText(
                     top: 2.h,
                     textAlign: TextAlign.start,
@@ -63,13 +63,15 @@ class DeliveryTitleWidget extends StatelessWidget {
         _buildCircularIconButton(
           context: context,
           icon: Assets.icons.foodLove.svg(),
-          backgroundColor: context.colors.white.withValues(alpha: 0.15), onTap: () {  },
+          backgroundColor: context.colors.white.withValues(alpha: 0.15),
+          onTap: () {},
         ),
         SizedBox(width: 12.w),
         _buildCircularIconButton(
           context: context,
           icon: Assets.icons.cart.svg(),
-          backgroundColor: context.colors.white, onTap: () {  },
+          backgroundColor: context.colors.white,
+          onTap: () {},
         ),
       ],
     );
@@ -92,7 +94,7 @@ class DeliveryTitleWidget extends StatelessWidget {
           offset: const Offset(-2, 2),
           blurRadius: 16,
           color: context.colors.black.withValues(alpha: 0.04),
-        )
+        ),
       ],
       alignment: Alignment.center,
       child: icon,

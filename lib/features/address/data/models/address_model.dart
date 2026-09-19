@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../domain/entities/address_entity.dart';
 
 class AddressModel extends AddressEntity {
@@ -16,6 +18,23 @@ class AddressModel extends AddressEntity {
     required super.isDefault,
   });
 
+  /// Reads the address list out of a response or cache envelope without
+  /// throwing when `data` is absent, null, or nested one level deeper.
+  static List<AddressModel> listFromJson(dynamic json) {
+    dynamic node = json is Map ? json['data'] : json;
+    if (node is Map) {
+      node = node['addresses'] ?? node['items'] ?? node['data'];
+    }
+    if (node is! List) {
+      debugPrint('[AddressModel] unexpected addresses payload: $json');
+      return const [];
+    }
+    return node
+        .whereType<Map>()
+        .map((e) => AddressModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
       id: json['id']?.toString() ?? '',
@@ -30,27 +49,18 @@ class AddressModel extends AddressEntity {
       city: json['city']?.toString(),
       postalCode: json['postal_code']?.toString(),
       contactPhone: json['contact_phone']?.toString(),
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      latitude: _toDouble(json['latitude']),
+      longitude: _toDouble(json['longitude']),
       isDefault: json['is_default'] == true,
     );
   }
 
-  factory AddressModel.fromEntity(AddressEntity entity) {
-    return AddressModel(
-      id: entity.id,
-      type: entity.type,
-      label: entity.label,
-      streetAddress: entity.streetAddress,
-      apartment: entity.apartment,
-      landmark: entity.landmark,
-      city: entity.city,
-      postalCode: entity.postalCode,
-      contactPhone: entity.contactPhone,
-      latitude: entity.latitude,
-      longitude: entity.longitude,
-      isDefault: entity.isDefault,
-    );
+  /// Decimal columns come back as strings from the API, so a plain `as num`
+  /// cast would throw and turn a 200 into a parse failure.
+  static double _toDouble(dynamic value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 
   Map<String, dynamic> toJson() {

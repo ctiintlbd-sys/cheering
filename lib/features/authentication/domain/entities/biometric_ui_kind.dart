@@ -6,7 +6,7 @@ enum BiometricUiKind {
   String get promptTitle => switch (this) {
         face => 'Face ID',
         touch => 'Touch ID',
-        combined => 'Touch ID / Face ID',
+        combined => 'Not Work',
       };
 
   String get enableScreenTitle => 'Enable $promptTitle';

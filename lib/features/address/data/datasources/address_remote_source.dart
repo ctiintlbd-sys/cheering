@@ -12,12 +12,7 @@ class AddressRemoteSource {
   Future<ApiResult<List<AddressModel>>> getAddresses() {
     return _client.get(
       ApiEndpoints.addresses,
-      fromJson: (json) {
-        final data = json['data'] as List;
-        return data
-            .map((e) => AddressModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-      },
+      fromJson: AddressModel.listFromJson,
     );
   }
 

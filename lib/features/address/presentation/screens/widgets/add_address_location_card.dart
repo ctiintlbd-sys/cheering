@@ -7,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AddAddressLocationCard extends StatelessWidget {
   const AddAddressLocationCard({
     super.key,
-    required this.onChangeTap, required this.address,
+    required this.onChangeTap,
+    required this.address,
   });
 
   final AddressEntity address;
@@ -47,13 +48,13 @@ class AddAddressLocationCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   maxLines: 1,
                 ),
-                  CustomText(
-                    top: 2.h,
-                    text: address.formattedAddress,
-                    fontSize: 12.sp,
-                    color: context.colors.textTertiary,
-                    maxLines: 1,
-                  ),
+                CustomText(
+                  top: 2.h,
+                  text: address.formattedAddress,
+                  fontSize: 12.sp,
+                  color: context.colors.textTertiary,
+                  maxLines: 1,
+                ),
               ],
             ),
           ),

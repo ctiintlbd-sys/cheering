@@ -19,24 +19,25 @@ class GoogleAuthService {
         callbackUrlScheme: ApiEndpoints.googleCallbackScheme,
       );
 
-      // Extract tokens from URL fragment:
+      // Tokens come back in the URL fragment:
       // crshop://auth/callback#access_token=xxx&refresh_token=yyy&token_type=Bearer&expires_in=1800
-      final uri = Uri.parse(result.replaceFirst('#', '?'));
-      final accessToken = uri.queryParameters['access_token'] ?? '';
-      final refreshToken = uri.queryParameters['refresh_token'] ?? '';
+      final params = Uri.splitQueryString(Uri.parse(result).fragment);
+      final accessToken = params['access_token'] ?? '';
+      final refreshToken = params['refresh_token'] ?? '';
 
       if (accessToken.isEmpty || refreshToken.isEmpty) {
-        final error = uri.queryParameters['error'];
+        final error = params['error'];
         throw BadRequestException(
-          error ?? 'Failed to retrieve authentication tokens from Google login.',
+          error ??
+              'Failed to retrieve authentication tokens from Google login.',
         );
       }
 
       return AuthTokensModel(
         accessToken: accessToken,
         refreshToken: refreshToken,
-        tokenType: uri.queryParameters['token_type'] ?? 'Bearer',
-        expiresIn: int.tryParse(uri.queryParameters['expires_in'] ?? '') ?? 1800,
+        tokenType: params['token_type'] ?? 'Bearer',
+        expiresIn: int.tryParse(params['expires_in'] ?? '') ?? 1800,
       );
     } on PlatformException catch (e) {
       if (e.code == 'CANCELED') {

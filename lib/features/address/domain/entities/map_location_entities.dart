@@ -4,14 +4,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 @immutable
 class MapSearchResult {
   const MapSearchResult({
-    required this.query,
     required this.formattedAddress,
     required this.area,
     this.position,
     this.placeId,
   });
 
-  final String query;
   final String formattedAddress;
   final String area;
   final LatLng? position;
@@ -29,6 +27,30 @@ class MapAddressSnapshot {
   final String address;
   final String area;
   final LatLng position;
+}
+
+/// Result of a reverse-geocode attempt.
+///
+/// [ReverseGeocodeSkipped] means no lookup ran at all (the pin barely moved, or
+/// one was already in flight). Callers must keep the address they already show
+/// in that case — only [ReverseGeocodeFailed] means the lookup ran and produced
+/// nothing.
+sealed class ReverseGeocodeOutcome {
+  const ReverseGeocodeOutcome();
+}
+
+final class ReverseGeocodeResolved extends ReverseGeocodeOutcome {
+  const ReverseGeocodeResolved(this.snapshot);
+
+  final MapAddressSnapshot snapshot;
+}
+
+final class ReverseGeocodeSkipped extends ReverseGeocodeOutcome {
+  const ReverseGeocodeSkipped();
+}
+
+final class ReverseGeocodeFailed extends ReverseGeocodeOutcome {
+  const ReverseGeocodeFailed();
 }
 
 abstract final class MapLocationDefaults {

@@ -11,22 +11,23 @@ class BiometricAuthService {
   final BiometricKeyService _keyService;
   final BiometricService _biometricService;
 
-  BiometricAuthService(
-    this._remote,
-    this._keyService,
-    this._biometricService,
-  );
+  BiometricAuthService(this._remote, this._keyService, this._biometricService);
 
   Future<void> enrollDevice({String? deviceName}) async {
     if (!await _biometricService.isBiometricsAvailable()) {
-      throw const BadRequestException('Biometrics is not available on this device.');
+      throw const BadRequestException(
+        'Biometrics is not available on this device.',
+      );
     }
 
     final authenticated = await _biometricService.authenticate(
-      localizedReason: 'Please authenticate to enable biometric login for Cheering',
+      localizedReason:
+          'Please authenticate to enable biometric login for Cheering',
     );
     if (!authenticated) {
-      throw const CancelledException('Biometric verification cancelled or failed.');
+      throw const CancelledException(
+        'Biometric verification cancelled or failed.',
+      );
     }
 
     final deviceId =
@@ -39,7 +40,9 @@ class BiometricAuthService {
       deviceName: deviceName,
     );
 
-    result.fold(
+    // fold() is synchronous, so the enrollment writes have to be awaited here —
+    // otherwise enrollDevice() returns before the private key is persisted.
+    await result.fold<Future<void>>(
       onSuccess: (_) async {
         await BiometricDeviceStorage.saveEnrollment(
           deviceId: deviceId,
@@ -68,20 +71,26 @@ class BiometricAuthService {
       localizedReason: 'Scan fingerprint to log in to Cheering',
     );
     if (!authenticated) {
-      throw const CancelledException('Biometric authentication cancelled or failed.');
+      throw const CancelledException(
+        'Biometric authentication cancelled or failed.',
+      );
     }
 
     final deviceId = BiometricDeviceStorage.deviceId!;
     final privateKey = BiometricDeviceStorage.privateKeyPkcs8Base64!;
 
-    final challengeResult = await _remote.requestBiometricChallenge(deviceId: deviceId);
+    final challengeResult = await _remote.requestBiometricChallenge(
+      deviceId: deviceId,
+    );
     final challenge = challengeResult.fold(
       onSuccess: (data) => data,
       onFailure: (e) => throw e,
     );
 
     if (challenge.challenge.isEmpty) {
-      throw const BadRequestException('Invalid biometric challenge from server.');
+      throw const BadRequestException(
+        'Invalid biometric challenge from server.',
+      );
     }
 
     final signature = _keyService.signChallengeEs256Der(

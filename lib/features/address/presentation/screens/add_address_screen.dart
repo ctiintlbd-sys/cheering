@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../domain/entities/address_entity.dart';
-import '../../domain/usecases/address_params.dart';
+import '../../domain/entities/address_params.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
+import '../bloc/address_form_cubit.dart';
 import '../bloc/address_state.dart';
 import 'widgets/add_address_location_card.dart';
 import 'widgets/save_as_type_selector.dart';
@@ -34,18 +36,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     super.initState();
     final edit = widget.args;
 
-    // Initialize form state in AddressBloc
-    context.read<AddressBloc>().add(InitFormEvent(edit));
-
     _houseController = TextEditingController(text: edit.apartment);
-
-    // Formatting the area gracefully
-    final areaText = [
-      edit.streetAddress,
-      edit.city,
-    ].where((e) => e != null && e.isNotEmpty).join(', ');
-
-    _areaController = TextEditingController(text: areaText);
+    _areaController = TextEditingController(text: _areaTextOf(edit));
     _landmarkController = TextEditingController(text: edit.landmark ?? '');
     _phoneController = TextEditingController(text: edit.contactPhone ?? '');
   }
@@ -59,6 +51,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     super.dispose();
   }
 
+  static String _areaTextOf(AddressEntity address) {
+    return [
+      address.streetAddress,
+      address.city,
+    ].where((e) => e != null && e.isNotEmpty).join(', ');
+  }
+
   Future<void> _changeLocation() async {
     final result = await context.push<Map<String, dynamic>>(
       RoutePaths.manualAddressMap,
@@ -66,34 +65,26 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     if (result == null || !mounted) return;
 
     final updatedLocation = AddressEntity.fromManualMap(result);
-    context.read<AddressBloc>().add(UpdateFormLocationEvent(updatedLocation));
+    context.read<AddressFormCubit>().setLocation(updatedLocation);
 
-    // Update the area controller when map location changes
-    final newAreaText = [
-      updatedLocation.streetAddress,
-      updatedLocation.city,
-    ].where((e) => e != null && e.isNotEmpty).join(', ');
+    final newAreaText = _areaTextOf(updatedLocation);
     if (newAreaText.isNotEmpty) {
       _areaController.text = newAreaText;
     }
   }
 
-  void _save(AddressState formState) {
+  void _save() {
     if (!_formKey.currentState!.validate()) return;
 
-    if (formState.formLocation == null) {
-      ToastMessageHelper.show('Location is missing');
-      return;
-    }
-
+    final form = context.read<AddressFormCubit>().state;
     final params = AddressParams(
-      type: formState.formType,
+      type: form.type,
       apartment: _houseController.text.trim(),
       streetAddress: _areaController.text.trim(),
       landmark: _landmarkController.text.trim(),
       contactPhone: _phoneController.text.trim(),
-      latitude: formState.formLocation!.latitude,
-      longitude: formState.formLocation!.longitude,
+      latitude: form.location.latitude,
+      longitude: form.location.longitude,
     );
 
     context.read<AddressBloc>().add(
@@ -123,86 +114,89 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
             break;
         }
       },
-      child: BlocBuilder<AddressBloc, AddressState>(
-        builder: (context, state) {
-          return SliverScaffold(
-            sideContentPadding: 16.w,
-            appBar: const CustomSliverAppBar(title: 'Add Address'),
-            bodyList: [
-              SizedBox(height: 8.h),
-              if (state.formLocation != null)
-                AddAddressLocationCard(
-                  address: state.formLocation!,
-                  onChangeTap: _changeLocation,
-                ),
-              SizedBox(height: 24.h),
-              SaveAsTypeSelector(
-                selected: state.formType,
-                onChanged: (type) =>
-                    context.read<AddressBloc>().add(UpdateFormTypeEvent(type)),
-              ),
-              SizedBox(height: 24.h),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      labelText: 'House / road / block',
-                      hintText: 'House 12, Road 8',
-                      controller: _houseController,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      onTap: _changeLocation,
-                      readOnly: true,
-                      labelText: 'Area',
-                      hintText: 'type you location',
-                      controller: _areaController,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      labelText: 'Landmark (helps the rider find you)',
-                      hintText: 'Near City Bank, Blue gate',
-                      controller: _landmarkController,
-                      validatorType: null,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      labelText: 'Phone Number',
-                      hintText: '01************',
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      validatorType: null,
-                      prefixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const CustomText(
-                            text: '+880',
-                            fontWeight: FontWeight.w500,
-                          ),
-                          Container(
-                            width: 1,
-                            height: 20.h,
-                            margin: EdgeInsets.only(left: 8.w),
-                            color: context.colors.textPlaceholder,
-                          ),
-                        ],
-                      ),
-                      prefixIconConstraints: BoxConstraints(minWidth: 60.w),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 24.h),
-            ],
-            bottomNavigationBar: CustomButton(
-              text: 'Save Address',
-              isLoading: state.isSaving,
-              onPressed: state.isSaving ? null : () => _save(state),
+      child: SliverScaffold(
+        sideContentPadding: 16.w,
+        appBar: const CustomSliverAppBar(title: 'Add Address'),
+        bodyList: [
+          SizedBox(height: 8.h),
+          BlocSelector<AddressFormCubit, AddressFormState, AddressEntity>(
+            selector: (state) => state.location,
+            builder: (context, location) => AddAddressLocationCard(
+              address: location,
+              onChangeTap: _changeLocation,
             ),
-          );
-        },
+          ),
+          SizedBox(height: 24.h),
+          BlocSelector<AddressFormCubit, AddressFormState, AddressType>(
+            selector: (state) => state.type,
+            builder: (context, type) => SaveAsTypeSelector(
+              selected: type,
+              onChanged: (value) =>
+                  context.read<AddressFormCubit>().setType(value),
+            ),
+          ),
+          SizedBox(height: 24.h),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomTextField(
+                  labelText: 'House / road / block',
+                  hintText: 'House 12, Road 8',
+                  controller: _houseController,
+                ),
+                SizedBox(height: 12.h),
+                CustomTextField(
+                  onTap: _changeLocation,
+                  readOnly: true,
+                  labelText: 'Area',
+                  hintText: 'type you location',
+                  controller: _areaController,
+                ),
+                SizedBox(height: 12.h),
+                CustomTextField(
+                  labelText: 'Landmark (helps the rider find you)',
+                  hintText: 'Near City Bank, Blue gate',
+                  controller: _landmarkController,
+                  validatorType: null,
+                ),
+                SizedBox(height: 12.h),
+                CustomTextField(
+                  labelText: 'Phone Number',
+                  hintText: '01************',
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  validatorType: null,
+                  prefixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CustomText(
+                        text: '+880',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 20.h,
+                        margin: EdgeInsets.only(left: 8.w),
+                        color: context.colors.textPlaceholder,
+                      ),
+                    ],
+                  ),
+                  prefixIconConstraints: BoxConstraints(minWidth: 60.w),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 24.h),
+        ],
+        bottomNavigationBar: BlocSelector<AddressBloc, AddressState, bool>(
+          selector: (state) => state.isSaving,
+          builder: (context, isSaving) => CustomButton(
+            text: 'Save Address',
+            isLoading: isSaving,
+            onPressed: isSaving ? null : _save,
+          ),
+        ),
       ),
     );
   }

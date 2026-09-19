@@ -9,11 +9,14 @@ import 'package:pointycastle/export.dart';
 class BiometricKeyService {
   static final ECDomainParameters _domain = ECCurve_secp256r1();
 
-  ({String publicKeySpkiBase64, String privateKeyPkcs8Base64}) generateKeyPair() {
+  ({String publicKeySpkiBase64, String privateKeyPkcs8Base64})
+  generateKeyPair() {
     final secureRandom = FortunaRandom()..seed(KeyParameter(_secureSeed(32)));
 
     final generator = ECKeyGenerator()
-      ..init(ParametersWithRandom(ECKeyGeneratorParameters(_domain), secureRandom));
+      ..init(
+        ParametersWithRandom(ECKeyGeneratorParameters(_domain), secureRandom),
+      );
 
     final pair = generator.generateKeyPair();
     final privateKey = pair.privateKey;
@@ -21,7 +24,9 @@ class BiometricKeyService {
 
     return (
       publicKeySpkiBase64: base64Encode(_encodeEcPublicKeySpki(publicKey)),
-      privateKeyPkcs8Base64: base64Encode(_encodeEcPrivateKeyPkcs8(privateKey, publicKey)),
+      privateKeyPkcs8Base64: base64Encode(
+        _encodeEcPrivateKeyPkcs8(privateKey, publicKey),
+      ),
     );
   }
 
@@ -29,12 +34,15 @@ class BiometricKeyService {
     required String privateKeyPkcs8Base64,
     required String challenge,
   }) {
-    final privateKey = _decodeEcPrivateKeyPkcs8(base64Decode(privateKeyPkcs8Base64));
+    final privateKey = _decodeEcPrivateKeyPkcs8(
+      base64Decode(privateKeyPkcs8Base64),
+    );
     final signer = ECDSASigner(SHA256Digest(), HMac(SHA256Digest(), 64))
       ..init(true, PrivateKeyParameter<ECPrivateKey>(privateKey));
 
-    final sig = signer.generateSignature(Uint8List.fromList(utf8.encode(challenge)))
-        as ECSignature;
+    final sig =
+        signer.generateSignature(Uint8List.fromList(utf8.encode(challenge)))
+            as ECSignature;
 
     return base64Encode(_encodeEcdsaSignatureDer(sig.r, sig.s));
   }
@@ -45,7 +53,9 @@ class BiometricKeyService {
 
   Uint8List _secureSeed(int length) {
     final random = Random.secure();
-    return Uint8List.fromList(List.generate(length, (_) => random.nextInt(256)));
+    return Uint8List.fromList(
+      List.generate(length, (_) => random.nextInt(256)),
+    );
   }
 
   Uint8List _encodeEcPublicKeySpki(ECPublicKey publicKey) {
@@ -62,7 +72,10 @@ class BiometricKeyService {
     return top.encodedBytes;
   }
 
-  Uint8List _encodeEcPrivateKeyPkcs8(ECPrivateKey privateKey, ECPublicKey publicKey) {
+  Uint8List _encodeEcPrivateKeyPkcs8(
+    ECPrivateKey privateKey,
+    ECPublicKey publicKey,
+  ) {
     final ecPrivateKeySeq = ASN1Sequence()
       ..add(ASN1Integer(BigInt.one))
       ..add(ASN1OctetString(_bigIntTo32Bytes(privateKey.d!)))
@@ -82,9 +95,9 @@ class BiometricKeyService {
 
   ECPrivateKey _decodeEcPrivateKeyPkcs8(Uint8List pkcs8) {
     final top = ASN1Parser(pkcs8).nextObject() as ASN1Sequence;
-    final ecPrivateKeyBytes = (top.elements![2] as ASN1OctetString).octets;
+    final ecPrivateKeyBytes = (top.elements[2] as ASN1OctetString).octets;
     final ecSeq = ASN1Parser(ecPrivateKeyBytes).nextObject() as ASN1Sequence;
-    final dBytes = (ecSeq.elements![1] as ASN1OctetString).octets;
+    final dBytes = (ecSeq.elements[1] as ASN1OctetString).octets;
     return ECPrivateKey(_bytesToBigInt(dBytes), _domain);
   }
 

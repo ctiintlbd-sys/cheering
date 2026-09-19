@@ -1,18 +1,15 @@
-import 'package:flutter/foundation.dart';
 import '../../features/address/domain/entities/address_entity.dart';
 
-class ActiveLocationService extends ChangeNotifier {
+/// Holds the address the rest of the app should deliver to.
+///
+/// `AddressBloc` is the source of truth and pushes into this; it exists so
+/// non-address features can read the selection without depending on the bloc.
+class ActiveLocationService {
   AddressEntity? _activeAddress;
 
   AddressEntity? get activeAddress => _activeAddress;
 
-  void setActiveAddress(AddressEntity address) {
-    _activeAddress = address;
-    notifyListeners();
-  }
+  void setActiveAddress(AddressEntity address) => _activeAddress = address;
 
-  void clear() {
-    _activeAddress = null;
-    notifyListeners();
-  }
+  void clear() => _activeAddress = null;
 }

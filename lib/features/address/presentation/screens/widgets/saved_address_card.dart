@@ -1,3 +1,4 @@
+import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
@@ -10,18 +11,15 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/entities/address_entity.dart';
 
 class SavedAddressCard extends StatelessWidget {
-  const SavedAddressCard({
-    super.key,
-    required this.address,
-    this.onSetDefault,
-  });
+  const SavedAddressCard({super.key, required this.address, this.onSetDefault});
 
   final AddressEntity address;
   final VoidCallback? onSetDefault;
 
-  bool get _isCurrentLocation => address.id == 'current_location';
+  bool get _isCurrentLocation => address.isCurrentLocation;
 
-  String get _displayTitle => _isCurrentLocation ? 'Current Location' : address.type.name.toUpperCase();
+  String get _displayTitle =>
+      _isCurrentLocation ? 'Current Location' : address.type.name.toUpperCase();
 
   @override
   Widget build(BuildContext context) {
@@ -146,17 +144,18 @@ class SavedAddressCard extends StatelessWidget {
 
     switch (action) {
       case AddressMenuAction.edit:
-        await context.push<bool>(
-          RoutePaths.addAddress,
-          extra: address,
-        );
+        await context.push<bool>(RoutePaths.addAddress, extra: address);
       case AddressMenuAction.setDefault:
         onSetDefault?.call();
         bloc.add(SetDefaultAddressRequested(address.id));
       case AddressMenuAction.delete:
-        if(!address.isDefault) {
-          bloc.add(DeleteAddressRequested(address.id));
+        if (address.isDefault) {
+          ToastMessageHelper.show(
+            'Set another address as default before deleting this one',
+          );
+          return;
         }
+        bloc.add(DeleteAddressRequested(address.id));
     }
   }
 }

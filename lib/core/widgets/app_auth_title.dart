@@ -27,6 +27,7 @@ class AppAuthTitle extends StatelessWidget {
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.center,
             color: context.colors.textPrimary,
+            maxLines: 1,
           ),
           CustomText(
             text: subtitle,

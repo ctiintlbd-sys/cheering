@@ -33,43 +33,43 @@ class ManualAddressMapSearchBar extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              CommonActionIcon(
-                icon: Assets.icons.arrowBack.path,
-                onTap: () => context.pop(),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: CustomTextField(
-                  maxLines: 1,
-                  validator: (_) => null,
-                  borderRadius: 99,
-                  controller: controller,
-                  focusNode: focusNode,
-                  hintText: 'Search your area ...',
-                  prefixIcon: Assets.icons.search.svg(),
-                  fillColor: context.colors.background,
-                  suffixIcon: IconButton(
-                    onPressed: onClear,
-                    icon: CustomText(
-                      text: 'Clear',
-                      color: context.colors.primary,
-                      fontWeight: FontWeight.w500,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                CommonActionIcon(
+                  icon: Assets.icons.arrowBack.path,
+                  onTap: () => context.pop(),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: CustomTextField(
+                    maxLines: 1,
+                    validator: (_) => null,
+                    borderRadius: 99,
+                    controller: controller,
+                    focusNode: focusNode,
+                    hintText: 'Search your area ...',
+                    prefixIcon: Assets.icons.search.svg(),
+                    fillColor: context.colors.background,
+                    suffixIcon: IconButton(
+                      onPressed: onClear,
+                      icon: CustomText(
+                        text: 'Clear',
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
+            ),
+            if (searchResults != null) ...[
+              SizedBox(height: 16.h),
+              searchResults!,
             ],
-          ),
-          if (searchResults != null) ...[
-            SizedBox(height: 16.h),
-            searchResults!,
           ],
-        ],
         ),
       ),
     );

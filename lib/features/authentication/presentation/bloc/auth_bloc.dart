@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
 import '../../../../core/services/active_location_service.dart';
+import '../../../../core/services/current_location_service.dart';
 import '../../../address/presentation/bloc/address_bloc.dart';
 import '../../../address/presentation/bloc/address_event.dart';
 import '../../../profile/presentation/bloc/profile_bloc.dart';
@@ -381,6 +382,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _clearDependenciesOnLogout() {
     try {
       getIt<ActiveLocationService>().clear();
+      CurrentLocationService.clearCache();
       getIt<AddressBloc>().add(const ClearAddressesEvent());
       getIt<ProfileBloc>().add(const ProfileSessionCleared());
     } catch (_) {}

@@ -1,5 +1,5 @@
 import '../entities/address_entity.dart';
-import '../usecases/address_params.dart';
+import '../entities/address_params.dart';
 
 abstract class IAddressRepository {
   Stream<List<AddressEntity>> getAddresses();

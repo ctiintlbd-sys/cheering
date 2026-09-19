@@ -11,6 +11,9 @@ import '../../features/address/domain/usecases/update_address_usecase.dart';
 import '../../features/address/presentation/bloc/address_bloc.dart';
 import '../cache/cache_service.dart';
 import '../network/i_api_client.dart';
+import '../services/active_location_service.dart';
+import '../services/current_location_service.dart';
+import '../services/map_location_service.dart';
 
 void setupAddressDependencies(GetIt getIt) {
   getIt.registerLazySingleton<AddressRemoteSource>(
@@ -47,6 +50,9 @@ void setupAddressDependencies(GetIt getIt) {
       updateAddressUseCase: getIt<UpdateAddressUseCase>(),
       deleteAddressUseCase: getIt<DeleteAddressUseCase>(),
       setDefaultAddressUseCase: getIt<SetDefaultAddressUseCase>(),
+      activeLocationService: getIt<ActiveLocationService>(),
+      currentLocationService: getIt<CurrentLocationService>(),
+      mapLocationService: getIt<MapLocationService>(),
     ),
   );
 }

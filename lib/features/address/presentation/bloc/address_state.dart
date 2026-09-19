@@ -1,12 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/address_entity.dart';
-import '../../domain/entities/map_location_entities.dart';
 
 enum AddressStatus { initial, loading, success, failure }
 
 enum AddressMutationStatus { initial, loading, success, failure }
 
+/// The saved-address list and the current-location row derived from GPS.
+///
+/// The map picker and the add/edit form keep their own state in
+/// `MapPickerCubit` / `AddressFormCubit`, so nothing here churns while the user
+/// pans a map or types in a form field.
 class AddressState extends Equatable {
   const AddressState({
     this.status = AddressStatus.initial,
@@ -16,62 +20,49 @@ class AddressState extends Equatable {
     this.currentLocationAddress,
     this.isFetchingLocation = true,
     this.activeDefaultId,
-
-    // Form State
-    this.formType = AddressType.home,
-    this.formLocation,
-
-    // Map State
-    this.isPinMoving = false,
-    this.mapAddress = MapLocationDefaults.locatingLabel,
-    this.mapArea = '',
-    this.mapSearchResults = const [],
-    this.isMapSearchLoading = false,
-    this.showMapSearchResults = false,
   });
 
   final AddressStatus status;
   final AddressMutationStatus mutationStatus;
   final List<AddressEntity> addresses;
   final String? errorMessage;
-  
+
   final AddressEntity? currentLocationAddress;
   final bool isFetchingLocation;
   final String? activeDefaultId;
 
-  // Form Fields
-  final AddressType formType;
-  final AddressEntity? formLocation;
-
-  // Map State
-  final bool isPinMoving;
-  final String mapAddress;
-  final String mapArea;
-  final List<MapSearchResult> mapSearchResults;
-  final bool isMapSearchLoading;
-  final bool showMapSearchResults;
-
   bool get isLoading => status == AddressStatus.loading && addresses.isEmpty;
+
   bool get isSaving => mutationStatus == AddressMutationStatus.loading;
 
+  /// The current-location row followed by the saved addresses, each carrying an
+  /// `isDefault` flag that reflects the locally selected id.
   List<AddressEntity> get displayAddresses {
-    final List<AddressEntity> list = [];
-    if (currentLocationAddress != null) {
-      list.add(currentLocationAddress!.copyWith(
-        isDefault: activeDefaultId == 'current_location',
-      ));
+    final list = <AddressEntity>[];
+
+    final current = currentLocationAddress;
+    if (current != null) {
+      list.add(_withDefaultFlag(current, AddressEntity.currentLocationId));
     }
-    for (final addr in addresses) {
-      list.add(addr.copyWith(
-        isDefault: activeDefaultId == addr.id,
-      ));
+    for (final address in addresses) {
+      list.add(_withDefaultFlag(address, address.id));
     }
+
     return list;
   }
 
   AddressEntity? get activeAddress {
-    final actives = displayAddresses.where((a) => a.isDefault);
-    return actives.isNotEmpty ? actives.first : null;
+    for (final address in displayAddresses) {
+      if (address.isDefault) return address;
+    }
+    return null;
+  }
+
+  AddressEntity _withDefaultFlag(AddressEntity address, String id) {
+    final isDefault = activeDefaultId == id;
+    return address.isDefault == isDefault
+        ? address
+        : address.copyWith(isDefault: isDefault);
   }
 
   AddressState copyWith({
@@ -83,56 +74,27 @@ class AddressState extends Equatable {
     AddressEntity? currentLocationAddress,
     bool? isFetchingLocation,
     String? activeDefaultId,
-
-    AddressType? formType,
-    AddressEntity? formLocation,
-
-    bool? isPinMoving,
-    String? mapAddress,
-    String? mapArea,
-    List<MapSearchResult>? mapSearchResults,
-    bool? isMapSearchLoading,
-    bool? showMapSearchResults,
   }) {
     return AddressState(
       status: status ?? this.status,
       mutationStatus: mutationStatus ?? this.mutationStatus,
       addresses: addresses ?? this.addresses,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      currentLocationAddress: currentLocationAddress ?? this.currentLocationAddress,
+      currentLocationAddress:
+          currentLocationAddress ?? this.currentLocationAddress,
       isFetchingLocation: isFetchingLocation ?? this.isFetchingLocation,
       activeDefaultId: activeDefaultId ?? this.activeDefaultId,
-
-      formType: formType ?? this.formType,
-      formLocation: formLocation ?? this.formLocation,
-
-      isPinMoving: isPinMoving ?? this.isPinMoving,
-      mapAddress: mapAddress ?? this.mapAddress,
-      mapArea: mapArea ?? this.mapArea,
-      mapSearchResults: mapSearchResults ?? this.mapSearchResults,
-      isMapSearchLoading: isMapSearchLoading ?? this.isMapSearchLoading,
-      showMapSearchResults: showMapSearchResults ?? this.showMapSearchResults,
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        mutationStatus,
-        addresses,
-        errorMessage,
-        currentLocationAddress,
-        isFetchingLocation,
-        activeDefaultId,
-
-        formType,
-        formLocation,
-
-        isPinMoving,
-        mapAddress,
-        mapArea,
-        mapSearchResults,
-        isMapSearchLoading,
-        showMapSearchResults,
-      ];
+    status,
+    mutationStatus,
+    addresses,
+    errorMessage,
+    currentLocationAddress,
+    isFetchingLocation,
+    activeDefaultId,
+  ];
 }

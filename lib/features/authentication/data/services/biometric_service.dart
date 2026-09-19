@@ -6,14 +6,12 @@ import '../../../../core/storage/biometric_storage.dart';
 import '../../domain/entities/biometric_ui_kind.dart';
 
 class BiometricService {
+  BiometricService({LocalAuthentication? auth})
+    : _auth = auth ?? LocalAuthentication();
+
   final LocalAuthentication _auth;
 
   BiometricUiKind _uiKind = BiometricUiKind.combined;
-
-  BiometricService({LocalAuthentication? auth})
-      : _auth = auth ?? LocalAuthentication();
-
-  BiometricUiKind get uiKind => _uiKind;
 
   BiometricUiKind get biometricUiKind => _uiKind;
 
@@ -21,7 +19,7 @@ class BiometricService {
 
   bool get canUseBiometricLogin => isBiometricEnabled && isDeviceEnrolled;
 
-  /// Call once at app startup so UI can read [uiKind] synchronously.
+  /// Call once at app startup so UI can read [biometricUiKind] synchronously.
   Future<void> loadUiKind() async {
     _uiKind = resolveUiKind(await getAvailableBiometrics());
   }
@@ -29,14 +27,13 @@ class BiometricService {
   static BiometricUiKind resolveUiKind(List<BiometricType> types) {
     if (types.isEmpty) return BiometricUiKind.combined;
 
-    final hasFace = types.contains(BiometricType.face);
-    final hasFingerprint = types.contains(BiometricType.fingerprint);
+    // Android normally reports `strong`/`weak` instead of the concrete sensor,
+    // so only a face-only device gets the Face ID wording.
+    final isFaceOnly =
+        types.contains(BiometricType.face) &&
+        !types.contains(BiometricType.fingerprint);
 
-    if (hasFace && !hasFingerprint) return BiometricUiKind.face;
-    if (hasFingerprint && !hasFace) return BiometricUiKind.touch;
-    if (hasFace && hasFingerprint) return BiometricUiKind.touch;
-
-    return hasFace ? BiometricUiKind.face : BiometricUiKind.touch;
+    return isFaceOnly ? BiometricUiKind.face : BiometricUiKind.touch;
   }
 
   /// Check if hardware supports biometrics
@@ -59,9 +56,11 @@ class BiometricService {
 
   /// Check if biometrics is available and enrolled
   Future<bool> isBiometricsAvailable() async {
-    final supported = await isDeviceSupported();
-    final canCheck = await canCheckBiometrics();
-    return supported && canCheck;
+    final checks = await Future.wait([
+      isDeviceSupported(),
+      canCheckBiometrics(),
+    ]);
+    return checks.every((passed) => passed);
   }
 
   /// Get available biometric types (e.g. fingerprint, face)
@@ -79,8 +78,7 @@ class BiometricService {
         'Please authenticate to log in to your Cheering account',
   }) async {
     try {
-      final available = await isBiometricsAvailable();
-      if (!available) return false;
+      if (!await isBiometricsAvailable()) return false;
 
       return await _auth.authenticate(
         localizedReason: localizedReason,

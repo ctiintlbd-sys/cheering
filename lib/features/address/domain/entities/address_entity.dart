@@ -1,19 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 enum AddressType { home, work, other, unknown }
 
-class AddressEntity {
-  final String id;
-  final AddressType type;
-  final String? label;
-  final String? streetAddress;
-  final String? apartment;
-  final String? landmark;
-  final String? city;
-  final String? postalCode;
-  final String? contactPhone;
-  final double latitude;
-  final double longitude;
-  final bool isDefault;
-
+class AddressEntity extends Equatable {
   const AddressEntity({
     required this.id,
     required this.type,
@@ -28,6 +17,24 @@ class AddressEntity {
     required this.longitude,
     required this.isDefault,
   });
+
+  /// Id of the GPS-derived row, which only ever exists on the device.
+  static const String currentLocationId = 'current_location';
+
+  final String id;
+  final AddressType type;
+  final String? label;
+  final String? streetAddress;
+  final String? apartment;
+  final String? landmark;
+  final String? city;
+  final String? postalCode;
+  final String? contactPhone;
+  final double latitude;
+  final double longitude;
+  final bool isDefault;
+
+  bool get isCurrentLocation => id == currentLocationId;
 
   AddressEntity copyWith({
     String? id,
@@ -61,7 +68,7 @@ class AddressEntity {
 
   factory AddressEntity.fromManualMap(
     Map<String, dynamic> map, {
-    String id = 'current_location',
+    String id = currentLocationId,
     AddressType type = AddressType.other,
     bool isDefault = true,
   }) {
@@ -76,6 +83,22 @@ class AddressEntity {
       isDefault: isDefault,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    type,
+    label,
+    streetAddress,
+    apartment,
+    landmark,
+    city,
+    postalCode,
+    contactPhone,
+    latitude,
+    longitude,
+    isDefault,
+  ];
 }
 
 extension AddressFormatting on AddressEntity {

@@ -1,8 +1,7 @@
-import '../../domain/entities/map_location_entities.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/usecases/address_params.dart';
 import '../../domain/entities/address_entity.dart';
+import '../../domain/entities/address_params.dart';
 
 abstract class AddressEvent extends Equatable {
   const AddressEvent();
@@ -15,7 +14,9 @@ class LoadAddressesRequested extends AddressEvent {
   const LoadAddressesRequested();
 }
 
-class RefreshAddressesRequested extends AddressEvent {
+/// A refresh is a reload, so it shares `LoadAddressesRequested`'s handler and
+/// its restartable transformer instead of racing against it.
+class RefreshAddressesRequested extends LoadAddressesRequested {
   const RefreshAddressesRequested();
 }
 
@@ -38,10 +39,7 @@ class SetDefaultAddressRequested extends AddressEvent {
 }
 
 class SaveAddressRequested extends AddressEvent {
-  const SaveAddressRequested({
-    required this.params,
-    this.addressId,
-  });
+  const SaveAddressRequested({required this.params, this.addressId});
 
   final AddressParams params;
   final String? addressId;
@@ -60,6 +58,7 @@ class InitializeAddressScreenData extends AddressEvent {
 
 class UpdateLocalCurrentLocation extends AddressEvent {
   const UpdateLocalCurrentLocation(this.address);
+
   final AddressEntity address;
 
   @override
@@ -68,79 +67,11 @@ class UpdateLocalCurrentLocation extends AddressEvent {
 
 class UpdateActiveDefaultId extends AddressEvent {
   const UpdateActiveDefaultId(this.id);
+
   final String id;
 
   @override
   List<Object?> get props => [id];
-}
-
-// ─── Form Events ──────────────────────────────────────────────
-
-class InitFormEvent extends AddressEvent {
-  const InitFormEvent(this.address);
-  final AddressEntity address;
-  @override
-  List<Object?> get props => [address];
-}
-
-class UpdateFormTypeEvent extends AddressEvent {
-  const UpdateFormTypeEvent(this.type);
-  final AddressType type;
-  @override
-  List<Object?> get props => [type];
-}
-
-
-
-class UpdateFormLocationEvent extends AddressEvent {
-  const UpdateFormLocationEvent(this.location);
-  final AddressEntity location;
-  @override
-  List<Object?> get props => [location];
-}
-
-// ─── Map Events ───────────────────────────────────────────────
-
-class UpdateMapPinEvent extends AddressEvent {
-  const UpdateMapPinEvent(this.isMoving);
-  final bool isMoving;
-  @override
-  List<Object?> get props => [isMoving];
-}
-
-class UpdateMapAddressEvent extends AddressEvent {
-  const UpdateMapAddressEvent(this.address, this.area);
-  final String address;
-  final String area;
-  @override
-  List<Object?> get props => [address, area];
-}
-
-class SetMapUnknownAddressEvent extends AddressEvent {
-  const SetMapUnknownAddressEvent();
-}
-
-class ShowMapSearchLoadingEvent extends AddressEvent {
-  const ShowMapSearchLoadingEvent();
-}
-
-class UpdateMapSearchResultsEvent extends AddressEvent {
-  const UpdateMapSearchResultsEvent(this.results, this.show);
-  final List<MapSearchResult> results;
-  final bool show;
-  @override
-  List<Object?> get props => [results, show];
-}
-
-class ClearMapSearchResultsEvent extends AddressEvent {
-  const ClearMapSearchResultsEvent();
-}
-
-class ShowMapSearchResultsEvent extends AddressEvent {
-  const ShowMapSearchResultsEvent(this.show);
-  final bool show;
-  @override
-  List<Object?> get props => [show];
 }
 
 class ClearAddressesEvent extends AddressEvent {

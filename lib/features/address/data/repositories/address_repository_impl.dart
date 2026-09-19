@@ -3,7 +3,7 @@ import '../../../../core/config/chache_keys.dart';
 import '../../../../core/network/api_result.dart';
 import '../../domain/entities/address_entity.dart';
 import '../../domain/repositories/i_address_repository.dart';
-import '../../domain/usecases/address_params.dart';
+import '../../domain/entities/address_params.dart';
 import '../datasources/address_remote_source.dart';
 import '../models/address_model.dart';
 import '../models/address_request_model.dart';
@@ -18,13 +18,8 @@ class AddressRepositoryImpl implements IAddressRepository {
   Stream<List<AddressEntity>> getAddresses() {
     return _cache.getOrFetch<List<AddressModel>>(
       CacheKeys.addresses,
-      fromJson: (json) {
-        final data = json['data'] as List;
-        return data.map((e) => AddressModel.fromJson(e as Map<String, dynamic>)).toList();
-      },
-      toJson: (list) => {
-        'data': list.map((e) => e.toJson()).toList(),
-      },
+      fromJson: AddressModel.listFromJson,
+      toJson: (list) => {'data': list.map((e) => e.toJson()).toList()},
       fetch: () => _source.getAddresses(),
       ttl: const Duration(hours: 24),
     );

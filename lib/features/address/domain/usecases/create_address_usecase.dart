@@ -1,6 +1,6 @@
 import '../entities/address_entity.dart';
 import '../repositories/i_address_repository.dart';
-import 'address_params.dart';
+import '../entities/address_params.dart';
 
 class CreateAddressUseCase {
   final IAddressRepository repository;

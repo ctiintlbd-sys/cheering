@@ -92,7 +92,10 @@ class DioApiClient implements IApiClient {
       );
     } on DioException catch (e) {
       return Failure(_handleDioError(e));
-    } catch (e) {
+    } catch (e, st) {
+      // A throw here means the request succeeded but parsing failed, which is
+      // otherwise indistinguishable from an empty response.
+      debugPrint('❌ [API PARSE ERROR] $e\n$st');
       return Failure(UnknownException(e.toString()));
     }
   }

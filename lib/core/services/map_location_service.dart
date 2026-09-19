@@ -5,22 +5,30 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:dio/dio.dart';
-import '../config/app_config.dart';
-
 import '../../features/address/domain/entities/map_location_entities.dart';
 import '../utils/placemark_extension.dart';
+import 'places_api_client.dart';
 
+/// Turns map coordinates into addresses and search queries into places.
+///
+/// Holds per-picker mutable state (debounce timers, last resolved position), so
+/// every map picker needs its own instance and must [dispose] of it.
 class MapLocationService {
-  MapLocationService({Geocoding? geocoding})
-      : _geocoding = geocoding ?? Geocoding();
+  MapLocationService({Geocoding? geocoding, PlacesApiClient? placesClient})
+    : _geocodingInstance = geocoding,
+      _placesInstance = placesClient;
 
-  final Geocoding _geocoding;
+  /// Below this distance a camera idle is treated as the same spot, so we skip
+  /// the lookup instead of spending a geocode on it.
+  static const double _minGeocodeDistanceMeters = 25;
 
-  static const int _maxSearchResults = 5;
+  // Built on first use so a picker that never geocodes or searches pays for
+  // neither, and so subclasses can stand in without touching the plugins.
+  Geocoding? _geocodingInstance;
+  PlacesApiClient? _placesInstance;
 
-  // Session-scoped search cache
-  static final Map<String, List<MapSearchResult>> _searchCache = {};
+  Geocoding get _geocoding => _geocodingInstance ??= Geocoding();
+  PlacesApiClient get _places => _placesInstance ??= PlacesApiClient();
 
   Timer? _searchDebounce;
   Timer? _reverseGeocodeDebounce;
@@ -31,8 +39,6 @@ class MapLocationService {
   LatLng? _lastGeocodedPosition;
   bool _isGeocoding = false;
 
-  bool get isGeocoding => _isGeocoding;
-
   // ─── Lifecycle ───────────────────────────────────────────────
 
   void cancelPendingWork() {
@@ -40,6 +46,12 @@ class MapLocationService {
     _reverseGeocodeDebounce?.cancel();
     _searchRequestId++;
     _geocodeRequestId++;
+  }
+
+  void dispose() {
+    cancelPendingWork();
+    // Only if a search actually created one; don't build a client to close it.
+    _placesInstance?.close();
   }
 
   // ─── Forward geocode (search) ────────────────────────────────
@@ -61,98 +73,21 @@ class MapLocationService {
 
   void cancelSearchDebounce() => _searchDebounce?.cancel();
 
-  final Dio _dio = Dio();
-  // Using a simple session token implementation, we can just use a UUID or timestamp based string for the session.
-  String? _sessionToken;
-
   Future<List<MapSearchResult>> searchAddresses(
     String query, {
     int? requestId,
   }) async {
-    final key = query.toLowerCase().trim();
-
-    if (_searchCache.containsKey(key)) {
-      if (requestId != null && requestId != _searchRequestId) return [];
-      return _searchCache[key]!;
-    }
-
     final id = requestId ?? ++_searchRequestId;
-
-    try {
-      _sessionToken ??= DateTime.now().millisecondsSinceEpoch.toString();
-
-      final response = await _dio.get(
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json',
-        queryParameters: {
-          'input': query,
-          'key': AppConfig.instance.googleMapsKey,
-          'sessiontoken': _sessionToken,
-          'components': 'country:bd', // Restricted to Bangladesh for better local results
-        },
-      );
-
-      if (id != _searchRequestId) return [];
-
-      final data = response.data;
-      if (data['status'] != 'OK' && data['status'] != 'ZERO_RESULTS') {
-        debugPrint('[MapLocationService] search error: ${data['status']}');
-        return [];
-      }
-
-      final predictions = data['predictions'] as List? ?? [];
-      final results = <MapSearchResult>[];
-
-      for (final p in predictions.take(_maxSearchResults)) {
-        final structuredFormatting = p['structured_formatting'];
-        final mainText = structuredFormatting?['main_text'] as String? ?? '';
-        final secondaryText = structuredFormatting?['secondary_text'] as String? ?? '';
-        final placeId = p['place_id'] as String?;
-
-        if (placeId == null) continue;
-
-        results.add(MapSearchResult(
-          query: query,
-          formattedAddress: mainText,
-          area: secondaryText,
-          placeId: placeId,
-        ));
-      }
-
-      if (id == _searchRequestId && results.isNotEmpty) {
-        _searchCache[key] = results;
-      }
-
-      return id == _searchRequestId ? results : [];
-    } catch (e) {
-      debugPrint('[MapLocationService] searchAddresses error: $e');
-      return [];
-    }
+    final results = await _places.autocomplete(query);
+    return id == _searchRequestId ? results : const [];
   }
 
-  Future<LatLng?> getPlaceDetails(String placeId) async {
-    try {
-      final response = await _dio.get(
-        'https://maps.googleapis.com/maps/api/place/details/json',
-        queryParameters: {
-          'place_id': placeId,
-          'key': AppConfig.instance.googleMapsKey,
-          'fields': 'geometry',
-          'sessiontoken': _sessionToken,
-        },
-      );
-
-      // Reset session token after a successful detail call
-      _sessionToken = null;
-
-      final data = response.data;
-      if (data['status'] == 'OK') {
-        final location = data['result']['geometry']['location'];
-        return LatLng(location['lat'], location['lng']);
-      }
-    } catch (e) {
-      debugPrint('[MapLocationService] getPlaceDetails error: $e');
-    }
-    return null;
+  /// Resolves the coordinates of a search result, fetching place details only
+  /// when the result didn't already carry a position.
+  Future<LatLng?> resolveSearchResultPosition(MapSearchResult result) async {
+    if (result.position != null) return result.position;
+    if (result.placeId == null) return null;
+    return _places.placeLocation(result.placeId!);
   }
 
   // ─── Reverse geocode ─────────────────────────────────────────
@@ -165,27 +100,28 @@ class MapLocationService {
   }) {
     _reverseGeocodeDebounce?.cancel();
     _reverseGeocodeDebounce = Timer(debounce, () async {
-      final snapshot = await reverseGeocode(position);
-      if (snapshot != null) {
-        onResolved(snapshot);
-      } else {
-        onUnknown();
+      switch (await reverseGeocode(position)) {
+        case ReverseGeocodeResolved(:final snapshot):
+          onResolved(snapshot);
+        case ReverseGeocodeFailed():
+          onUnknown();
+        case ReverseGeocodeSkipped():
+          break;
       }
     });
   }
 
   void cancelReverseGeocodeDebounce() => _reverseGeocodeDebounce?.cancel();
 
-  /// Resolves [position] to a [MapAddressSnapshot].
+  /// Resolves [position] to an address.
   ///
-  /// Returns null if:
-  /// - a geocode is already in progress, or
-  /// - the position hasn't moved more than 25 m (unless [ignoreDistanceCheck]).
-  Future<MapAddressSnapshot?> reverseGeocode(
-      LatLng position, {
-        bool ignoreDistanceCheck = false,
-      }) async {
-    if (_isGeocoding) return null;
+  /// Skips the lookup when one is already running or the pin moved less than
+  /// [_minGeocodeDistanceMeters] (unless [ignoreDistanceCheck]).
+  Future<ReverseGeocodeOutcome> reverseGeocode(
+    LatLng position, {
+    bool ignoreDistanceCheck = false,
+  }) async {
+    if (_isGeocoding) return const ReverseGeocodeSkipped();
 
     if (!ignoreDistanceCheck && _lastGeocodedPosition != null) {
       final distance = Geolocator.distanceBetween(
@@ -194,7 +130,9 @@ class MapLocationService {
         position.latitude,
         position.longitude,
       );
-      if (distance < 25) return null;
+      if (distance < _minGeocodeDistanceMeters) {
+        return const ReverseGeocodeSkipped();
+      }
     }
 
     _isGeocoding = true;
@@ -207,67 +145,31 @@ class MapLocationService {
         position.longitude,
       );
 
-      if (id != _geocodeRequestId || placemarks.isEmpty) return null;
+      if (id != _geocodeRequestId) return const ReverseGeocodeSkipped();
+      if (placemarks.isEmpty) {
+        debugPrint('[MapLocationService] no placemark for $position');
+        return const ReverseGeocodeFailed();
+      }
 
       final place = placemarks.first;
-      return MapAddressSnapshot(
-        address: place.formattedAddress,
-        area: place.formattedArea,
-        position: position,
+      return ReverseGeocodeResolved(
+        MapAddressSnapshot(
+          address: place.formattedAddress,
+          area: place.formattedArea,
+          position: position,
+        ),
       );
     } catch (e) {
       debugPrint('[MapLocationService] reverseGeocode error: $e');
-      return null;
+      return const ReverseGeocodeFailed();
     } finally {
       _isGeocoding = false;
     }
   }
 
-  // ─── Camera ──────────────────────────────────────────────────
-
-  Future<void> moveCamera({
-    required GoogleMapController? controller,
-    required LatLng target,
-    double zoom = MapLocationDefaults.pickerZoom,
-  }) {
-    return controller?.animateCamera(
-      CameraUpdate.newLatLngZoom(target, zoom),
-    ) ??
-        Future.value();
-  }
-
-  Future<void> applySearchResult({
-    required MapSearchResult result,
-    required GoogleMapController? mapController,
-    required void Function(MapAddressSnapshot snapshot) onApplied,
-    double zoom = MapLocationDefaults.pickerZoom,
-  }) async {
-    LatLng? targetPosition = result.position;
-
-    if (targetPosition == null && result.placeId != null) {
-      final details = await getPlaceDetails(result.placeId!);
-      if (details != null) {
-        targetPosition = details;
-      }
-    }
-
-    if (targetPosition == null) {
-      // If we still don't have a location, we can't apply it.
-      return; 
-    }
-
-    _lastGeocodedPosition = targetPosition;
-    await moveCamera(
-      controller: mapController,
-      target: targetPosition,
-      zoom: zoom,
-    );
-    onApplied(
-      MapAddressSnapshot(
-        address: result.formattedAddress,
-        area: result.area,
-        position: targetPosition,
-      ),
-    );
+  /// Records [position] as already resolved so the next camera idle nearby
+  /// doesn't spend a geocode re-resolving it.
+  void markPositionResolved(LatLng position) {
+    _lastGeocodedPosition = position;
   }
 }

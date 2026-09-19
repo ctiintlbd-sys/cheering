@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenStorage {
@@ -10,8 +11,16 @@ class TokenStorage {
   static String? _cachedRefreshToken;
 
   static Future<void> init() async {
-    _cachedAccessToken = await _storage.read(key: _keyAccess);
-    _cachedRefreshToken = await _storage.read(key: _keyRefresh);
+    // On Android the Keystore-backed read can throw (e.g. BAD_DECRYPT after a
+    // restore or an OEM keystore reset). Never let that take down main().
+    try {
+      _cachedAccessToken = await _storage.read(key: _keyAccess);
+      _cachedRefreshToken = await _storage.read(key: _keyRefresh);
+    } catch (e) {
+      debugPrint('[TokenStorage] read failed, treating session as empty: $e');
+      _cachedAccessToken = null;
+      _cachedRefreshToken = null;
+    }
   }
 
   static Future<void> saveTokens({

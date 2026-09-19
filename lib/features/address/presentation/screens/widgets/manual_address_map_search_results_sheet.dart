@@ -64,10 +64,8 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemCount: results.length,
-                separatorBuilder: (_, _) => Divider(
-                  height: 1,
-                  color: context.colors.bgSecondary,
-                ),
+                separatorBuilder: (_, _) =>
+                    Divider(height: 1, color: context.colors.bgSecondary),
                 itemBuilder: (context, index) {
                   final result = results[index];
                   return Material(

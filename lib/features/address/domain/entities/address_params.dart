@@ -1,4 +1,4 @@
-import '../entities/address_entity.dart';
+import 'address_entity.dart';
 
 class AddressParams {
   final AddressType type;
