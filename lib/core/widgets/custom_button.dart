@@ -85,7 +85,7 @@ class CustomButton extends StatelessWidget {
 
   double get _effectiveRadius => (radius ?? borderRadius ?? 48).r;
 
-  Color? get _effectiveBorderColor =>   bordersColor;
+  Color? get _effectiveBorderColor => bordersColor;
 
   Color _resolveFgColor(BuildContext context, bool isTransparentBg) {
     if (textColor != null) return textColor!;
@@ -115,10 +115,7 @@ class CustomButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(effectiveRadiusValue),
           side: effectiveBorder != null
-              ? BorderSide(
-                  color: effectiveBorder,
-                  width: borderWidth ?? 1.0,
-                )
+              ? BorderSide(color: effectiveBorder, width: borderWidth ?? 1.0)
               : BorderSide.none,
         ),
         clipBehavior: Clip.antiAlias,
@@ -135,7 +132,8 @@ class CustomButton extends StatelessWidget {
             width: width ?? double.infinity,
             padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w),
             alignment: Alignment.center,
-            child: child ??
+            child:
+                child ??
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   switchInCurve: Curves.easeIn,

@@ -209,7 +209,8 @@ class FieldValidator {
 
       case ValidatorType.confirmPassword:
         return (value) {
-          if (value == null || value.isEmpty) return 'Please confirm your password';
+          if (value == null || value.isEmpty)
+            return 'Please confirm your password';
           final target = matchController?.text ?? matchValue;
           if (value != target) return 'Passwords do not match';
           return null;
@@ -276,8 +277,10 @@ class FieldValidator {
       of(ValidatorType.email, isRequired: isRequired);
 
   /// `phone` validator.
-  static String? Function(String?) phone({String? label, bool isRequired = true}) =>
-      of(ValidatorType.phone, label: label, isRequired: isRequired);
+  static String? Function(String?) phone({
+    String? label,
+    bool isRequired = true,
+  }) => of(ValidatorType.phone, label: label, isRequired: isRequired);
 
   /// `password` strength validator.
   static String? Function(String?) get password => of(ValidatorType.password);
@@ -285,8 +288,7 @@ class FieldValidator {
   /// `confirmPassword` validator with live controller matching.
   static String? Function(String?) confirmPassword({
     required TextEditingController controller,
-  }) =>
-      of(ValidatorType.confirmPassword, matchController: controller);
+  }) => of(ValidatorType.confirmPassword, matchController: controller);
 
   /// `minLength` validator.
   static String? Function(String?) minLength(int min, {String? label}) =>
@@ -297,10 +299,14 @@ class FieldValidator {
       of(ValidatorType.maxLength, maxLength: max, label: label);
 
   /// `numeric` validator.
-  static String? Function(String?) numeric({String? label, bool isRequired = true}) =>
-      of(ValidatorType.numeric, label: label, isRequired: isRequired);
+  static String? Function(String?) numeric({
+    String? label,
+    bool isRequired = true,
+  }) => of(ValidatorType.numeric, label: label, isRequired: isRequired);
 
   /// `url` validator.
-  static String? Function(String?) url({String? label, bool isRequired = true}) =>
-      of(ValidatorType.url, label: label, isRequired: isRequired);
+  static String? Function(String?) url({
+    String? label,
+    bool isRequired = true,
+  }) => of(ValidatorType.url, label: label, isRequired: isRequired);
 }

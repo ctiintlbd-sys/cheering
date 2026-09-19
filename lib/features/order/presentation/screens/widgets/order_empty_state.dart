@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderEmptyState extends StatelessWidget {
   final String? message;
-  
+
   const OrderEmptyState({super.key, this.message});
 
   @override

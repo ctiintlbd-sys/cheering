@@ -38,13 +38,13 @@ class _AboutScreenState extends State<AboutScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     context.read<AuthBloc>().add(
-          VerifyOtpRequested(
-            email: widget.email,
-            code: widget.otp,
-            password: widget.password,
-            fullName: _nameController.text.trim(),
-          ),
-        );
+      VerifyOtpRequested(
+        email: widget.email,
+        code: widget.otp,
+        password: widget.password,
+        fullName: _nameController.text.trim(),
+      ),
+    );
   }
 
   @override

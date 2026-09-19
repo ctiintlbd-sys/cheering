@@ -3,11 +3,7 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppAuthTitle extends StatelessWidget {
-  const AppAuthTitle({
-    super.key,
-    required this.subtitle,
-    required this.title,
-  });
+  const AppAuthTitle({super.key, required this.subtitle, required this.title});
 
   final String title;
   final String subtitle;

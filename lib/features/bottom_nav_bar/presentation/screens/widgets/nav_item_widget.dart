@@ -34,13 +34,17 @@ class _BottomNavItemState extends State<BottomNavItem>
 
     _scale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.85)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.85,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 40,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.85, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOutBack)),
+        tween: Tween(
+          begin: 0.85,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 60,
       ),
     ]).animate(_animController);
@@ -85,11 +89,7 @@ class _BottomNavItemState extends State<BottomNavItem>
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOut,
                 builder: (context, color, _) {
-                  return SvgPicture.asset(
-                    iconPath,
-                    width: 24.w,
-                    height: 24.h,
-                  );
+                  return SvgPicture.asset(iconPath, width: 24.w, height: 24.h);
                 },
               ),
 
@@ -99,7 +99,10 @@ class _BottomNavItemState extends State<BottomNavItem>
                   top: -4.h,
                   right: -8.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 1.h,
+                    ),
                     decoration: BoxDecoration(
                       color: context.colors.primary,
                       borderRadius: BorderRadius.circular(10.r),
@@ -153,8 +156,7 @@ class _BottomNavItemState extends State<BottomNavItem>
             style: TextStyle(
               fontFamily: FontFamily.sFPro,
               fontSize: 11.sp,
-              fontWeight:
-              widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
               color: itemColor,
             ),
             child: Text(widget.navItem.label),

@@ -35,29 +35,22 @@ class HiveCacheService implements CacheService {
     if (box == null || !box.isOpen) {
       throw StateError(
         'HiveCacheService is not initialized. '
-            'Call HiveCacheService.init() first.',
+        'Call HiveCacheService.init() first.',
       );
     }
 
     return box;
   }
 
-  Uint8List _encode<T>(
-      T data,
-      Map<String, dynamic> Function(T data) toJson,
-      ) {
+  Uint8List _encode<T>(T data, Map<String, dynamic> Function(T data) toJson) {
     final json = jsonEncode(toJson(data));
 
-    return Uint8List.fromList(
-      utf8.encode(json),
-    );
+    return Uint8List.fromList(utf8.encode(json));
   }
 
   Map<String, dynamic>? _decode(Uint8List bytes) {
     try {
-      final decoded = jsonDecode(
-        utf8.decode(bytes),
-      );
+      final decoded = jsonDecode(utf8.decode(bytes));
 
       if (decoded is! Map) {
         return null;
@@ -71,11 +64,11 @@ class HiveCacheService implements CacheService {
 
   @override
   Future<void> set<T>(
-      String key,
-      T data, {
-        required Map<String, dynamic> Function(T data) toJson,
-        Duration ttl = const Duration(minutes: 30),
-      }) async {
+    String key,
+    T data, {
+    required Map<String, dynamic> Function(T data) toJson,
+    Duration ttl = const Duration(minutes: 30),
+  }) async {
     if (ttl <= Duration.zero) {
       await remove(key);
       return;
@@ -91,9 +84,9 @@ class HiveCacheService implements CacheService {
 
   @override
   T? get<T>(
-      String key, {
-        required T Function(Map<String, dynamic> json) fromJson,
-      }) {
+    String key, {
+    required T Function(Map<String, dynamic> json) fromJson,
+  }) {
     final entry = _box.get(key);
 
     if (entry == null) {
@@ -122,17 +115,14 @@ class HiveCacheService implements CacheService {
 
   @override
   Stream<T> getOrFetch<T>(
-      String key, {
-        required T Function(Map<String, dynamic> json) fromJson,
-        required Map<String, dynamic> Function(T data) toJson,
-        required Future<ApiResult<T>> Function() fetch,
-        Duration ttl = const Duration(minutes: 30),
-        bool skipFetchIfCached = false,
-      }) async* {
-    final cached = get<T>(
-      key,
-      fromJson: fromJson,
-    );
+    String key, {
+    required T Function(Map<String, dynamic> json) fromJson,
+    required Map<String, dynamic> Function(T data) toJson,
+    required Future<ApiResult<T>> Function() fetch,
+    Duration ttl = const Duration(minutes: 30),
+    bool skipFetchIfCached = false,
+  }) async* {
+    final cached = get<T>(key, fromJson: fromJson);
 
     // Emit cached data immediately.
     if (cached != null) {
@@ -145,17 +135,12 @@ class HiveCacheService implements CacheService {
 
     switch (result) {
       case Success<T>(data: final freshData):
-        await set<T>(
-          key,
-          freshData,
-          toJson: toJson,
-          ttl: ttl,
-        );
+        await set<T>(key, freshData, toJson: toJson, ttl: ttl);
 
         yield freshData;
 
       case Failure<T>():
-      // If cache exists, keep using it.
+        // If cache exists, keep using it.
         if (cached != null) {
           return;
         }
@@ -176,8 +161,6 @@ class HiveCacheService implements CacheService {
   }
 
   void _remove(String key) {
-    Future.microtask(
-          () => _box.delete(key),
-    );
+    Future.microtask(() => _box.delete(key));
   }
 }

@@ -7,7 +7,8 @@ sealed class ApiResult<T> {
   bool get isFailure => this is Failure<T>;
 
   T? get dataOrNull => this is Success<T> ? (this as Success<T>).data : null;
-  AppException? get errorOrNull => this is Failure<T> ? (this as Failure<T>).exception : null;
+  AppException? get errorOrNull =>
+      this is Failure<T> ? (this as Failure<T>).exception : null;
 }
 
 final class Success<T> extends ApiResult<T> {
@@ -49,8 +50,11 @@ extension ApiResultX<T> on ApiResult<T> {
 
   ApiResult<R> map<R>(R Function(T data) transform) {
     return switch (this) {
-      Success<T>(:final data, :final statusCode, :final message) =>
-          Success(transform(data), statusCode: statusCode, message: message),
+      Success<T>(:final data, :final statusCode, :final message) => Success(
+        transform(data),
+        statusCode: statusCode,
+        message: message,
+      ),
       Failure<T>(:final exception) => Failure(exception),
     };
   }

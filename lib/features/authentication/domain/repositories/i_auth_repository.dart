@@ -2,10 +2,7 @@ import '../entities/login_result_entity.dart';
 import '../entities/reset_password_result_entity.dart';
 
 abstract class IAuthRepository {
-  Future<String> sendOtp({
-    required String email,
-    String role = 'CUSTOMER',
-  });
+  Future<String> sendOtp({required String email, String role = 'CUSTOMER'});
 
   Future<LoginResultEntity> verifyOtp({
     required String email,
@@ -29,9 +26,7 @@ abstract class IAuthRepository {
 
   Future<void> clearLocalSession();
 
-  Future<String> forgotPassword({
-    required String email,
-  });
+  Future<String> forgotPassword({required String email});
 
   Future<ResetPasswordResultEntity> resetPassword({
     required String email,

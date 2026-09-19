@@ -37,10 +37,10 @@ class CustomText extends StatelessWidget {
     this.top = 0,
     this.bottom = 0,
   }) : assert(
-  !(isUnderline && isLineThrough),
-  'CustomText: isUnderline and isLineThrough cannot both be true. '
-      'Pick one, or use the decoration parameter directly.',
-  );
+         !(isUnderline && isLineThrough),
+         'CustomText: isUnderline and isLineThrough cannot both be true. '
+         'Pick one, or use the decoration parameter directly.',
+       );
 
   final String text;
   final double? fontSize;
@@ -114,7 +114,8 @@ class CustomText extends StatelessWidget {
     // ── Performance: Only wrap in Padding if spacing is actually requested
     if (_hasPadding) {
       current = Padding(
-        padding: padding ??
+        padding:
+            padding ??
             EdgeInsets.only(
               left: left.w,
               right: right.w,

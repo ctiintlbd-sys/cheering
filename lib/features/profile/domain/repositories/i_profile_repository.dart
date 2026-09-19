@@ -23,4 +23,3 @@ abstract class IProfileRepository {
     void Function(int sent, int total)? onProgress,
   });
 }
-

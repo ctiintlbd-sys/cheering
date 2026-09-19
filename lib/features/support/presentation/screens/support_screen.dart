@@ -67,10 +67,7 @@ class _SupportScreenState extends State<SupportScreen> {
           decoration: BoxDecoration(
             color: context.colors.bgSecondary,
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: context.colors.outline,
-              width: 1,
-            ),
+            border: Border.all(color: context.colors.outline, width: 1),
           ),
           child: Row(
             children: [
@@ -132,7 +129,9 @@ class _SupportScreenState extends State<SupportScreen> {
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Text('Calling partner support helpline...'),
+                      content: const Text(
+                        'Calling partner support helpline...',
+                      ),
                       backgroundColor: context.colors.primary,
                     ),
                   );
@@ -170,14 +169,13 @@ class _SupportScreenState extends State<SupportScreen> {
               borderRadius: BorderRadius.circular(12.r),
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 16.w, vertical: isExpanded ? 16.h : 14.h),
+                  horizontal: 16.w,
+                  vertical: isExpanded ? 16.h : 14.h,
+                ),
                 decoration: BoxDecoration(
                   color: context.colors.bgSecondary,
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: context.colors.outline,
-                    width: 1,
-                  ),
+                  border: Border.all(color: context.colors.outline, width: 1),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,19 +235,12 @@ class _SupportScreenState extends State<SupportScreen> {
         decoration: BoxDecoration(
           color: context.colors.bgSecondary,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: context.colors.outline,
-            width: 1,
-          ),
+          border: Border.all(color: context.colors.outline, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              icon,
-              size: 24.sp,
-              color: context.colors.textPrimary,
-            ),
+            Icon(icon, size: 24.sp, color: context.colors.textPrimary),
             SizedBox(height: 8.h),
             CustomText(
               text: title,

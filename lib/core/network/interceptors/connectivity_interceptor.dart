@@ -7,10 +7,13 @@ class ConnectivityInterceptor extends Interceptor {
   final InternetConnection _checker;
 
   ConnectivityInterceptor({InternetConnection? checker})
-      : _checker = checker ?? InternetConnection();
+    : _checker = checker ?? InternetConnection();
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final hasConnection = await _checker.hasInternetAccess;
     if (!hasConnection) {
       // This blocks the request before it is ever sent, and the probe hosts are
@@ -23,8 +26,11 @@ class ConnectivityInterceptor extends Interceptor {
         DioException(
           requestOptions: options,
           type: DioExceptionType.connectionError,
-          error: const NetworkException('No internet access detected before request.'),
-          message: 'No internet connection. Please check your network and try again.',
+          error: const NetworkException(
+            'No internet access detected before request.',
+          ),
+          message:
+              'No internet connection. Please check your network and try again.',
         ),
       );
     }

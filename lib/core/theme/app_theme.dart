@@ -22,9 +22,7 @@ class AppTheme {
         error: colors.error,
         outline: colors.outline,
       ),
-      extensions: [
-        colors,
-      ],
+      extensions: [colors],
     );
   }
 
@@ -43,9 +41,7 @@ class AppTheme {
         error: colors.error,
         outline: colors.outline,
       ),
-      extensions: [
-        colors,
-      ],
+      extensions: [colors],
     );
   }
 }

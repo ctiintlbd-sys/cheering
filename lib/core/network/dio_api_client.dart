@@ -423,7 +423,9 @@ class DioApiClient implements IApiClient {
     final message = _parseErrorMessage(resData);
 
     debugPrint('❌ [API ERROR BODY] $resData');
-    debugPrint('❌ [API ERROR CODE] ${resData is Map ? resData['error'] : null}');
+    debugPrint(
+      '❌ [API ERROR CODE] ${resData is Map ? resData['error'] : null}',
+    );
     debugPrint('❌ [API ERROR MESSAGE] $message');
 
     return switch (statusCode) {
@@ -472,6 +474,7 @@ class DioApiClient implements IApiClient {
 
     return 'Unexpected server response';
   }
+
   List<String> _parseValidationErrors(dynamic data) {
     if (data is Map<String, dynamic> && data['errors'] != null) {
       final errors = data['errors'];

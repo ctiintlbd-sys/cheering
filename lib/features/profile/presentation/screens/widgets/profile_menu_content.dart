@@ -7,7 +7,11 @@ class ProfileMenuContent extends StatelessWidget {
   final String title;
   final List<Widget> list;
 
-  const ProfileMenuContent({super.key, required this.title, required this.list});
+  const ProfileMenuContent({
+    super.key,
+    required this.title,
+    required this.list,
+  });
 
   @override
   Widget build(BuildContext context) {

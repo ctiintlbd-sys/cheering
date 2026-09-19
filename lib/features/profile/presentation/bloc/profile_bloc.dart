@@ -19,10 +19,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.updateProfileUseCase,
     required this.uploadProfileImageUseCase,
   }) : super(const ProfileState()) {
-    on<LoadProfileRequested>(_onLoadProfileRequested, transformer: restartable());
-    on<ProfileSessionCleared>(
-      (event, emit) => emit(const ProfileState()),
+    on<LoadProfileRequested>(
+      _onLoadProfileRequested,
+      transformer: restartable(),
     );
+    on<ProfileSessionCleared>((event, emit) => emit(const ProfileState()));
     on<UpdateProfileRequested>(_onUpdateProfileRequested);
     on<UploadProfileImage>(_onUploadProfileImage);
     on<UpdateUploadProgress>(_onUpdateUploadProgress);
@@ -35,11 +36,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     if (!state.hasUser) {
-      emit(state.copyWith(
-        status: ProfileStatus.loading,
-        action: ProfileAction.loadProfile,
-        clearError: true,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.loading,
+          action: ProfileAction.loadProfile,
+          clearError: true,
+        ),
+      );
     }
 
     try {
@@ -64,11 +67,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
     } catch (e) {
       if (!state.hasUser) {
-        emit(state.copyWith(
-          status: ProfileStatus.failure,
-          action: ProfileAction.loadProfile,
-          errorMessage: e.toString(),
-        ));
+        emit(
+          state.copyWith(
+            status: ProfileStatus.failure,
+            action: ProfileAction.loadProfile,
+            errorMessage: e.toString(),
+          ),
+        );
       }
     }
   }
@@ -77,10 +82,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     UpdateProfileRequested event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(
-      updateProfileStatus: UpdateProfileStatus.loading,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        updateProfileStatus: UpdateProfileStatus.loading,
+        clearError: true,
+      ),
+    );
 
     try {
       final updatedUser = await updateProfileUseCase(
@@ -89,15 +96,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         phone: event.phone,
       );
 
-      emit(state.copyWith(
-        updateProfileStatus: UpdateProfileStatus.success,
-        user: updatedUser,
-      ));
+      emit(
+        state.copyWith(
+          updateProfileStatus: UpdateProfileStatus.success,
+          user: updatedUser,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        updateProfileStatus: UpdateProfileStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          updateProfileStatus: UpdateProfileStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -105,11 +116,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     UploadProfileImage event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(
-      uploadStatus: ProfileUploadStatus.uploading,
-      uploadProgress: 0.0,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        uploadStatus: ProfileUploadStatus.uploading,
+        uploadProgress: 0.0,
+        clearError: true,
+      ),
+    );
 
     try {
       final publicUrl = await uploadProfileImageUseCase(
@@ -121,15 +134,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         },
       );
 
-      emit(state.copyWith(
-        uploadStatus: ProfileUploadStatus.success,
-        uploadedImageUrl: publicUrl,
-      ));
+      emit(
+        state.copyWith(
+          uploadStatus: ProfileUploadStatus.success,
+          uploadedImageUrl: publicUrl,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        uploadStatus: ProfileUploadStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          uploadStatus: ProfileUploadStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 

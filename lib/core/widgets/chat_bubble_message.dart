@@ -25,17 +25,21 @@ class ChatBubbleMessage extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 12.w),
       child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment:
-                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: isMe
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               Flexible(
                 child: CustomContainer(
                   paddingAll: 10.r,
-                  color: isMe ? Colors.white : Colors.black.withValues(alpha: 0.08),
+                  color: isMe
+                      ? Colors.white
+                      : Colors.black.withValues(alpha: 0.08),
                   bottomRight: 10.r,
                   bottomLeft: 10.r,
                   topLeftRadius: isMe ? 10.r : 0,
@@ -46,8 +50,9 @@ class ChatBubbleMessage extends StatelessWidget {
             ],
           ),
           Row(
-            mainAxisAlignment:
-                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: isMe
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               CustomText(
                 top: 3.h,

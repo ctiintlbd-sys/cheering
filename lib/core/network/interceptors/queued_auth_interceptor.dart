@@ -6,7 +6,8 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
   final Dio mainDio;
   final String? Function() getAccessToken;
   final String? Function() getRefreshToken;
-  final Future<void> Function(String newAccessToken, String newRefreshToken) onTokenRefreshed;
+  final Future<void> Function(String newAccessToken, String newRefreshToken)
+  onTokenRefreshed;
   final Future<void> Function() onLogout;
   final String refreshEndpoint;
 
@@ -48,13 +49,17 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
   Future<String>? _refreshFuture;
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     final isUnauthorized = err.response?.statusCode == 401;
     final requiresAuth = err.requestOptions.extra['requiresAuth'] ?? true;
 
     if (isUnauthorized && requiresAuth) {
       final currentToken = getAccessToken();
-      final requestAuthHeader = err.requestOptions.headers['Authorization'] as String?;
+      final requestAuthHeader =
+          err.requestOptions.headers['Authorization'] as String?;
 
       // Avoid duplicate refresh calls if another request has refreshed the token already
       if (currentToken != null && requestAuthHeader != 'Bearer $currentToken') {
@@ -69,8 +74,9 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
 
       try {
         // Wait for any ongoing refresh, or start a new one
-        final newAccess = await (_refreshFuture ??= _performRefresh(refreshToken)
-            .whenComplete(() => _refreshFuture = null));
+        final newAccess = await (_refreshFuture ??= _performRefresh(
+          refreshToken,
+        ).whenComplete(() => _refreshFuture = null));
 
         return _retryRequest(err.requestOptions, newAccess, handler, err);
       } catch (e, st) {
@@ -95,9 +101,13 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
     final dynamic raw = response.data;
     final Map<String, dynamic> body = raw is Map<String, dynamic> ? raw : {};
     final dynamic dataNode = body['data'];
-    final Map<String, dynamic> data = dataNode is Map<String, dynamic> ? dataNode : body;
+    final Map<String, dynamic> data = dataNode is Map<String, dynamic>
+        ? dataNode
+        : body;
     final dynamic tokensNode = data['tokens'];
-    final Map<String, dynamic> tokens = tokensNode is Map<String, dynamic> ? tokensNode : data;
+    final Map<String, dynamic> tokens = tokensNode is Map<String, dynamic>
+        ? tokensNode
+        : data;
 
     final newAccess = tokens['access_token']?.toString();
     final newRefresh = tokens['refresh_token']?.toString() ?? refreshToken;
@@ -116,13 +126,16 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
     ErrorInterceptorHandler handler,
     DioException originalErr,
   ) async {
-    final retryOptions = requestOptions..headers['Authorization'] = 'Bearer $accessToken';
+    final retryOptions = requestOptions
+      ..headers['Authorization'] = 'Bearer $accessToken';
     try {
       final clonedResponse = await mainDio.fetch(retryOptions);
       return handler.resolve(clonedResponse);
     } catch (e, st) {
       assert(() {
-        debugPrint('[QueuedAuthInterceptor] Retry with refreshed token failed: $e\n$st');
+        debugPrint(
+          '[QueuedAuthInterceptor] Retry with refreshed token failed: $e\n$st',
+        );
         return true;
       }());
       return handler.reject(originalErr);

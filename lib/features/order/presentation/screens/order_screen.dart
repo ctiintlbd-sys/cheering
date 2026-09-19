@@ -38,9 +38,7 @@ class _OrderScreenState extends State<OrderScreen> {
             itemCount: 50,
             separatorBuilder: (_, _) => SizedBox(height: 12.h),
             itemBuilder: (context, index) {
-              return CustomItemAnimator(
-                index: index,
-                  child: OrderCard());
+              return CustomItemAnimator(index: index, child: OrderCard());
             },
           ),
         ),

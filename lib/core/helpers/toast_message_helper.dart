@@ -47,15 +47,9 @@ class ToastMessageHelper {
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.r),
-            side: const BorderSide(
-              color: Color(0xFF1E293B),
-              width: 0.8,
-            ),
+            side: const BorderSide(color: Color(0xFF1E293B), width: 0.8),
           ),
-          margin: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 12.h,
-          ),
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           duration: const Duration(seconds: 3),
         ),
       );

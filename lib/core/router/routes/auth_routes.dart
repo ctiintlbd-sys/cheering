@@ -56,7 +56,6 @@ final List<RouteBase> authRoutes = [
     },
   ),
 
-
   GoRoute(
     path: RoutePaths.about,
     builder: (context, state) {

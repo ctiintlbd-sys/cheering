@@ -13,7 +13,7 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,10 +30,7 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText(
-                    text: 'Jenia Rahman',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  CustomText(text: 'Jenia Rahman', fontWeight: FontWeight.w600),
                   CustomText(
                     text: '2 days ago',
                     fontSize: 12.sp,
@@ -45,11 +42,11 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Chicken bucket was super crispy and hot on arrival. Delivery was quicker than the estimate too.',
+            text:
+                'Chicken bucket was super crispy and hot on arrival. Delivery was quicker than the estimate too.',
           ),
         ],
       ),
     );
   }
-
 }

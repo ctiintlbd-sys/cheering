@@ -2,6 +2,9 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/food_categories_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/home_feed/home_feed_bloc.dart';
+import '../../blocs/home_feed/home_feed_state.dart';
 
 class AllCategoriesBottomSheet extends StatelessWidget {
   const AllCategoriesBottomSheet({super.key});
@@ -19,9 +22,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           CustomContainer(
             width: 54.w,
             height: 4.h,
-            color: context.colors.textSecondary.withValues(
-              alpha: 0.2,
-            ), // using textSecondary for the gray drag handle
+            color: context.colors.textSecondary.withValues(alpha: 0.2),
             radiusAll: 4.r,
           ),
 
@@ -47,22 +48,47 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 14.h),
 
-          // Grid
+          // Grid with BlocBuilder
           Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 44.h),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 24.h,
-                crossAxisSpacing: 12.w,
-                childAspectRatio: 74 / 90,
-              ),
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return CustomItemAnimator(
-                  index: index,
-                  animationType: CustomItemAnimationType.scale,
-                  child: FoodCategoriesWidget(),
+            child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
+              builder: (context, state) {
+                if (state.isLoadingAllCategories) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.categoriesErrorMessage != null &&
+                    (state.allCategories == null ||
+                        state.allCategories!.isEmpty)) {
+                  return Center(
+                    child: Text(
+                      state.categoriesErrorMessage!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: context.colors.error,
+                      ),
+                    ),
+                  );
+                }
+
+                final categories = state.allCategories ?? [];
+
+                return GridView.builder(
+                  padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 44.h),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 24.h,
+                    crossAxisSpacing: 12.w,
+                    childAspectRatio: 74 / 90,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    
+                    return CustomItemAnimator(
+                      index: index,
+                      animationType: CustomItemAnimationType.scale,
+                      child:
+                          const FoodCategoriesWidget(), // Pass category here later
+                    );
+                  },
                 );
               },
             ),

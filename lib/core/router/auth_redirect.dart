@@ -31,5 +31,4 @@ abstract final class AuthRedirect {
 
   static String withRedirectFromContext(BuildContext context, String path) =>
       withRedirect(path, redirect: fromContext(context));
-
 }

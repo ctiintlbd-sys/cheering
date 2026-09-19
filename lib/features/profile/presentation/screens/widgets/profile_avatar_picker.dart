@@ -47,18 +47,19 @@ class ProfileAvatarPicker extends StatelessWidget {
               right: 0,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: isUploading ? null : (){
-                  context.pickImageWithCrop(
-                    cropConfig: ImageCropHelper.profilePicture,
-                    onCropped: (File croppedFile) {
-                      context.read<ProfileBloc>().add(UploadProfileImage(croppedFile));
-                    },
-                  );
-                },
-                child: Assets.icons.imageUpdate.svg(
-                  width: 28.w,
-                  height: 28.h,
-                ),
+                onTap: isUploading
+                    ? null
+                    : () {
+                        context.pickImageWithCrop(
+                          cropConfig: ImageCropHelper.profilePicture,
+                          onCropped: (File croppedFile) {
+                            context.read<ProfileBloc>().add(
+                              UploadProfileImage(croppedFile),
+                            );
+                          },
+                        );
+                      },
+                child: Assets.icons.imageUpdate.svg(width: 28.w, height: 28.h),
               ),
             ),
             if (isUploading)

@@ -140,10 +140,7 @@ class AuthRepositoryImpl implements IAuthRepository {
       code: code,
       newPassword: newPassword,
     );
-    return result.fold(
-      onSuccess: (data) => data,
-      onFailure: (e) => throw e,
-    );
+    return result.fold(onSuccess: (data) => data, onFailure: (e) => throw e);
   }
 
   @override
@@ -156,11 +153,7 @@ class AuthRepositoryImpl implements IAuthRepository {
           refreshToken: refreshToken,
           allDevices: allDevices,
         );
-        result.fold(
-          onSuccess: (_) {
-          },
-          onFailure: (e) => throw e,
-        );
+        result.fold(onSuccess: (_) {}, onFailure: (e) => throw e);
       }
     } finally {
       await TokenStorage.clearTokens();

@@ -58,7 +58,5 @@ extension PlacemarkFormatting on Placemark {
   static String _clean(String? s) => s?.trim() ?? '';
 
   static bool _isUsablePart(String s) =>
-      s.isNotEmpty &&
-      !s.contains('+') &&
-      !s.toLowerCase().contains('unnamed');
+      s.isNotEmpty && !s.contains('+') && !s.toLowerCase().contains('unnamed');
 }

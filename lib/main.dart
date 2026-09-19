@@ -30,9 +30,7 @@ void main() async {
   ]);
 
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ),
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
   runApp(const App());

@@ -64,7 +64,9 @@ class OrderCard extends StatelessWidget {
                           CustomContainer(
                             paddingHorizontal: 12.w,
                             paddingVertical: 4.h,
-                            color: context.colors.bgSuccessSecondary.withValues(alpha: 0.1),
+                            color: context.colors.bgSuccessSecondary.withValues(
+                              alpha: 0.1,
+                            ),
                             radiusAll: 36.r,
                             child: CustomText(
                               text: 'Delivered',

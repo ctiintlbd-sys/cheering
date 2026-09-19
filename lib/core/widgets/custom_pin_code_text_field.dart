@@ -95,7 +95,8 @@ class CustomPinCodeTextField extends StatelessWidget {
     final effectiveTextColor = textColor ?? context.colors.textPrimary;
     final effectiveFillColor = fillColor ?? context.colors.bgTertiary;
     final effectiveFocusedFill = focusedFillColor ?? context.colors.bgSecondary;
-    final effectiveSubmittedFill = submittedFillColor ?? context.colors.bgTertiary;
+    final effectiveSubmittedFill =
+        submittedFillColor ?? context.colors.bgTertiary;
     final effectiveBorder = borderColor ?? Colors.transparent;
     final effectiveFocusedBorder = focusedBorderColor ?? context.colors.primary;
     final effectiveErrorBorder = errorBorderColor ?? context.colors.error;
@@ -113,10 +114,7 @@ class CustomPinCodeTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: effectiveFillColor,
         borderRadius: effectiveRadius,
-        border: Border.all(
-          color: effectiveBorder,
-          width: borderWidth,
-        ),
+        border: Border.all(color: effectiveBorder, width: borderWidth),
       ),
     );
 
@@ -133,10 +131,7 @@ class CustomPinCodeTextField extends StatelessWidget {
     final submittedTheme = defaultTheme.copyWith(
       decoration: defaultTheme.decoration?.copyWith(
         color: effectiveSubmittedFill,
-        border: Border.all(
-          color: Colors.transparent,
-          width: borderWidth,
-        ),
+        border: Border.all(color: Colors.transparent, width: borderWidth),
       ),
     );
 

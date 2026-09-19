@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class ErrorReportingInterceptor extends Interceptor {
-  final void Function(String endpoint, int? statusCode, String? message)? onServerError;
+  final void Function(String endpoint, int? statusCode, String? message)?
+  onServerError;
   final void Function(String endpoint, DioException error)? onAnyError;
   final bool enableInDebug;
 
@@ -12,8 +13,8 @@ class ErrorReportingInterceptor extends Interceptor {
     this.enableInDebug = false,
   }) {
     assert(
-    kDebugMode || onServerError != null || onAnyError != null,
-    '[ErrorReportingInterceptor] Running in release mode without crash reporter.',
+      kDebugMode || onServerError != null || onAnyError != null,
+      '[ErrorReportingInterceptor] Running in release mode without crash reporter.',
     );
   }
 

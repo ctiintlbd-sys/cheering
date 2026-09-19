@@ -7,9 +7,8 @@ import '../route_paths.dart';
 final List<RouteBase> foodRoutes = [
   GoRoute(
     path: RoutePaths.categoryDetails,
-    builder: (context, state) => const CategoryDetailsScreen(
-      categoryName: 'Pizza',
-    ),
+    builder: (context, state) =>
+        const CategoryDetailsScreen(categoryName: 'Pizza'),
   ),
   GoRoute(
     path: RoutePaths.storeDetails,

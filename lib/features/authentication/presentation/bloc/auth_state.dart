@@ -53,9 +53,11 @@ class AuthState extends Equatable {
   bool get isEnableBiometricsLoading =>
       isLoading && action == AuthAction.enableBiometrics;
 
-  bool get isForgotPasswordLoading => isLoading && action == AuthAction.forgotPassword;
+  bool get isForgotPasswordLoading =>
+      isLoading && action == AuthAction.forgotPassword;
 
-  bool get isResetPasswordLoading => isLoading && action == AuthAction.resetPassword;
+  bool get isResetPasswordLoading =>
+      isLoading && action == AuthAction.resetPassword;
 
   bool get isLogoutLoading => isLoading && action == AuthAction.logout;
 

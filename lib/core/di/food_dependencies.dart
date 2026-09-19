@@ -26,21 +26,27 @@ void setupFoodDependencies(GetIt getIt) {
 
   // Repositories
   getIt.registerLazySingleton<IFoodRepository>(
-    () => FoodRepositoryImpl(
-      getIt<FoodRemoteSource>(),
-      getIt<CacheService>(),
-    ),
+    () => FoodRepositoryImpl(getIt<FoodRemoteSource>(), getIt<CacheService>()),
   );
 
   // Use cases
   getIt.registerLazySingleton(
-    () => GetHomeFeedUseCase(getIt<IFoodRepository>(), getIt<ActiveLocationService>()),
+    () => GetHomeFeedUseCase(
+      getIt<IFoodRepository>(),
+      getIt<ActiveLocationService>(),
+    ),
   );
   getIt.registerLazySingleton(
-    () => GetRestaurantsUseCase(getIt<IFoodRepository>(), getIt<ActiveLocationService>()),
+    () => GetRestaurantsUseCase(
+      getIt<IFoodRepository>(),
+      getIt<ActiveLocationService>(),
+    ),
   );
   getIt.registerLazySingleton(
-    () => GetRestaurantDetailsUseCase(getIt<IFoodRepository>(), getIt<ActiveLocationService>()),
+    () => GetRestaurantDetailsUseCase(
+      getIt<IFoodRepository>(),
+      getIt<ActiveLocationService>(),
+    ),
   );
   getIt.registerLazySingleton(
     () => GetRestaurantMenuUseCase(getIt<IFoodRepository>()),
@@ -49,7 +55,10 @@ void setupFoodDependencies(GetIt getIt) {
     () => GetCategoriesUseCase(getIt<IFoodRepository>()),
   );
   getIt.registerLazySingleton(
-    () => SearchFoodUseCase(getIt<IFoodRepository>(), getIt<ActiveLocationService>()),
+    () => SearchFoodUseCase(
+      getIt<IFoodRepository>(),
+      getIt<ActiveLocationService>(),
+    ),
   );
 
   // Blocs
@@ -68,7 +77,5 @@ void setupFoodDependencies(GetIt getIt) {
       getIt<GetRestaurantMenuUseCase>(),
     ),
   );
-  getIt.registerFactory(
-    () => SearchFoodBloc(getIt<SearchFoodUseCase>()),
-  );
+  getIt.registerFactory(() => SearchFoodBloc(getIt<SearchFoodUseCase>()));
 }

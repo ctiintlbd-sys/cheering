@@ -19,9 +19,9 @@ void setupProfileDependencies(GetIt getIt) {
   // Repository
   getIt.registerLazySingleton<IProfileRepository>(
     () => ProfileRepositoryImpl(
-          getIt<ProfileRemoteSource>(),
-          getIt<CacheService>(),
-        ),
+      getIt<ProfileRemoteSource>(),
+      getIt<CacheService>(),
+    ),
   );
 
   // UseCases

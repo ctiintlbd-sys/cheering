@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenStorage {
   static const _storage = FlutterSecureStorage();
-  
+
   static const _keyAccess = 'access_token';
   static const _keyRefresh = 'refresh_token';
 
@@ -43,4 +43,3 @@ class TokenStorage {
     await _storage.delete(key: _keyRefresh);
   }
 }
-

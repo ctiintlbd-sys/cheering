@@ -27,7 +27,9 @@ class ProfileRemoteSource {
   }
 
   /// Calls PUT /users/me/profile to update mutable profile fields.
-  Future<ApiResult<UserModel>> updateProfile(UpdateProfileRequestModel request) {
+  Future<ApiResult<UserModel>> updateProfile(
+    UpdateProfileRequestModel request,
+  ) {
     return _client.put(
       ApiEndpoints.profile,
       body: request.toJson(),
@@ -48,10 +50,7 @@ class ProfileRemoteSource {
   }) {
     return _client.post<PresignedUploadModel>(
       ApiEndpoints.presignedUpload,
-      body: {
-        'file_type': fileType,
-        'file_name': fileName,
-      },
+      body: {'file_type': fileType, 'file_name': fileName},
       fromJson: (json) =>
           PresignedUploadModel.fromJson(json as Map<String, dynamic>),
     );
@@ -74,4 +73,3 @@ class ProfileRemoteSource {
     );
   }
 }
-

@@ -13,7 +13,9 @@ import '../router/app_router_notifier.dart';
 import '../storage/token_storage.dart';
 
 void setupCoreDependencies(GetIt getIt) {
-  getIt.registerLazySingleton<ActiveLocationService>(() => ActiveLocationService());
+  getIt.registerLazySingleton<ActiveLocationService>(
+    () => ActiveLocationService(),
+  );
   getIt.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
   getIt.registerLazySingleton<LocaleCubit>(() => LocaleCubit());
   getIt.registerLazySingleton<AppRouterNotifier>(() => AppRouterNotifier());

@@ -21,8 +21,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AddressBloc>().add(const InitializeAddressScreenData());
-    context.read<AddressBloc>().add(const LoadAddressesRequested());
   }
 
   void _onTabSelected(int index) {

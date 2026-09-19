@@ -5,10 +5,7 @@ class CacheEntry {
   final Uint8List bytes;
   final DateTime expiresAt;
 
-  const CacheEntry({
-    required this.bytes,
-    required this.expiresAt,
-  });
+  const CacheEntry({required this.bytes, required this.expiresAt});
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 }

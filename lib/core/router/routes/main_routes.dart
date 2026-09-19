@@ -7,6 +7,11 @@ import 'package:go_router/go_router.dart';
 import '../../../features/bottom_nav_bar/presentation/screens/bottom_nav_screen.dart';
 import '../route_paths.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
+import '../../../features/food/presentation/blocs/home_feed/home_feed_event.dart';
+import 'package:cheering/core/di/service_locator.dart';
+
 final List<RouteBase> mainRoutes = [
   StatefulShellRoute.indexedStack(
     builder: (context, state, navigationShell) {
@@ -17,7 +22,11 @@ final List<RouteBase> mainRoutes = [
         routes: [
           GoRoute(
             path: RoutePaths.foodTab,
-            builder: (context, state) => const FoodScreen(),
+            builder: (context, state) => BlocProvider(
+              create: (context) =>
+                  getIt<HomeFeedBloc>()..add(const LoadHomeFeed()),
+              child: const FoodScreen(),
+            ),
           ),
         ],
       ),

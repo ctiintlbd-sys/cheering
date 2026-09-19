@@ -35,16 +35,14 @@ class ProfileMenuTile extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12.r),
         onTap: () {
-                HapticFeedback.lightImpact();
-                onTap?.call();
-              },
+          HapticFeedback.lightImpact();
+          onTap?.call();
+        },
         child: CustomContainer(
           radiusAll: 12.r,
           color: bgColor,
           border: isBorder
-              ? Border(
-                  bottom: BorderSide(color: context.colors.borderTertiary),
-                )
+              ? Border(bottom: BorderSide(color: context.colors.borderTertiary))
               : null,
           height: 58.h,
           child: Padding(

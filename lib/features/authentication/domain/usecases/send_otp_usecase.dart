@@ -5,10 +5,7 @@ class SendOtpUseCase {
 
   SendOtpUseCase(this._repository);
 
-  Future<String> call({
-    required String email,
-    String role = 'CUSTOMER',
-  }) {
+  Future<String> call({required String email, String role = 'CUSTOMER'}) {
     return _repository.sendOtp(email: email, role: role);
   }
 }

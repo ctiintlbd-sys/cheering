@@ -147,12 +147,14 @@ class _PickerCore {
         _PickerOption(
           icon: Icons.camera_alt,
           label: 'Camera',
-          onTap: () => _pickImageFrom(context, ImageSource.camera, onImagePicked),
+          onTap: () =>
+              _pickImageFrom(context, ImageSource.camera, onImagePicked),
         ),
         _PickerOption(
           icon: Icons.photo_library,
           label: 'Gallery',
-          onTap: () => _pickImageFrom(context, ImageSource.gallery, onImagePicked),
+          onTap: () =>
+              _pickImageFrom(context, ImageSource.gallery, onImagePicked),
         ),
       ],
     );
@@ -353,8 +355,7 @@ class ImageCropHelper {
   static ImageCropConfig coverPhoto({
     required double width,
     required double height,
-  }) =>
-      ImageCropConfig(cropWidth: width, cropHeight: height);
+  }) => ImageCropConfig(cropWidth: width, cropHeight: height);
 
   static Future<File?> cropImage({
     BuildContext? context,
@@ -363,10 +364,12 @@ class ImageCropHelper {
   }) async {
     if (config.cropWidth <= 0 || config.cropHeight <= 0) return null;
 
-    final primaryColor =
-        context != null ? context.colors.primary : const Color(0xFF0E8A45);
-    final toolbarColor =
-        context != null ? context.colors.textPrimary : Colors.black;
+    final primaryColor = context != null
+        ? context.colors.primary
+        : const Color(0xFF0E8A45);
+    final toolbarColor = context != null
+        ? context.colors.textPrimary
+        : Colors.black;
 
     final cropped = await ImageCropper().cropImage(
       sourcePath: imagePath,

@@ -13,7 +13,9 @@ class CustomFilterChip extends StatelessWidget {
     super.key,
     required this.label,
     required this.isSelected,
-    required this.onTap, this.padding, this.labelSize,
+    required this.onTap,
+    this.padding,
+    this.labelSize,
   });
 
   @override
@@ -23,7 +25,8 @@ class CustomFilterChip extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        padding:
+            padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         margin: EdgeInsets.symmetric(vertical: 4.h),
         decoration: BoxDecoration(
           color: isSelected

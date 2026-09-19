@@ -167,9 +167,7 @@ class CustomNetworkImage extends StatelessWidget {
 
   BoxDecoration _decoration({ImageProvider? provider, bool shimmer = false}) {
     return BoxDecoration(
-      color: shimmer
-          ? Colors.grey.withValues(alpha: 0.4)
-          : backgroundColor,
+      color: shimmer ? Colors.grey.withValues(alpha: 0.4) : backgroundColor,
       boxShadow:
           boxShadow ??
           (elevation
@@ -200,12 +198,13 @@ class CustomNetworkImage extends StatelessWidget {
       height: height,
       width: width,
       decoration: _decoration(),
-      child: fallbackAsset ??
-      Icon(
-        Icons.person,
-        color: Colors.grey.shade500,
-        size: ((height ?? 48) - 16).clamp(16.0, 64.0),
-      ),
+      child:
+          fallbackAsset ??
+          Icon(
+            Icons.person,
+            color: Colors.grey.shade500,
+            size: ((height ?? 48) - 16).clamp(16.0, 64.0),
+          ),
     );
   }
 }

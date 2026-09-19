@@ -33,8 +33,8 @@ class _ForgotScreenState extends State<ForgotScreen> {
   void _onSubmit() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     context.read<AuthBloc>().add(
-          ForgotPasswordRequested(email: _emailController.text.trim()),
-        );
+      ForgotPasswordRequested(email: _emailController.text.trim()),
+    );
   }
 
   @override

@@ -26,7 +26,11 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
         BlocProvider(create: (_) => getIt<ProfileBloc>()),
-        BlocProvider(create: (_) => getIt<AddressBloc>()..add(LoadAddressesRequested())),
+        BlocProvider(
+          create: (_) => getIt<AddressBloc>()
+            ..add(const InitializeAddressScreenData())
+            ..add(const LoadAddressesRequested()),
+        ),
       ],
       child: ProfileSessionSync(
         child: ScreenUtilInit(

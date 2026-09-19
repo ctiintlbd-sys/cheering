@@ -12,7 +12,7 @@ abstract final class MapMarkerHelper {
   /// - Ground এ: 20×20 solid red circle + 48px border ring (10% red/500 — Figma exact)
   /// - উপরে: map_location.png asset icon
   static Future<BitmapDescriptor> createLocationMarker({
-    double width = 96,   // ← বড় করা: 48px border ring + pin icon ধরতে
+    double width = 96, // ← বড় করা: 48px border ring + pin icon ধরতে
     double height = 96,
     Color circleColor = const Color(0xFFEF4444), // red/500 — Figma exact
     bool useCache = true,
@@ -23,8 +23,9 @@ abstract final class MapMarkerHelper {
     }
 
     // ── 1. Asset image load ──────────────────────────────────────────
-    final ByteData byteData =
-    await rootBundle.load(Assets.images.mapLocation.path);
+    final ByteData byteData = await rootBundle.load(
+      Assets.images.mapLocation.path,
+    );
     final ui.Codec codec = await ui.instantiateImageCodec(
       byteData.buffer.asUint8List(),
     );
@@ -35,8 +36,9 @@ abstract final class MapMarkerHelper {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
 
-    final double cx = width / 2;    // horizontal center
-    final double cy = height - 14;  // ground dot vertical center (pin tip এর কাছে)
+    final double cx = width / 2; // horizontal center
+    final double cy =
+        height - 14; // ground dot vertical center (pin tip এর কাছে)
 
     // ── 3. Border ring — 48px, red/500 @ 10% opacity (Figma exact) ──
     canvas.drawCircle(
@@ -66,15 +68,17 @@ abstract final class MapMarkerHelper {
       image,
       Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
       Rect.fromLTWH(pinL, 0, pinW, pinH),
-      Paint()..filterQuality = FilterQuality.medium, // ✅ high → medium: low-end GPU ভালো
+      Paint()
+        ..filterQuality =
+            FilterQuality.medium, // ✅ high → medium: low-end GPU ভালো
     );
 
     // ── 6. PNG render ────────────────────────────────────────────────
     final picture = recorder.endRecording();
-    final renderedImage =
-    await picture.toImage(width.toInt(), height.toInt());
-    final pngBytes =
-    await renderedImage.toByteData(format: ui.ImageByteFormat.png);
+    final renderedImage = await picture.toImage(width.toInt(), height.toInt());
+    final pngBytes = await renderedImage.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
 
     if (pngBytes == null) {
       throw StateError('Failed to render map marker to PNG bytes');
@@ -134,13 +138,15 @@ abstract final class MapMarkerHelper {
       image,
       Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
       Rect.fromLTWH(padding, padding, iconSize, iconSize),
-      Paint()..filterQuality = FilterQuality.medium, // ✅ medium — low-end friendly
+      Paint()
+        ..filterQuality = FilterQuality.medium, // ✅ medium — low-end friendly
     );
 
     final picture = recorder.endRecording();
     final renderedImage = await picture.toImage(size.toInt(), size.toInt());
-    final pngBytes =
-    await renderedImage.toByteData(format: ui.ImageByteFormat.png);
+    final pngBytes = await renderedImage.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
 
     if (pngBytes == null) {
       throw StateError('Failed to render circular badge marker to PNG bytes');

@@ -20,8 +20,7 @@ class UpdateProfileRequestModel {
       'full_name': fullName,
       if (avatarUrl != null && avatarUrl!.trim().isNotEmpty)
         'avatar_url': avatarUrl!.trim(),
-      if (phone != null && phone!.trim().isNotEmpty)
-        'phone': phone!.trim(),
+      if (phone != null && phone!.trim().isNotEmpty) 'phone': phone!.trim(),
     };
   }
 }

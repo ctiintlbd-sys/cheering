@@ -4,10 +4,7 @@ import '../../../authentication/domain/entities/user_entity.dart';
 
 enum ProfileStatus { initial, loading, success, failure }
 
-enum ProfileAction {
-  none,
-  loadProfile,
-}
+enum ProfileAction { none, loadProfile }
 
 enum UpdateProfileStatus { initial, loading, success, failure }
 
@@ -77,14 +74,14 @@ class ProfileState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        action,
-        updateProfileStatus,
-        uploadStatus,
-        user,
-        errorMessage,
-        successMessage,
-        uploadedImageUrl,
-        uploadProgress,
-      ];
+    status,
+    action,
+    updateProfileStatus,
+    uploadStatus,
+    user,
+    errorMessage,
+    successMessage,
+    uploadedImageUrl,
+    uploadProgress,
+  ];
 }

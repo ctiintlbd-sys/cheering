@@ -19,7 +19,8 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.sendOtp,
       body: {'email': email, 'role': role},
-      fromJson: (json) => SendOtpResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          SendOtpResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
@@ -38,7 +39,8 @@ class AuthRemoteSource {
         'password': password,
         'full_name': fullName,
       },
-      fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
@@ -50,7 +52,8 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.login,
       body: {'email': email, 'password': password},
-      fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
@@ -61,7 +64,8 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.forgotPassword,
       body: {'email': email},
-      fromJson: (json) => ForgotPasswordResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          ForgotPasswordResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }
@@ -117,7 +121,8 @@ class AuthRemoteSource {
     return _client.post(
       ApiEndpoints.biometricsLogin,
       body: {'device_id': deviceId, 'signature': signatureBase64},
-      fromJson: (json) => LoginResponseModel.fromJson(json as Map<String, dynamic>),
+      fromJson: (json) =>
+          LoginResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }

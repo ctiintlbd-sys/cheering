@@ -16,7 +16,9 @@ class CustomLoggerInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (kDebugMode) {
-      debugPrint('✅ [DIO RES ${response.statusCode}] ${response.requestOptions.uri}');
+      debugPrint(
+        '✅ [DIO RES ${response.statusCode}] ${response.requestOptions.uri}',
+      );
     }
     super.onResponse(response, handler);
   }
@@ -24,7 +26,9 @@ class CustomLoggerInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
-      debugPrint('❌ [DIO ERR ${err.response?.statusCode}] ${err.requestOptions.uri}');
+      debugPrint(
+        '❌ [DIO ERR ${err.response?.statusCode}] ${err.requestOptions.uri}',
+      );
       debugPrint('   Message: ${err.message}');
     }
     super.onError(err, handler);

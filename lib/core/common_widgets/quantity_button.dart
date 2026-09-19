@@ -31,11 +31,7 @@ class QuantityButton extends StatelessWidget {
         shape: BoxShape.circle,
         bordersColor: context.colors.borderSecondary,
         borderWidth: 1.5,
-        child: Icon(
-          Icons.add,
-          color: context.colors.primary,
-          size: 20.r,
-        ),
+        child: Icon(Icons.add, color: context.colors.primary, size: 20.r),
       ),
     );
   }
@@ -61,21 +57,14 @@ class QuantityButton extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: CustomText(
-              text: '$count',
-              fontWeight: FontWeight.w500,
-            ),
+            child: CustomText(text: '$count', fontWeight: FontWeight.w500),
           ),
           CustomContainer(
             onTap: onIncrement,
             paddingAll: 5.r,
             radiusAll: 6,
             color: context.colors.primary,
-            child: Icon(
-              Icons.add,
-              color: context.colors.white,
-              size: 16.r,
-            ),
+            child: Icon(Icons.add, color: context.colors.white, size: 16.r),
           ),
         ],
       ),

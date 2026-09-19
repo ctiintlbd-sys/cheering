@@ -81,9 +81,9 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
                     return GestureDetector(
                       onTap: state.isBiometricLoginLoading
                           ? null
-                          : () => context
-                              .read<AuthBloc>()
-                              .add(const BiometricLoginRequested()),
+                          : () => context.read<AuthBloc>().add(
+                              const BiometricLoginRequested(),
+                            ),
                       child: CustomContainer(
                         width: 64.r,
                         height: 64.r,

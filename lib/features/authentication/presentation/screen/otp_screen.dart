@@ -73,7 +73,9 @@ class _OtpScreenState extends State<OtpScreen> {
     if (_countdownNotifier.value > 0) return;
     _startTimer();
     if (widget.isForgotPassword) {
-      context.read<AuthBloc>().add(ForgotPasswordRequested(email: widget.email));
+      context.read<AuthBloc>().add(
+        ForgotPasswordRequested(email: widget.email),
+      );
     } else {
       context.read<AuthBloc>().add(SendOtpRequested(email: widget.email));
     }
@@ -84,11 +86,10 @@ class _OtpScreenState extends State<OtpScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (prev, curr) =>
           curr.status == AuthStatus.failure &&
-          (curr.action == AuthAction.sendOtp || curr.action == AuthAction.forgotPassword),
+          (curr.action == AuthAction.sendOtp ||
+              curr.action == AuthAction.forgotPassword),
       listener: (context, state) {
-        ToastMessageHelper.show(
-          state.errorMessage ?? 'Failed to resend code',
-        );
+        ToastMessageHelper.show(state.errorMessage ?? 'Failed to resend code');
       },
       child: SliverScaffold(
         sideContentPadding: 24.w,
@@ -131,8 +132,9 @@ class _OtpScreenState extends State<OtpScreen> {
                 builder: (context, seconds, _) {
                   final isCounting = seconds > 0;
                   return CustomText(
-                    text:
-                        isCounting ? 'Resend in (${seconds}s)' : 'Resend Code',
+                    text: isCounting
+                        ? 'Resend in (${seconds}s)'
+                        : 'Resend Code',
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: isCounting

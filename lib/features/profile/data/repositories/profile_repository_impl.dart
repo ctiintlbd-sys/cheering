@@ -19,16 +19,15 @@ class ProfileRepositoryImpl implements IProfileRepository {
 
   @override
   Stream<UserEntity> getProfile() => _cache.getOrFetch(
-        CacheKeys.profile,
-        fromJson: (json) {
-          final data =
-              json['data'] is Map<String, dynamic> ? json['data'] : json;
-          return UserModel.fromJson(data as Map<String, dynamic>);
-        },
-        toJson: (e) => (e as UserModel).toJson(),
-        fetch: () => _source.getProfile(),
-        ttl: const Duration(hours: 24),
-      );
+    CacheKeys.profile,
+    fromJson: (json) {
+      final data = json['data'] is Map<String, dynamic> ? json['data'] : json;
+      return UserModel.fromJson(data as Map<String, dynamic>);
+    },
+    toJson: (e) => (e as UserModel).toJson(),
+    fetch: () => _source.getProfile(),
+    ttl: const Duration(hours: 24),
+  );
 
   @override
   Future<UserEntity> updateProfile({

@@ -17,8 +17,7 @@ class StoreScreen extends StatelessWidget {
         expandedHeight: 234.h,
         backgroundColor: context.colors.background,
         collapsedBgColor: context.colors.primary,
-        flexibleChild: const DeliveryTitleWidget(
-        ),
+        flexibleChild: const DeliveryTitleWidget(),
         flexibleBackground: FoodFlexibleBackground(
           imageUrl: '',
           fallbackAsset: Assets.images.store.image(

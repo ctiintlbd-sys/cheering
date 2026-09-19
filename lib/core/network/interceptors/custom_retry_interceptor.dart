@@ -12,9 +12,12 @@ class CustomRetryInterceptor extends Interceptor {
   });
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     final attempt = (err.requestOptions.extra['retryAttempt'] as int? ?? 0);
-    
+
     if (_shouldRetry(err, attempt)) {
       final delay = attempt < retryDelays.length
           ? retryDelays[attempt]
@@ -42,11 +45,7 @@ class CustomRetryInterceptor extends Interceptor {
 
     final method = err.requestOptions.method.toUpperCase();
 
-    final isIdempotent = {
-      'GET',
-      'HEAD',
-      'OPTIONS',
-    }.contains(method);
+    final isIdempotent = {'GET', 'HEAD', 'OPTIONS'}.contains(method);
 
     if (!isIdempotent) return false;
 

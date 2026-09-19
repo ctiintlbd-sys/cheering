@@ -6,9 +6,7 @@ class OnboardingState extends Equatable {
   const OnboardingState({this.currentIndex = 0});
 
   OnboardingState copyWith({int? currentIndex}) {
-    return OnboardingState(
-      currentIndex: currentIndex ?? this.currentIndex,
-    );
+    return OnboardingState(currentIndex: currentIndex ?? this.currentIndex);
   }
 
   @override

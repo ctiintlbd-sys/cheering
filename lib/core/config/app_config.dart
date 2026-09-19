@@ -12,7 +12,7 @@ class AppConfig {
   final String googleMapsKey;
 
   const AppConfig._({
-    required this.environment, 
+    required this.environment,
     required this.baseUrl,
     required this.googleMapsKey,
   });
@@ -22,20 +22,20 @@ class AppConfig {
 
     final config = switch (env) {
       'prod' => const AppConfig._(
-          environment: Environment.prod,
-          baseUrl: 'https://api.cheeringshop.online/api/v1',
-          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
-        ),
+        environment: Environment.prod,
+        baseUrl: 'https://api.cheeringshop.online/api/v1',
+        googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
+      ),
       'staging' => const AppConfig._(
-          environment: Environment.staging,
-          baseUrl: 'https://api.cheeringshop.online/api/v1',
-          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
-        ),
+        environment: Environment.staging,
+        baseUrl: 'https://api.cheeringshop.online/api/v1',
+        googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
+      ),
       _ => const AppConfig._(
-          environment: Environment.dev,
-          baseUrl: 'https://api.cheeringshop.online/api/v1',
-          googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
-        ),
+        environment: Environment.dev,
+        baseUrl: 'https://api.cheeringshop.online/api/v1',
+        googleMapsKey: 'AIzaSyC1pbq65142CElsMlN6KPTWYJ37P32ssng',
+      ),
     };
 
     _instance = config;

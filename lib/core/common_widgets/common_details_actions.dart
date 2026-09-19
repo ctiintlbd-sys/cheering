@@ -32,11 +32,7 @@ class CommonActionIcon extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
 
-  const CommonActionIcon({
-    super.key,
-    required this.icon,
-    required this.onTap,
-  });
+  const CommonActionIcon({super.key, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

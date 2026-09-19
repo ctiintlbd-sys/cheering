@@ -100,19 +100,19 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     this.maxLines,
     this.minLines,
-  })  : _mode = _FieldMode.normal,
-        isObscureText = false,
-        obscuringCharacter = '•',
-        menuItems = const [],
-        onMenuItemSelected = null,
-        isMultiSelect = false,
-        selectedItems = const [],
-        onMultiSelectionChanged = null,
-        menuItemBuilder = null,
-        dropdownMaxHeight = 220,
-        dropdownElevation = 4,
-        dropdownBorderRadius = 10,
-        dropdownWidth = null;
+  }) : _mode = _FieldMode.normal,
+       isObscureText = false,
+       obscuringCharacter = '•',
+       menuItems = const [],
+       onMenuItemSelected = null,
+       isMultiSelect = false,
+       selectedItems = const [],
+       onMultiSelectionChanged = null,
+       menuItemBuilder = null,
+       dropdownMaxHeight = 220,
+       dropdownElevation = 4,
+       dropdownBorderRadius = 10,
+       dropdownWidth = null;
 
   // ─────────────────────────── Password constructor ───────────────────────────
   const CustomTextField.password({
@@ -169,24 +169,24 @@ class CustomTextField extends StatefulWidget {
     this.focusNode,
     this.enabled = true,
     this.autofocus = false,
-  })  : _mode = _FieldMode.password,
-        isObscureText = true,
-        suffixIcon = null,
-        keyboardType = TextInputType.visiblePassword,
-        readOnly = false,
-        maxLength = null,
-        maxLines = null,
-        minLines = null,
-        menuItems = const [],
-        onMenuItemSelected = null,
-        isMultiSelect = false,
-        selectedItems = const [],
-        onMultiSelectionChanged = null,
-        menuItemBuilder = null,
-        dropdownMaxHeight = 220,
-        dropdownElevation = 4,
-        dropdownBorderRadius = 10,
-        dropdownWidth = null;
+  }) : _mode = _FieldMode.password,
+       isObscureText = true,
+       suffixIcon = null,
+       keyboardType = TextInputType.visiblePassword,
+       readOnly = false,
+       maxLength = null,
+       maxLines = null,
+       minLines = null,
+       menuItems = const [],
+       onMenuItemSelected = null,
+       isMultiSelect = false,
+       selectedItems = const [],
+       onMultiSelectionChanged = null,
+       menuItemBuilder = null,
+       dropdownMaxHeight = 220,
+       dropdownElevation = 4,
+       dropdownBorderRadius = 10,
+       dropdownWidth = null;
 
   // ─────────────────────────── MenuShow constructor ───────────────────────────
   const CustomTextField.menuShow({
@@ -244,24 +244,24 @@ class CustomTextField extends StatefulWidget {
     // State & Focus
     this.focusNode,
     this.enabled = true,
-  })  : _mode = _FieldMode.menu,
-        isObscureText = false,
-        obscuringCharacter = '•',
-        suffixIcon = null,
-        suffixIconConstraints = null,
-        keyboardType = TextInputType.none,
-        textInputAction = null,
-        inputFormatters = null,
-        onFieldSubmitted = null,
-        onTap = null,
-        readOnly = true,
-        autofocus = false,
-        maxLength = null,
-        maxLines = 1,
-        minLines = 1,
-        validatorType = null,
-        validatorMinLength = null,
-        validatorMaxLength = null;
+  }) : _mode = _FieldMode.menu,
+       isObscureText = false,
+       obscuringCharacter = '•',
+       suffixIcon = null,
+       suffixIconConstraints = null,
+       keyboardType = TextInputType.none,
+       textInputAction = null,
+       inputFormatters = null,
+       onFieldSubmitted = null,
+       onTap = null,
+       readOnly = true,
+       autofocus = false,
+       maxLength = null,
+       maxLines = 1,
+       minLines = 1,
+       validatorType = null,
+       validatorMinLength = null,
+       validatorMaxLength = null;
 
   // ─────────────────────────── Shared fields ──────────────────────────────────
   final _FieldMode _mode;
@@ -344,7 +344,8 @@ class CustomTextField extends StatefulWidget {
   final bool isMultiSelect;
   final List<String> selectedItems;
   final ValueChanged<List<String>>? onMultiSelectionChanged;
-  final Widget Function(BuildContext context, String item, bool isSelected)? menuItemBuilder;
+  final Widget Function(BuildContext context, String item, bool isSelected)?
+  menuItemBuilder;
   final double dropdownMaxHeight;
   final double dropdownElevation;
   final double dropdownBorderRadius;
@@ -495,7 +496,8 @@ class _CustomTextFieldState extends State<CustomTextField>
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final effectiveWidth = widget.dropdownWidth ?? size.width;
-    final horizontalOffset = (widget.dropdownWidth != null && widget.dropdownWidth! > size.width)
+    final horizontalOffset =
+        (widget.dropdownWidth != null && widget.dropdownWidth! > size.width)
         ? -(widget.dropdownWidth! - size.width)
         : 0.0;
 
@@ -552,9 +554,8 @@ class _CustomTextFieldState extends State<CustomTextField>
     if (widget.validator != null) return widget.validator;
 
     // Auto derive label: validatorLabel -> labelText -> hintText
-    final effectiveLabel = widget.validatorLabel ??
-        widget.labelText ??
-        widget.hintText;
+    final effectiveLabel =
+        widget.validatorLabel ?? widget.labelText ?? widget.hintText;
 
     // 2. validatorType param — auto build from FieldValidator
     if (widget.validatorType != null) {
@@ -589,12 +590,17 @@ class _CustomTextFieldState extends State<CustomTextField>
     final defaultFillColor = widget.fillColor ?? colors.bgTertiary;
     final defaultHintColor = widget.hintColor ?? colors.textPlaceholder;
 
-    final enabledBorder = widget.border ??
+    final enabledBorder =
+        widget.border ??
         OutlineInputBorder(
           borderRadius: effectiveRadius,
-          borderSide: BorderSide(color: defaultBorderColor, width: widget.borderWidth),
+          borderSide: BorderSide(
+            color: defaultBorderColor,
+            width: widget.borderWidth,
+          ),
         );
-    final focusedBorder = widget.border ??
+    final focusedBorder =
+        widget.border ??
         OutlineInputBorder(
           borderRadius: effectiveRadius,
           borderSide: BorderSide(
@@ -602,7 +608,8 @@ class _CustomTextFieldState extends State<CustomTextField>
             width: widget.focusBorderWidth,
           ),
         );
-    final errorBorder = widget.border ??
+    final errorBorder =
+        widget.border ??
         OutlineInputBorder(
           borderRadius: effectiveRadius,
           borderSide: BorderSide(
@@ -633,20 +640,22 @@ class _CustomTextFieldState extends State<CustomTextField>
       );
     } else {
       resolvedSuffix = Padding(
-        padding:  EdgeInsets.only(right: 12.w),
+        padding: EdgeInsets.only(right: 12.w),
         child: widget.suffixIcon,
       );
     }
 
     // ── Content padding ───────────────────────────────────────
-    final contentPadding = widget.contentPadding ??
+    final contentPadding =
+        widget.contentPadding ??
         EdgeInsets.symmetric(
           horizontal: widget.contentPaddingHorizontal.w,
           vertical: widget.contentPaddingVertical.h,
         );
 
     // ── Prefix icon ───────────────────────────────────────────
-    final prefixIconConstraints = widget.prefixIconConstraints ??
+    final prefixIconConstraints =
+        widget.prefixIconConstraints ??
         BoxConstraints(minWidth: 40.w, minHeight: 24.h);
 
     final resolvedPrefixIcon = widget.prefixIcon != null
@@ -705,7 +714,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         suffixIconConstraints: _isPassword
             ? null
             : (widget.suffixIconConstraints ??
-                BoxConstraints(minWidth: 40.w, minHeight: 24.h)),
+                  BoxConstraints(minWidth: 40.w, minHeight: 24.h)),
         enabledBorder: enabledBorder,
         focusedBorder: focusedBorder,
         errorBorder: errorBorder,
@@ -740,10 +749,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         : field;
 
     if (_isMenu) {
-      return CompositedTransformTarget(
-        link: _layerLink,
-        child: contentWidget,
-      );
+      return CompositedTransformTarget(link: _layerLink, child: contentWidget);
     }
 
     return contentWidget;

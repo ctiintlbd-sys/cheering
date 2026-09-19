@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'palette/dark_color_palette.dart';
 import 'palette/light_color_palette.dart';
 
-
 /// Complete Figma-synchronized Theme Color Extension.
 /// All variable names match Figma design tokens (camelCase format).
 class AppThemeColors extends ThemeExtension<AppThemeColors> {
@@ -40,7 +39,6 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color textTertiary;
   final Color textPlaceholder;
   final Color textAccentSolid;
-
 
   // ── Semantic Status Colors ─────────────────────────────────
   final Color error;

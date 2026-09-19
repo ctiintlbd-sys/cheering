@@ -18,7 +18,11 @@ class OrderStatusTabs extends StatelessWidget {
         itemBuilder: (context, index) {
           final isSelected = index == 0;
 
-          return CustomFilterChip(label: 'All', isSelected: isSelected, onTap: () {});
+          return CustomFilterChip(
+            label: 'All',
+            isSelected: isSelected,
+            onTap: () {},
+          );
         },
       ),
     );

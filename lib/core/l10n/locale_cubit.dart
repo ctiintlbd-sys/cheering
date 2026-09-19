@@ -15,7 +15,9 @@ class LocaleCubit extends Cubit<Locale> {
   }
 
   void updateLocaleFromName(String languageName) {
-    final newLocale = languageName == 'Bangla' ? const Locale('bn') : const Locale('en');
+    final newLocale = languageName == 'Bangla'
+        ? const Locale('bn')
+        : const Locale('en');
     updateLocale(newLocale);
   }
 }

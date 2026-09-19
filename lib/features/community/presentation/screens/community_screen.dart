@@ -9,9 +9,7 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      appBar: CustomSliverAppBar(
-        title: 'Community',
-      ),
+      appBar: CustomSliverAppBar(title: 'Community'),
       bodyList: [
         SliverFillRemaining(
           hasScrollBody: false,
@@ -40,7 +38,8 @@ class CommunityScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
                 CustomText(
-                  text: 'We are working hard to bring you a vibrant community experience. Stay tuned for exciting updates!',
+                  text:
+                      'We are working hard to bring you a vibrant community experience. Stay tuned for exciting updates!',
                   fontSize: 14.r,
                   fontWeight: FontWeight.w400,
                   color: context.colors.textSecondary,
