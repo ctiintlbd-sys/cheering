@@ -1,4 +1,6 @@
-class RestaurantQueryParams {
+import 'package:equatable/equatable.dart';
+
+class RestaurantQueryParams extends Equatable {
   final double? lat;
   final double? lng;
   final int? radius;
@@ -71,4 +73,20 @@ class RestaurantQueryParams {
     if (q != null) map['q'] = q;
     return map;
   }
+
+  @override
+  List<Object?> get props => [
+    lat,
+    lng,
+    radius,
+    cuisine,
+    category,
+    isOpen,
+    sort,
+    maxDeliveryFee,
+    minRating,
+    q,
+    limit,
+    offset,
+  ];
 }

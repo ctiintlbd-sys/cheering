@@ -1,4 +1,6 @@
-class SearchFoodParams {
+import 'package:equatable/equatable.dart';
+
+class SearchFoodParams extends Equatable {
   final String q;
   final double? lat;
   final double? lng;
@@ -40,4 +42,7 @@ class SearchFoodParams {
     if (sort != null) map['sort'] = sort;
     return map;
   }
+
+  @override
+  List<Object?> get props => [q, lat, lng, limit, offset, sort];
 }

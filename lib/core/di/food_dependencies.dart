@@ -12,6 +12,12 @@ import '../network/i_api_client.dart';
 import '../services/active_location_service.dart';
 import '../cache/cache_service.dart';
 
+// Blocs
+import '../../features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
+import '../../features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
+import '../../features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
+import '../../features/food/presentation/blocs/search_food/search_food_bloc.dart';
+
 void setupFoodDependencies(GetIt getIt) {
   // Data sources
   getIt.registerLazySingleton<FoodRemoteSource>(
@@ -44,5 +50,25 @@ void setupFoodDependencies(GetIt getIt) {
   );
   getIt.registerLazySingleton(
     () => SearchFoodUseCase(getIt<IFoodRepository>(), getIt<ActiveLocationService>()),
+  );
+
+  // Blocs
+  getIt.registerFactory(
+    () => HomeFeedBloc(
+      getIt<GetHomeFeedUseCase>(),
+      getIt<GetCategoriesUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => RestaurantListBloc(getIt<GetRestaurantsUseCase>()),
+  );
+  getIt.registerFactory(
+    () => RestaurantDetailsBloc(
+      getIt<GetRestaurantDetailsUseCase>(),
+      getIt<GetRestaurantMenuUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => SearchFoodBloc(getIt<SearchFoodUseCase>()),
   );
 }
