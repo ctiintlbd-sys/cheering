@@ -24,7 +24,6 @@ void main() async {
   await OnboardingStorage.init();
   await setupServiceLocator();
   await getIt<BiometricService>().loadUiKind();
-
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
