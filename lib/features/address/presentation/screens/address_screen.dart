@@ -108,10 +108,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 prev.isFetchingLocation != curr.isFetchingLocation,
             builder: (context, state) {
               final addresses = state.displayAddresses;
-
               if (addresses.isEmpty) {
-                // Only spin when there is genuinely nothing to show yet —
-                // cached addresses shouldn't wait on the GPS fix.
                 return state.isLoading || state.isFetchingLocation
                     ? Padding(
                         padding: EdgeInsets.symmetric(vertical: 48.h),
@@ -119,43 +116,31 @@ class _AddressScreenState extends State<AddressScreen> {
                       )
                     : const EmptyAddressWidget();
               }
-
-              return _SavedAddressList(addresses: addresses);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: 'Saved Address',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  SizedBox(height: 16.h),
+                  for (var i = 0; i < addresses.length; i++) ...[
+                    if (i > 0) SizedBox(height: 12.h),
+                    SavedAddressCard(
+                      address: addresses[i],
+                      onSetDefault: () => context.read<AddressBloc>().add(
+                        UpdateActiveDefaultId(addresses[i].id),
+                      ),
+                    ),
+                  ],
+                  SizedBox(height: 104.h),
+                ],
+              );
             },
           ),
         ],
       ),
-    );
-  }
-}
-
-class _SavedAddressList extends StatelessWidget {
-  const _SavedAddressList({required this.addresses});
-
-  final List<AddressEntity> addresses;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-          text: 'Saved Address',
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
-        ),
-        SizedBox(height: 16.h),
-        for (var i = 0; i < addresses.length; i++) ...[
-          if (i > 0) SizedBox(height: 12.h),
-          SavedAddressCard(
-            address: addresses[i],
-            onSetDefault: () => context.read<AddressBloc>().add(
-              UpdateActiveDefaultId(addresses[i].id),
-            ),
-          ),
-        ],
-        SizedBox(height: 104.h),
-      ],
     );
   }
 }
