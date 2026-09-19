@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-
 import 'package:cheering/features/store/presentation/screens/widgets/menu_item_widget.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/store_details_header.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/store_reviews_view.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/store_app_bar_bottom.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/restaurant_details_header.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 
-class StoreDetailsScreen extends StatefulWidget {
-  const StoreDetailsScreen({super.key});
+class RestaurantDetailsScreen extends StatefulWidget {
+  const RestaurantDetailsScreen({super.key});
 
   @override
-  State<StoreDetailsScreen> createState() => _StoreDetailsScreenState();
+  State<RestaurantDetailsScreen> createState() =>
+      _RestaurantDetailsScreenState();
 }
 
-class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
-  bool _showReviews = false;
-
-  void _toggleReviews() => setState(() => _showReviews = !_showReviews);
-
+class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
@@ -35,18 +29,19 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
             onTap: () => context.pop(),
           ),
         ),
-        collapsedTitle: _showReviews ? 'KFC - Badda' : null,
-        expandedHeight: _showReviews ? 458.h : 416.h,
+        expandedHeight: 416.h,
         flexibleBackground: _buildFlexibleBackground(),
         actions: [CommonDetailsActions(onShareTap: () {}, onLoveTap: () {})],
-        bottom: StoreAppBarBottom(showReviews: _showReviews),
+        bottom: RestaurantAppBarBottom(),
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _showReviews
-          ? null
-          : ViewCartButton(itemCount: 1, totalPrice: 650, onTap: () {}),
-      bodyList: _showReviews ? _buildReviewsBody() : _buildMenuBody(),
+      floatingActionButton: ViewCartButton(
+        itemCount: 1,
+        totalPrice: 650,
+        onTap: () {},
+      ),
+      bodyList: _buildMenuBody(),
     );
   }
 
@@ -62,10 +57,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
           top: 190.h,
           right: 0,
           left: 0,
-          child: StoreDetailsHeader(
-            isExpanded: _showReviews,
-            onTap: _toggleReviews,
-          ),
+          child: RestaurantDetailsHeader(),
         ),
       ],
     );
@@ -90,25 +82,6 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
             index: index,
             animationType: CustomItemAnimationType.slide,
             child: MenuItemWidget(index: index),
-          );
-        },
-      ),
-
-      SizedBox(height: 140.h),
-    ];
-  }
-
-  List<Widget> _buildReviewsBody() {
-    return [
-      SizedBox(height: 20.h),
-      SliverList.separated(
-        itemCount: 10,
-        separatorBuilder: (context, index) => SizedBox(height: 16.h),
-        itemBuilder: (context, index) {
-          return CustomItemAnimator(
-            index: index,
-            animationType: CustomItemAnimationType.slide,
-            child: const ReviewCardWidget(),
           );
         },
       ),

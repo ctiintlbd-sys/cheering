@@ -3,12 +3,8 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class StoreDetailsHeader extends StatelessWidget {
-  const StoreDetailsHeader({super.key, this.onTap, this.isExpanded = false});
-
-  /// Toggles between the menu view and the reviews view.
-  final VoidCallback? onTap;
-  final bool isExpanded;
+class RestaurantDetailsHeader extends StatelessWidget {
+  const RestaurantDetailsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,28 +16,10 @@ class StoreDetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: onTap,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomText(
-                  text: 'KFC - Badda',
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-                AnimatedRotation(
-                  turns: isExpanded ? 0.25 : 0,
-                  duration: const Duration(milliseconds: 250),
-                  child: Icon(
-                    Icons.chevron_right,
-                    color: context.colors.iconSecondary,
-                    size: 24.r,
-                  ),
-                ),
-              ],
-            ),
+          CustomText(
+            text: 'KFC - Badda',
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w600,
           ).horizontal(16.w),
           SizedBox(height: 4.h),
 
