@@ -33,7 +33,7 @@ class FoodCategoriesWidget extends StatelessWidget {
                 BoxShadow(
                   offset: const Offset(0, 0),
                   blurRadius: 6,
-                  color: context.colors.black.withValues(alpha: 0.009),
+                  color: Colors.transparent,
                 ),
               ],
               child: CustomNetworkImage(

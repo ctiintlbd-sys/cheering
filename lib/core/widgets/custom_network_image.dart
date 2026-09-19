@@ -131,6 +131,9 @@ class CustomNetworkImage extends StatelessWidget {
         imageUrl: url,
         memCacheWidth: width?.toInt(),
         memCacheHeight: height?.toInt(),
+        fadeInDuration: Duration.zero,
+        fadeOutDuration: Duration.zero,
+
         imageBuilder: (ctx, provider) =>
             _withPreview(ctx, provider: provider, child: _container(provider)),
         placeholder: (_, __) => Shimmer.fromColors(
