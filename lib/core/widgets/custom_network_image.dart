@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
@@ -202,12 +203,15 @@ class CustomNetworkImage extends StatelessWidget {
       width: width,
       decoration: _decoration(),
       child:
-          fallbackAsset ??
-          Icon(
-            Icons.person,
-            color: Colors.grey.shade500,
-            size: ((height ?? 48) - 16).clamp(16.0, 64.0),
-          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius ?? 0),
+            child: fallbackAsset ??
+                Assets.images.placeholder.image(
+                    height: height,
+                    width: width,
+                    fit: BoxFit.cover
+                ),
+          )
     );
   }
 }

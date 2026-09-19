@@ -103,7 +103,48 @@ class SuperDealsSection extends StatelessWidget {
   }
 }
 
-// TopRestaurantsSection
+// Nearby
+class NearbyRestaurantsSection extends StatelessWidget {
+  const NearbyRestaurantsSection({super.key, required this.nearby});
+
+  final List<RestaurantEntity> nearby;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SectionHeaderWidget(
+          title: 'Nearby',
+          onTap: () {},
+        ).horizontal(16.w),
+        SizedBox(height: 10.h),
+        SizedBox(
+          height: 202.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: nearby.length,
+            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 4.h),
+                child: CustomItemAnimator(
+                  index: index,
+                  child:  StoreCardWidget(restaurant: nearby[index]),
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 28.h),
+      ],
+    );
+  }
+}
+
+
+
 class TopRestaurantsSection extends StatelessWidget {
   const TopRestaurantsSection({super.key, required this.topRated});
 
@@ -131,7 +172,7 @@ class TopRestaurantsSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 4.h),
                 child: CustomItemAnimator(
                   index: index,
-                  child: const StoreCardWidget(),
+                  child:  StoreCardWidget(restaurant: topRated[index]),
                 ),
               );
             },

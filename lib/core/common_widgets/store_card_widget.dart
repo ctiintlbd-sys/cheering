@@ -1,13 +1,14 @@
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class StoreCardWidget extends StatelessWidget {
-  const StoreCardWidget({super.key});
+  const StoreCardWidget({super.key, required this.restaurant});
 
-  final
+  final RestaurantEntity restaurant;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +25,13 @@ class StoreCardWidget extends StatelessWidget {
           children: [
             CustomNetworkImage(
               height: 124.h,
+              width: double.maxFinite,
               borderRadius: 12.r,
-              imageUrl:
-                  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4',
+              imageUrl: restaurant.logoUrl,
             ),
             CustomText(
               top: 10.h,
-              text: 'KFC - Badda',
+              text: restaurant.name,
               fontWeight: FontWeight.w500,
               maxLines: 1,
               textOverflow: TextOverflow.ellipsis,
@@ -53,9 +54,9 @@ class StoreCardWidget extends StatelessWidget {
                       size: 12.r,
                     ),
                   ),
-                  TextSpan(text: ' ৳40 '),
+                  TextSpan(text: ' ৳${restaurant.deliveryFee.toStringAsFixed(0)} '),
                   TextSpan(text: '•'),
-                  TextSpan(text: ' 1.2Km\n'),
+                  TextSpan(text: ' ${restaurant.distanceKm}Km\n'),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
                     child: Icon(
@@ -64,7 +65,7 @@ class StoreCardWidget extends StatelessWidget {
                       size: 12.r,
                     ),
                   ),
-                  TextSpan(text: ' 4.3 (27) '),
+                  TextSpan(text: ' ${restaurant.ratingAvg} (${restaurant.ratingCount}) '),
                   TextSpan(text: '•'),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
@@ -74,7 +75,7 @@ class StoreCardWidget extends StatelessWidget {
                       size: 12.r,
                     ),
                   ),
-                  TextSpan(text: ' 15-30 mins'),
+                  TextSpan(text: ' ${restaurant.avgPrepTimeMins} mins'),
                 ],
               ),
             ),

@@ -71,8 +71,11 @@ class FoodScreen extends StatelessWidget {
                   if (state.feed!.categories.isNotEmpty)
                     CategoriesSection(categories: state.feed!.categories),
 
-                  if (state.feed!.promoted.isNotEmpty)
-                    SuperDealsSection(promoted: state.feed!.promoted),
+                  if (state.feed!.nearby.isNotEmpty)
+                    NearbyRestaurantsSection(nearby: state.feed!.nearby),
+
+                 // if (state.feed!.promoted.isNotEmpty)
+                   // SuperDealsSection(promoted: state.feed!.promoted),
 
                   SectionHeaderWidget(
                     title: 'Bites 🔥',
@@ -82,6 +85,8 @@ class FoodScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   const BitesItems(),
                   SizedBox(height: 20.h),
+
+
 
                   if (state.feed!.promoted.isNotEmpty)
                     TopRestaurantsSection(topRated: state.feed!.promoted),

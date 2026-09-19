@@ -74,7 +74,7 @@ class StoreScreen extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              child: const StoreCardWidget(),
+              //child: const StoreCardWidget(restaurant: null,),
             ),
           ),
         ),

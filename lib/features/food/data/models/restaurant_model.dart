@@ -64,7 +64,7 @@ class RestaurantModel extends RestaurantEntity {
       deliveryFee: (json['delivery_fee'] as num?)?.toDouble() ?? 0.0,
       minOrderAmount: (json['min_order_amount'] as num?)?.toDouble() ?? 0.0,
       isOpen: json['is_open'] == true,
-      distanceKm: (json['distance_km'] as num?)?.toDouble(),
+      distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 0.0,
       isFavorite: json['is_favorite'] == true,
       description: json['description'] as String?,
       phone: json['phone'] as String?,

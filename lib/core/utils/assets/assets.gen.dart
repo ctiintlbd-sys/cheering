@@ -240,6 +240,10 @@ class $AssetsImagesGen {
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
 
+  /// File path: assets/images/placeholder.png
+  AssetGenImage get placeholder =>
+      const AssetGenImage('assets/images/placeholder.png');
+
   /// File path: assets/images/profile_empty.png
   AssetGenImage get profileEmpty =>
       const AssetGenImage('assets/images/profile_empty.png');
@@ -252,6 +256,7 @@ class $AssetsImagesGen {
     appIcon,
     foodBanner,
     mapLocation,
+    placeholder,
     profileEmpty,
     store,
   ];
