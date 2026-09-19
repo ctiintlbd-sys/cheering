@@ -91,8 +91,8 @@ class ItemSizeOptionsWidget extends StatelessWidget {
             CustomContainer(
               width: 20.r,
               height: 20.r,
-                shape: BoxShape.circle,
-                color:context.colors.white,
+              shape: BoxShape.circle,
+              color: context.colors.white,
               borderWidth: isSelected ? 7 : 2,
               bordersColor: isSelected
                   ? context.colors.primary

@@ -12,15 +12,18 @@ class SearchResultModel extends SearchResultEntity {
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) {
     return SearchResultModel(
-      restaurants: (json['restaurants'] as List<dynamic>?)
+      restaurants:
+          (json['restaurants'] as List<dynamic>?)
               ?.map((e) => RestaurantModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => MenuItemModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      categories: (json['categories'] as List<dynamic>?)
+      categories:
+          (json['categories'] as List<dynamic>?)
               ?.map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

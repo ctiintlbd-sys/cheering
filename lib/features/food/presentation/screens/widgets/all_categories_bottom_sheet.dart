@@ -10,7 +10,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       height: MediaQuery.of(context).size.height * 0.64,
-        color: context.colors.background,
+      color: context.colors.background,
       topLeftRadius: 24.r,
       topRightRadius: 24.r,
       child: Column(
@@ -19,9 +19,10 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           CustomContainer(
             width: 54.w,
             height: 4.h,
-              color: context.colors.textSecondary.withValues(alpha: 0.2), // using textSecondary for the gray drag handle
-              radiusAll: 4.r,
-
+            color: context.colors.textSecondary.withValues(
+              alpha: 0.2,
+            ), // using textSecondary for the gray drag handle
+            radiusAll: 4.r,
           ),
 
           SizedBox(height: 12.h),
@@ -49,7 +50,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
           // Grid
           Expanded(
             child: GridView.builder(
-              padding: EdgeInsets.fromLTRB(16.w,8.h ,16.w,44.h ,),
+              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 44.h),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 mainAxisSpacing: 24.h,
@@ -61,8 +62,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
                 return CustomItemAnimator(
                   index: index,
                   animationType: CustomItemAnimationType.scale,
-                  child: FoodCategoriesWidget(
-                  ),
+                  child: FoodCategoriesWidget(),
                 );
               },
             ),

@@ -19,7 +19,21 @@ class PromotionModel extends PromotionEntity {
       discountValue: (json['discount_value'] as num?)?.toDouble() ?? 0.0,
       minOrderAmount: (json['min_order_amount'] as num?)?.toDouble() ?? 0.0,
       maxDiscount: (json['max_discount'] as num?)?.toDouble(),
-      validUntil: DateTime.tryParse(json['valid_until']?.toString() ?? '') ?? DateTime.now(),
+      validUntil:
+          DateTime.tryParse(json['valid_until']?.toString() ?? '') ??
+          DateTime.now(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'title': title,
+      'discount_type': discountType,
+      'discount_value': discountValue,
+      'min_order_amount': minOrderAmount,
+      'max_discount': maxDiscount,
+      'valid_until': validUntil.toIso8601String(),
+    };
   }
 }

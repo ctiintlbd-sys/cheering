@@ -18,4 +18,14 @@ class CategoryModel extends CategoryEntity {
       restaurantCount: json['restaurant_count'] as int? ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'image_url': imageUrl,
+      'restaurant_count': restaurantCount,
+    };
+  }
 }

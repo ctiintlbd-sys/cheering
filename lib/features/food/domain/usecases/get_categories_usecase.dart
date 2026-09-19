@@ -1,4 +1,3 @@
-import '../../../../core/network/api_result.dart';
 import '../repositories/i_food_repository.dart';
 import '../entities/category_entity.dart';
 
@@ -7,7 +6,7 @@ class GetCategoriesUseCase {
 
   GetCategoriesUseCase(this._repository);
 
-  Future<ApiResult<List<CategoryEntity>>> call() {
+  Stream<List<CategoryEntity>> call() {
     return _repository.getCategories();
   }
 }

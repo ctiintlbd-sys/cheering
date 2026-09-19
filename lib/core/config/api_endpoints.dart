@@ -31,4 +31,12 @@ class ApiEndpoints {
   static const String presignedUpload = '/uploads/presigned-url';
   static const String uploadApplicationDoc = '/vendor/applications/uploads';
   static const String applicationsSubmit = '/vendor/applications';
+
+  // ── Food ───────────────────────────────────────────────────
+  static const String homeFeed = '/home/feed';
+  static const String restaurants = '/restaurants';
+  static String restaurantDetails(String id) => '/restaurants/$id';
+  static String restaurantMenu(String id) => '/restaurants/$id/menu';
+  static const String categories = '/categories';
+  static const String search = '/search';
 }

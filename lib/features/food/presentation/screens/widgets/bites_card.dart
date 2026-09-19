@@ -15,7 +15,7 @@ class BitesItems extends StatelessWidget {
         itemCount: 5,
         separatorBuilder: (context, index) => SizedBox(width: 16.w),
         itemBuilder: (context, index) => Padding(
-          padding:  EdgeInsets.symmetric(vertical: 4.h),
+          padding: EdgeInsets.symmetric(vertical: 4.h),
           child: CustomNetworkImage(
             width: 124.w,
             height: 176.h,

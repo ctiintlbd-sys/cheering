@@ -91,7 +91,8 @@ class MenuCategoryModel extends MenuCategoryEntity {
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
       sortOrder: json['sort_order'] as int? ?? 0,
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => MenuItemModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

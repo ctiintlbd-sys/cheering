@@ -17,10 +17,11 @@ class FoodCardWidget extends StatelessWidget {
             width: 102.w,
             height: 84.w,
             borderRadius: 12.r,
-            imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Dummy pizza image
+            imageUrl:
+                'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Dummy pizza image
           ),
           SizedBox(width: 16.w),
-          
+
           // Details
           Expanded(
             child: Column(
@@ -49,7 +50,7 @@ class FoodCardWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 4.h),
-                
+
                 // Subtitle
                 CustomText(
                   text: 'Italian · Fast food',
@@ -57,7 +58,7 @@ class FoodCardWidget extends StatelessWidget {
                   fontSize: 12.sp,
                 ),
                 SizedBox(height: 6.h),
-                
+
                 // Stats Row
                 RichText(
                   maxLines: 1,
@@ -70,24 +71,36 @@ class FoodCardWidget extends StatelessWidget {
                     children: [
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
-                        child: Icon(Icons.star, color: context.colors.ratingColor, size: 14.r),
+                        child: Icon(
+                          Icons.star,
+                          color: context.colors.ratingColor,
+                          size: 14.r,
+                        ),
                       ),
                       const TextSpan(text: ' 4.5  ·  '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
-                        child: Icon(Icons.directions_bike, color: context.colors.iconSecondary, size: 14.r),
+                        child: Icon(
+                          Icons.directions_bike,
+                          color: context.colors.iconSecondary,
+                          size: 14.r,
+                        ),
                       ),
                       const TextSpan(text: ' ৳65(1.5Km)  ·  '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
-                        child: Icon(Icons.access_time, color: context.colors.iconSecondary, size: 14.r),
+                        child: Icon(
+                          Icons.access_time,
+                          color: context.colors.iconSecondary,
+                          size: 14.r,
+                        ),
                       ),
                       const TextSpan(text: ' 10-20 mins'),
                     ],
                   ),
                 ),
                 SizedBox(height: 10.h),
-                
+
                 // Discount Tag
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -99,7 +112,11 @@ class FoodCardWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.local_offer_outlined, color: context.colors.primary, size: 12.r),
+                      Icon(
+                        Icons.local_offer_outlined,
+                        color: context.colors.primary,
+                        size: 12.r,
+                      ),
                       CustomText(
                         left: 4.w,
                         text: '20% OFF',

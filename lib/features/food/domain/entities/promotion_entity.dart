@@ -21,6 +21,12 @@ class PromotionEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    code, title, discountType, discountValue, minOrderAmount, maxDiscount, validUntil
+    code,
+    title,
+    discountType,
+    discountValue,
+    minOrderAmount,
+    maxDiscount,
+    validUntil,
   ];
 }

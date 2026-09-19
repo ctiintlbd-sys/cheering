@@ -48,7 +48,7 @@ class MenuItemEntity extends Equatable {
   final int? prepTimeMins;
   final List<MenuVariantEntity>? variants;
   final List<MenuAddOnEntity>? addOns;
-  
+
   // For search results where restaurant details might be attached
   final String? restaurantId;
   final String? restaurantName;
@@ -71,8 +71,19 @@ class MenuItemEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    id, categoryId, name, description, basePrice, imageUrl, 
-    isAvailable, isVeg, prepTimeMins, variants, addOns, restaurantId, restaurantName
+    id,
+    categoryId,
+    name,
+    description,
+    basePrice,
+    imageUrl,
+    isAvailable,
+    isVeg,
+    prepTimeMins,
+    variants,
+    addOns,
+    restaurantId,
+    restaurantName,
   ];
 }
 

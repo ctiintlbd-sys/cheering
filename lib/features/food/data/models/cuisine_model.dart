@@ -14,4 +14,12 @@ class CuisineModel extends CuisineEntity {
       imageUrl: json['image_url'] as String?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'restaurant_count': restaurantCount,
+      'image_url': imageUrl,
+    };
+  }
 }

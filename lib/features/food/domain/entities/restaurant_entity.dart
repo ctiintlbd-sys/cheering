@@ -31,7 +31,7 @@ class RestaurantEntity extends Equatable {
   final bool isOpen;
   final double? distanceKm;
   final bool isFavorite;
-  
+
   // Details fields
   final String? description;
   final String? phone;
@@ -67,10 +67,26 @@ class RestaurantEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    id, name, slug, cuisineTypes, logoUrl, coverImageUrl, 
-    ratingAvg, ratingCount, avgPrepTimeMins, deliveryFee, 
-    minOrderAmount, isOpen, distanceKm, isFavorite,
-    description, phone, addressLine, latitude, longitude,
-    businessHours, promotions
+    id,
+    name,
+    slug,
+    cuisineTypes,
+    logoUrl,
+    coverImageUrl,
+    ratingAvg,
+    ratingCount,
+    avgPrepTimeMins,
+    deliveryFee,
+    minOrderAmount,
+    isOpen,
+    distanceKm,
+    isFavorite,
+    description,
+    phone,
+    addressLine,
+    latitude,
+    longitude,
+    businessHours,
+    promotions,
   ];
 }

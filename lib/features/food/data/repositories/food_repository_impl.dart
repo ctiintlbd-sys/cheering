@@ -1,88 +1,93 @@
-import '../../../../core/network/api_result.dart';
 import '../../domain/repositories/i_food_repository.dart';
 import '../../domain/entities/home_feed_entity.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/entities/menu_entity.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/search_result_entity.dart';
-import '../datasources/food_remote_data_source.dart';
+import '../../domain/entities/restaurant_query_params.dart';
+import '../../domain/entities/search_food_params.dart';
+import '../datasources/food_remote_source.dart';
+import '../../../../core/network/api_result.dart';
+import '../../../../core/cache/cache_service.dart';
+import '../../../../core/config/chache_keys.dart';
+import '../models/home_feed_model.dart';
+import '../models/restaurant_model.dart';
+import '../models/category_model.dart';
 
 class FoodRepositoryImpl implements IFoodRepository {
-  final IFoodRemoteDataSource _remoteDataSource;
+  final FoodRemoteSource _remoteSource;
+  final CacheService _cache;
 
-  FoodRepositoryImpl(this._remoteDataSource);
-
-  @override
-  Future<ApiResult<HomeFeedEntity>> getHomeFeed({double? lat, double? lng}) {
-    return _remoteDataSource.getHomeFeed(lat: lat, lng: lng);
-  }
+  FoodRepositoryImpl(this._remoteSource, this._cache);
 
   @override
-  Future<ApiResult<List<RestaurantEntity>>> getRestaurants({
-    double? lat,
-    double? lng,
-    int? radius,
-    String? cuisine,
-    String? category,
-    bool? isOpen,
-    String? sort,
-    int? maxDeliveryFee,
-    double? minRating,
-    String? q,
-    int limit = 20,
-    int offset = 0,
-  }) {
-    return _remoteDataSource.getRestaurants(
-      lat: lat,
-      lng: lng,
-      radius: radius,
-      cuisine: cuisine,
-      category: category,
-      isOpen: isOpen,
-      sort: sort,
-      maxDeliveryFee: maxDeliveryFee,
-      minRating: minRating,
-      q: q,
-      limit: limit,
-      offset: offset,
+  Stream<HomeFeedEntity> getHomeFeed({double? lat, double? lng}) {
+    return _cache.getOrFetch<HomeFeedModel>(
+      CacheKeys.homeFeed,
+      fromJson: (json) => HomeFeedModel.fromJson(json),
+      toJson: (data) => data.toJson(),
+      fetch: () => _remoteSource.getHomeFeed(lat: lat, lng: lng),
+      ttl: const Duration(minutes: 30),
     );
   }
 
   @override
-  Future<ApiResult<RestaurantEntity>> getRestaurantDetails(
+  Stream<List<RestaurantEntity>> getRestaurants(RestaurantQueryParams params) {
+    return _cache.getOrFetch<List<RestaurantModel>>(
+      CacheKeys.restaurants(params.toMap()),
+      fromJson: (json) {
+        final data = json['data'] as List<dynamic>? ?? [];
+        return data
+            .map((e) => RestaurantModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      },
+      toJson: (list) => {'data': list.map((e) => e.toJson()).toList()},
+      fetch: () => _remoteSource.getRestaurants(params),
+      ttl: const Duration(minutes: 15),
+    );
+  }
+
+  @override
+  Future<RestaurantEntity> getRestaurantDetails(
     String restaurantId, {
     double? lat,
     double? lng,
-  }) {
-    return _remoteDataSource.getRestaurantDetails(restaurantId, lat: lat, lng: lng);
-  }
-
-  @override
-  Future<ApiResult<List<MenuCategoryEntity>>> getRestaurantMenu(String restaurantId) {
-    return _remoteDataSource.getRestaurantMenu(restaurantId);
-  }
-
-  @override
-  Future<ApiResult<List<CategoryEntity>>> getCategories() {
-    return _remoteDataSource.getCategories();
-  }
-
-  @override
-  Future<ApiResult<SearchResultEntity>> search({
-    required String q,
-    double? lat,
-    double? lng,
-    int limit = 20,
-    int offset = 0,
-    String? sort,
-  }) {
-    return _remoteDataSource.search(
-      q: q,
+  }) async {
+    final result = await _remoteSource.getRestaurantDetails(
+      restaurantId,
       lat: lat,
       lng: lng,
-      limit: limit,
-      offset: offset,
-      sort: sort,
     );
+    return result.fold(onSuccess: (data) => data, onFailure: (e) => throw e);
+  }
+
+  @override
+  Future<List<MenuCategoryEntity>> getRestaurantMenu(
+    String restaurantId,
+  ) async {
+    final result = await _remoteSource.getRestaurantMenu(restaurantId);
+    return result.fold(onSuccess: (data) => data, onFailure: (e) => throw e);
+  }
+
+  @override
+  Stream<List<CategoryEntity>> getCategories() {
+    return _cache.getOrFetch<List<CategoryModel>>(
+      CacheKeys.categories,
+      fromJson: (json) {
+        final data = json['data'] as List<dynamic>? ?? [];
+        return data
+            .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      },
+      toJson: (list) => {'data': list.map((e) => e.toJson()).toList()},
+      fetch: () => _remoteSource.getCategories(),
+      ttl: const Duration(hours: 24),
+    );
+  }
+
+  @override
+  Future<SearchResultEntity> search(SearchFoodParams params) async {
+    final result = await _remoteSource.search(params);
+    return result.fold(onSuccess: (data) => data, onFailure: (e) => throw e);
   }
 }
