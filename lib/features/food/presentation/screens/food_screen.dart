@@ -83,7 +83,10 @@ class FoodScreen extends StatelessWidget {
                           onTap: () {
                             BottomSheetHelper.showSheet(
                               context: context,
-                              child: const AllCategoriesBottomSheet(),
+                              child: BlocProvider.value(
+                                value: context.read<HomeFeedBloc>(),
+                                child: const AllCategoriesBottomSheet(),
+                              ),
                             );
                           },
                         );
@@ -93,7 +96,9 @@ class FoodScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 4.h),
                         child: CustomItemAnimator(
                           index: index,
-                          child: FoodCategoriesWidget(category: state.feed!.categories[index]), // Add category parameter to this widget later
+                          child: FoodCategoriesWidget(
+                            category: state.feed!.categories[index],
+                          ), // Add category parameter to this widget later
                         ),
                       );
                     },
