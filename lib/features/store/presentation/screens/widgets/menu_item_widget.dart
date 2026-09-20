@@ -1,16 +1,16 @@
 import 'package:cheering/core/common_widgets/quantity_button.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MenuItemWidget extends StatelessWidget {
-  final int index;
+  final MenuItemEntity? menuItem;
 
-  const MenuItemWidget({super.key, required this.index});
+  const MenuItemWidget({super.key,  this.menuItem,});
 
   @override
   Widget build(BuildContext context) {
-    final hasQuantity = index == 0;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
@@ -20,9 +20,7 @@ class MenuItemWidget extends StatelessWidget {
             width: 66.r,
             height: 66.r,
             borderRadius: 12.r,
-            imageUrl:
-                'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
-          ),
+            imageUrl: menuItem?.imageUrl ),
           SizedBox(width: 12.w),
 
           Expanded(
@@ -30,31 +28,32 @@ class MenuItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: 'Classic Cheeseburger',
+                  text: menuItem?.name ?? '',
                   fontWeight: FontWeight.w600,
                   maxLines: 1,
                   bottom: 2.w,
                 ),
-                CustomText(
-                  text: '8 pcs crispy fried chicken, spiced',
-                  color: context.colors.textTertiary,
-                  fontSize: 12.r,
-                  maxLines: 1,
-                ),
+                if (menuItem?.description != null && menuItem!.description!.isNotEmpty)
+                  CustomText(
+                    text: menuItem!.description!,
+                    color: context.colors.textTertiary,
+                    fontSize: 12.r,
+                    maxLines: 1,
+                  ),
                 SizedBox(height: 8.w),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: '৳450',
+                      text: '৳${menuItem?.basePrice.toStringAsFixed(0) ?? '0'}',
                       color: context.colors.primary,
                       fontWeight: FontWeight.w700,
                       fontSize: 14.r,
                     ),
 
                     QuantityButton(
-                      count: hasQuantity ? 3 : null,
+                      count: null,
                       onIncrement: () {},
                       onDecrement: () {},
                     ),

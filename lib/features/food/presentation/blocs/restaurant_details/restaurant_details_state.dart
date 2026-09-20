@@ -17,6 +17,9 @@ class RestaurantDetailsState extends Equatable {
     this.errorMessage,
   });
 
+  List<MenuCategoryEntity> get validMenuCategories =>
+      menuCategories.where((c) => c.items.isNotEmpty).toList();
+
   RestaurantDetailsState copyWith({
     RestaurantDetailsStatus? status,
     RestaurantEntity? restaurant,

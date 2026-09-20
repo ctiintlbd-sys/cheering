@@ -88,7 +88,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
               restaurant: restaurant,
             ),
             bottom: RestaurantAppBarBottom(
-              categories: state.menuCategories,
+              categories: state.validMenuCategories,
               activeIndexNotifier: _activeIndexNotifier,
               onTabTapped: _scrollToIndex,
             ),
@@ -109,7 +109,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
               EmptyState(message: state.errorMessage ?? ''),
             ],
             RestaurantDetailsStatus.success => _buildMenuSections(
-              state.menuCategories,
+              state.validMenuCategories,
             ),
           },
         );
@@ -155,13 +155,15 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
-                itemCount: 5,
+                itemCount: category.items.length,
                 separatorBuilder: (context, index) => SizedBox(height: 16.w),
                 itemBuilder: (context, itemIndex) {
                   return CustomItemAnimator(
                     index: itemIndex,
                     animationType: CustomItemAnimationType.slide,
-                    child: MenuItemWidget(index: itemIndex),
+                    child: MenuItemWidget(
+                      menuItem: category.items[itemIndex],
+                    ),
                   );
                 },
               ),
