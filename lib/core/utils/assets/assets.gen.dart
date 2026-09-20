@@ -232,6 +232,9 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/empty.png
+  AssetGenImage get empty => const AssetGenImage('assets/images/empty.png');
+
   /// File path: assets/images/food_banner.png
   AssetGenImage get foodBanner =>
       const AssetGenImage('assets/images/food_banner.png');
@@ -254,6 +257,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<AssetGenImage> get values => [
     appIcon,
+    empty,
     foodBanner,
     mapLocation,
     placeholder,
