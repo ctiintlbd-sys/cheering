@@ -159,6 +159,9 @@ class $AssetsIconsGen {
   SvgGenImage get profilePayment =>
       const SvgGenImage('assets/icons/profile_payment.svg');
 
+  /// File path: assets/icons/promo.svg
+  SvgGenImage get promo => const SvgGenImage('assets/icons/promo.svg');
+
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
@@ -217,6 +220,7 @@ class $AssetsIconsGen {
     profileLogout,
     profileNotification,
     profilePayment,
+    promo,
     search,
     share,
     store,

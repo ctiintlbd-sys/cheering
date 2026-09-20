@@ -22,6 +22,7 @@ class SliverScaffold extends StatefulWidget {
     this.onRefresh,
     this.sideContentPadding,
     this.extendBody = true,
+    this.isNavWrap = true,
     this.extendBodyBehindAppBar = false,
   }) : onLoadMore = null,
        threshold = 200;
@@ -44,6 +45,7 @@ class SliverScaffold extends StatefulWidget {
     this.onRefresh,
     this.sideContentPadding,
     this.extendBody = true,
+    this.isNavWrap = true,
     this.extendBodyBehindAppBar = false,
   });
 
@@ -63,6 +65,7 @@ class SliverScaffold extends StatefulWidget {
   final bool? resizeToAvoidBottomInset;
 
   final bool extendBody;
+  final bool isNavWrap;
   final bool extendBodyBehindAppBar;
 
   final ScrollPhysics? scrollPhysics;
@@ -176,11 +179,11 @@ class _SliverScaffoldState extends State<SliverScaffold> {
       floatingActionButton: widget.floatingActionButton != null
           ? RepaintBoundary(child: widget.floatingActionButton!)
           : null,
-      bottomNavigationBar: widget.bottomNavigationBar != null
+      bottomNavigationBar: widget.bottomNavigationBar != null && widget.isNavWrap
           ? RepaintBoundary(
               child: _BottomNavWrapper(child: widget.bottomNavigationBar!),
             )
-          : null,
+          : widget.bottomNavigationBar,
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: CustomScrollView(

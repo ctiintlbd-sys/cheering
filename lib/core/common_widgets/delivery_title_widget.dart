@@ -71,7 +71,9 @@ class DeliveryTitleWidget extends StatelessWidget {
           context: context,
           icon: Assets.icons.cart.svg(),
           backgroundColor: context.colors.white,
-          onTap: () {},
+          onTap: () {
+            context.push(RoutePaths.cart);
+          },
         ),
       ],
     );
