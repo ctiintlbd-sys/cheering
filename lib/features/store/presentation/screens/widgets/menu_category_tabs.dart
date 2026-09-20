@@ -58,7 +58,7 @@ class _MenuCategoryTabsState extends State<MenuCategoryTabs> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.categories.isEmpty) return const SizedBox.shrink();
+    if (widget.categories.isEmpty) return SizedBox(height: 40.w);
     return CustomContainer(
       horizontalMargin: 16.w,
       height: 40.w,
@@ -74,29 +74,32 @@ class _MenuCategoryTabsState extends State<MenuCategoryTabs> {
                 SizedBox(width: 22.w),
             itemBuilder: (context, index) {
               final bool isSelected = selectedIndex == index;
-              return GestureDetector(
-                onTap: () {
-                  widget.onTabTapped(index);
-                },
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 8.w),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: isSelected
-                            ? context.colors.primary
-                            : Colors.transparent,
-                        width: 2,
+              return CustomItemAnimator(
+                index: index,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.onTabTapped(index);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 8.w),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: isSelected
+                              ? context.colors.primary
+                              : Colors.transparent,
+                          width: 2,
+                        ),
                       ),
                     ),
-                  ),
-                  child: CustomText(
-                    text: widget.categories[index].name,
-                    color: isSelected
-                        ? context.colors.primary
-                        : context.colors.textSecondary,
-                    fontSize: 14.r,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    child: CustomText(
+                      text: widget.categories[index].name,
+                      color: isSelected
+                          ? context.colors.primary
+                          : context.colors.textSecondary,
+                      fontSize: 14.r,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    ),
                   ),
                 ),
               );

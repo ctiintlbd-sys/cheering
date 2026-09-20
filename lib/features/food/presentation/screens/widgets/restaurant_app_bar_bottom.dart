@@ -53,5 +53,5 @@ class RestaurantAppBarBottom extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(118.w);
+  Size get preferredSize => Size.fromHeight(122.w);
 }

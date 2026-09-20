@@ -155,7 +155,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 itemCount: 5,
-                // Replace with category.items.length later
                 separatorBuilder: (context, index) => SizedBox(height: 16.w),
                 itemBuilder: (context, itemIndex) {
                   return CustomItemAnimator(
