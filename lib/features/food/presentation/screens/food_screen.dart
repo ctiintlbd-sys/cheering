@@ -58,40 +58,41 @@ class FoodScreen extends StatelessWidget {
                 ),
               ),
             ),
-            bodyList: [
-              SizedBox(height: 20.w),
-              ...switch (state.status) {
-                HomeFeedStatus.initial ||
-                HomeFeedStatus.loading => [const HomeFeedLoadingWidget()],
-                HomeFeedStatus.failure => [
-                  EmptyState(message: state.errorMessage ?? ''),
-                ],
+            bodyList: switch (state.status) {
+              HomeFeedStatus.initial || HomeFeedStatus.loading => [
+                const HomeFeedLoadingWidget(),
+              ],
+              HomeFeedStatus.failure  => [
+                EmptyState(message: state.errorMessage ?? ''),
+              ],
+              HomeFeedStatus.success when state.feed == null => [
+                EmptyState(message: state.errorMessage ?? ''),
+              ],
+              HomeFeedStatus.success => [
+                SizedBox(height: 20.w),
+                if (state.feed!.categories.isNotEmpty)
+                  CategoriesSection(categories: state.feed!.categories),
 
-                HomeFeedStatus.success when state.feed != null => [
-                  if (state.feed!.categories.isNotEmpty)
-                    CategoriesSection(categories: state.feed!.categories),
+                if (state.feed!.nearby.isNotEmpty)
+                  NearbyRestaurantsSection(nearby: state.feed!.nearby),
 
-                  if (state.feed!.nearby.isNotEmpty)
-                    NearbyRestaurantsSection(nearby: state.feed!.nearby),
+                // if (state.feed!.promoted.isNotEmpty)
+                // SuperDealsSection(promoted: state.feed!.promoted),
+                SectionHeaderWidget(
+                  title: 'Bites 🔥',
+                  subtitle: "Discover what everyone's eating",
+                  onTap: () {},
+                ).horizontal(16.w),
+                SizedBox(height: 8.w),
+                const BitesItems(),
+                SizedBox(height: 20.w),
 
-                  // if (state.feed!.promoted.isNotEmpty)
-                  // SuperDealsSection(promoted: state.feed!.promoted),
-                  SectionHeaderWidget(
-                    title: 'Bites 🔥',
-                    subtitle: "Discover what everyone's eating",
-                    onTap: () {},
-                  ).horizontal(16.w),
-                  SizedBox(height: 8.w),
-                  const BitesItems(),
-                  SizedBox(height: 20.w),
+                if (state.feed!.topRated.isNotEmpty)
+                  TopRestaurantsSection(topRated: state.feed!.topRated),
 
-                  if (state.feed!.promoted.isNotEmpty)
-                    TopRestaurantsSection(topRated: state.feed!.topRated),
-                  SizedBox(height: 120.w),
-                ],
-                _ => [const SizedBox.shrink()],
-              },
-            ],
+                SizedBox(height: 120.w),
+              ],
+            },
           );
         },
       ),
