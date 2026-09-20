@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_filters_bar.dart';
 import 'package:cheering/features/food/presentation/models/filter_data.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_shimmer.dart';
 
 class ExploreRestaurantsScreen extends StatelessWidget {
   final String title;
@@ -26,7 +27,33 @@ class ExploreRestaurantsScreen extends StatelessWidget {
     return BlocBuilder<RestaurantListBloc, RestaurantListState>(
       builder: (context, state) {
         return SliverScaffold(
-          onRefresh: ()async{
+          onRefresh: () async {
+            final currentParams =
+                state.baseParams?.copyWith(
+                  maxDeliveryFee: state.selectedFilterIndex != null
+                      ? FilterData
+                            .filters[state.selectedFilterIndex!]
+                            .params
+                            .maxDeliveryFee
+                      : null,
+                  minRating: state.selectedFilterIndex != null
+                      ? FilterData
+                            .filters[state.selectedFilterIndex!]
+                            .params
+                            .minRating
+                      : null,
+                  sort: state.selectedFilterIndex != null
+                      ? FilterData
+                            .filters[state.selectedFilterIndex!]
+                            .params
+                            .sort
+                      : null,
+                ) ??
+                initialParams;
+
+            context.read<RestaurantListBloc>().add(
+              RefreshRestaurants(params: currentParams),
+            );
           },
           appBar: CustomSliverAppBar(
             title: title,
@@ -48,25 +75,21 @@ class ExploreRestaurantsScreen extends StatelessWidget {
               ),
             ),
           ),
-          bodyList: [
-            if (state.status == RestaurantListStatus.initial ||
-                state.status == RestaurantListStatus.loading)
-              Padding(
-                padding: EdgeInsets.only(top: 24.w),
-                child: const Center(child: CircularProgressIndicator()),
-              )
-            else if (state.status == RestaurantListStatus.failure)
-              Padding(
-                padding: EdgeInsets.only(top: 26.w),
-                child: EmptyState(
-                  message: state.errorMessage ?? 'Failed to load',
-                ),
-              )
-            else
+          bodyList: switch (state.status) {
+            RestaurantListStatus.initial || RestaurantListStatus.loading => [
+              const HRestaurantCardShimmer(count: 6),
+            ],
+            RestaurantListStatus.failure => [
+              EmptyState(message: state.errorMessage ?? 'Failed to load'),
+            ],
+            RestaurantListStatus.success when state.restaurants.isEmpty => [
+              const EmptyState(message: 'No restaurants found'),
+            ],
+            RestaurantListStatus.success => [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 16.w),
+                  SizedBox(height: 26.w),
                   ListView.separated(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -86,7 +109,8 @@ class ExploreRestaurantsScreen extends StatelessWidget {
                   SizedBox(height: 120.w),
                 ],
               ),
-          ],
+            ],
+          },
         );
       },
     );
