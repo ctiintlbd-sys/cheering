@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_state.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_item_widget.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/restaurant_details_header.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/restaurant_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 
@@ -83,22 +80,11 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         return SliverScaffold(
           scrollController: _scrollController,
           appBar: CustomSliverAppBar(
-            stretch: true,
             toolbarHeight: 0,
-            leading: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6.w),
-              child: CommonActionIcon(
-                icon: Assets.icons.arrowBack.path,
-                onTap: () => context.pop(),
-              ),
-            ),
             expandedHeight: 416.w,
-            flexibleBackground: _buildFlexibleBackground(
-              restaurant?.coverImageUrl ?? '',
+            flexibleBackground: RestaurantFlexibleBackground(
+              imageUrl: restaurant?.coverImageUrl ?? '',
             ),
-            actions: [
-              CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
-            ],
             bottom: RestaurantAppBarBottom(
               categories: state.menuCategories,
               activeIndexNotifier: _activeIndexNotifier,
@@ -118,37 +104,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     );
   }
 
-  Widget _buildFlexibleBackground(String imageUrl) {
-    return Stack(
-      children: [
-        CustomNetworkImage(
-          height: 220.w,
-          width: double.maxFinite,
-          imageUrl: imageUrl,
-        ),
-        Positioned(
-          top: 190.w,
-          right: 0,
-          left: 0,
-          child: RestaurantDetailsHeader(),
-        ),
-        Positioned(
-          top: kToolbarHeight,
-          left: 16.w,
-          child: CommonActionIcon(
-            icon: Assets.icons.arrowBack.path,
-            onTap: () => context.pop(),
-          ),
-        ),
-
-        Positioned(
-          top: kToolbarHeight,
-          right: 0,
-          child: CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
-        ),
-      ],
-    );
-  }
 
   List<Widget> _buildBody(RestaurantDetailsState state) {
     return switch (state.status) {

@@ -1,12 +1,48 @@
-import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
+import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/core/common_widgets/common_details_actions.dart';
 
-class RestaurantDetailsHeader extends StatelessWidget {
-  const RestaurantDetailsHeader({super.key});
+class RestaurantFlexibleBackground extends StatelessWidget {
+  final String imageUrl;
+
+  const RestaurantFlexibleBackground({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        CustomNetworkImage(
+          height: 220.w,
+          width: double.maxFinite,
+          imageUrl: imageUrl,
+        ),
+        Positioned(
+          top: 190.w,
+          right: 0,
+          left: 0,
+          child: _buildRestaurantDetailsHeader(context),
+        ),
+        Positioned(
+          top: 50.w,
+          left: 16.w,
+          child: CommonActionIcon(
+            icon: Assets.icons.arrowBack.path,
+            onTap: () => context.pop(),
+          ),
+        ),
+        Positioned(
+          top: 50.w,
+          right: 16.w,
+          child: CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRestaurantDetailsHeader(BuildContext context) {
     return CustomContainer(
       color: context.colors.background,
       topRightRadius: 32.r,
