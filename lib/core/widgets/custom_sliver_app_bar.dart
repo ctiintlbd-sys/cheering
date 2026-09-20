@@ -34,6 +34,7 @@ class CustomSliverAppBar extends StatelessWidget {
     this.pinned = true,
     this.floating = false,
     this.snap = false,
+    this.stretch = false,
     this.bottom,
   });
 
@@ -68,6 +69,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final bool pinned;
   final bool floating;
   final bool snap;
+  final bool stretch;
 
   final PreferredSizeWidget? bottom;
   final double? leadingWidth;
@@ -221,6 +223,7 @@ class CustomSliverAppBar extends StatelessWidget {
           pinned: pinned || bottom != null,
           floating: floating,
           snap: snap,
+          stretch: stretch,
 
           elevation: 0,
           scrolledUnderElevation: 0,

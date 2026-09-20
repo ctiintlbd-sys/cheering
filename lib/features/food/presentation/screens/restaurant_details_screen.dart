@@ -83,7 +83,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         return SliverScaffold(
           scrollController: _scrollController,
           appBar: CustomSliverAppBar(
-            floating: true,
+            stretch: true,
+            toolbarHeight: 0,
             leading: Padding(
               padding: EdgeInsets.symmetric(vertical: 6.w),
               child: CommonActionIcon(
@@ -130,6 +131,20 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
           right: 0,
           left: 0,
           child: RestaurantDetailsHeader(),
+        ),
+        Positioned(
+          top: kToolbarHeight,
+          left: 16.w,
+          child: CommonActionIcon(
+            icon: Assets.icons.arrowBack.path,
+            onTap: () => context.pop(),
+          ),
+        ),
+
+        Positioned(
+          top: kToolbarHeight,
+          right: 0,
+          child: CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
         ),
       ],
     );
