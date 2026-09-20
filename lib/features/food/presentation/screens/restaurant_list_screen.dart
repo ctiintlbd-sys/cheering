@@ -4,7 +4,7 @@ import 'package:cheering/features/food/domain/entities/restaurant_query_params.d
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_state.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/food_card_widget.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +42,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      sideContentPadding: 16.w,
+      //sideContentPadding: 16.w,
       appBar: CustomSliverAppBar(
         title: widget.title,
         expandedHeight: 96.w,
@@ -101,12 +101,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 26.w),
-                CustomText(
-                  text: '${restaurants.length} places serving ${widget.title.toLowerCase()}',
-                  color: context.colors.textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
-                SizedBox(height: 12.w),
+
                 ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -117,7 +112,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                     return CustomItemAnimator(
                       index: index,
                       animationType: CustomItemAnimationType.slide,
-                      child: const FoodCardWidget(), // TODO: Pass restaurant data here later
+                      child:  HRestaurantCardWidget(restaurant: restaurants[index]),
                     );
                   },
                 ),

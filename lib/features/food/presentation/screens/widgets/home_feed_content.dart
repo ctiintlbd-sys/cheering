@@ -144,7 +144,7 @@ class NearbyRestaurantsSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
-                  child: StoreCardWidget(restaurant: nearby[index]),
+                  child: RestaurantCardWidget(restaurant: nearby[index]),
                 ),
               );
             },
@@ -188,7 +188,7 @@ class TopRestaurantsSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
-                  child: StoreCardWidget(restaurant: topRated[index]),
+                  child: RestaurantCardWidget(restaurant: topRated[index]),
                 ),
               );
             },
