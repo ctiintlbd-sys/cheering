@@ -1,4 +1,4 @@
-import 'package:cheering/features/food/presentation/screens/restaurant_list_screen.dart';
+import 'package:cheering/features/food/presentation/screens/explore_restaurants_screen.dart';
 import 'package:cheering/features/food/presentation/screens/restaurant_details_screen.dart';
 import 'package:cheering/features/food/presentation/screens/item_details_screen.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
@@ -22,7 +22,7 @@ final List<RouteBase> foodRoutes = [
 
       return BlocProvider(
         create: (context) => getIt<RestaurantListBloc>()..add(LoadRestaurants(params: params)),
-        child: RestaurantListScreen(title: title, initialParams: params),
+        child: ExploreRestaurantsScreen(title: title, initialParams: params),
       );
     },
   ),

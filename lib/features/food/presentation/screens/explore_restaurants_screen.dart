@@ -9,21 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class RestaurantListScreen extends StatefulWidget {
+class ExploreRestaurantsScreen extends StatefulWidget {
   final String title;
   final RestaurantQueryParams initialParams;
 
-  const RestaurantListScreen({
+  const ExploreRestaurantsScreen({
     super.key,
     required this.title,
     required this.initialParams,
   });
 
   @override
-  State<RestaurantListScreen> createState() => _RestaurantListScreenState();
+  State<ExploreRestaurantsScreen> createState() => _ExploreRestaurantsScreenState();
 }
 
-class _RestaurantListScreenState extends State<RestaurantListScreen> {
+class _ExploreRestaurantsScreenState extends State<ExploreRestaurantsScreen> {
   late RestaurantQueryParams _currentParams;
 
   @override
@@ -42,7 +42,6 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      //sideContentPadding: 16.w,
       appBar: CustomSliverAppBar(
         title: widget.title,
         expandedHeight: 96.w,
