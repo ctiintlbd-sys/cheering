@@ -7,26 +7,20 @@ import 'package:cheering/core/common_widgets/common_details_actions.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
   final String imageUrl;
-  final String? heroTag;
 
   const RestaurantFlexibleBackground({
     super.key,
     required this.imageUrl,
-    required this.heroTag,
   });
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('$heroTag');
     return Stack(
       children: [
-        Hero(
-          tag: 'res$heroTag',
-          child: CustomNetworkImage(
-            height: 220.w,
-            width: double.maxFinite,
-            imageUrl: imageUrl,
-          ),
+        CustomNetworkImage(
+          height: 220.w,
+          width: double.maxFinite,
+          imageUrl: imageUrl,
         ),
         Positioned(
           top: 190.w,

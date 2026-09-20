@@ -10,6 +10,7 @@ import 'package:cheering/features/store/presentation/screens/widgets/view_cart_b
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
   const RestaurantDetailsScreen({super.key});
@@ -83,8 +84,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             toolbarHeight: 0,
             expandedHeight: 416.w,
             flexibleBackground: RestaurantFlexibleBackground(
-              imageUrl: restaurant?.coverImageUrl ?? restaurant?.logoUrl ?? '',
-              heroTag: restaurant?.id,
+              imageUrl: restaurant?.logoUrl ?? restaurant?.coverImageUrl ?? '',
             ),
             bottom: RestaurantAppBarBottom(
               categories: state.menuCategories,
