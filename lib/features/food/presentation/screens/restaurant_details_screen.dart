@@ -122,7 +122,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       return [
         SizedBox(height: 100.w),
         const Center(child: Text("No menu available")),
-        SizedBox(height: 300.w),
       ];
     }
 
