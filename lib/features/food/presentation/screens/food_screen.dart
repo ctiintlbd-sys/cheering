@@ -25,10 +25,6 @@ class FoodScreen extends StatelessWidget {
         context.read<HomeFeedBloc>().add(const LoadHomeFeed());
       },
       child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
-        buildWhen: (previous, current) =>
-            previous.status != current.status ||
-            previous.feed != current.feed ||
-            previous.errorMessage != current.errorMessage,
         builder: (context, state) {
           return SliverScaffold(
             onRefresh: () async {
