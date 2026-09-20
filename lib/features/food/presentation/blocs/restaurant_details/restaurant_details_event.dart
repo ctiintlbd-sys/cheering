@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../food/domain/entities/restaurant_entity.dart';
 
 sealed class RestaurantDetailsEvent extends Equatable {
   const RestaurantDetailsEvent();
@@ -8,12 +9,10 @@ sealed class RestaurantDetailsEvent extends Equatable {
 }
 
 class LoadRestaurantDetails extends RestaurantDetailsEvent {
-  final String restaurantId;
-  final double? lat;
-  final double? lng;
+  final RestaurantEntity restaurant;
 
-  const LoadRestaurantDetails({required this.restaurantId, this.lat, this.lng});
+  const LoadRestaurantDetails({required this.restaurant});
 
   @override
-  List<Object?> get props => [restaurantId, lat, lng];
+  List<Object?> get props => [restaurant];
 }

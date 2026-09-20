@@ -20,25 +20,24 @@ class RestaurantDetailsBloc
     LoadRestaurantDetails event,
     Emitter<RestaurantDetailsState> emit,
   ) async {
-    emit(
-      state.copyWith(status: RestaurantDetailsStatus.loading, clearError: true),
-    );
+    emit(state.copyWith(
+      status: RestaurantDetailsStatus.loading, 
+      restaurant: event.restaurant,
+      clearError: true
+    ));
 
     try {
-      // Parallel fetch — type safe with Dart 3 records
-      final (restaurant, menuCategories) = await (
+      final (updatedRestaurant, menuCategories) = await (
         _getRestaurantDetailsUseCase(
-          event.restaurantId,
-          lat: event.lat,
-          lng: event.lng,
+          event.restaurant.id,
         ),
-        _getRestaurantMenuUseCase(event.restaurantId),
+        _getRestaurantMenuUseCase(event.restaurant.id),
       ).wait;
 
       emit(
         state.copyWith(
           status: RestaurantDetailsStatus.success,
-          restaurant: restaurant,
+          restaurant: updatedRestaurant,
           menuCategories: menuCategories,
         ),
       );

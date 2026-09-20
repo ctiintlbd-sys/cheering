@@ -35,8 +35,9 @@ class App extends StatelessWidget {
       child: ProfileSessionSync(
         child: ScreenUtilInit(
           designSize: const Size(390, 844),
-          minTextAdapt: true,
+          minTextAdapt: false,
           splitScreenMode: true,
+          ensureScreenSize: true,
           builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
             builder: (context, locale) => MaterialApp.router(
               scaffoldMessengerKey: ToastMessageHelper.messengerKey,
@@ -53,8 +54,14 @@ class App extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              builder: (context, child) => child ?? const SizedBox.shrink(),
-            ),
+              builder: (context, child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: TextScaler.noScaling, // ✅ system font size ignore করবে
+                  ),
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },            ),
           ),
         ),
       ),
