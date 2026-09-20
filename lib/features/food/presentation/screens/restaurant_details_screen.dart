@@ -10,6 +10,7 @@ import 'package:cheering/features/store/presentation/screens/widgets/view_cart_b
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
+import 'package:cheering/features/store/presentation/screens/widgets/menu_item_shimmer.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
   const RestaurantDetailsScreen({super.key});
@@ -75,6 +76,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RestaurantDetailsBloc, RestaurantDetailsState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         final restaurant = state.restaurant;
         return SliverScaffold(
@@ -101,8 +103,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
           bodyList: switch (state.status) {
             RestaurantDetailsStatus.initial ||
             RestaurantDetailsStatus.loading => [
-              SizedBox(height: 100.w),
-              const Center(child: CircularProgressIndicator()),
+              const MenuItemShimmer(count: 6),
             ],
             RestaurantDetailsStatus.failure => [
               EmptyState(message: state.errorMessage ?? ''),
