@@ -22,7 +22,6 @@ class CommonDetailsActions extends StatelessWidget {
         CommonActionIcon(icon: Assets.icons.foodShare.path, onTap: onShareTap),
         SizedBox(width: 8.w),
         CommonActionIcon(icon: Assets.icons.foodLove.path, onTap: onLoveTap),
-        SizedBox(width: 16.w),
       ],
     );
   }

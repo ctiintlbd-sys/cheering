@@ -26,7 +26,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
           child: _buildRestaurantDetailsHeader(context),
         ),
         Positioned(
-          top: 50.w,
+          top: kToolbarHeight,
           left: 16.w,
           child: CommonActionIcon(
             icon: Assets.icons.arrowBack.path,
@@ -34,7 +34,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 50.w,
+          top: kToolbarHeight,
           right: 16.w,
           child: CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
         ),
