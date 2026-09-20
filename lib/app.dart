@@ -1,4 +1,5 @@
 import 'package:cheering/core/session/profile_session_sync.dart';
+import 'package:cheering/core/theme/design_size_helper.dart';
 import 'package:cheering/core/theme/theme_cubit.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<LocaleCubit>()),
@@ -34,7 +36,7 @@ class App extends StatelessWidget {
       ],
       child: ProfileSessionSync(
         child: ScreenUtilInit(
-          designSize: const Size(390, 844),
+          designSize: DesignSizeHelper.getDesignSize(),
           minTextAdapt: false,
           splitScreenMode: true,
           ensureScreenSize: true,
@@ -57,11 +59,13 @@ class App extends StatelessWidget {
               builder: (context, child) {
                 return MediaQuery(
                   data: MediaQuery.of(context).copyWith(
-                    textScaler: TextScaler.noScaling, // ✅ system font size ignore করবে
+                    textScaler:
+                        TextScaler.noScaling, // ✅ system font size ignore করবে
                   ),
                   child: child ?? const SizedBox.shrink(),
                 );
-              },            ),
+              },
+            ),
           ),
         ),
       ),

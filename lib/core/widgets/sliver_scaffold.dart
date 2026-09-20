@@ -221,7 +221,7 @@ class _RefreshIndicator extends StatelessWidget {
         child: Opacity(
           opacity: isRefreshing ? 1.0 : progress,
           child: SizedBox(
-            height: 22.h,
+            height: 22.w,
             width: 22.w,
             child: CircularProgressIndicator(
               strokeWidth: 2.2,
@@ -247,9 +247,9 @@ class _BottomNavWrapper extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           16.w,
-          10.h,
+          10.w,
           16.w,
-          MediaQuery.paddingOf(context).bottom + 8.h,
+          MediaQuery.paddingOf(context).bottom + 8.w,
         ),
         child: child,
       ),

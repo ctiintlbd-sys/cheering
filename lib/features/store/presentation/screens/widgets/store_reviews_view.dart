@@ -33,14 +33,14 @@ class _ReviewCardWidgetState extends State<ReviewCardWidget> {
                   CustomText(text: 'Jenia Rahman', fontWeight: FontWeight.w600),
                   CustomText(
                     text: '2 days ago',
-                    fontSize: 12.sp,
+                    fontSize: 12.r,
                     color: context.colors.textTertiary,
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 8.w),
           CustomText(
             text:
                 'Chicken bucket was super crispy and hot on arrival. Delivery was quicker than the estimate too.',

@@ -89,19 +89,19 @@ class _BottomNavItemState extends State<BottomNavItem>
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOut,
                 builder: (context, color, _) {
-                  return SvgPicture.asset(iconPath, width: 24.w, height: 24.h);
+                  return SvgPicture.asset(iconPath, width: 24.w, height: 24.w);
                 },
               ),
 
               // Live Number Badge (e.g. Order Count)
               if (widget.navItem.badgeCount > 0)
                 Positioned(
-                  top: -4.h,
+                  top: -4.w,
                   right: -8.w,
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 4.w,
-                      vertical: 1.h,
+                      vertical: 1.w,
                     ),
                     decoration: BoxDecoration(
                       color: context.colors.primary,
@@ -119,7 +119,7 @@ class _BottomNavItemState extends State<BottomNavItem>
                       style: TextStyle(
                         fontFamily: FontFamily.sFPro,
                         color: Colors.white,
-                        fontSize: 9.sp,
+                        fontSize: 9.r,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _BottomNavItemState extends State<BottomNavItem>
               // Dot Badge Indicator
               if (widget.navItem.showBadgeDot && widget.navItem.badgeCount == 0)
                 Positioned(
-                  top: -1.h,
+                  top: -1.w,
                   right: -2.w,
                   child: Container(
                     width: 7.w,
@@ -147,7 +147,7 @@ class _BottomNavItemState extends State<BottomNavItem>
                 ),
             ],
           ),
-          SizedBox(height: 3.h),
+          SizedBox(height: 3.w),
 
           // ── Label ──────────────────────────────────────────────────
           AnimatedDefaultTextStyle(
@@ -155,7 +155,7 @@ class _BottomNavItemState extends State<BottomNavItem>
             curve: Curves.easeOut,
             style: TextStyle(
               fontFamily: FontFamily.sFPro,
-              fontSize: 11.sp,
+              fontSize: 11.r,
               fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
               color: itemColor,
             ),

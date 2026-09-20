@@ -16,14 +16,14 @@ class FoodFlexibleBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      height: 300.h,
-      bottomRight: 20.h,
-      bottomLeft: 20.h,
-      paddingBottom: 24.h,
+      height: 300.w,
+      bottomRight: 20.w,
+      bottomLeft: 20.w,
+      paddingBottom: 24.w,
       child: ClipRRect(
         borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(20.h),
-          bottomLeft: Radius.circular(20.h),
+          bottomRight: Radius.circular(20.w),
+          bottomLeft: Radius.circular(20.w),
         ),
         child: CustomNetworkImage(
           imageUrl: imageUrl,

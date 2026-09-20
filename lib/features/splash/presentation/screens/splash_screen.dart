@@ -41,19 +41,19 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Assets.icons.appLogo.svg(width: 61.w, height: 57.h),
+            Assets.icons.appLogo.svg(width: 61.w, height: 57.w),
             CustomText(
-              top: 16.h,
+              top: 16.w,
               text: 'CHEERING',
-              fontSize: 20.sp,
+              fontSize: 20.r,
               fontWeight: FontWeight.w700,
               color: context.colors.textPrimary,
             ),
             CustomText(
-              top: 4.h,
+              top: 4.w,
               text: context.l10n.splashSubtitle,
               fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
+              fontSize: 14.r,
               color: context.colors.primary,
             ),
           ],

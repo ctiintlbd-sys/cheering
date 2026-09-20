@@ -23,7 +23,7 @@ class ChatBubbleMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 12.w),
+      padding: EdgeInsets.symmetric(vertical: 6.w, horizontal: 12.w),
       child: Column(
         crossAxisAlignment: isMe
             ? CrossAxisAlignment.end
@@ -55,8 +55,8 @@ class ChatBubbleMessage extends StatelessWidget {
                 : MainAxisAlignment.start,
             children: [
               CustomText(
-                top: 3.h,
-                fontSize: 10.sp,
+                top: 3.w,
+                fontSize: 10.r,
                 fontWeight: FontWeight.w400,
                 text: time,
                 left: isMe ? 0 : 10.w,
@@ -85,12 +85,12 @@ class ChatBubbleMessage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: images!.map((url) {
             return Padding(
-              padding: EdgeInsets.only(right: 5.h),
+              padding: EdgeInsets.only(right: 5.w),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: SizedBox(
                   width: 180.w,
-                  height: 120.h,
+                  height: 120.w,
                   child: Image.network(
                     url,
                     fit: BoxFit.cover,

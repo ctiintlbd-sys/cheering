@@ -9,7 +9,7 @@ class ProfileHeaderShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      paddingVertical: 8.h,
+      paddingVertical: 8.w,
       paddingHorizontal: 12.w,
       radiusAll: 8.r,
       color: context.colors.bgSecondary,
@@ -37,17 +37,17 @@ class ProfileHeaderShimmer extends StatelessWidget {
                   highlightColor: context.colors.shimmerHighlight,
                   child: Container(
                     width: 140.w,
-                    height: 16.h,
+                    height: 16.w,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 8.w),
                 Shimmer.fromColors(
                   baseColor: context.colors.shimmerBase,
                   highlightColor: context.colors.shimmerHighlight,
                   child: Container(
                     width: 180.w,
-                    height: 14.h,
+                    height: 14.w,
                     color: Colors.white,
                   ),
                 ),

@@ -60,7 +60,7 @@ class AddressActionButtons extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           icon,
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
           CustomText(text: label, fontWeight: FontWeight.w500),
         ],
       ),

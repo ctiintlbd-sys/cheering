@@ -14,9 +14,9 @@ class SuperDealsCard extends StatelessWidget {
       onTap: () {
         context.push(RoutePaths.itemDetails);
       },
-      verticalMargin: 4.h,
+      verticalMargin: 4.w,
       width: 248.w,
-      height: 220.h,
+      height: 220.w,
       radiusAll: 12.r,
       clipBehavior: Clip.hardEdge,
       child: Stack(
@@ -42,25 +42,25 @@ class SuperDealsCard extends StatelessWidget {
           ),
           // Top Badges
           Positioned(
-            top: 12.h,
+            top: 12.w,
             left: 12.w,
             child: CustomContainer(
               alignment: Alignment.center,
               color: context.colors.primaryLight.withValues(alpha: 0.8),
               radiusAll: 16.r,
-              paddingVertical: 4.h,
+              paddingVertical: 4.w,
               paddingHorizontal: 8.w,
               child: CustomText(
                 text: '20%Off',
                 color: context.colors.primary,
                 fontWeight: FontWeight.w600,
-                fontSize: 12.sp,
+                fontSize: 12.r,
               ),
             ),
           ),
           // Bottom Info
           Positioned(
-            bottom: 12.h,
+            bottom: 12.w,
             left: 12.w,
             right: 12.w,
             child: Column(
@@ -86,13 +86,13 @@ class SuperDealsCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.w),
                 CustomText(
                   text: 'Pizza House • Fast Food',
                   color: context.colors.white.withValues(alpha: 0.66),
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.w),
                 RichText(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -100,7 +100,7 @@ class SuperDealsCard extends StatelessWidget {
                   text: TextSpan(
                     style: TextStyle(
                       color: context.colors.white.withValues(alpha: 0.8),
-                      fontSize: 12.sp,
+                      fontSize: 12.r,
                     ),
                     children: [
                       WidgetSpan(

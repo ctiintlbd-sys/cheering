@@ -21,9 +21,9 @@ class ProfileMenuContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            fontSize: 16.sp,
+            fontSize: 16.r,
             fontWeight: FontWeight.w600,
-            bottom: 12.h,
+            bottom: 12.w,
             text: title,
           ),
 

@@ -24,14 +24,14 @@ class SectionHeaderWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomText(
-              fontSize: 16.sp,
+              fontSize: 16.r,
               fontWeight: FontWeight.w600,
               text: title,
             ),
             if (subtitle != null)
               CustomText(
-                top: 4.h,
-                fontSize: 12.sp,
+                top: 4.w,
+                fontSize: 12.r,
                 color: context.colors.textSecondary,
                 text: subtitle!,
               ),

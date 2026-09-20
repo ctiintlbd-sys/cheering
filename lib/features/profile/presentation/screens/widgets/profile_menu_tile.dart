@@ -44,7 +44,7 @@ class ProfileMenuTile extends StatelessWidget {
           border: isBorder
               ? Border(bottom: BorderSide(color: context.colors.borderTertiary))
               : null,
-          height: 58.h,
+          height: 58.w,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Row(

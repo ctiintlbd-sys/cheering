@@ -40,31 +40,31 @@ class CustomDialog extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 24.h),
+            padding: EdgeInsets.fromLTRB(24.w, 24.w, 24.w, 24.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (icon != null) ...[icon!, SizedBox(height: 24.h)],
+                if (icon != null) ...[icon!, SizedBox(height: 24.w)],
                 CustomText(
                   text: title,
-                  fontSize: 20.sp,
+                  fontSize: 20.r,
                   fontWeight: FontWeight.w600,
                   textAlign: TextAlign.center,
                   color: resolvedTitleColor,
                 ),
-                //SizedBox(height: 8.h),
+                //SizedBox(height: 8.w),
                 if (description != null)
                   CustomText(
-                    top: 8.h,
+                    top: 8.w,
                     textAlign: TextAlign.center,
                     text: description!,
                     color: context.colors.textTertiary,
                   ),
-                if (content != null) ...[SizedBox(height: 24.h), content!],
-                SizedBox(height: 24.h),
+                if (content != null) ...[SizedBox(height: 24.w), content!],
+                SizedBox(height: 24.w),
                 CustomButton(
-                  height: 48.h,
-                  fontSize: 16.sp,
+                  height: 48.w,
+                  fontSize: 16.r,
                   fontWeight: FontWeight.w500,
                   backgroundColor: resolvedBgColor,
                   foregroundColor: buttonLabelColor,

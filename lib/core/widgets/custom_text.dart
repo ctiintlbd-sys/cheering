@@ -98,7 +98,7 @@ class CustomText extends StatelessWidget {
       overflow: _resolvedOverflow,
       softWrap: softWrap,
       style: TextStyle(
-        fontSize: fontSize ?? 14.sp,
+        fontSize: fontSize ?? 14.r,
         fontFamily: fontName ?? FontFamily.sFPro,
         fontWeight: fontWeight,
         color: resolvedColor,

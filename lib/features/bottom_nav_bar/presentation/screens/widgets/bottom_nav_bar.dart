@@ -30,7 +30,7 @@ class BottomNavBar extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.only(top: 10.h),
+      padding: EdgeInsets.only(top: 10.w),
       child: SafeArea(
         top: false,
         child: Row(

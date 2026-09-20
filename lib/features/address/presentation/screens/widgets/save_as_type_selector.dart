@@ -22,7 +22,7 @@ class SaveAsTypeSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(text: 'Save As', color: context.colors.textTertiary),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.w),
         Row(
           children: [
             Expanded(
@@ -82,7 +82,7 @@ class _TypeChip extends StatelessWidget {
       color: bg,
       radiusAll: 99,
       paddingHorizontal: 12.w,
-      paddingVertical: 8.h,
+      paddingVertical: 8.w,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

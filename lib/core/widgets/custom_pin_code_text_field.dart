@@ -171,7 +171,7 @@ class CustomPinCodeTextField extends StatelessWidget {
         cursor: Center(
           child: Container(
             width: 2.w,
-            height: 22.h,
+            height: 22.w,
             decoration: BoxDecoration(
               color: effectiveCursorColor,
               borderRadius: BorderRadius.circular(1.r),

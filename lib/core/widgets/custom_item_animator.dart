@@ -88,7 +88,7 @@ class _CustomItemAnimatorState extends State<CustomItemAnimator>
     // Wrapping in RepaintBoundary fixes Impeller opacity crashes during scroll
     // and improves performance during the scale/fade/slide animations.
     final Widget repaintedChild = RepaintBoundary(child: widget.child);
-    
+
     return switch (widget.animationType) {
       CustomItemAnimationType.slide => FadeTransition(
         opacity: _opacity,

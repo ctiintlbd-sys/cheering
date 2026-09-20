@@ -49,9 +49,9 @@ class AddAddressLocationCard extends StatelessWidget {
                   maxLines: 1,
                 ),
                 CustomText(
-                  top: 2.h,
+                  top: 2.w,
                   text: address.formattedAddress,
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                   color: context.colors.textTertiary,
                   maxLines: 1,
                 ),

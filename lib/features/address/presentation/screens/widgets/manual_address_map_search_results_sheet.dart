@@ -23,7 +23,7 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
     return CustomContainer(
       color: context.colors.background,
       radiusAll: 16.r,
-      paddingVertical: 8.h,
+      paddingVertical: 8.w,
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.08),
@@ -33,7 +33,7 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
       ],
       child: loading && results.isEmpty
           ? Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.h),
+              padding: EdgeInsets.symmetric(vertical: 20.w),
               child: Center(
                 child: SizedBox(
                   width: 22.r,
@@ -47,17 +47,17 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
             )
           : results.isEmpty
           ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
               child: CustomText(
                 text:
                     'No places found. Try adding area and city, e.g. Dhanmondi, Dhaka',
-                fontSize: 14.sp,
+                fontSize: 14.r,
                 color: context.colors.textSecondary,
                 maxLines: 3,
               ),
             )
           : ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 240.h),
+              constraints: BoxConstraints(maxHeight: 240.w),
               child: ListView.separated(
                 shrinkWrap: true,
                 primary: false,
@@ -75,7 +75,7 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
-                          vertical: 12.h,
+                          vertical: 12.w,
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,15 +92,15 @@ class ManualAddressMapSearchResultsSheet extends StatelessWidget {
                                 children: [
                                   CustomText(
                                     text: result.formattedAddress,
-                                    fontSize: 15.sp,
+                                    fontSize: 15.r,
                                     fontWeight: FontWeight.w500,
                                     maxLines: 2,
                                   ),
                                   if (result.area.isNotEmpty) ...[
-                                    SizedBox(height: 2.h),
+                                    SizedBox(height: 2.w),
                                     CustomText(
                                       text: result.area,
-                                      fontSize: 13.sp,
+                                      fontSize: 13.r,
                                       color: context.colors.textSecondary,
                                       maxLines: 1,
                                     ),

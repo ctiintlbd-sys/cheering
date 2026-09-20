@@ -58,11 +58,11 @@ class _SupportScreenState extends State<SupportScreen> {
         backAction: () => Navigator.pop(context),
       ),
       bodyList: [
-        SizedBox(height: 16.h),
+        SizedBox(height: 16.w),
 
         // ── 1. Search Bar ────────────────────────────────────────
         Container(
-          height: 48.h,
+          height: 48.w,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
             color: context.colors.bgSecondary,
@@ -73,7 +73,7 @@ class _SupportScreenState extends State<SupportScreen> {
             children: [
               Icon(
                 Icons.search_rounded,
-                size: 20.sp,
+                size: 20.r,
                 color: context.colors.textSecondary,
               ),
               SizedBox(width: 8.w),
@@ -81,14 +81,14 @@ class _SupportScreenState extends State<SupportScreen> {
                 child: TextField(
                   controller: _searchController,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14.r,
                     fontWeight: FontWeight.w400,
                     color: context.colors.textPrimary,
                   ),
                   decoration: InputDecoration(
                     hintText: 'Search',
                     hintStyle: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14.r,
                       fontWeight: FontWeight.w400,
                       color: context.colors.textSecondary,
                     ),
@@ -102,7 +102,7 @@ class _SupportScreenState extends State<SupportScreen> {
           ),
         ).horizontal(16),
 
-        SizedBox(height: 16.h),
+        SizedBox(height: 16.w),
 
         // ── 2. Quick Actions (Chat / Call) ───────────────────────
         Row(
@@ -141,17 +141,17 @@ class _SupportScreenState extends State<SupportScreen> {
           ],
         ).horizontal(16),
 
-        SizedBox(height: 24.h),
+        SizedBox(height: 24.w),
 
         // ── 3. Frequently Asked Section ──────────────────────────
         CustomText(
           text: 'Frequently asked',
-          fontSize: 14.sp,
+          fontSize: 14.r,
           fontWeight: FontWeight.w600,
           color: context.colors.textSecondary,
         ).horizontal(16),
 
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.w),
 
         ..._faqs.asMap().entries.map((entry) {
           final index = entry.key;
@@ -159,7 +159,7 @@ class _SupportScreenState extends State<SupportScreen> {
           final isExpanded = _expandedFaqIndex == index;
 
           return Padding(
-            padding: EdgeInsets.only(bottom: 8.h),
+            padding: EdgeInsets.only(bottom: 8.w),
             child: InkWell(
               onTap: () {
                 setState(() {
@@ -170,7 +170,7 @@ class _SupportScreenState extends State<SupportScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: 16.w,
-                  vertical: isExpanded ? 16.h : 14.h,
+                  vertical: isExpanded ? 16.w : 14.w,
                 ),
                 decoration: BoxDecoration(
                   color: context.colors.bgSecondary,
@@ -186,7 +186,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         Expanded(
                           child: CustomText(
                             text: faq['question']!,
-                            fontSize: 14.sp,
+                            fontSize: 14.r,
                             fontWeight: FontWeight.w500,
                             color: context.colors.textPrimary,
                           ),
@@ -195,16 +195,16 @@ class _SupportScreenState extends State<SupportScreen> {
                           isExpanded
                               ? Icons.keyboard_arrow_up_rounded
                               : Icons.chevron_right_rounded,
-                          size: 20.sp,
+                          size: 20.r,
                           color: context.colors.textSecondary,
                         ),
                       ],
                     ),
                     if (isExpanded) ...[
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 10.w),
                       CustomText(
                         text: faq['answer']!,
-                        fontSize: 13.sp,
+                        fontSize: 13.r,
                         fontWeight: FontWeight.w400,
                         color: context.colors.textSecondary,
                         textHeight: 1.4,
@@ -217,7 +217,7 @@ class _SupportScreenState extends State<SupportScreen> {
           ).horizontal(16);
         }),
 
-        SizedBox(height: 40.h),
+        SizedBox(height: 40.w),
       ],
     );
   }
@@ -231,7 +231,7 @@ class _SupportScreenState extends State<SupportScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.w),
         decoration: BoxDecoration(
           color: context.colors.bgSecondary,
           borderRadius: BorderRadius.circular(12.r),
@@ -240,11 +240,11 @@ class _SupportScreenState extends State<SupportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 24.sp, color: context.colors.textPrimary),
-            SizedBox(height: 8.h),
+            Icon(icon, size: 24.r, color: context.colors.textPrimary),
+            SizedBox(height: 8.w),
             CustomText(
               text: title,
-              fontSize: 14.sp,
+              fontSize: 14.r,
               fontWeight: FontWeight.w500,
               color: context.colors.textPrimary,
             ),

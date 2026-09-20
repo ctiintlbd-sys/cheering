@@ -100,14 +100,14 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: 'Set Password',
             subtitle: 'Enter your desired password in both fields.',
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           Form(
             key: _formKey,
             child: Column(
@@ -119,7 +119,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   hintText: '••••••••',
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 24.w),
                 CustomTextField.password(
                   controller: _confirmPasswordController,
                   labelText: 'Re-enter Password',
@@ -134,7 +134,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           if (widget.isForgotPassword)
             BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (prev, curr) =>
@@ -149,7 +149,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
             )
           else
             CustomButton(label: 'Confirm', onPressed: _onSubmit),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
       ),
     );

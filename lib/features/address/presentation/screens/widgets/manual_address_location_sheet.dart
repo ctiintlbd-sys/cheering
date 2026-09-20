@@ -20,7 +20,7 @@ class ManualAddressLocationSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      marginBottom: MediaQuery.paddingOf(context).bottom + 8.h,
+      marginBottom: MediaQuery.paddingOf(context).bottom + 8.w,
       marginLeft: 16.w,
       marginRight: 16.w,
       color: context.colors.background,
@@ -49,14 +49,14 @@ class ManualAddressLocationSheet extends StatelessWidget {
                   children: [
                     CustomText(
                       text: address.isEmpty ? 'Loading...' : address,
-                      fontSize: 16.sp,
+                      fontSize: 16.r,
                       fontWeight: FontWeight.w600,
                       maxLines: 1,
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 4.w),
                     CustomText(
                       text: area,
-                      fontSize: 14.sp,
+                      fontSize: 14.r,
                       color: context.colors.textSecondary,
                       maxLines: 1,
                     ),
@@ -65,12 +65,12 @@ class ManualAddressLocationSheet extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 20.w),
           CustomButton(
             onPressed: onConfirm,
             text: 'Confirm Location',
             width: double.infinity,
-            height: 50.h,
+            height: 50.w,
           ),
         ],
       ),

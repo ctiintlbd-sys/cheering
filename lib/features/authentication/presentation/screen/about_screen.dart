@@ -65,14 +65,14 @@ class _AboutScreenState extends State<AboutScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: 'Tell us about you',
             subtitle: 'Enter your name to finish creating your account.',
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           Form(
             key: _formKey,
             child: CustomTextField(
@@ -82,7 +82,7 @@ class _AboutScreenState extends State<AboutScreen> {
               textInputAction: TextInputAction.done,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           BlocBuilder<AuthBloc, AuthState>(
             buildWhen: (prev, curr) =>
                 prev.isVerifyOtpLoading != curr.isVerifyOtpLoading,
@@ -94,7 +94,7 @@ class _AboutScreenState extends State<AboutScreen> {
               );
             },
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
       ),
     );

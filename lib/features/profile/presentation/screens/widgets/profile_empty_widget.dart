@@ -14,21 +14,21 @@ class ProfileEmptyWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Assets.images.profileEmpty.image(width: 190.w, height: 176.h),
+        Assets.images.profileEmpty.image(width: 190.w, height: 176.w),
         CustomText(
-          top: 14.h,
+          top: 14.w,
           textAlign: TextAlign.center,
           text: 'Welcome to Cheering Shop',
-          fontSize: 24.sp,
+          fontSize: 24.r,
           fontWeight: FontWeight.w500,
         ),
         CustomText(
-          top: 12.h,
+          top: 12.w,
           textAlign: TextAlign.center,
           text:
               'Sign in to access your order, settings, reward, and exclusive benefits',
           color: context.colors.textTertiary,
-          bottom: 24.h,
+          bottom: 24.w,
         ),
         CustomButton(
           onPressed: () {

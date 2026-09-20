@@ -61,7 +61,7 @@ class _MenuCategoryTabsState extends State<MenuCategoryTabs> {
     if (widget.categories.isEmpty) return const SizedBox.shrink();
     return CustomContainer(
       horizontalMargin: 16.w,
-      height: 40.h,
+      height: 40.w,
       border: Border(bottom: BorderSide(color: context.colors.borderSecondary)),
       child: ValueListenableBuilder<int>(
         valueListenable: widget.activeIndexNotifier,
@@ -79,7 +79,7 @@ class _MenuCategoryTabsState extends State<MenuCategoryTabs> {
                   widget.onTabTapped(index);
                 },
                 child: Container(
-                  padding: EdgeInsets.only(bottom: 8.h),
+                  padding: EdgeInsets.only(bottom: 8.w),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -95,7 +95,7 @@ class _MenuCategoryTabsState extends State<MenuCategoryTabs> {
                     color: isSelected
                         ? context.colors.primary
                         : context.colors.textSecondary,
-                    fontSize: 14.sp,
+                    fontSize: 14.r,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   ),
                 ),

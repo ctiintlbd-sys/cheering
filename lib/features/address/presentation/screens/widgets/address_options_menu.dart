@@ -15,7 +15,7 @@ Future<AddressMenuAction?> showAddressOptionsMenu({
     context: context,
     position: RelativeRect.fromLTRB(
       position.dx - 160.w,
-      position.dy + 8.h,
+      position.dy + 8.w,
       position.dx,
       position.dy,
     ),
@@ -65,14 +65,14 @@ PopupMenuItem<AddressMenuAction> _menuItem(
 
   return PopupMenuItem(
     value: value,
-    height: 48.h,
+    height: 48.w,
     child: Row(
       children: [
         Icon(icon, size: 20.r, color: color),
         SizedBox(width: 12.w),
         CustomText(
           text: label,
-          fontSize: 15.sp,
+          fontSize: 15.r,
           fontWeight: FontWeight.w500,
           color: color,
         ),

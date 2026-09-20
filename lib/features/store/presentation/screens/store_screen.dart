@@ -14,7 +14,7 @@ class StoreScreen extends StatelessWidget {
       onRefresh: () async {},
       appBar: CustomSliverAppBar(
         toolbarHeight: 0,
-        expandedHeight: 234.h,
+        expandedHeight: 234.w,
         backgroundColor: context.colors.background,
         collapsedBgColor: context.colors.primary,
         flexibleChild: const DeliveryTitleWidget(),
@@ -27,9 +27,9 @@ class StoreScreen extends StatelessWidget {
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(58.h),
+          preferredSize: Size.fromHeight(58.w),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.h),
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.w),
             child: CustomTextField(
               onTap: () {},
               readOnly: true,
@@ -44,10 +44,10 @@ class StoreScreen extends StatelessWidget {
         ),
       ),
       bodyList: [
-        SizedBox(height: 20.h),
+        SizedBox(height: 20.w),
 
         SizedBox(
-          height: 96.h,
+          height: 96.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -55,51 +55,51 @@ class StoreScreen extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.h),
+                padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: const StoreCategoriesWidget(),
               );
             },
           ),
         ),
 
-        SizedBox(height: 24.h),
+        SizedBox(height: 24.w),
         SectionHeaderWidget(title: 'All Stores', onTap: () {}).horizontal(16.w),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.w),
         SizedBox(
-          height: 202.h,
+          height: 202.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
             itemCount: 5,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.h),
+              padding: EdgeInsets.symmetric(vertical: 4.w),
               //child: const StoreCardWidget(restaurant: null,),
             ),
           ),
         ),
 
-        SizedBox(height: 20.h),
+        SizedBox(height: 20.w),
         SectionHeaderWidget(
           title: 'Top Pics for you',
           onTap: () {},
         ).horizontal(16.w),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.w),
         SizedBox(
-          height: 184.h,
+          height: 184.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
             itemCount: 5,
             separatorBuilder: (context, index) => SizedBox(width: 12.w),
             itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.h),
+              padding: EdgeInsets.symmetric(vertical: 4.w),
               child: const ProductCardWidget(),
             ),
           ),
         ),
 
-        SizedBox(height: 120.h),
+        SizedBox(height: 120.w),
       ],
     );
   }

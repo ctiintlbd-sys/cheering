@@ -8,17 +8,17 @@ class BitesItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 184.h,
+      height: 184.w,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         separatorBuilder: (context, index) => SizedBox(width: 16.w),
         itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.symmetric(vertical: 4.h),
+          padding: EdgeInsets.symmetric(vertical: 4.w),
           child: CustomNetworkImage(
             width: 124.w,
-            height: 176.h,
+            height: 176.w,
             borderRadius: 12.r,
             imageUrl:
                 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5',

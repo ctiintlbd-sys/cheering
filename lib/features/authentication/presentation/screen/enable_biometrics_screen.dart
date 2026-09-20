@@ -70,7 +70,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: biometricUi.enableScreenTitle,
             subtitle:
@@ -78,14 +78,14 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           CustomContainer(
             height: 120.r,
             width: 120.r,
             shape: BoxShape.circle,
             child: biometricUi.icon.svg(),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           BlocBuilder<AuthBloc, AuthState>(
             buildWhen: (prev, curr) =>
                 prev.isEnableBiometricsLoading !=
@@ -103,7 +103,7 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
                             const EnableBiometricsRequested(),
                           ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 12.w),
                   CustomButton(
                     bordersColor: context.colors.borderPrimary,
                     backgroundColor: context.colors.background,

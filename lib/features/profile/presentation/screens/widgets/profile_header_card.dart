@@ -19,7 +19,7 @@ class ProfileHeaderCard extends StatelessWidget {
 
     return CustomContainer(
       onTap: () => context.push(RoutePaths.accountSettings),
-      paddingVertical: 8.h,
+      paddingVertical: 8.w,
       paddingHorizontal: 12.w,
       radiusAll: 8.r,
       color: context.colors.bgSecondary,
@@ -37,12 +37,12 @@ class ProfileHeaderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  fontSize: 16.sp,
+                  fontSize: 16.r,
                   fontWeight: FontWeight.w600,
                   text: profile.fullName,
                 ),
                 CustomText(
-                  top: 4.h,
+                  top: 4.w,
                   color: context.colors.textTertiary,
                   text: profile.email,
                 ),

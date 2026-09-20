@@ -39,7 +39,7 @@ class ToastMessageHelper {
           content: Text(
             message,
             style: TextStyle(
-              fontSize: 13.sp,
+              fontSize: 13.r,
               color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
@@ -49,7 +49,7 @@ class ToastMessageHelper {
             borderRadius: BorderRadius.circular(10.r),
             side: const BorderSide(color: Color(0xFF1E293B), width: 0.8),
           ),
-          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
           duration: const Duration(seconds: 3),
         ),
       );

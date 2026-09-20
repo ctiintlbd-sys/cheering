@@ -53,26 +53,26 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 12.h),
+          padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 12.w),
           child: CustomContainer(
-            paddingAll: 24.h,
+            paddingAll: 24.w,
             radiusAll: 16.r,
             color: context.colors.background,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CustomText(
-                  top: 22.h,
+                  top: 22.w,
                   text: biometricUi.promptTitle,
-                  fontSize: 16.sp,
+                  fontSize: 16.r,
                   fontWeight: FontWeight.w600,
                 ),
                 CustomText(
-                  top: 4.h,
+                  top: 4.w,
                   text: 'Log in to your Cheering account',
                   color: context.colors.textSecondary,
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.w),
                 BlocBuilder<AuthBloc, AuthState>(
                   buildWhen: (prev, curr) =>
                       prev.isBiometricLoginLoading !=
@@ -100,7 +100,7 @@ class _TouchFaceIdSheetState extends State<TouchFaceIdSheet> {
                     );
                   },
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.w),
                 CustomButton(
                   backgroundColor: context.colors.background,
                   foregroundColor: context.colors.textPrimary,

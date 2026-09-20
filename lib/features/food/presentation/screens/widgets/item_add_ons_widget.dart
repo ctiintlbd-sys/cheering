@@ -19,14 +19,14 @@ class ItemAddOnsWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomText(
-          top: 6.sp,
+          top: 6.r,
           text: 'Add-ons',
-          fontSize: 12.sp,
+          fontSize: 12.r,
           fontWeight: FontWeight.w500,
           color: context.colors.textTertiary,
         ),
         CustomContainer(
-          verticalMargin: 12.h,
+          verticalMargin: 12.w,
           color: context.colors.background,
           child: Column(
             children: [
@@ -37,7 +37,7 @@ class ItemAddOnsWidget extends StatelessWidget {
                 subtitle: 'Garlic mayo or spicy ketchup',
                 price: '+৳40',
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 8.w),
               _buildAddOnTile(
                 context: context,
                 index: 1,
@@ -65,7 +65,7 @@ class ItemAddOnsWidget extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => onToggle(index),
       child: Padding(
-        padding: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.only(bottom: 16.w),
         child: Row(
           children: [
             Expanded(
@@ -73,16 +73,16 @@ class ItemAddOnsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(text: title, fontWeight: FontWeight.w600),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 4.w),
                   CustomText(
                     text: subtitle,
-                    fontSize: 12.sp,
+                    fontSize: 12.r,
                     color: context.colors.textTertiary,
                   ),
                 ],
               ),
             ),
-            CustomText(text: price, fontSize: 16.sp),
+            CustomText(text: price, fontSize: 16.r),
             SizedBox(width: 14.w),
             CustomContainer(
               width: 20.r,

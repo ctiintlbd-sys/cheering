@@ -9,7 +9,7 @@ class StoreCategoriesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 60.w,
-      height: 88.h,
+      height: 88.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -23,11 +23,11 @@ class StoreCategoriesWidget extends StatelessWidget {
             child: CustomNetworkImage(fit: BoxFit.contain, imageUrl: ''),
           ),
 
-          SizedBox(height: 8.h),
+          SizedBox(height: 8.w),
 
           SizedBox(
             width: 60.w,
-            height: 20.h,
+            height: 20.w,
             child: CustomText(
               text: 'Grocery',
               fontWeight: FontWeight.w500,

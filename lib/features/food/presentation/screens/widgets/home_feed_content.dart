@@ -29,7 +29,7 @@ class CategoriesSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 98.h,
+          height: 98.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -51,7 +51,7 @@ class CategoriesSection extends StatelessWidget {
               }
 
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.h),
+                padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
                   child: FoodCategoriesWidget(category: categories[index]),
@@ -60,7 +60,7 @@ class CategoriesSection extends StatelessWidget {
             },
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: 24.w),
       ],
     );
   }
@@ -81,9 +81,9 @@ class SuperDealsSection extends StatelessWidget {
           title: 'Super Deals 🔥',
           onTap: () {},
         ).horizontal(16.w),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.w),
         SizedBox(
-          height: 228.h,
+          height: 228.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -97,7 +97,7 @@ class SuperDealsSection extends StatelessWidget {
             },
           ),
         ),
-        SizedBox(height: 28.h),
+        SizedBox(height: 28.w),
       ],
     );
   }
@@ -114,13 +114,10 @@ class NearbyRestaurantsSection extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SectionHeaderWidget(
-          title: 'Nearby',
-          onTap: () {},
-        ).horizontal(16.w),
-        SizedBox(height: 10.h),
+        SectionHeaderWidget(title: 'Nearby', onTap: () {}).horizontal(16.w),
+        SizedBox(height: 10.w),
         SizedBox(
-          height: 202.h,
+          height: 202.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -128,22 +125,20 @@ class NearbyRestaurantsSection extends StatelessWidget {
             separatorBuilder: (_, __) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.h),
+                padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
-                  child:  StoreCardWidget(restaurant: nearby[index]),
+                  child: StoreCardWidget(restaurant: nearby[index]),
                 ),
               );
             },
           ),
         ),
-        SizedBox(height: 28.h),
+        SizedBox(height: 28.w),
       ],
     );
   }
 }
-
-
 
 class TopRestaurantsSection extends StatelessWidget {
   const TopRestaurantsSection({super.key, required this.topRated});
@@ -159,9 +154,9 @@ class TopRestaurantsSection extends StatelessWidget {
           title: 'Top Restaurants',
           onTap: () {},
         ).horizontal(16.w),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.w),
         SizedBox(
-          height: 202.h,
+          height: 202.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -169,10 +164,10 @@ class TopRestaurantsSection extends StatelessWidget {
             separatorBuilder: (_, __) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.h),
+                padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
-                  child:  StoreCardWidget(restaurant: topRated[index]),
+                  child: StoreCardWidget(restaurant: topRated[index]),
                 ),
               );
             },

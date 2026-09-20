@@ -128,7 +128,7 @@ class CustomButton extends StatelessWidget {
               ? context.colors.primary.withValues(alpha: 0.05)
               : Colors.white.withValues(alpha: 0.1),
           child: Container(
-            height: height ?? 48.h,
+            height: height ?? 48.w,
             width: width ?? double.infinity,
             padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w),
             alignment: Alignment.center,
@@ -141,8 +141,8 @@ class CustomButton extends StatelessWidget {
                   child: isLoading
                       ? SizedBox(
                           key: const ValueKey('button_loading'),
-                          height: 20.h,
-                          width: 20.h,
+                          height: 20.w,
+                          width: 20.w,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.2,
                             valueColor: AlwaysStoppedAnimation<Color>(
@@ -172,7 +172,7 @@ class CustomButton extends StatelessWidget {
                                   color: effectiveFg,
                                   fontName: fontName ?? FontFamily.sFPro,
                                   fontWeight: fontWeight,
-                                  fontSize: fontSize ?? 16.sp,
+                                  fontSize: fontSize ?? 16.r,
                                   textAlign: TextAlign.center,
                                   maxLines: 1,
                                 ),

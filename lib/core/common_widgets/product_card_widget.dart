@@ -10,19 +10,19 @@ class ProductCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 138.w,
-      height: 176.h,
+      height: 176.w,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomNetworkImage(
             backgroundColor: context.colors.bgSecondary,
-            height: 124.h,
+            height: 124.w,
             borderRadius: 12.r,
             imageUrl:
                 'https://images.unsplash.com/photo-1513104890138-7c749659a591',
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: 10.w),
           RichText(
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

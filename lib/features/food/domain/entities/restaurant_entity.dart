@@ -54,7 +54,7 @@ class RestaurantEntity extends Equatable {
     required this.deliveryFee,
     required this.minOrderAmount,
     required this.isOpen,
-     this.distanceKm = 0.0,
+    this.distanceKm = 0.0,
     required this.isFavorite,
     this.description,
     this.phone,

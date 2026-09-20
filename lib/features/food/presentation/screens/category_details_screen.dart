@@ -15,12 +15,12 @@ class CategoryDetailsScreen extends StatelessWidget {
       sideContentPadding: 16.w,
       appBar: CustomSliverAppBar(
         title: categoryName,
-        expandedHeight: 96.h,
+        expandedHeight: 96.w,
         flexibleChild: SizedBox.shrink(),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(28.h),
+          preferredSize: Size.fromHeight(28.w),
           child: SizedBox(
-            height: 40.h,
+            height: 40.w,
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -32,10 +32,10 @@ class CategoryDetailsScreen extends StatelessWidget {
                 return CustomFilterChip(
                   padding: EdgeInsets.symmetric(
                     horizontal: 12.w,
-                    vertical: 6.h,
+                    vertical: 6.w,
                   ),
                   label: 'Sort',
-                  labelSize: 14.sp,
+                  labelSize: 14.r,
                   isSelected: isSelected,
                   onTap: () {},
                 );
@@ -45,17 +45,17 @@ class CategoryDetailsScreen extends StatelessWidget {
         ),
       ),
       bodyList: [
-        SizedBox(height: 26.h),
+        SizedBox(height: 26.w),
         CustomText(
           text: '36 places serving $categoryName',
           color: context.colors.textSecondary,
           fontWeight: FontWeight.w500,
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.w),
 
         SliverList.separated(
           itemCount: 10,
-          separatorBuilder: (context, index) => SizedBox(height: 4.h),
+          separatorBuilder: (context, index) => SizedBox(height: 4.w),
           itemBuilder: (context, index) {
             return CustomItemAnimator(
               index: index,
@@ -65,7 +65,7 @@ class CategoryDetailsScreen extends StatelessWidget {
           },
         ),
 
-        SizedBox(height: 120.h),
+        SizedBox(height: 120.w),
       ],
     );
   }

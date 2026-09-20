@@ -13,17 +13,17 @@ class EmptyAddressWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Assets.icons.emptyLocation.svg(),
-          SizedBox(height: 44.h),
+          SizedBox(height: 44.w),
           CustomText(
             textAlign: TextAlign.center,
             text: 'No saved address',
-            fontSize: 20.sp,
+            fontSize: 20.r,
             fontWeight: FontWeight.w600,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
           CustomText(
             text: 'Add your delivery address\nfor a faster checkout experience',
-            fontSize: 16.sp,
+            fontSize: 16.r,
             color: context.colors.textTertiary,
             textAlign: TextAlign.center,
           ),

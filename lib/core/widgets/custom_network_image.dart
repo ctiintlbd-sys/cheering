@@ -202,16 +202,16 @@ class CustomNetworkImage extends StatelessWidget {
       height: height,
       width: width,
       decoration: _decoration(),
-      child:
-          ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius ?? 0),
-            child: fallbackAsset ??
-                Assets.images.placeholder.image(
-                    height: height,
-                    width: width,
-                    fit: BoxFit.cover
-                ),
-          )
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0),
+        child:
+            fallbackAsset ??
+            Assets.images.placeholder.image(
+              height: height,
+              width: width,
+              fit: BoxFit.cover,
+            ),
+      ),
     );
   }
 }

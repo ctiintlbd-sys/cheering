@@ -18,15 +18,15 @@ class AllCategoriesBottomSheet extends StatelessWidget {
       topRightRadius: 24.r,
       child: Column(
         children: [
-          SizedBox(height: 14.h),
+          SizedBox(height: 14.w),
           CustomContainer(
             width: 54.w,
-            height: 4.h,
+            height: 4.w,
             color: context.colors.textSecondary.withValues(alpha: 0.2),
             radiusAll: 4.r,
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
@@ -34,7 +34,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
               children: [
                 CustomText(
                   text: 'Category',
-                  fontSize: 16.sp,
+                  fontSize: 16.r,
                   fontWeight: FontWeight.w600,
                 ),
                 CustomText(
@@ -46,7 +46,7 @@ class AllCategoriesBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 14.w),
 
           // Grid with BlocBuilder
           Expanded(
@@ -68,10 +68,10 @@ class AllCategoriesBottomSheet extends StatelessWidget {
                 final categories = state.allCategories ?? [];
 
                 return GridView.builder(
-                  padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 44.h),
+                  padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 44.w),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
-                    mainAxisSpacing: 24.h,
+                    mainAxisSpacing: 24.w,
                     crossAxisSpacing: 12.w,
                     childAspectRatio: 74 / 90,
                   ),

@@ -18,7 +18,7 @@ class OrderEmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Assets.icons.emptyOrder.svg(),
-            SizedBox(height: 20.h),
+            SizedBox(height: 20.w),
 
             // Title: "No orders"
             CustomText(
@@ -28,13 +28,13 @@ class OrderEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 4.w),
 
             // Description
             CustomText(
               text:
                   'Orders will appear here the moment a customer checks out. Keep your store open to keep receiving them.',
-              fontSize: 12.sp,
+              fontSize: 12.r,
               color: context.colors.textTertiary,
               textAlign: TextAlign.center,
             ),

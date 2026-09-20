@@ -19,14 +19,14 @@ class ItemSizeOptionsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          top: 24.sp,
+          top: 24.r,
           text: 'Choose size',
-          fontSize: 12.sp,
+          fontSize: 12.r,
           fontWeight: FontWeight.w500,
           color: context.colors.textTertiary,
         ),
         CustomContainer(
-          verticalMargin: 12.h,
+          verticalMargin: 12.w,
           color: context.colors.white,
           radiusAll: 16.r,
           bordersColor: context.colors.borderSecondary,
@@ -72,7 +72,7 @@ class ItemSizeOptionsWidget extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => onChanged(index),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -80,10 +80,10 @@ class ItemSizeOptionsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(text: title, fontWeight: FontWeight.w600),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.w),
                 CustomText(
                   text: subtitle,
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                   color: context.colors.textTertiary,
                 ),
               ],

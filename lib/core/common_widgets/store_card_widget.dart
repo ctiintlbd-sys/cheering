@@ -19,18 +19,18 @@ class StoreCardWidget extends StatelessWidget {
       },
       child: SizedBox(
         width: 174.w,
-        height: 194.h,
+        height: 194.w,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomNetworkImage(
-              height: 124.h,
+              height: 124.w,
               width: double.maxFinite,
               borderRadius: 12.r,
               imageUrl: restaurant.logoUrl,
             ),
             CustomText(
-              top: 10.h,
+              top: 10.w,
               text: restaurant.name,
               fontWeight: FontWeight.w500,
               maxLines: 1,
@@ -42,7 +42,7 @@ class StoreCardWidget extends StatelessWidget {
               text: TextSpan(
                 style: TextStyle(
                   height: 1.55,
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                   color: context.colors.textTertiary,
                 ),
                 children: [
@@ -54,7 +54,9 @@ class StoreCardWidget extends StatelessWidget {
                       size: 12.r,
                     ),
                   ),
-                  TextSpan(text: ' ৳${restaurant.deliveryFee.toStringAsFixed(0)} '),
+                  TextSpan(
+                    text: ' ৳${restaurant.deliveryFee.toStringAsFixed(0)} ',
+                  ),
                   TextSpan(text: '•'),
                   TextSpan(text: ' ${restaurant.distanceKm}Km\n'),
                   WidgetSpan(
@@ -65,7 +67,10 @@ class StoreCardWidget extends StatelessWidget {
                       size: 12.r,
                     ),
                   ),
-                  TextSpan(text: ' ${restaurant.ratingAvg} (${restaurant.ratingCount}) '),
+                  TextSpan(
+                    text:
+                        ' ${restaurant.ratingAvg} (${restaurant.ratingCount}) ',
+                  ),
                   TextSpan(text: '•'),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,

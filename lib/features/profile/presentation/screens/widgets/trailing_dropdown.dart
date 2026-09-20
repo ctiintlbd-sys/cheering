@@ -49,7 +49,7 @@ class _TrailingDropdownState extends State<TrailingDropdown> {
         dropdownColor: context.colors.bgSecondary,
         borderRadius: BorderRadius.circular(12.r),
         style: TextStyle(
-          fontSize: 14.sp,
+          fontSize: 14.r,
           fontWeight: FontWeight.w500,
           color: context.colors.textSecondary,
         ),

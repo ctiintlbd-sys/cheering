@@ -62,7 +62,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: 'Forgot Password? 🔐',
             subtitle:
@@ -70,7 +70,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           Form(
             key: _formKey,
             child: CustomTextField(
@@ -83,7 +83,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
               onFieldSubmitted: (_) => _onSubmit(),
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           BlocBuilder<AuthBloc, AuthState>(
             buildWhen: (prev, curr) =>
                 prev.isForgotPasswordLoading != curr.isForgotPasswordLoading,
@@ -95,7 +95,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
               );
             },
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
       ),
     );

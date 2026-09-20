@@ -8,7 +8,7 @@ class OrderStatusTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44.h,
+      height: 44.w,
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16.w),

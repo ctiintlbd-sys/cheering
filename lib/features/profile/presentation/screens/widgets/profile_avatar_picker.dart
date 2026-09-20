@@ -59,7 +59,7 @@ class ProfileAvatarPicker extends StatelessWidget {
                           },
                         );
                       },
-                child: Assets.icons.imageUpdate.svg(width: 28.w, height: 28.h),
+                child: Assets.icons.imageUpdate.svg(width: 28.w, height: 28.w),
               ),
             ),
             if (isUploading)
@@ -84,10 +84,10 @@ class ProfileAvatarPicker extends StatelessWidget {
                               color: context.colors.background,
                             ),
                           ),
-                          SizedBox(height: 6.h),
+                          SizedBox(height: 6.w),
                           CustomText(
                             text: '${(uploadProgress * 100).toInt()}%',
-                            fontSize: 13.sp,
+                            fontSize: 13.r,
                             fontWeight: FontWeight.w600,
                             color: context.colors.background,
                           ),

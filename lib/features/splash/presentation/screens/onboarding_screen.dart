@@ -66,18 +66,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: kToolbarHeight + 32.h),
+                  SizedBox(height: kToolbarHeight + 32.w),
                   SvgPicture.asset(item.image),
                   const Spacer(),
                   CustomText(
                     left: 32.w,
                     right: 32.w,
                     text: item.title,
-                    fontSize: 24.sp,
+                    fontSize: 24.r,
                     textAlign: TextAlign.center,
                   ),
                   CustomText(
-                    top: 8.h,
+                    top: 8.w,
                     left: 32.w,
                     right: 32.w,
                     text: item.subtitle,

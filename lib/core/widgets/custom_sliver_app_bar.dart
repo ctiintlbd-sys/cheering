@@ -99,7 +99,7 @@ class CustomSliverAppBar extends StatelessWidget {
               Navigator.maybePop(context);
             }
           },
-      icon: Assets.icons.arrowBack.svg(height: 24.h, width: 24.w),
+      icon: Assets.icons.arrowBack.svg(height: 24.w, width: 24.w),
     );
   }
 

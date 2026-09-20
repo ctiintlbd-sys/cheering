@@ -515,7 +515,7 @@ class _CustomTextFieldState extends State<CustomTextField>
           CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: Offset(horizontalOffset, size.height + 4.h),
+            offset: Offset(horizontalOffset, size.height + 4.w),
             child: Material(
               color: Colors.transparent,
               child: _DropdownMenu(
@@ -656,7 +656,7 @@ class _CustomTextFieldState extends State<CustomTextField>
     // ── Prefix icon ───────────────────────────────────────────
     final prefixIconConstraints =
         widget.prefixIconConstraints ??
-        BoxConstraints(minWidth: 40.w, minHeight: 24.h);
+        BoxConstraints(minWidth: 40.w, minHeight: 24.w);
 
     final resolvedPrefixIcon = widget.prefixIcon != null
         ? Padding(
@@ -714,7 +714,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         suffixIconConstraints: _isPassword
             ? null
             : (widget.suffixIconConstraints ??
-                  BoxConstraints(minWidth: 40.w, minHeight: 24.h)),
+                  BoxConstraints(minWidth: 40.w, minHeight: 24.w)),
         enabledBorder: enabledBorder,
         focusedBorder: focusedBorder,
         errorBorder: errorBorder,
@@ -723,7 +723,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         border: enabledBorder,
         errorStyle: TextStyle(
           color: colors.error,
-          fontSize: 12.sp,
+          fontSize: 12.r,
           fontWeight: FontWeight.w400,
           fontFamily: _effectiveFont,
         ),
@@ -887,7 +887,7 @@ class _DropdownMenuState extends State<_DropdownMenu> {
                 ),
               )
             : ListView.separated(
-                padding: EdgeInsets.symmetric(vertical: 6.h),
+                padding: EdgeInsets.symmetric(vertical: 6.w),
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemCount: widget.items.length,
@@ -946,7 +946,7 @@ class _DefaultMenuItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.w),
         child: Row(
           children: [
             Expanded(

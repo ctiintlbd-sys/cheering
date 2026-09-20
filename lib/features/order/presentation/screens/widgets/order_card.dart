@@ -11,7 +11,7 @@ class OrderCard extends StatelessWidget {
       child: CustomContainer(
         onTap: () {},
         width: double.infinity,
-        paddingAll: 16.h,
+        paddingAll: 16.w,
         radiusAll: 16,
         bordersColor: context.colors.borderSecondary,
         child: Column(
@@ -35,7 +35,7 @@ class OrderCard extends StatelessWidget {
                     children: [
                       CustomText(
                         text: 'Fried Chicken Bucket',
-                        fontSize: 16.sp,
+                        fontSize: 16.r,
                         fontWeight: FontWeight.w600,
                         maxLines: 1,
                       ),
@@ -50,7 +50,7 @@ class OrderCard extends StatelessWidget {
                             text: TextSpan(
                               style: TextStyle(
                                 height: 1.88,
-                                fontSize: 14.sp,
+                                fontSize: 14.r,
                                 color: context.colors.textTertiary,
                               ),
                               children: [
@@ -63,14 +63,14 @@ class OrderCard extends StatelessWidget {
 
                           CustomContainer(
                             paddingHorizontal: 12.w,
-                            paddingVertical: 4.h,
+                            paddingVertical: 4.w,
                             color: context.colors.bgSuccessSecondary.withValues(
                               alpha: 0.1,
                             ),
                             radiusAll: 36.r,
                             child: CustomText(
                               text: 'Delivered',
-                              fontSize: 12.sp,
+                              fontSize: 12.r,
                               fontWeight: FontWeight.w500,
                               color: context.colors.bgSuccessSecondary,
                               maxLines: 1,
@@ -84,9 +84,9 @@ class OrderCard extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 8.h),
+            SizedBox(height: 8.w),
             Divider(color: context.colors.borderSecondary),
-            SizedBox(height: 10.h),
+            SizedBox(height: 10.w),
 
             Row(
               children: [
@@ -99,10 +99,10 @@ class OrderCard extends StatelessWidget {
                 CustomContainer(
                   radiusAll: 38.r,
                   paddingHorizontal: 12.w,
-                  paddingVertical: 8.h,
+                  paddingVertical: 8.w,
                   bordersColor: context.colors.borderSecondary,
                   child: CustomText(
-                    fontSize: 12.sp,
+                    fontSize: 12.r,
                     fontWeight: FontWeight.w600,
                     text: 'Rate Order',
                   ),
@@ -111,10 +111,10 @@ class OrderCard extends StatelessWidget {
                 CustomContainer(
                   radiusAll: 38.r,
                   paddingHorizontal: 12.w,
-                  paddingVertical: 8.h,
+                  paddingVertical: 8.w,
                   color: context.colors.primary,
                   child: CustomText(
-                    fontSize: 12.sp,
+                    fontSize: 12.r,
                     fontWeight: FontWeight.w600,
                     color: context.colors.white,
                     text: 'Order Again',

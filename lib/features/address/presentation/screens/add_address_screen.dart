@@ -118,7 +118,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         sideContentPadding: 16.w,
         appBar: const CustomSliverAppBar(title: 'Add Address'),
         bodyList: [
-          SizedBox(height: 8.h),
+          SizedBox(height: 8.w),
           BlocSelector<AddressFormCubit, AddressFormState, AddressEntity>(
             selector: (state) => state.location,
             builder: (context, location) => AddAddressLocationCard(
@@ -126,7 +126,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               onChangeTap: _changeLocation,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           BlocSelector<AddressFormCubit, AddressFormState, AddressType>(
             selector: (state) => state.type,
             builder: (context, type) => SaveAsTypeSelector(
@@ -135,7 +135,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   context.read<AddressFormCubit>().setType(value),
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           Form(
             key: _formKey,
             child: Column(
@@ -145,7 +145,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   hintText: 'House 12, Road 8',
                   controller: _houseController,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomTextField(
                   onTap: _changeLocation,
                   readOnly: true,
@@ -153,14 +153,14 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   hintText: 'type you location',
                   controller: _areaController,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomTextField(
                   labelText: 'Landmark (helps the rider find you)',
                   hintText: 'Near City Bank, Blue gate',
                   controller: _landmarkController,
                   validatorType: null,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomTextField(
                   labelText: 'Phone Number',
                   hintText: '01************',
@@ -176,7 +176,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       ),
                       Container(
                         width: 1,
-                        height: 20.h,
+                        height: 20.w,
                         margin: EdgeInsets.only(left: 8.w),
                         color: context.colors.textPlaceholder,
                       ),
@@ -187,7 +187,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               ],
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
         bottomNavigationBar: BlocSelector<AddressBloc, AddressState, bool>(
           selector: (state) => state.isSaving,

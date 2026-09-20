@@ -36,7 +36,7 @@ class DeliveryTitleWidget extends StatelessWidget {
               CustomText(
                 textAlign: TextAlign.start,
                 text: 'Delivery to',
-                fontSize: 12.sp,
+                fontSize: 12.r,
                 fontWeight: FontWeight.w500,
                 color: context.colors.white.withValues(alpha: 0.8),
               ),
@@ -46,10 +46,10 @@ class DeliveryTitleWidget extends StatelessWidget {
                     'Getting location...',
                 builder: (context, addressText) {
                   return CustomText(
-                    top: 2.h,
+                    top: 2.w,
                     textAlign: TextAlign.start,
                     text: addressText,
-                    fontSize: 12.sp,
+                    fontSize: 12.r,
                     maxLines: 1,
                     textOverflow: TextOverflow.ellipsis,
                     fontWeight: FontWeight.w500,

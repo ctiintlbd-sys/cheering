@@ -36,15 +36,15 @@ class FoodScreen extends StatelessWidget {
             },
             appBar: CustomSliverAppBar(
               toolbarHeight: 0,
-              expandedHeight: 234.h,
+              expandedHeight: 234.w,
               backgroundColor: context.colors.background,
               collapsedBgColor: context.colors.primary,
               flexibleChild: const DeliveryTitleWidget(),
               flexibleBackground: const FoodFlexibleBackground(imageUrl: ''),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(58.h),
+                preferredSize: Size.fromHeight(58.w),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.h),
+                  padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.w),
                   child: CustomTextField(
                     onTap: () {},
                     readOnly: true,
@@ -59,7 +59,7 @@ class FoodScreen extends StatelessWidget {
               ),
             ),
             bodyList: [
-              SizedBox(height: 20.h),
+              SizedBox(height: 20.w),
               ...switch (state.status) {
                 HomeFeedStatus.initial ||
                 HomeFeedStatus.loading => [const HomeFeedLoadingWidget()],
@@ -74,23 +74,20 @@ class FoodScreen extends StatelessWidget {
                   if (state.feed!.nearby.isNotEmpty)
                     NearbyRestaurantsSection(nearby: state.feed!.nearby),
 
-                 // if (state.feed!.promoted.isNotEmpty)
-                   // SuperDealsSection(promoted: state.feed!.promoted),
-
+                  // if (state.feed!.promoted.isNotEmpty)
+                  // SuperDealsSection(promoted: state.feed!.promoted),
                   SectionHeaderWidget(
                     title: 'Bites 🔥',
                     subtitle: "Discover what everyone's eating",
                     onTap: () {},
                   ).horizontal(16.w),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 8.w),
                   const BitesItems(),
-                  SizedBox(height: 20.h),
-
-
+                  SizedBox(height: 20.w),
 
                   if (state.feed!.promoted.isNotEmpty)
                     TopRestaurantsSection(topRated: state.feed!.promoted),
-                  SizedBox(height: 120.h),
+                  SizedBox(height: 120.w),
                 ],
                 _ => [const SizedBox.shrink()],
               },

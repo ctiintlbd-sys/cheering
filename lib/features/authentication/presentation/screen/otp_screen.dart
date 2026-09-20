@@ -94,19 +94,19 @@ class _OtpScreenState extends State<OtpScreen> {
       child: SliverScaffold(
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: 'Enter OTP',
             subtitle: 'We have sent a verification code to ${widget.email}',
           ),
         ),
         bodyList: [
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
 
           /// PinCode Input Field
           Center(child: CustomPinCodeTextField(controller: _otpController)),
 
-          SizedBox(height: 32.h),
+          SizedBox(height: 32.w),
 
           /// Confirm CTA Button
           CustomButton(
@@ -114,7 +114,7 @@ class _OtpScreenState extends State<OtpScreen> {
             onPressed: () => _onConfirm(context),
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
 
           /// "Didn't receive code? Resend Code" Row with Timer
           Row(
@@ -122,7 +122,7 @@ class _OtpScreenState extends State<OtpScreen> {
             children: [
               CustomText(
                 text: "Didn't receive code?",
-                fontSize: 14.sp,
+                fontSize: 14.r,
                 fontWeight: FontWeight.w400,
                 color: context.colors.textSecondary,
               ),
@@ -135,7 +135,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     text: isCounting
                         ? 'Resend in (${seconds}s)'
                         : 'Resend Code',
-                    fontSize: 14.sp,
+                    fontSize: 14.r,
                     fontWeight: FontWeight.w600,
                     color: isCounting
                         ? context.colors.textPlaceholder
@@ -147,7 +147,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ],
           ),
 
-          SizedBox(height: 32.h),
+          SizedBox(height: 32.w),
         ],
       ),
     );

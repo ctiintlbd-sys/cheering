@@ -92,7 +92,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         sideContentPadding: 16.w,
         appBar: const CustomSliverAppBar(title: 'Account Settings'),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           BlocBuilder<ProfileBloc, ProfileState>(
             buildWhen: (prev, curr) =>
                 prev.uploadStatus != curr.uploadStatus ||
@@ -113,7 +113,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               );
             },
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           Form(
             key: _formKey,
             child: Column(
@@ -123,7 +123,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   controller: _nameController,
                   hintText: 'e.g. Tanvir Hridoy',
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomTextField(
                   labelText: 'Email',
                   controller: _emailController,
@@ -131,7 +131,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   keyboardType: TextInputType.emailAddress,
                   enabled: false,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomTextField(
                   labelText: 'Phone number',
                   controller: _phoneController,
@@ -141,7 +141,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ],
             ),
           ),
-          SizedBox(height: 32.h),
+          SizedBox(height: 32.w),
         ],
         bottomNavigationBar: BlocBuilder<ProfileBloc, ProfileState>(
           buildWhen: (prev, curr) =>

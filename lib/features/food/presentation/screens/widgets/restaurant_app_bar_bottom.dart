@@ -5,7 +5,8 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_category_tabs.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 
-class RestaurantAppBarBottom extends StatelessWidget implements PreferredSizeWidget {
+class RestaurantAppBarBottom extends StatelessWidget
+    implements PreferredSizeWidget {
   final List<MenuCategoryEntity> categories;
   final ValueNotifier<int> activeIndexNotifier;
   final ValueChanged<int> onTabTapped;
@@ -27,12 +28,12 @@ class RestaurantAppBarBottom extends StatelessWidget implements PreferredSizeWid
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 10.w),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: CustomTextField(
               validator: (_) => null,
-              contentPaddingVertical: 12.h,
+              contentPaddingVertical: 12.w,
               hintText: 'Search Menu',
               prefixIcon: Assets.icons.search.svg(),
               fillColor: context.colors.bgSecondary,
@@ -40,7 +41,7 @@ class RestaurantAppBarBottom extends StatelessWidget implements PreferredSizeWid
               borderRadius: 99.r,
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 20.w),
           MenuCategoryTabs(
             categories: categories,
             activeIndexNotifier: activeIndexNotifier,
@@ -52,5 +53,5 @@ class RestaurantAppBarBottom extends StatelessWidget implements PreferredSizeWid
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(118.h); 
+  Size get preferredSize => Size.fromHeight(118.w);
 }

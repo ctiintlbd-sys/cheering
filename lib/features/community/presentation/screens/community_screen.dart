@@ -29,14 +29,14 @@ class CommunityScreen extends StatelessWidget {
                     height: 48.r,
                   ),
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 24.w),
                 CustomText(
                   text: 'Coming Soon!',
                   fontSize: 24.r,
                   fontWeight: FontWeight.w700,
                   color: context.colors.textPrimary,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12.w),
                 CustomText(
                   text:
                       'We are working hard to bring you a vibrant community experience. Stay tuned for exciting updates!',
@@ -47,7 +47,7 @@ class CommunityScreen extends StatelessWidget {
                   maxLines: 3,
                   textHeight: 1.5,
                 ),
-                SizedBox(height: 80.h),
+                SizedBox(height: 80.w),
               ],
             ),
           ),

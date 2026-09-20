@@ -20,8 +20,9 @@ final List<RouteBase> foodRoutes = [
     builder: (context, state) {
       final restaurant = state.extra as RestaurantEntity;
       return BlocProvider(
-        create: (context) => getIt<RestaurantDetailsBloc>()
-          ..add(LoadRestaurantDetails(restaurant: restaurant)),
+        create: (context) =>
+            getIt<RestaurantDetailsBloc>()
+              ..add(LoadRestaurantDetails(restaurant: restaurant)),
         child: const RestaurantDetailsScreen(),
       );
     },

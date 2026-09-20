@@ -31,23 +31,23 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ),
       appBar: CustomSliverAppBar(
         leading: Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h),
+          padding: EdgeInsets.symmetric(vertical: 6.w),
           child: CommonActionIcon(
             icon: Assets.icons.arrowBack.path,
             onTap: () => context.pop(),
           ),
         ),
-        expandedHeight: 210.h,
+        expandedHeight: 210.w,
         collapsedTitle: 'Fried Chicken Bucket',
         flexibleBackground: CustomNetworkImage(
-          height: 280.h,
+          height: 280.w,
           imageUrl:
               'https://images.unsplash.com/photo-1513104890138-7c749659a591',
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(0),
           child: Container(
-            height: 32.h,
+            height: 32.w,
             decoration: BoxDecoration(
               color: context.colors.background,
               borderRadius: BorderRadius.only(
@@ -62,14 +62,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       bodyList: [
         CustomText(
           text: 'Fried Chicken Bucket',
-          fontSize: 20.sp,
+          fontSize: 20.r,
           fontWeight: FontWeight.w600,
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 8.w),
         CustomText(
           text:
               '8 pieces of our signature crispy fried chicken, marinated for 24 hours in a secret spice blend.',
-          fontSize: 12.sp,
+          fontSize: 12.r,
           color: context.colors.textSecondary,
         ),
         ItemSizeOptionsWidget(
@@ -88,7 +88,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             });
           },
         ),
-        SizedBox(height: 120.h),
+        SizedBox(height: 120.w),
       ],
     );
   }

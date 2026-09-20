@@ -16,10 +16,10 @@ class AppAuthTitle extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          //SizedBox(height: 20.h),
+          //SizedBox(height: 20.w),
           CustomText(
             text: title,
-            fontSize: 24.sp,
+            fontSize: 24.r,
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.center,
             color: context.colors.textPrimary,
@@ -27,12 +27,12 @@ class AppAuthTitle extends StatelessWidget {
           ),
           CustomText(
             text: subtitle,
-            fontSize: 14.sp,
+            fontSize: 14.r,
             fontWeight: FontWeight.w400,
             textAlign: TextAlign.center,
             maxLines: 2,
             color: context.colors.textSecondary,
-            top: 8.h,
+            top: 8.w,
           ),
         ],
       ),

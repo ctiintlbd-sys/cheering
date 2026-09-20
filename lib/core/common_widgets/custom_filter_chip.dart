@@ -26,8 +26,8 @@ class CustomFilterChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
         padding:
-            padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        margin: EdgeInsets.symmetric(vertical: 4.h),
+            padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.w),
+        margin: EdgeInsets.symmetric(vertical: 4.w),
         decoration: BoxDecoration(
           color: isSelected
               ? context.colors.primary
@@ -40,7 +40,7 @@ class CustomFilterChip extends StatelessWidget {
         child: Center(
           child: CustomText(
             text: label,
-            fontSize: labelSize ?? 12.sp,
+            fontSize: labelSize ?? 12.r,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             maxLines: 1,
             color: isSelected

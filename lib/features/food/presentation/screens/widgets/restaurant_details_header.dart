@@ -11,23 +11,23 @@ class RestaurantDetailsHeader extends StatelessWidget {
       color: context.colors.background,
       topRightRadius: 32.r,
       topLeftRadius: 32.r,
-      paddingVertical: 24.h,
+      paddingVertical: 24.w,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
             text: 'KFC - Badda',
-            fontSize: 20.sp,
+            fontSize: 20.r,
             fontWeight: FontWeight.w600,
           ).horizontal(16.w),
-          SizedBox(height: 4.h),
+          SizedBox(height: 4.w),
 
           CustomText(
             text: 'Fried chicken · Fast food · Combos',
             color: context.colors.textTertiary,
-            fontSize: 12.sp,
+            fontSize: 12.r,
           ).horizontal(16.w),
-          SizedBox(height: 8.h),
+          SizedBox(height: 8.w),
 
           // Stats Row
           RichText(
@@ -35,7 +35,7 @@ class RestaurantDetailsHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 12.r,
                 color: context.colors.textSecondary,
               ),
               children: [
@@ -73,7 +73,7 @@ class RestaurantDetailsHeader extends StatelessWidget {
               ],
             ),
           ).horizontal(16.w),
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
 
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -110,7 +110,7 @@ class RestaurantDetailsHeader extends StatelessWidget {
     required Color bgColor,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8.r),
@@ -123,7 +123,7 @@ class RestaurantDetailsHeader extends StatelessWidget {
           CustomText(
             text: text,
             color: color,
-            fontSize: 12.sp,
+            fontSize: 12.r,
             fontWeight: FontWeight.w600,
           ),
         ],

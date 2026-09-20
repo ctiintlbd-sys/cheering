@@ -75,7 +75,7 @@ class _EmailScreenState extends State<EmailScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: BlocSelector<AuthBloc, AuthState, bool>(
             selector: (state) => state.isSignUp,
             builder: (context, isSignUp) {
@@ -89,7 +89,7 @@ class _EmailScreenState extends State<EmailScreen> {
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
 
           /// Email Input Field (stateless from bloc, zero rebuilds on mode toggle)
           Form(
@@ -102,7 +102,7 @@ class _EmailScreenState extends State<EmailScreen> {
               validatorType: ValidatorType.email,
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
 
           /// Primary Action Button
           BlocBuilder<AuthBloc, AuthState>(
@@ -131,7 +131,7 @@ class _EmailScreenState extends State<EmailScreen> {
               }
               final biometricUi = biometricService.biometricUiKind;
               return Padding(
-                padding: EdgeInsets.only(top: 12.h),
+                padding: EdgeInsets.only(top: 12.w),
                 child: CustomButton(
                   prefixIcon: biometricUi.icon.svg(),
                   backgroundColor: context.colors.background,
@@ -151,7 +151,7 @@ class _EmailScreenState extends State<EmailScreen> {
             },
           ),
 
-          SizedBox(height: 34.h),
+          SizedBox(height: 34.w),
           Row(
             children: [
               Expanded(
@@ -170,7 +170,7 @@ class _EmailScreenState extends State<EmailScreen> {
             ],
           ),
 
-          SizedBox(height: 34.h),
+          SizedBox(height: 34.w),
 
           /// Google Sign-In Button
           BlocSelector<AuthBloc, AuthState, bool>(
@@ -190,7 +190,7 @@ class _EmailScreenState extends State<EmailScreen> {
             },
           ),
 
-          SizedBox(height: 28.h),
+          SizedBox(height: 28.w),
 
           /// Switch between Sign In and Sign Up via AuthBloc
           Center(
@@ -207,14 +207,14 @@ class _EmailScreenState extends State<EmailScreen> {
                           ? 'Already have an account? '
                           : "Don't have an account? ",
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 14.r,
                         color: context.colors.textSecondary,
                       ),
                       children: [
                         TextSpan(
                           text: isSignUp ? 'Sign In' : 'Sign Up',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14.r,
                             fontWeight: FontWeight.w600,
                             color: context.colors.primary,
                           ),
@@ -227,7 +227,7 @@ class _EmailScreenState extends State<EmailScreen> {
             ),
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
       ),
     );

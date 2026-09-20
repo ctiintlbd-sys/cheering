@@ -16,7 +16,7 @@ class HomeFeedLoadingWidget extends StatelessWidget {
         children: [
           // Categories shimmer
           SizedBox(
-            height: 98.h,
+            height: 98.w,
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               scrollDirection: Axis.horizontal,
@@ -32,24 +32,24 @@ class HomeFeedLoadingWidget extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  SizedBox(height: 8.h),
-                  Container(width: 50.w, height: 12.h, color: Colors.white),
+                  SizedBox(height: 8.w),
+                  Container(width: 50.w, height: 12.w, color: Colors.white),
                 ],
               ),
             ),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 30.w),
 
           // Deals title shimmer
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Container(width: 150.w, height: 20.h, color: Colors.white),
+            child: Container(width: 150.w, height: 20.w, color: Colors.white),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
 
           // Deals shimmer
           SizedBox(
-            height: 228.h,
+            height: 228.w,
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               scrollDirection: Axis.horizontal,
@@ -64,18 +64,18 @@ class HomeFeedLoadingWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 30.w),
 
           // Deals title shimmer
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Container(width: 150.w, height: 20.h, color: Colors.white),
+            child: Container(width: 150.w, height: 20.w, color: Colors.white),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
 
           // Deals shimmer
           SizedBox(
-            height: 194.h,
+            height: 194.w,
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               scrollDirection: Axis.horizontal,

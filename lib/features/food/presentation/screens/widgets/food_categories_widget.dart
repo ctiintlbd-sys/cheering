@@ -19,7 +19,7 @@ class FoodCategoriesWidget extends StatelessWidget {
       },
       child: CustomContainer(
         width: 74.w,
-        height: 90.h,
+        height: 90.w,
         color: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -45,11 +45,11 @@ class FoodCategoriesWidget extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 4.h),
+            SizedBox(height: 4.w),
 
             SizedBox(
               width: 74.w,
-              height: 16.h,
+              height: 16.w,
               child: CustomText(
                 text: category.name,
                 fontWeight: FontWeight.w500,
@@ -75,7 +75,7 @@ class SeeAllCategoriesWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: CustomContainer(
-        verticalMargin: 4.h,
+        verticalMargin: 4.w,
         width: 32.r,
         height: 32.r,
         shape: BoxShape.circle,

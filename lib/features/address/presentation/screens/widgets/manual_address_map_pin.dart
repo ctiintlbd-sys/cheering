@@ -12,13 +12,13 @@ class ManualAddressMapPin extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 35.h),
+        padding: EdgeInsets.only(bottom: 35.w),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           transform: Matrix4.translationValues(0, isMoving ? -15 : 0, 0),
           child: MapMarkerHelper.buildLocationPinOverlay(
             width: 64.w,
-            height: 64.h,
+            height: 64.w,
           ),
         ),
       ),

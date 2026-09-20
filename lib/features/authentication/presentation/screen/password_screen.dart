@@ -55,14 +55,14 @@ class _PasswordScreenState extends State<PasswordScreen> {
         sideContentPadding: 24.w,
         appBar: CustomSliverAppBar(
           backgroundColor: context.colors.background.withValues(alpha: 0.4),
-          expandedHeight: 144.h,
+          expandedHeight: 144.w,
           flexibleChild: AppAuthTitle(
             title: 'Hi, Welcome Back! 👋',
             subtitle: 'Enter your password for ${widget.email}',
           ),
         ),
         bodyList: [
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.w),
           Form(
             key: _formKey,
             child: CustomTextField.password(
@@ -73,7 +73,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
               onFieldSubmitted: (_) => _onLogin(),
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.w),
           CustomText(
             onTap: () => context.push(
               AuthRedirect.withRedirectFromContext(
@@ -84,7 +84,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             text: 'Forgot Password?',
             color: context.colors.textSecondary,
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
           BlocBuilder<AuthBloc, AuthState>(
             buildWhen: (prev, curr) =>
                 prev.isLoginLoading != curr.isLoginLoading,
@@ -96,7 +96,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
               );
             },
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24.w),
         ],
       ),
     );

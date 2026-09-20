@@ -8,7 +8,7 @@ class FoodCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -49,15 +49,15 @@ class FoodCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.w),
 
                 // Subtitle
                 CustomText(
                   text: 'Italian · Fast food',
                   color: context.colors.textSecondary,
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 6.w),
 
                 // Stats Row
                 RichText(
@@ -65,7 +65,7 @@ class FoodCardWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 12.r,
                       color: context.colors.textSecondary,
                     ),
                     children: [
@@ -99,11 +99,11 @@ class FoodCardWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10.w),
 
                 // Discount Tag
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
                   decoration: BoxDecoration(
                     color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(32.r),
@@ -121,7 +121,7 @@ class FoodCardWidget extends StatelessWidget {
                         left: 4.w,
                         text: '20% OFF',
                         color: context.colors.primary,
-                        fontSize: 10.sp,
+                        fontSize: 10.r,
                         fontWeight: FontWeight.w600,
                       ),
                     ],

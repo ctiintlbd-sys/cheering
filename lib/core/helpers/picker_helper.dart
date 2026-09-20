@@ -248,10 +248,10 @@ class _PickerCore {
       builder: (sheetContext) => SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-            top: 24.h,
+            top: 24.w,
             left: 16.w,
             right: 16.w,
-            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom + 16.h,
+            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom + 16.w,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -259,8 +259,8 @@ class _PickerCore {
               // ✅ Drag handle indicator
               Container(
                 width: 40.w,
-                height: 4.h,
-                margin: EdgeInsets.only(bottom: 16.h),
+                height: 4.w,
+                margin: EdgeInsets.only(bottom: 16.w),
                 decoration: BoxDecoration(
                   color: sheetContext.colors.textPrimary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2.r),
@@ -268,11 +268,11 @@ class _PickerCore {
               ),
               CustomText(
                 text: title,
-                fontSize: 16.sp,
+                fontSize: 16.r,
                 fontWeight: FontWeight.bold,
                 color: sheetContext.colors.textPrimary,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 20.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: options
@@ -316,7 +316,7 @@ class _PickerOptionWidget extends StatelessWidget {
                 color: context.colors.primary,
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 8.w),
             CustomText(
               text: option.label,
               color: context.colors.textPrimary,

@@ -36,7 +36,7 @@ class SavedAddressCard extends StatelessWidget {
         color: context.colors.background,
         bordersColor: context.colors.borderTertiary,
         radiusAll: 16.r,
-        paddingVertical: 12.h,
+        paddingVertical: 12.w,
         paddingHorizontal: 16.w,
         boxShadow: address.isDefault
             ? [
@@ -78,7 +78,7 @@ class SavedAddressCard extends StatelessWidget {
                       Flexible(
                         child: CustomText(
                           text: _displayTitle,
-                          fontSize: 16.sp,
+                          fontSize: 16.r,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -86,12 +86,12 @@ class SavedAddressCard extends StatelessWidget {
                         SizedBox(width: 8.w),
                         CustomContainer(
                           paddingHorizontal: 12.w,
-                          paddingVertical: 2.h,
+                          paddingVertical: 2.w,
                           color: context.colors.primary.withValues(alpha: 0.1),
                           radiusAll: 36.r,
                           child: CustomText(
                             text: 'Default',
-                            fontSize: 12.sp,
+                            fontSize: 12.r,
                             fontWeight: FontWeight.w500,
                             color: context.colors.primary,
                           ),
@@ -99,7 +99,7 @@ class SavedAddressCard extends StatelessWidget {
                       ],
                     ],
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: 6.w),
                   CustomText(
                     text: address.formattedAddress,
                     color: context.colors.textTertiary,

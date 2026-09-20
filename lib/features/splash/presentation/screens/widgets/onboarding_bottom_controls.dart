@@ -27,7 +27,7 @@ class OnboardingBottomControls extends StatelessWidget {
     return Positioned(
       left: 16.w,
       right: 16.w,
-      bottom: 16.h,
+      bottom: 16.w,
       child: SafeArea(
         child: Column(
           children: [
@@ -91,7 +91,7 @@ class OnboardingBottomControls extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 30.w),
 
             CustomButton(
               label: context.l10n.getStartedButton,

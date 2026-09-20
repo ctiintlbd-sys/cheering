@@ -33,15 +33,15 @@ class MenuItemWidget extends StatelessWidget {
                   text: 'Classic Cheeseburger',
                   fontWeight: FontWeight.w600,
                   maxLines: 1,
-                  bottom: 2.h,
+                  bottom: 2.w,
                 ),
                 CustomText(
                   text: '8 pcs crispy fried chicken, spiced',
                   color: context.colors.textTertiary,
-                  fontSize: 12.sp,
+                  fontSize: 12.r,
                   maxLines: 1,
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 8.w),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +50,7 @@ class MenuItemWidget extends StatelessWidget {
                       text: '৳450',
                       color: context.colors.primary,
                       fontWeight: FontWeight.w700,
-                      fontSize: 14.sp,
+                      fontSize: 14.r,
                     ),
 
                     QuantityButton(

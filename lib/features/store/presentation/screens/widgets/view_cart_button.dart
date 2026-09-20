@@ -25,20 +25,20 @@ class ViewCartButton extends StatelessWidget {
           radiusAll: 99.r,
           color: context.colors.primary,
           paddingHorizontal: 20.w,
-          paddingVertical: 14.h,
+          paddingVertical: 14.w,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
                 text: '$itemCount item${itemCount > 1 ? 's' : ''}',
                 color: context.colors.white,
-                fontSize: 16.sp,
+                fontSize: 16.r,
                 fontWeight: FontWeight.w500,
               ),
               CustomText(
                 text: 'View cart · ৳${totalPrice.toInt()}',
                 color: context.colors.white,
-                fontSize: 16.sp,
+                fontSize: 16.r,
                 fontWeight: FontWeight.w600,
               ),
             ],

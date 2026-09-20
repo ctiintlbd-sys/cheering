@@ -24,7 +24,7 @@ class ManualAddressMapSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.paddingOf(context).top + 16.h;
+    final top = MediaQuery.paddingOf(context).top + 16.w;
 
     return Positioned(
       top: top,
@@ -66,7 +66,7 @@ class ManualAddressMapSearchBar extends StatelessWidget {
               ],
             ),
             if (searchResults != null) ...[
-              SizedBox(height: 16.h),
+              SizedBox(height: 16.w),
               searchResults!,
             ],
           ],

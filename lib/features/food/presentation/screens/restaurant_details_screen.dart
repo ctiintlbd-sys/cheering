@@ -52,8 +52,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         final renderBox = key.currentContext!.findRenderObject() as RenderBox?;
         if (renderBox != null) {
           final position = renderBox.localToGlobal(Offset.zero).dy;
-          // 416.h is the expanded height, 118.h is the bottom app bar, plus some safe margin
-          if (position > 0 && position < 250) { 
+          // 416.w is the expanded height, 118.w is the bottom app bar, plus some safe margin
+          if (position > 0 && position < 250) {
             if (_activeIndexNotifier.value != i) {
               _activeIndexNotifier.value = i;
             }
@@ -85,13 +85,13 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
           appBar: CustomSliverAppBar(
             floating: true,
             leading: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6.h),
+              padding: EdgeInsets.symmetric(vertical: 6.w),
               child: CommonActionIcon(
                 icon: Assets.icons.arrowBack.path,
                 onTap: () => context.pop(),
               ),
             ),
-            expandedHeight: 416.h,
+            expandedHeight: 416.w,
             flexibleBackground: _buildFlexibleBackground(
               restaurant?.coverImageUrl ?? '',
             ),
@@ -120,9 +120,13 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   Widget _buildFlexibleBackground(String imageUrl) {
     return Stack(
       children: [
-        CustomNetworkImage(height: 220.h,width: double.maxFinite, imageUrl: imageUrl),
+        CustomNetworkImage(
+          height: 220.w,
+          width: double.maxFinite,
+          imageUrl: imageUrl,
+        ),
         Positioned(
-          top: 190.h,
+          top: 190.w,
           right: 0,
           left: 0,
           child: RestaurantDetailsHeader(),
@@ -134,19 +138,19 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   List<Widget> _buildBody(RestaurantDetailsState state) {
     return switch (state.status) {
       RestaurantDetailsStatus.initial || RestaurantDetailsStatus.loading => [
-        SizedBox(height: 100.h),
+        SizedBox(height: 100.w),
         const Center(child: CircularProgressIndicator()),
-        SizedBox(height: 300.h),
+        SizedBox(height: 300.w),
       ],
       RestaurantDetailsStatus.failure => [
-        SizedBox(height: 100.h),
+        SizedBox(height: 100.w),
         Center(
           child: Text(
             state.errorMessage ?? 'Error',
             style: TextStyle(color: context.colors.error),
           ),
         ),
-        SizedBox(height: 300.h),
+        SizedBox(height: 300.w),
       ],
       RestaurantDetailsStatus.success => _buildMenuSections(
         state.menuCategories,
@@ -157,14 +161,14 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   List<Widget> _buildMenuSections(List<MenuCategoryEntity> categories) {
     if (categories.isEmpty) {
       return [
-        SizedBox(height: 100.h),
+        SizedBox(height: 100.w),
         const Center(child: Text("No menu available")),
-        SizedBox(height: 300.h),
+        SizedBox(height: 300.w),
       ];
     }
 
     final List<Widget> slivers = [];
-    slivers.add(SizedBox(height: 20.h));
+    slivers.add(SizedBox(height: 20.w));
 
     if (_sectionKeys.length != categories.length) {
       _sectionKeys.clear();
@@ -184,10 +188,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             children: [
               CustomText(
                 text: category.name,
-                fontSize: 20.sp,
+                fontSize: 20.r,
                 fontWeight: FontWeight.w700,
               ).horizontal(16.w),
-              SizedBox(height: 12.h),
+              SizedBox(height: 12.w),
 
               // We simulate the items since MenuCategoryEntity might just have names for now
               // If it has List<MenuItemEntity> items, we loop over them.
@@ -197,7 +201,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 itemCount: 5, // Replace with category.items.length later
-                separatorBuilder: (context, index) => SizedBox(height: 16.h),
+                separatorBuilder: (context, index) => SizedBox(height: 16.w),
                 itemBuilder: (context, itemIndex) {
                   return CustomItemAnimator(
                     index: itemIndex,
@@ -206,14 +210,14 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                   );
                 },
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 24.w),
             ],
           ),
         ),
       );
     }
 
-    slivers.add(SizedBox(height: 140.h));
+    slivers.add(SizedBox(height: 140.w));
     return slivers;
   }
 }

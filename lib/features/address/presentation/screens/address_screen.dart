@@ -76,9 +76,9 @@ class _AddressScreenState extends State<AddressScreen> {
         sideContentPadding: 16.w,
         appBar: CustomSliverAppBar(
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(66.h),
+            preferredSize: Size.fromHeight(66.w),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+              padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 16.w),
               child: CustomTextField(
                 onTap: () => _onTapEnterManually(true),
                 readOnly: true,
@@ -93,12 +93,12 @@ class _AddressScreenState extends State<AddressScreen> {
           title: 'My Address',
         ),
         bodyList: [
-          SizedBox(height: 20.h),
+          SizedBox(height: 20.w),
           AddressActionButtons(
             onTapCurrentLocation: _onTapCurrentLocation,
             onTapEnterManually: () => _onTapEnterManually(),
           ),
-          SizedBox(height: 28.h),
+          SizedBox(height: 28.w),
           BlocBuilder<AddressBloc, AddressState>(
             buildWhen: (prev, curr) =>
                 prev.addresses != curr.addresses ||
@@ -111,7 +111,7 @@ class _AddressScreenState extends State<AddressScreen> {
               if (addresses.isEmpty) {
                 return state.isLoading || state.isFetchingLocation
                     ? Padding(
-                        padding: EdgeInsets.symmetric(vertical: 48.h),
+                        padding: EdgeInsets.symmetric(vertical: 48.w),
                         child: const Center(child: CircularProgressIndicator()),
                       )
                     : const EmptyAddressWidget();
@@ -121,12 +121,12 @@ class _AddressScreenState extends State<AddressScreen> {
                 children: [
                   CustomText(
                     text: 'Saved Address',
-                    fontSize: 16.sp,
+                    fontSize: 16.r,
                     fontWeight: FontWeight.w600,
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 16.w),
                   for (var i = 0; i < addresses.length; i++) ...[
-                    if (i > 0) SizedBox(height: 12.h),
+                    if (i > 0) SizedBox(height: 12.w),
                     SavedAddressCard(
                       address: addresses[i],
                       onSetDefault: () => context.read<AddressBloc>().add(
@@ -134,7 +134,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       ),
                     ),
                   ],
-                  SizedBox(height: 104.h),
+                  SizedBox(height: 104.w),
                 ],
               );
             },

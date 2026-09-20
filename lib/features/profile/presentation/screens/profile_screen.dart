@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
           return SliverScaffold(
             sideContentPadding: 16.w,
             appBar: CustomSliverAppBar(
-              expandedHeight: isAuthenticated ? 0 : 414.h,
+              expandedHeight: isAuthenticated ? 0 : 414.w,
               title: 'Profile',
               flexibleChild: isAuthenticated
                   ? null
@@ -49,13 +49,13 @@ class ProfileScreen extends StatelessWidget {
             bodyList: [
               // ── Profile Header (only when authenticated) ──
               if (isAuthenticated) ...[
-                SizedBox(height: 16.h),
+                SizedBox(height: 16.w),
                 profileState.isLoadProfileLoading
                     ? const ProfileHeaderShimmer()
                     : ProfileHeaderCard(user: profileState.user),
               ],
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 20.w),
 
               // ── My Account (only when authenticated) ──
               ProfileMenuContent(
@@ -76,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 20.w),
 
               // ── Preferences (always visible) ──
               ProfileMenuContent(
@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 20.w),
 
               // ── Support (only when authenticated) ──
               ProfileMenuContent(
@@ -133,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
 
               // ── Logout (only when authenticated) ──
               if (isAuthenticated) ...[
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.w),
                 ProfileMenuTile(
                   bgColor: context.colors.bgErrorPrimary.withValues(alpha: 0.1),
                   title: 'Logout',
@@ -145,7 +145,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
 
-              SizedBox(height: 124.h),
+              SizedBox(height: 124.w),
             ],
           );
         },

@@ -20,17 +20,17 @@ class RestaurantDetailsBloc
     LoadRestaurantDetails event,
     Emitter<RestaurantDetailsState> emit,
   ) async {
-    emit(state.copyWith(
-      status: RestaurantDetailsStatus.loading, 
-      restaurant: event.restaurant,
-      clearError: true
-    ));
+    emit(
+      state.copyWith(
+        status: RestaurantDetailsStatus.loading,
+        restaurant: event.restaurant,
+        clearError: true,
+      ),
+    );
 
     try {
       final (updatedRestaurant, menuCategories) = await (
-        _getRestaurantDetailsUseCase(
-          event.restaurant.id,
-        ),
+        _getRestaurantDetailsUseCase(event.restaurant.id),
         _getRestaurantMenuUseCase(event.restaurant.id),
       ).wait;
 
