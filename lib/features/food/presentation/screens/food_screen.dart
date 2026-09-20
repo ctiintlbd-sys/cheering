@@ -86,7 +86,7 @@ class FoodScreen extends StatelessWidget {
                   SizedBox(height: 20.w),
 
                   if (state.feed!.promoted.isNotEmpty)
-                    TopRestaurantsSection(topRated: state.feed!.promoted),
+                    TopRestaurantsSection(topRated: state.feed!.topRated),
                   SizedBox(height: 120.w),
                 ],
                 _ => [const SizedBox.shrink()],

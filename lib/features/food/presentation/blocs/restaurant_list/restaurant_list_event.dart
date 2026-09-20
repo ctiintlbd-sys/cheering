@@ -25,3 +25,13 @@ class RefreshRestaurants extends RestaurantListEvent {
   @override
   List<Object?> get props => [params];
 }
+
+class ApplyRestaurantFilter extends RestaurantListEvent {
+  final int? index;
+  final RestaurantQueryParams? filterParams;
+
+  const ApplyRestaurantFilter({this.index, this.filterParams});
+
+  @override
+  List<Object?> get props => [index, filterParams];
+}

@@ -20,7 +20,7 @@ class FoodCategoriesWidget extends StatelessWidget {
           RoutePaths.restaurantList,
           extra: {
             'title': category.name,
-            'params': RestaurantQueryParams(category: category.name), // using name or id depending on API
+            'params': RestaurantQueryParams(category: category.slug)
           },
         );
       },

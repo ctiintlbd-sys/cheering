@@ -12,6 +12,7 @@ class RestaurantListBloc
     : super(const RestaurantListState()) {
     on<LoadRestaurants>(_onLoadRestaurants);
     on<RefreshRestaurants>(_onRefreshRestaurants);
+    on<ApplyRestaurantFilter>(_onApplyFilter);
   }
 
   Future<void> _onLoadRestaurants(
@@ -19,15 +20,20 @@ class RestaurantListBloc
     Emitter<RestaurantListState> emit,
   ) async {
     emit(
-      state.copyWith(status: RestaurantListStatus.loading, clearError: true),
+      state.copyWith(
+        status: RestaurantListStatus.loading, 
+        baseParams: event.params,
+        clearError: true,
+      ),
     );
 
     try {
       await emit.forEach<List<RestaurantEntity>>(
         _getRestaurantsUseCase(event.params),
-        onData: (restaurants) => RestaurantListState(
+        onData: (restaurants) => state.copyWith(
           status: RestaurantListStatus.success,
           restaurants: restaurants,
+          baseParams: event.params, // Ensure baseParams are kept
         ),
         onError: (error, _) => state.copyWith(
           status: RestaurantListStatus.failure,
@@ -48,12 +54,10 @@ class RestaurantListBloc
     RefreshRestaurants event,
     Emitter<RestaurantListState> emit,
   ) async {
-    // Intentionally omitting loading state to prevent UI flicker
-    // Purono list UI te theke jabe, just background e data refresh hobe
     try {
       await emit.forEach<List<RestaurantEntity>>(
         _getRestaurantsUseCase(event.params),
-        onData: (restaurants) => RestaurantListState(
+        onData: (restaurants) => state.copyWith(
           status: RestaurantListStatus.success,
           restaurants: restaurants,
         ),
@@ -61,6 +65,29 @@ class RestaurantListBloc
       );
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> _onApplyFilter(
+    ApplyRestaurantFilter event,
+    Emitter<RestaurantListState> emit,
+  ) async {
+    final baseParams = state.baseParams;
+    if (baseParams == null) return;
+
+    if (event.index == null || event.filterParams == null) {
+      // Clear filter
+      emit(state.copyWith(clearFilter: true));
+      add(RefreshRestaurants(params: baseParams));
+    } else {
+      // Apply filter
+      emit(state.copyWith(selectedFilterIndex: event.index));
+      final newParams = baseParams.copyWith(
+        maxDeliveryFee: event.filterParams!.maxDeliveryFee,
+        minRating: event.filterParams!.minRating,
+        sort: event.filterParams!.sort ?? baseParams.sort,
+      );
+      add(RefreshRestaurants(params: newParams));
     }
   }
 }

@@ -127,7 +127,7 @@ class NearbyRestaurantsSection extends StatelessWidget {
           onTap: () {
             context.push(RoutePaths.restaurantList, extra: {
               'title': 'Nearby Restaurants',
-              'params': const RestaurantQueryParams(sort: 'distance'),
+              'params': const RestaurantQueryParams(radius: 5000),
             });
           }
         ).horizontal(16.w),
@@ -171,7 +171,7 @@ class TopRestaurantsSection extends StatelessWidget {
           onTap: () {
             context.push(RoutePaths.restaurantList, extra: {
               'title': 'Top Restaurants',
-              'params': const RestaurantQueryParams(sort: 'rating'),
+              'params': const RestaurantQueryParams(minRating: 4.0),
             });
           }
         ).horizontal(16.w),
