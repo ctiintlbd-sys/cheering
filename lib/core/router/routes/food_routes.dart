@@ -1,9 +1,12 @@
-import 'package:cheering/features/food/presentation/screens/category_details_screen.dart';
+import 'package:cheering/features/food/presentation/screens/restaurant_list_screen.dart';
 import 'package:cheering/features/food/presentation/screens/restaurant_details_screen.dart';
 import 'package:cheering/features/food/presentation/screens/item_details_screen.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_event.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,9 +14,17 @@ import '../route_paths.dart';
 
 final List<RouteBase> foodRoutes = [
   GoRoute(
-    path: RoutePaths.categoryDetails,
-    builder: (context, state) =>
-        const CategoryDetailsScreen(categoryName: 'Pizza'),
+    path: RoutePaths.restaurantList,
+    builder: (context, state) {
+      final extra = state.extra as Map<String, dynamic>;
+      final title = extra['title'] as String;
+      final params = extra['params'] as RestaurantQueryParams;
+
+      return BlocProvider(
+        create: (context) => getIt<RestaurantListBloc>()..add(LoadRestaurants(params: params)),
+        child: RestaurantListScreen(title: title, initialParams: params),
+      );
+    },
   ),
   GoRoute(
     path: RoutePaths.storeDetails,

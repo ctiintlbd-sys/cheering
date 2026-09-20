@@ -5,6 +5,7 @@ import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
 
 class FoodCategoriesWidget extends StatelessWidget {
   const FoodCategoriesWidget({super.key, required this.category});
@@ -15,7 +16,13 @@ class FoodCategoriesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push(RoutePaths.categoryDetails);
+        context.push(
+          RoutePaths.restaurantList,
+          extra: {
+            'title': category.name,
+            'params': RestaurantQueryParams(category: category.name), // using name or id depending on API
+          },
+        );
       },
       child: CustomContainer(
         width: 74.w,

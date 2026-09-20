@@ -12,7 +12,7 @@ abstract class RoutePaths {
   static const String about = '/about';
   static const String enableBiometrics = '/enable-biometrics';
 
-  static const String categoryDetails = '/category-details';
+  static const String restaurantList = '/restaurant-list';
   static const String storeDetails = '/store-details';
   static const String itemDetails = '/item-details';
 

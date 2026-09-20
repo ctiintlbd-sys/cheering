@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/helpers/bottom_sheet_helper.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
 import 'package:cheering/features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
 import 'all_categories_bottom_sheet.dart';
 import 'food_categories_widget.dart';
@@ -79,7 +82,12 @@ class SuperDealsSection extends StatelessWidget {
       children: [
         SectionHeaderWidget(
           title: 'Super Deals 🔥',
-          onTap: () {},
+          onTap: () {
+            context.push(RoutePaths.restaurantList, extra: {
+              'title': 'Super Deals 🔥',
+              'params': const RestaurantQueryParams(sort: 'offers'),
+            });
+          },
         ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
@@ -114,7 +122,15 @@ class NearbyRestaurantsSection extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SectionHeaderWidget(title: 'Nearby', onTap: () {}).horizontal(16.w),
+        SectionHeaderWidget(
+          title: 'Nearby', 
+          onTap: () {
+            context.push(RoutePaths.restaurantList, extra: {
+              'title': 'Nearby Restaurants',
+              'params': const RestaurantQueryParams(sort: 'distance'),
+            });
+          }
+        ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
           height: 202.w,
@@ -152,7 +168,12 @@ class TopRestaurantsSection extends StatelessWidget {
       children: [
         SectionHeaderWidget(
           title: 'Top Restaurants',
-          onTap: () {},
+          onTap: () {
+            context.push(RoutePaths.restaurantList, extra: {
+              'title': 'Top Restaurants',
+              'params': const RestaurantQueryParams(sort: 'rating'),
+            });
+          }
         ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
