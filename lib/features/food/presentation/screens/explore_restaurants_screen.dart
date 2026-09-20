@@ -28,31 +28,8 @@ class ExploreRestaurantsScreen extends StatelessWidget {
       builder: (context, state) {
         return SliverScaffold(
           onRefresh: () async {
-            final currentParams =
-                state.baseParams?.copyWith(
-                  maxDeliveryFee: state.selectedFilterIndex != null
-                      ? FilterData
-                            .filters[state.selectedFilterIndex!]
-                            .params
-                            .maxDeliveryFee
-                      : null,
-                  minRating: state.selectedFilterIndex != null
-                      ? FilterData
-                            .filters[state.selectedFilterIndex!]
-                            .params
-                            .minRating
-                      : null,
-                  sort: state.selectedFilterIndex != null
-                      ? FilterData
-                            .filters[state.selectedFilterIndex!]
-                            .params
-                            .sort
-                      : null,
-                ) ??
-                initialParams;
-
             context.read<RestaurantListBloc>().add(
-              RefreshRestaurants(params: currentParams),
+              RefreshRestaurants(params: state.currentParams ?? initialParams),
             );
           },
           appBar: CustomSliverAppBar(

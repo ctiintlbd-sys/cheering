@@ -23,6 +23,7 @@ class RestaurantListBloc
       state.copyWith(
         status: RestaurantListStatus.loading, 
         baseParams: event.params,
+        currentParams: event.params,
         clearError: true,
       ),
     );
@@ -33,7 +34,8 @@ class RestaurantListBloc
         onData: (restaurants) => state.copyWith(
           status: RestaurantListStatus.success,
           restaurants: restaurants,
-          baseParams: event.params, // Ensure baseParams are kept
+          baseParams: event.params,
+          currentParams: event.params,
         ),
         onError: (error, _) => state.copyWith(
           status: RestaurantListStatus.failure,
@@ -60,6 +62,7 @@ class RestaurantListBloc
         onData: (restaurants) => state.copyWith(
           status: RestaurantListStatus.success,
           restaurants: restaurants,
+          currentParams: event.params,
         ),
         onError: (error, _) => state.copyWith(errorMessage: error.toString()),
       );
@@ -77,16 +80,16 @@ class RestaurantListBloc
 
     if (event.index == null || event.filterParams == null) {
       // Clear filter
-      emit(state.copyWith(clearFilter: true));
+      emit(state.copyWith(clearFilter: true, currentParams: baseParams));
       add(RefreshRestaurants(params: baseParams));
     } else {
       // Apply filter
-      emit(state.copyWith(selectedFilterIndex: event.index));
       final newParams = baseParams.copyWith(
         maxDeliveryFee: event.filterParams!.maxDeliveryFee,
         minRating: event.filterParams!.minRating,
         sort: event.filterParams!.sort ?? baseParams.sort,
       );
+      emit(state.copyWith(selectedFilterIndex: event.index, currentParams: newParams));
       add(RefreshRestaurants(params: newParams));
     }
   }

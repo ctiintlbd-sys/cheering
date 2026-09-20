@@ -10,6 +10,7 @@ class RestaurantListState extends Equatable {
   final String? errorMessage;
   final int? selectedFilterIndex;
   final RestaurantQueryParams? baseParams;
+  final RestaurantQueryParams? currentParams;
 
   const RestaurantListState({
     this.status = RestaurantListStatus.initial,
@@ -17,6 +18,7 @@ class RestaurantListState extends Equatable {
     this.errorMessage,
     this.selectedFilterIndex,
     this.baseParams,
+    this.currentParams,
   });
 
   RestaurantListState copyWith({
@@ -25,6 +27,7 @@ class RestaurantListState extends Equatable {
     String? errorMessage,
     int? selectedFilterIndex,
     RestaurantQueryParams? baseParams,
+    RestaurantQueryParams? currentParams,
     bool clearError = false,
     bool clearFilter = false,
   }) {
@@ -34,9 +37,10 @@ class RestaurantListState extends Equatable {
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       selectedFilterIndex: clearFilter ? null : (selectedFilterIndex ?? this.selectedFilterIndex),
       baseParams: baseParams ?? this.baseParams,
+      currentParams: currentParams ?? this.currentParams,
     );
   }
 
   @override
-  List<Object?> get props => [status, restaurants, errorMessage, selectedFilterIndex, baseParams];
+  List<Object?> get props => [status, restaurants, errorMessage, selectedFilterIndex, baseParams, currentParams];
 }

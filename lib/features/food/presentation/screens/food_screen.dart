@@ -59,10 +59,9 @@ class FoodScreen extends StatelessWidget {
               ),
             ),
             bodyList: switch (state.status) {
-              HomeFeedStatus.initial || HomeFeedStatus.loading => [
-                const HomeFeedLoadingWidget(),
-              ],
-              HomeFeedStatus.failure  => [
+              HomeFeedStatus.initial ||
+              HomeFeedStatus.loading => [const HomeFeedLoadingWidget()],
+              HomeFeedStatus.failure => [
                 EmptyState(message: state.errorMessage ?? ''),
               ],
               HomeFeedStatus.success when state.feed == null => [
