@@ -1,3 +1,4 @@
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -6,12 +7,9 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
-  final String imageUrl;
+  final RestaurantEntity? restaurant;
 
-  const RestaurantFlexibleBackground({
-    super.key,
-    required this.imageUrl,
-  });
+  const RestaurantFlexibleBackground({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
         CustomNetworkImage(
           height: 220.w,
           width: double.maxFinite,
-          imageUrl: imageUrl,
+          imageUrl: restaurant?.logoUrl ?? restaurant?.coverImageUrl,
         ),
         Positioned(
           top: 190.w,
@@ -55,14 +53,14 @@ class RestaurantFlexibleBackground extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            text: 'KFC - Badda',
+            text: restaurant?.name ?? '',
             fontSize: 20.r,
             fontWeight: FontWeight.w600,
           ).horizontal(16.w),
           SizedBox(height: 4.w),
 
           CustomText(
-            text: 'Fried chicken · Fast food · Combos',
+            text: restaurant?.cuisineTypes.join(' · ') ?? '',
             color: context.colors.textTertiary,
             fontSize: 12.r,
           ).horizontal(16.w),
@@ -87,10 +85,10 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: ' 4.5 ',
+                  text: ' ${restaurant?.ratingAvg ?? 0} ',
                   style: TextStyle(color: context.colors.textPrimary),
                 ),
-                const TextSpan(text: '(27 review) · '),
+                TextSpan(text: '(${restaurant?.ratingCount ?? 0} review) · '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: Icon(
@@ -99,7 +97,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                     size: 14.r,
                   ),
                 ),
-                const TextSpan(text: ' 10-20 mins  '),
+                TextSpan(text: ' ${restaurant?.avgPrepTimeMins ?? 0} mins  '),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: Icon(
@@ -108,7 +106,10 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                     size: 14.r,
                   ),
                 ),
-                const TextSpan(text: '  ৳40 · 1.2Km'),
+                TextSpan(
+                  text:
+                      '  ৳${restaurant?.deliveryFee.toStringAsFixed(0) ?? 0} · ${restaurant?.distanceKm ?? 0.0}Km',
+                ),
               ],
             ),
           ).horizontal(16.w),
@@ -118,14 +119,21 @@ class RestaurantFlexibleBackground extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildTag(
-                  context: context,
-                  icon: Icons.local_offer_outlined,
-                  text: '20% off on orders over ৳500',
-                  color: context.colors.primary,
-                  bgColor: context.colors.primary.withValues(alpha: 0.1),
-                ),
-                SizedBox(width: 12.w),
+                if (restaurant?.promotions != null &&
+                    restaurant!.promotions!.isNotEmpty) ...[
+                  CustomMenuContainer(
+                    items: restaurant!.promotions!.map((e) => e.title).toList(),
+                    onSelected: (selectedPromo) {},
+                    child: _buildTag(
+                      context: context,
+                      icon: Icons.local_offer_outlined,
+                      text: restaurant!.promotions!.first.title,
+                      color: context.colors.primary,
+                      bgColor: context.colors.primary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                ],
                 _buildTag(
                   context: context,
                   icon: Icons.calendar_today_outlined,

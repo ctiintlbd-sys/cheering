@@ -10,7 +10,6 @@ import 'package:cheering/features/store/presentation/screens/widgets/view_cart_b
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_flexible_background.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
-import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
   const RestaurantDetailsScreen({super.key});
@@ -84,7 +83,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             toolbarHeight: 0,
             expandedHeight: 416.w,
             flexibleBackground: RestaurantFlexibleBackground(
-              imageUrl: restaurant?.logoUrl ?? restaurant?.coverImageUrl ?? '',
+              restaurant: restaurant,
             ),
             bottom: RestaurantAppBarBottom(
               categories: state.menuCategories,
@@ -99,34 +98,22 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             totalPrice: 650,
             onTap: () {},
           ),
-          bodyList: _buildBody(state),
+          bodyList: switch (state.status) {
+            RestaurantDetailsStatus.initial ||
+            RestaurantDetailsStatus.loading => [
+              SizedBox(height: 100.w),
+              const Center(child: CircularProgressIndicator()),
+            ],
+            RestaurantDetailsStatus.failure => [
+              EmptyState(message: state.errorMessage ?? ''),
+            ],
+            RestaurantDetailsStatus.success => _buildMenuSections(
+              state.menuCategories,
+            ),
+          },
         );
       },
     );
-  }
-
-
-  List<Widget> _buildBody(RestaurantDetailsState state) {
-    return switch (state.status) {
-      RestaurantDetailsStatus.initial || RestaurantDetailsStatus.loading => [
-        SizedBox(height: 100.w),
-        const Center(child: CircularProgressIndicator()),
-        SizedBox(height: 300.w),
-      ],
-      RestaurantDetailsStatus.failure => [
-        SizedBox(height: 100.w),
-        Center(
-          child: Text(
-            state.errorMessage ?? 'Error',
-            style: TextStyle(color: context.colors.error),
-          ),
-        ),
-        SizedBox(height: 300.w),
-      ],
-      RestaurantDetailsStatus.success => _buildMenuSections(
-        state.menuCategories,
-      ),
-    };
   }
 
   List<Widget> _buildMenuSections(List<MenuCategoryEntity> categories) {
@@ -163,15 +150,12 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 fontWeight: FontWeight.w700,
               ).horizontal(16.w),
               SizedBox(height: 12.w),
-
-              // We simulate the items since MenuCategoryEntity might just have names for now
-              // If it has List<MenuItemEntity> items, we loop over them.
-              // Assuming we use MenuItemWidget for now
               ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
-                itemCount: 5, // Replace with category.items.length later
+                itemCount: 5,
+                // Replace with category.items.length later
                 separatorBuilder: (context, index) => SizedBox(height: 16.w),
                 itemBuilder: (context, itemIndex) {
                   return CustomItemAnimator(
