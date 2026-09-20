@@ -83,7 +83,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             toolbarHeight: 0,
             expandedHeight: 416.w,
             flexibleBackground: RestaurantFlexibleBackground(
-              imageUrl: restaurant?.logoUrl ?? '',
+              imageUrl: restaurant?.coverImageUrl ?? restaurant?.logoUrl ?? '',
+              heroTag: restaurant?.id,
             ),
             bottom: RestaurantAppBarBottom(
               categories: state.menuCategories,
