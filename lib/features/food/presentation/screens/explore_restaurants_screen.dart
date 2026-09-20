@@ -56,7 +56,7 @@ class ExploreRestaurantsScreen extends StatelessWidget {
             RestaurantListStatus.initial || RestaurantListStatus.loading => [
               const HRestaurantCardShimmer(count: 6),
             ],
-            RestaurantListStatus.failure => [
+            RestaurantListStatus.failure  => [
               EmptyState(message: state.errorMessage ?? 'Failed to load'),
             ],
             RestaurantListStatus.success when state.restaurants.isEmpty => [

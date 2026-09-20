@@ -19,7 +19,7 @@ class FilterData {
     ),
     FilterData(
       label: 'Fastest',
-      params: RestaurantQueryParams(sort: 'delivery_time'),
+      params: RestaurantQueryParams(sort: 'prep_time'),
     ),
   ];
 }

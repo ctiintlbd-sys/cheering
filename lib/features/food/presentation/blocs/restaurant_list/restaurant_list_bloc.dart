@@ -39,6 +39,7 @@ class RestaurantListBloc
         ),
         onError: (error, _) => state.copyWith(
           status: RestaurantListStatus.failure,
+          restaurants: const [],
           errorMessage: error.toString(),
         ),
       );
@@ -46,6 +47,7 @@ class RestaurantListBloc
       emit(
         state.copyWith(
           status: RestaurantListStatus.failure,
+          restaurants: const [],
           errorMessage: e.toString(),
         ),
       );
@@ -64,10 +66,18 @@ class RestaurantListBloc
           restaurants: restaurants,
           currentParams: event.params,
         ),
-        onError: (error, _) => state.copyWith(errorMessage: error.toString()),
+        onError: (error, _) => state.copyWith(
+          status: RestaurantListStatus.failure,
+          restaurants: const [],
+          errorMessage: error.toString(),
+        ),
       );
     } catch (e) {
-      emit(state.copyWith(errorMessage: e.toString()));
+      emit(state.copyWith(
+        status: RestaurantListStatus.failure,
+        restaurants: const [],
+        errorMessage: e.toString(),
+      ));
     }
   }
 
