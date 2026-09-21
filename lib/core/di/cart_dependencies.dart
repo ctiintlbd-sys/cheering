@@ -6,6 +6,8 @@ import '../../features/cart/domain/repositories/i_cart_repository.dart';
 import '../../features/cart/domain/usecases/add_cart_item_usecase.dart';
 import '../../features/cart/domain/usecases/get_cart_usecase.dart';
 import '../../features/cart/domain/usecases/get_checkout_summary_usecase.dart';
+import '../../features/cart/presentation/blocs/cart/cart_bloc.dart';
+import '../../features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
 import '../network/i_api_client.dart';
 import '../cache/cache_service.dart';
 
@@ -29,5 +31,18 @@ void setupCartDependencies(GetIt getIt) {
   );
   getIt.registerLazySingleton(
     () => GetCheckoutSummaryUseCase(getIt<ICartRepository>()),
+  );
+
+  // Blocs
+  getIt.registerFactory(
+    () => CartBloc(
+      getIt<GetCartUseCase>(),
+      getIt<AddCartItemUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => CheckoutSummaryBloc(
+      getIt<GetCheckoutSummaryUseCase>(),
+    ),
   );
 }
