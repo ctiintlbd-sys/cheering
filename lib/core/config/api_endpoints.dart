@@ -39,4 +39,9 @@ class ApiEndpoints {
   static String restaurantMenu(String id) => '/restaurants/$id/menu';
   static const String categories = '/categories';
   static const String search = '/search';
+
+  // ── Cart & Checkout ────────────────────────────────────────
+  static const String cart = '/cart';
+  static const String cartItems = '/cart/items';
+  static const String checkoutSummary = '/checkout/summary';
 }
