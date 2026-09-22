@@ -48,6 +48,11 @@ class CartEntity extends Equatable {
     );
   }
 
+  int quantityFor(String menuItemId) =>
+      items
+          .where((i) => i.menuItemId == menuItemId)
+          .fold(0, (sum, i) => sum + i.quantity);
+
   @override
   List<Object?> get props => [
         id,
