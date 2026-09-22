@@ -57,7 +57,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ),
           ),
         ),
-        actions: [CommonDetailsActions(onShareTap: () {}, onLoveTap: () {})],
+        actions: [
+          CommonActionIcon(icon: Assets.icons.foodShare.path, onTap: () {}),
+        ],
       ),
       bodyList: [
         CustomText(

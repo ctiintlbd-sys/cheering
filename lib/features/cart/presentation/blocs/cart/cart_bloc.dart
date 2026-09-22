@@ -53,8 +53,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(isUpdating: true));
     try {
       await _addCartItemUseCase(event.params);
-      // The use case internally updates the cache on success,
-      // which automatically pushes the new cart through emit.forEach.
     } catch (e) {
       emit(state.copyWith(
         errorMessage: 'Failed to update item: ${e.toString()}',
