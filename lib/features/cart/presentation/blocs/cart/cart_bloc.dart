@@ -13,6 +13,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc(this._getCartUseCase, this._addCartItemUseCase)
       : super(const CartState()) {
     on<LoadCart>(_onLoadCart);
+    on<ClearCart>(_onClearCart);
     on<AddOrUpdateCartItemEvent>(
       _onAddOrUpdateCartItem,
       transformer: (events, mapper) => events
@@ -20,6 +21,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           .flatMap((group) => group.debounceTime(const Duration(milliseconds: 600)))
           .asyncExpand(mapper),
     );
+  }
+
+  void _onClearCart(ClearCart event, Emitter<CartState> emit) {
+    emit(const CartState());
   }
 
   Future<void> _onLoadCart(

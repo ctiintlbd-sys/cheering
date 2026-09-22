@@ -12,6 +12,10 @@ class LoadCart extends CartEvent {
   const LoadCart();
 }
 
+class ClearCart extends CartEvent {
+  const ClearCart();
+}
+
 class AddOrUpdateCartItemEvent extends CartEvent {
   final AddCartItemParams params;
 
