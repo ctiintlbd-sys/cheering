@@ -115,7 +115,7 @@ class CartItemContainer extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomText(
-                      text: '৳${item.lineTotal.toStringAsFixed(0)}',
+                      text: '৳${item.unitPrice.toStringAsFixed(0)}',
                       fontWeight: FontWeight.w500,
                     ),
                   ),

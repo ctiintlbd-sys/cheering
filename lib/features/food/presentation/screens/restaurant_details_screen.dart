@@ -11,6 +11,10 @@ import 'package:cheering/features/food/presentation/screens/widgets/restaurant_f
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_app_bar_bottom.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_item_shimmer.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
+import 'package:cheering/core/router/route_paths.dart';
+import 'package:go_router/go_router.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
   const RestaurantDetailsScreen({super.key});
@@ -95,10 +99,19 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: ViewCartButton(
-            itemCount: 1,
-            totalPrice: 650,
-            onTap: () {},
+          floatingActionButton: BlocBuilder<CartBloc, CartState>(
+            builder: (context, cartState) {
+              final itemCount = cartState.cart?.itemCount ?? 0;
+              if (itemCount == 0) return const SizedBox.shrink();
+
+              return ViewCartButton(
+                itemCount: itemCount,
+                totalPrice: cartState.cart?.itemTotal ?? 0,
+                onTap: () {
+                  context.push(RoutePaths.cart);
+                },
+              );
+            },
           ),
           bodyList: switch (state.status) {
             RestaurantDetailsStatus.initial ||

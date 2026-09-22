@@ -6,6 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:cheering/features/cart/domain/entities/add_cart_item_params.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 class MenuItemWidget extends StatelessWidget {
   final MenuItemEntity? menuItem;
 
@@ -61,11 +67,37 @@ class MenuItemWidget extends StatelessWidget {
                         fontSize: 14.r,
                       ),
 
-                      QuantityButton(
-                        count: null,
-                        onIncrement: () {},
-                        onDecrement: () {},
-                      ),
+                      if (menuItem != null)
+                        BlocBuilder<CartBloc, CartState>(
+                          builder: (context, state) {
+                            final count = state.cart?.quantityFor(menuItem!.id) ?? 0;
+                            return QuantityButton(
+                              count: count,
+                              onIncrement: () {
+                                context.read<CartBloc>().add(
+                                  AddOrUpdateCartItemEvent(
+                                    AddCartItemParams(
+                                      menuItemId: menuItem!.id,
+                                      quantity: count + 1,
+                                    ),
+                                  ),
+                                );
+                              },
+                              onDecrement: () {
+                                if (count > 0) {
+                                  context.read<CartBloc>().add(
+                                    AddOrUpdateCartItemEvent(
+                                      AddCartItemParams(
+                                        menuItemId: menuItem!.id,
+                                        quantity: count - 1,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
                     ],
                   ),
                 ],

@@ -27,16 +27,8 @@ class CartItemModel extends CartItemEntity {
       quantity: json['quantity'] as int,
       variantId: json['variant_id'] as String?,
       variantName: json['variant_name'] as String?,
-      addOnIds:
-          (json['add_on_ids'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
-      addOnNames:
-          (json['add_on_names'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+      addOnIds: (json['add_on_ids'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      addOnNames: (json['add_on_names'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
       unitPrice: (json['unit_price'] as num).toDouble(),
       addOnsTotal: (json['add_ons_total'] as num).toDouble(),
       lineTotal: (json['line_total'] as num).toDouble(),

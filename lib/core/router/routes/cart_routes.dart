@@ -9,9 +9,6 @@ import '../route_paths.dart';
 final List<RouteBase> cartRoutes = [
   GoRoute(
     path: RoutePaths.cart,
-    builder: (context, state) => BlocProvider(
-      create: (context) => getIt<CartBloc>()..add(const LoadCart()),
-      child: const CartScreen(),
-    ),
+    builder: (context, state) => const CartScreen(),
   ),
 ];
