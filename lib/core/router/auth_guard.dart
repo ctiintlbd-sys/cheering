@@ -7,7 +7,7 @@ abstract final class AppAuthGuard {
   // ── Protected routes (login required) ────────────────────────────────────
   static const _protectedRoutes = {
     RoutePaths.accountSettings,
-    // RoutePaths.checkout,
+    RoutePaths.cart,
     // RoutePaths.orderHistory,
     // RoutePaths.savedAddresses,
   };

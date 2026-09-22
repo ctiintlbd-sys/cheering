@@ -51,34 +51,27 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: state.cart?.items != null && state.cart!.items.isNotEmpty
+          bottomNavigationBar:
+              state.cart?.items != null && state.cart!.items.isNotEmpty
               ? CartBottomBarWidget(totalPrice: state.cart!.itemTotal)
               : const SizedBox.shrink(),
           bodyList: switch (state.status) {
             CartStatus.initial ||
-            CartStatus.loading => [
-              SizedBox(height: 16.w),
-              const CartLoadingShimmer(),
-              SizedBox(height: 204.w),
-            ],
+            CartStatus.loading => [const CartLoadingShimmer()],
             CartStatus.failure => [
-              SizedBox(height: 16.w),
-              EmptyState(
-                message: state.errorMessage ?? 'Something went wrong',
-              ),
-              SizedBox(height: 204.w),
+              EmptyState(message: state.errorMessage ?? 'Something went wrong'),
             ],
-            CartStatus.success when state.cart == null || state.cart!.items.isEmpty => [
-              SizedBox(height: 16.w),
-              const EmptyState(message: 'Your cart is empty'),
-              SizedBox(height: 204.w),
-            ],
+            CartStatus.success
+                when state.cart == null || state.cart!.items.isEmpty =>
+              [const EmptyState(message: 'Your cart is empty')],
             CartStatus.success => [
               SizedBox(height: 16.w),
               CartItemContainer(
                 cart: state.cart!,
                 onUpdateItem: (params) {
-                  context.read<CartBloc>().add(AddOrUpdateCartItemEvent(params));
+                  context.read<CartBloc>().add(
+                    AddOrUpdateCartItemEvent(params),
+                  );
                 },
               ),
               SizedBox(height: 20.w),

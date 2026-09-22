@@ -7,8 +7,6 @@ class CartState extends Equatable {
   final CartStatus status;
   final CartEntity? cart;
   final String? errorMessage;
-  
-  // Track if we are currently updating the cart (e.g., adding/removing an item)
   final bool isUpdating;
 
   const CartState({
