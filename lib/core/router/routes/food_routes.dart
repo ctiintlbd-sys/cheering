@@ -10,7 +10,6 @@ import 'package:cheering/features/food/presentation/blocs/restaurant_list/restau
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cheering/features/cart/presentation/screens/cart_screen.dart';
 import '../route_paths.dart';
 
 final List<RouteBase> foodRoutes = [
@@ -42,9 +41,5 @@ final List<RouteBase> foodRoutes = [
   GoRoute(
     path: RoutePaths.itemDetails,
     builder: (context, state) => const ItemDetailsScreen(),
-  ),
-  GoRoute(
-    path: RoutePaths.cart,
-    builder: (context, state) => const CartScreen(),
   ),
 ];

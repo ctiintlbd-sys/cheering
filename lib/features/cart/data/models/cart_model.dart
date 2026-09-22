@@ -16,9 +16,9 @@ class CartModel extends CartEntity {
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
-      id: json['id'] as String,
-      restaurantId: json['restaurant_id'] as String,
-      restaurantName: json['restaurant_name'] as String,
+      id: json['id'] as String?,
+      restaurantId: json['restaurant_id'] as String?,
+      restaurantName: json['restaurant_name'] as String?,
       restaurantIsOpen: json['restaurant_is_open'] as bool? ?? false,
       items:
           (json['items'] as List<dynamic>?)

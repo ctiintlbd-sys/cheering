@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'cart_item_entity.dart';
 
 class CartEntity extends Equatable {
-  final String id;
-  final String restaurantId;
-  final String restaurantName;
+  final String? id;
+  final String? restaurantId;
+  final String? restaurantName;
   final bool restaurantIsOpen;
   final List<CartItemEntity> items;
   final double itemTotal;

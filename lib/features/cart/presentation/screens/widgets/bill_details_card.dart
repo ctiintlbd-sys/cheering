@@ -3,7 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BillDetailsCard extends StatelessWidget {
-  const BillDetailsCard({super.key});
+  final double itemTotal;
+  final int itemCount;
+  final double minOrderAmount;
+
+  const BillDetailsCard({
+    super.key,
+    required this.itemTotal,
+    required this.itemCount,
+    required this.minOrderAmount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +40,13 @@ class BillDetailsCard extends StatelessWidget {
           ],
           child: Column(
             children: [
-              _buildBillRow(context, 'Item total', '৳1,259'),
-              _buildBillRow(context, 'Delivery fee', '৳40'),
+              _buildBillRow(context, 'Total Items', '$itemCount'),
+              if (minOrderAmount > 0)
+                _buildBillRow(context, 'Min Order Amount', '৳${minOrderAmount.toStringAsFixed(0)}'),
               _buildBillRow(
                 context,
-                'Discount',
-                '-৳200',
-                valueColor: context.colors.bgSuccessSecondary,
-              ),
-              _buildBillRow(
-                context,
-                'Delivery fee',
-                '৳1,099',
+                'Subtotal',
+                '৳${itemTotal.toStringAsFixed(0)}',
                 valueColor: context.colors.primary,
                 fontWeight: FontWeight.w600,
               ),

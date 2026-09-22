@@ -2,9 +2,19 @@ import 'package:cheering/core/common_widgets/quantity_button.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../domain/entities/cart_entity.dart';
+import '../../../domain/entities/cart_item_entity.dart';
+import '../../../domain/entities/add_cart_item_params.dart';
 
 class CartItemContainer extends StatelessWidget {
-  const CartItemContainer({super.key});
+  final CartEntity cart;
+  final Function(AddCartItemParams) onUpdateItem;
+
+  const CartItemContainer({
+    super.key,
+    required this.cart,
+    required this.onUpdateItem,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,23 +36,23 @@ class CartItemContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                text: 'KFC - Badda',
+                text: cart.restaurantName ?? 'Restaurant',
                 fontSize: 16.r,
                 fontWeight: FontWeight.w600,
               ),
-              CustomText(text: '2 Items', color: context.colors.textSecondary),
+              CustomText(text: '${cart.itemCount} Items', color: context.colors.textSecondary),
             ],
           ),
           SizedBox(height: 16.w),
 
           ListView.separated(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
-            itemCount: 2,
+            itemCount: cart.items.length,
             separatorBuilder: (context, index) => SizedBox(height: 16.w),
             itemBuilder: (context, index) {
-              return _buildCartItem(context: context);
+              return _buildCartItem(context: context, item: cart.items[index]);
             },
           ),
           SizedBox(height: 18.w),
@@ -68,13 +78,13 @@ class CartItemContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildCartItem({required BuildContext context}) {
+  Widget _buildCartItem({required BuildContext context, required CartItemEntity item}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomNetworkImage(
           borderRadius: 12.r,
-          imageUrl: '',
+          imageUrl: item.imageUrl ?? '',
           width: 66.w,
           height: 66.w,
           fit: BoxFit.cover,
@@ -85,30 +95,54 @@ class CartItemContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomText(
-                text: 'Fried Chicken Bucket',
+                text: item.name,
                 fontWeight: FontWeight.w600,
                 maxLines: 1,
               ),
-              CustomText(
-                top: 2.w,
-                text: '8 pcs · Extra dip sauce',
-                fontSize: 12.r,
-                color: context.colors.textTertiary,
-                maxLines: 1,
-                bottom: 2.w,
-              ),
+              if (item.variantName != null || item.addOnNames.isNotEmpty)
+                CustomText(
+                  top: 2.w,
+                  text: [
+                    if (item.variantName != null) item.variantName,
+                    if (item.addOnNames.isNotEmpty) item.addOnNames.join(', '),
+                  ].join(' · '),
+                  fontSize: 12.r,
+                  color: context.colors.textTertiary,
+                  maxLines: 1,
+                  bottom: 2.w,
+                ),
               Row(
                 children: [
                   Expanded(
                     child: CustomText(
-                      text: '৳650',
+                      text: '৳${item.lineTotal.toStringAsFixed(0)}',
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   QuantityButton(
-                    count: 1,
-                    onIncrement: () {},
-                    onDecrement: () {},
+                    count: item.quantity,
+                    onIncrement: () {
+                      onUpdateItem(
+                        AddCartItemParams(
+                          menuItemId: item.menuItemId,
+                          variantId: item.variantId,
+                          addOnIds: item.addOnIds,
+                          quantity: item.quantity + 1,
+                          notes: item.notes,
+                        ),
+                      );
+                    },
+                    onDecrement: () {
+                      onUpdateItem(
+                        AddCartItemParams(
+                          menuItemId: item.menuItemId,
+                          variantId: item.variantId,
+                          addOnIds: item.addOnIds,
+                          quantity: item.quantity - 1,
+                          notes: item.notes,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

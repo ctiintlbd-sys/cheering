@@ -13,6 +13,7 @@ import 'auth_guard.dart';
 import 'route_paths.dart';
 import 'routes/auth_routes.dart';
 import 'routes/food_routes.dart';
+import 'routes/cart_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -44,6 +45,7 @@ class AppRouter {
       ...authRoutes,
       ...mainRoutes,
       ...foodRoutes,
+      ...cartRoutes,
       ...profileRoutes,
     ],
     errorBuilder: (context, state) => Scaffold(
