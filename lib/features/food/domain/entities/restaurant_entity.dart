@@ -65,6 +65,27 @@ class RestaurantEntity extends Equatable {
     this.promotions,
   });
 
+  factory RestaurantEntity.stub({
+    required String id,
+    required String name,
+    required double minOrderAmount,
+    required bool isOpen,
+  }) {
+    return RestaurantEntity(
+      id: id,
+      name: name,
+      slug: '',
+      cuisineTypes: const [],
+      ratingAvg: 0.0,
+      ratingCount: 0,
+      avgPrepTimeMins: 0,
+      deliveryFee: 0.0,
+      minOrderAmount: minOrderAmount,
+      isOpen: isOpen,
+      isFavorite: false,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,
