@@ -1,13 +1,16 @@
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 
 class ItemAddOnsWidget extends StatelessWidget {
+  final List<MenuAddOnEntity> addOns;
   final Map<int, bool> selectedAddOns;
   final ValueChanged<int> onToggle;
 
   const ItemAddOnsWidget({
     super.key,
+    required this.addOns,
     required this.selectedAddOns,
     required this.onToggle,
   });
@@ -29,36 +32,18 @@ class ItemAddOnsWidget extends StatelessWidget {
           verticalMargin: 12.w,
           color: context.colors.background,
           child: Column(
-            children: [
-              _buildAddOnTile(
-                context: context,
-                index: 0,
-                title: 'Extra dip sauce',
-                subtitle: 'Garlic mayo or spicy ketchup',
-                price: '+৳40',
-              ),
-              SizedBox(height: 8.w),
-              _buildAddOnTile(
-                context: context,
-                index: 1,
-                title: 'Cheese fries',
-                subtitle: 'Regular fries topped with cheese',
-                price: '+৳120',
-              ),
-            ],
+            children: List.generate(
+              addOns.length,
+                  (i) => _buildAddOnTile(context, i),
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildAddOnTile({
-    required BuildContext context,
-    required int index,
-    required String title,
-    required String subtitle,
-    required String price,
-  }) {
+  Widget _buildAddOnTile(BuildContext context, int index) {
+    final addOn = addOns[index];
     final isChecked = selectedAddOns[index] ?? false;
 
     return GestureDetector(
@@ -72,17 +57,16 @@ class ItemAddOnsWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText(text: title, fontWeight: FontWeight.w600),
+                  CustomText(text: addOn.name, fontWeight: FontWeight.w600),
                   SizedBox(height: 4.w),
                   CustomText(
-                    text: subtitle,
+                    text: '+৳${addOn.price.toStringAsFixed(0)}',
                     fontSize: 12.r,
                     color: context.colors.textTertiary,
                   ),
                 ],
               ),
             ),
-            CustomText(text: price, fontSize: 16.r),
             SizedBox(width: 14.w),
             CustomContainer(
               width: 20.r,

@@ -9,13 +9,13 @@ import 'package:go_router/go_router.dart';
 class MenuItemWidget extends StatelessWidget {
   final MenuItemEntity? menuItem;
 
-  const MenuItemWidget({super.key,  this.menuItem,});
+  const MenuItemWidget({super.key, this.menuItem});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        context.push(RoutePaths.itemDetails);
+      onTap: () {
+        context.push(RoutePaths.itemDetails, extra: menuItem);
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -26,7 +26,8 @@ class MenuItemWidget extends StatelessWidget {
               width: 66.r,
               height: 66.r,
               borderRadius: 12.r,
-              imageUrl: menuItem?.imageUrl ),
+              imageUrl: menuItem?.imageUrl,
+            ),
             SizedBox(width: 12.w),
 
             Expanded(
@@ -39,7 +40,8 @@ class MenuItemWidget extends StatelessWidget {
                     maxLines: 1,
                     bottom: 2.w,
                   ),
-                  if (menuItem?.description != null && menuItem!.description!.isNotEmpty)
+                  if (menuItem?.description != null &&
+                      menuItem!.description!.isNotEmpty)
                     CustomText(
                       text: menuItem!.description!,
                       color: context.colors.textTertiary,
@@ -52,7 +54,8 @@ class MenuItemWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomText(
-                        text: '৳${menuItem?.basePrice.toStringAsFixed(0) ?? '0'}',
+                        text:
+                            '৳${menuItem?.basePrice.toStringAsFixed(0) ?? '0'}',
                         color: context.colors.primary,
                         fontWeight: FontWeight.w700,
                         fontSize: 14.r,

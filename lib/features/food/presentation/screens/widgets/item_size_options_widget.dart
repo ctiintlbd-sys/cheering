@@ -1,3 +1,4 @@
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -5,11 +6,13 @@ import 'package:cheering/core/widgets/widgets.dart';
 class ItemSizeOptionsWidget extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onChanged;
+  final List<MenuVariantEntity> variants;
 
   const ItemSizeOptionsWidget({
     super.key,
     required this.selectedIndex,
     required this.onChanged,
+    required this.variants,
   });
 
   @override
@@ -20,7 +23,7 @@ class ItemSizeOptionsWidget extends StatelessWidget {
       children: [
         CustomText(
           top: 24.r,
-          text: 'Choose size',
+          text: 'Choose Variant',
           fontSize: 12.r,
           fontWeight: FontWeight.w500,
           color: context.colors.textTertiary,
@@ -29,43 +32,27 @@ class ItemSizeOptionsWidget extends StatelessWidget {
           verticalMargin: 12.w,
           color: context.colors.white,
           radiusAll: 16.r,
-          bordersColor: context.colors.borderSecondary,
           border: Border.all(color: context.colors.borderSecondary),
           child: Column(
-            children: [
-              _buildSizeOptionTile(
-                context: context,
-                index: 0,
-                title: '6 pcs',
-                subtitle: 'Serves 1-2',
+            children: List.generate(
+              variants.length,
+              (i) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildTile(context, i),
+                  if (i < variants.length - 1)
+                    Divider(height: 1, color: context.colors.borderSecondary),
+                ],
               ),
-              Divider(height: 1, color: context.colors.borderSecondary),
-              _buildSizeOptionTile(
-                context: context,
-                index: 1,
-                title: '8 pcs',
-                subtitle: 'Serves 2-3 · Most popular',
-              ),
-              Divider(height: 1, color: context.colors.borderSecondary),
-              _buildSizeOptionTile(
-                context: context,
-                index: 2,
-                title: '12 pcs',
-                subtitle: 'Serves 3-4',
-              ),
-            ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSizeOptionTile({
-    required BuildContext context,
-    required int index,
-    required String title,
-    required String subtitle,
-  }) {
+  Widget _buildTile(BuildContext context, int index) {
+    final variant = variants[index];
     final isSelected = selectedIndex == index;
 
     return GestureDetector(
@@ -79,10 +66,10 @@ class ItemSizeOptionsWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(text: title, fontWeight: FontWeight.w600),
+                CustomText(text: variant.name, fontWeight: FontWeight.w600),
                 SizedBox(height: 4.w),
                 CustomText(
-                  text: subtitle,
+                  text: '৳${variant.price.toStringAsFixed(0)}',
                   fontSize: 12.r,
                   color: context.colors.textTertiary,
                 ),

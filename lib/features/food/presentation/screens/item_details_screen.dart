@@ -1,3 +1,4 @@
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,9 @@ import 'package:cheering/features/food/presentation/screens/widgets/item_size_op
 import 'package:cheering/features/food/presentation/screens/widgets/item_add_ons_widget.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
-  const ItemDetailsScreen({super.key});
+  const ItemDetailsScreen({super.key, required this.menuItem});
+
+  final MenuItemEntity menuItem;
 
   @override
   State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
@@ -38,11 +41,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           ),
         ),
         expandedHeight: 210.w,
-        collapsedTitle: 'Fried Chicken Bucket',
+        collapsedTitle: widget.menuItem.name,
         flexibleBackground: CustomNetworkImage(
           height: 280.w,
-          imageUrl:
-              'https://images.unsplash.com/photo-1513104890138-7c749659a591',
+          imageUrl: widget.menuItem.imageUrl,
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(0),
@@ -63,33 +65,40 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       ),
       bodyList: [
         CustomText(
-          text: 'Fried Chicken Bucket',
+          text: widget.menuItem.name,
           fontSize: 20.r,
           fontWeight: FontWeight.w600,
         ),
         SizedBox(height: 8.w),
-        CustomText(
-          text:
-              '8 pieces of our signature crispy fried chicken, marinated for 24 hours in a secret spice blend.',
-          fontSize: 12.r,
-          color: context.colors.textSecondary,
-        ),
-        ItemSizeOptionsWidget(
-          selectedIndex: _selectedSizeIndex,
-          onChanged: (index) {
-            setState(() {
-              _selectedSizeIndex = index;
-            });
-          },
-        ),
-        ItemAddOnsWidget(
-          selectedAddOns: _selectedAddOns,
-          onToggle: (index) {
-            setState(() {
-              _selectedAddOns[index] = !(_selectedAddOns[index] ?? false);
-            });
-          },
-        ),
+        if (widget.menuItem.description != null &&
+            widget.menuItem.description!.isNotEmpty)
+          CustomText(
+            text: widget.menuItem.description!,
+            fontSize: 12.r,
+            color: context.colors.textSecondary,
+          ),
+        if (widget.menuItem.variants != null &&
+            widget.menuItem.variants!.isNotEmpty)
+          ItemSizeOptionsWidget(
+            variants: widget.menuItem.variants!,
+            selectedIndex: _selectedSizeIndex,
+            onChanged: (index) {
+              setState(() {
+                _selectedSizeIndex = index;
+              });
+            },
+          ),
+        if (widget.menuItem.variants != null &&
+            widget.menuItem.variants!.isNotEmpty)
+          ItemAddOnsWidget(
+            addOns: widget.menuItem.addOns!,
+            selectedAddOns: _selectedAddOns,
+            onToggle: (index) {
+              setState(() {
+                _selectedAddOns[index] = !(_selectedAddOns[index] ?? false);
+              });
+            },
+          ),
         SizedBox(height: 120.w),
       ],
     );
