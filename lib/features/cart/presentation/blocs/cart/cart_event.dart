@@ -20,3 +20,12 @@ class AddOrUpdateCartItemEvent extends CartEvent {
   @override
   List<Object?> get props => [params];
 }
+
+class SyncCartApiEvent extends CartEvent {
+  final AddCartItemParams params;
+  
+  const SyncCartApiEvent(this.params);
+
+  @override
+  List<Object?> get props => [params];
+}
