@@ -40,7 +40,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           status: CartStatus.success,
           cart: cart,
           clearError: true,
-          updatingItemIds: const {},
         ),
         onError: (error, _) => state.copyWith(
           status: CartStatus.failure,
