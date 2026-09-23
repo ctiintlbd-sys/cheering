@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
-import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/widgets/app_auth_title.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -62,7 +61,7 @@ class _OtpScreenState extends State<OtpScreen> {
   void _onConfirm(BuildContext context) {
     final otp = _otpController.text.trim();
     context.push(
-      AuthRedirect.withRedirectFromContext(context, RoutePaths.setPassword),
+      RoutePaths.setPassword,
       extra: SetPasswordScreenArgs(
         email: widget.email,
         otp: otp,

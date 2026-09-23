@@ -12,8 +12,14 @@ class AppRouterNotifier extends ChangeNotifier {
   bool get isOnboardingSeen => _isOnboardingSeen;
 
   bool _pendingBiometricOffer = false;
-
   bool get pendingBiometricOffer => _pendingBiometricOffer;
+
+  String? _pendingRedirect;
+  String? get pendingRedirect => _pendingRedirect;
+
+  void setPendingRedirect(String? url) {
+    _pendingRedirect = url;
+  }
 
   void setPendingBiometricOffer(bool value) {
     if (_pendingBiometricOffer == value) return;

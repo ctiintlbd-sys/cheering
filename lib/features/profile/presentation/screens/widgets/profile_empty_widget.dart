@@ -1,4 +1,6 @@
-import 'package:cheering/core/router/auth_redirect.dart';
+import "package:cheering/core/di/service_locator.dart";
+import "package:cheering/core/router/app_router_notifier.dart";
+
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +34,10 @@ class ProfileEmptyWidget extends StatelessWidget {
         ),
         CustomButton(
           onPressed: () {
-            context.go(AuthRedirect.loginPath(returnTo: RoutePaths.profileTab));
+            {
+              getIt<AppRouterNotifier>().setPendingRedirect(RoutePaths.profileTab);
+              context.go(RoutePaths.login);
+            }
           },
           label: 'Login/ Sign up',
         ),

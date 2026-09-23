@@ -31,10 +31,13 @@ class _EnableBiometricsScreenState extends State<EnableBiometricsScreen> {
   }
 
   void _goToApp() {
-    getIt<AppRouterNotifier>().clearPendingBiometricOffer();
-    final redirect = GoRouterState.of(context).uri.queryParameters['redirect'];
+    final notifier = getIt<AppRouterNotifier>();
+    notifier.clearPendingBiometricOffer();
+    
+    final redirect = notifier.pendingRedirect;
     if (redirect != null && redirect.isNotEmpty) {
-      context.go(Uri.decodeComponent(redirect));
+      notifier.setPendingRedirect(null);
+      context.go(redirect);
       return;
     }
     context.go(RoutePaths.foodTab);

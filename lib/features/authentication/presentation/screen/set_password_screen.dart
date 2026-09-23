@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
-import '../../../../core/router/auth_redirect.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/utils/validators.dart';
@@ -58,7 +57,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       return;
     }
     context.push(
-      AuthRedirect.withRedirectFromContext(context, RoutePaths.about),
+      RoutePaths.about,
       extra: AboutScreenArgs(email: widget.email, otp: widget.otp, password: _password),
     );
   }
