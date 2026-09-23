@@ -15,7 +15,7 @@ class RestaurantCardWidget extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        context.push(RoutePaths.storeDetails, extra: restaurant);
+        context.push(RoutePaths.storeDetails(restaurant.id), extra: restaurant);
       },
       child: SizedBox(
         width: 174.w,

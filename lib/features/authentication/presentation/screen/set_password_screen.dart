@@ -1,3 +1,5 @@
+import "package:cheering/core/router/route_args.dart";
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +59,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     }
     context.push(
       AuthRedirect.withRedirectFromContext(context, RoutePaths.about),
-      extra: {'email': widget.email, 'otp': widget.otp, 'password': _password},
+      extra: AboutScreenArgs(email: widget.email, otp: widget.otp, password: _password),
     );
   }
 

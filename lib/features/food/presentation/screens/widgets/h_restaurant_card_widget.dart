@@ -17,7 +17,7 @@ class HRestaurantCardWidget extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          context.push(RoutePaths.storeDetails, extra: restaurant);
+          if (restaurant != null) context.push(RoutePaths.storeDetails(restaurant!.id), extra: restaurant);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

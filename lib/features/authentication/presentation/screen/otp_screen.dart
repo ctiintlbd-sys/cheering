@@ -1,3 +1,5 @@
+import "package:cheering/core/router/route_args.dart";
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,11 +63,11 @@ class _OtpScreenState extends State<OtpScreen> {
     final otp = _otpController.text.trim();
     context.push(
       AuthRedirect.withRedirectFromContext(context, RoutePaths.setPassword),
-      extra: {
-        'email': widget.email,
-        'otp': otp,
-        'isForgotPassword': widget.isForgotPassword,
-      },
+      extra: SetPasswordScreenArgs(
+        email: widget.email,
+        otp: otp,
+        isForgotPassword: widget.isForgotPassword,
+      ),
     );
   }
 

@@ -9,10 +9,12 @@ sealed class RestaurantDetailsEvent extends Equatable {
 }
 
 class LoadRestaurantDetails extends RestaurantDetailsEvent {
-  final RestaurantEntity restaurant;
+  final String? id;
+  final RestaurantEntity? restaurant;
 
-  const LoadRestaurantDetails({required this.restaurant});
+  const LoadRestaurantDetails({this.id, this.restaurant})
+      : assert(id != null || restaurant != null, 'Either id or restaurant must be provided');
 
   @override
-  List<Object?> get props => [restaurant];
+  List<Object?> get props => [id, restaurant];
 }

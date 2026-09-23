@@ -9,6 +9,8 @@ import '../../../features/authentication/presentation/screen/forgot_screen.dart'
 import '../../../features/authentication/presentation/screen/email_screen.dart';
 import '../route_paths.dart';
 
+import '../route_args.dart';
+
 final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.login,
@@ -30,11 +32,11 @@ final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.otp,
     builder: (context, state) {
-      if (state.extra is Map<String, dynamic>) {
-        final args = state.extra as Map<String, dynamic>;
+      if (state.extra is OtpScreenArgs) {
+        final args = state.extra as OtpScreenArgs;
         return OtpScreen(
-          email: args['email'] as String? ?? '',
-          isForgotPassword: args['isForgotPassword'] as bool? ?? false,
+          email: args.email,
+          isForgotPassword: args.isForgotPassword,
         );
       }
       return OtpScreen(
@@ -47,11 +49,11 @@ final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.setPassword,
     builder: (context, state) {
-      final args = state.extra as Map<String, dynamic>;
+      final args = state.extra as SetPasswordScreenArgs;
       return SetPasswordScreen(
-        email: args['email'] as String,
-        otp: args['otp'] as String? ?? args['code'] as String? ?? '',
-        isForgotPassword: args['isForgotPassword'] as bool? ?? false,
+        email: args.email,
+        otp: args.otp,
+        isForgotPassword: args.isForgotPassword,
       );
     },
   ),
@@ -59,11 +61,11 @@ final List<RouteBase> authRoutes = [
   GoRoute(
     path: RoutePaths.about,
     builder: (context, state) {
-      final args = state.extra as Map<String, dynamic>;
+      final args = state.extra as AboutScreenArgs;
       return AboutScreen(
-        email: args['email'] as String,
-        otp: args['otp'] as String,
-        password: args['password'] as String,
+        email: args.email,
+        otp: args.otp,
+        password: args.password,
       );
     },
   ),

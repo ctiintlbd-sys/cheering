@@ -29,9 +29,10 @@ class RestaurantDetailsBloc
     );
 
     try {
+      final restaurantId = event.restaurant?.id ?? event.id!;
       final (updatedRestaurant, menuCategories) = await (
-        _getRestaurantDetailsUseCase(event.restaurant.id),
-        _getRestaurantMenuUseCase(event.restaurant.id),
+        _getRestaurantDetailsUseCase(restaurantId),
+        _getRestaurantMenuUseCase(restaurantId),
       ).wait;
 
       emit(

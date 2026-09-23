@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
 
+import 'package:cheering/core/router/route_args.dart';
+
 class FoodCategoriesWidget extends StatelessWidget {
   const FoodCategoriesWidget({super.key, required this.category});
 
@@ -18,10 +20,10 @@ class FoodCategoriesWidget extends StatelessWidget {
       onTap: () {
         context.push(
           RoutePaths.restaurantList,
-          extra: {
-            'title': category.name,
-            'params': RestaurantQueryParams(category: category.slug)
-          },
+          extra: RestaurantListArgs(
+            title: category.name,
+            params: RestaurantQueryParams(category: category.slug),
+          ),
         );
       },
       child: CustomContainer(

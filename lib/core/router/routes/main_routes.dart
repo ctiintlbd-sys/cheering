@@ -23,8 +23,7 @@ final List<RouteBase> mainRoutes = [
           GoRoute(
             path: RoutePaths.foodTab,
             builder: (context, state) => BlocProvider(
-              create: (context) =>
-                  getIt<HomeFeedBloc>()..add(const LoadHomeFeed()),
+              create: (context) => getIt<HomeFeedBloc>()..add(const LoadHomeFeed()),
               child: const FoodScreen(),
             ),
           ),

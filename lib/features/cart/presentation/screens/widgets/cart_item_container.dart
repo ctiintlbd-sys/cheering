@@ -85,7 +85,7 @@ class CartItemContainer extends StatelessWidget {
                     minOrderAmount: cart.minOrderAmount,
                     isOpen: cart.restaurantIsOpen,
                   );
-                  context.push(RoutePaths.storeDetails, extra: dummyRestaurant);
+                  context.push(RoutePaths.storeDetails(dummyRestaurant.id), extra: dummyRestaurant);
                 }
               },
               label: 'Add more items',

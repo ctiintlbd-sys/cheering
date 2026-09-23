@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:cheering/core/router/route_args.dart";
+
 import 'package:go_router/go_router.dart';
 import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/helpers/bottom_sheet_helper.dart';
@@ -83,10 +85,7 @@ class SuperDealsSection extends StatelessWidget {
         SectionHeaderWidget(
           title: 'Super Deals 🔥',
           onTap: () {
-            context.push(RoutePaths.restaurantList, extra: {
-              'title': 'Super Deals 🔥',
-              'params': const RestaurantQueryParams(sort: 'offers'),
-            });
+            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Super Deals 🔥', params: const RestaurantQueryParams(sort: 'offers')));
           },
         ).horizontal(16.w),
         SizedBox(height: 10.w),
@@ -125,10 +124,7 @@ class NearbyRestaurantsSection extends StatelessWidget {
         SectionHeaderWidget(
           title: 'Nearby', 
           onTap: () {
-            context.push(RoutePaths.restaurantList, extra: {
-              'title': 'Nearby Restaurants',
-              'params': const RestaurantQueryParams(radius: 5000),
-            });
+            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Nearby Restaurants', params: const RestaurantQueryParams(radius: 5000)));
           }
         ).horizontal(16.w),
         SizedBox(height: 10.w),
@@ -169,10 +165,7 @@ class TopRestaurantsSection extends StatelessWidget {
         SectionHeaderWidget(
           title: 'Top Restaurants',
           onTap: () {
-            context.push(RoutePaths.restaurantList, extra: {
-              'title': 'Top Restaurants',
-              'params': const RestaurantQueryParams(minRating: 4.0),
-            });
+            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Top Restaurants', params: const RestaurantQueryParams(minRating: 4.0)));
           }
         ).horizontal(16.w),
         SizedBox(height: 10.w),
