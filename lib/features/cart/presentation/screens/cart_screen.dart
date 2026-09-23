@@ -25,6 +25,10 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.cart != current.cart ||
+          previous.errorMessage != current.errorMessage,
       builder: (context, state) {
         return SliverScaffold(
           isNavWrap: false,

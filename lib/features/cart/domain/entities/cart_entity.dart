@@ -53,6 +53,37 @@ class CartEntity extends Equatable {
           .where((i) => i.menuItemId == menuItemId)
           .fold(0, (sum, i) => sum + i.quantity);
 
+  CartEntity withUpdatedQuantity(String menuItemId, String? variantId, int quantity) {
+    final itemIndex = items.indexWhere((i) => i.menuItemId == menuItemId);
+    if (itemIndex == -1) return this;
+
+    final updatedItems = List<CartItemEntity>.from(items);
+    final i = updatedItems[itemIndex];
+    
+    if (quantity <= 0) {
+      updatedItems.removeAt(itemIndex);
+    } else {
+      final perUnitAddon = i.quantity > 0 ? (i.addOnsTotal / i.quantity) : 0.0;
+      final newAddOnsTotal = perUnitAddon * quantity;
+      final newLineTotal = (i.unitPrice * quantity) + newAddOnsTotal;
+
+      updatedItems[itemIndex] = i.copyWith(
+        quantity: quantity,
+        addOnsTotal: newAddOnsTotal,
+        lineTotal: newLineTotal,
+      );
+    }
+
+    final newItemTotal = updatedItems.fold(0.0, (sum, item) => sum + item.lineTotal);
+    final newItemCount = updatedItems.fold(0, (sum, item) => sum + item.quantity);
+
+    return copyWith(
+      items: updatedItems,
+      itemTotal: newItemTotal,
+      itemCount: newItemCount,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,
