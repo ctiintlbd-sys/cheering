@@ -5,13 +5,11 @@ class ItemDetailsState extends Equatable {
   final MenuItemEntity menuItem;
   final MenuVariantEntity? selectedVariant;
   final List<MenuAddOnEntity> selectedAddOns;
-  final int quantity;
 
   const ItemDetailsState({
     required this.menuItem,
     this.selectedVariant,
     this.selectedAddOns = const [],
-    this.quantity = 1,
   });
 
   double get unitPrice {
@@ -22,10 +20,6 @@ class ItemDetailsState extends Equatable {
     return price;
   }
 
-  double get totalPrice {
-    return unitPrice * quantity;
-  }
-
   @override
-  List<Object?> get props => [menuItem, selectedVariant, selectedAddOns, quantity];
+  List<Object?> get props => [menuItem, selectedVariant, selectedAddOns];
 }

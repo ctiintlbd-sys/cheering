@@ -9,15 +9,12 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       : super(_createInitialState(menuItem, cartItem)) {
     on<SelectVariantEvent>(_onSelectVariant);
     on<ToggleAddOnEvent>(_onToggleAddOn);
-    on<IncrementQuantityEvent>(_onIncrementQuantity);
-    on<DecrementQuantityEvent>(_onDecrementQuantity);
   }
 
   static ItemDetailsState _createInitialState(
     MenuItemEntity menuItem,
     CartItemEntity? cartItem,
   ) {
-    final initialQuantity = (cartItem != null && cartItem.quantity > 0) ? cartItem.quantity : 1;
     final initialVariantId = cartItem?.variantId;
     final initialAddOnIds = cartItem?.addOnIds ?? const [];
 
@@ -46,7 +43,6 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       menuItem: menuItem,
       selectedVariant: initialVariant,
       selectedAddOns: initialAddOns,
-      quantity: initialQuantity,
     );
   }
 
@@ -55,7 +51,6 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       menuItem: state.menuItem,
       selectedVariant: event.variant,
       selectedAddOns: state.selectedAddOns,
-      quantity: state.quantity,
     ));
   }
 
@@ -70,27 +65,6 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
       menuItem: state.menuItem,
       selectedVariant: state.selectedVariant,
       selectedAddOns: currentAddOns,
-      quantity: state.quantity,
     ));
-  }
-
-  void _onIncrementQuantity(IncrementQuantityEvent event, Emitter<ItemDetailsState> emit) {
-    emit(ItemDetailsState(
-      menuItem: state.menuItem,
-      selectedVariant: state.selectedVariant,
-      selectedAddOns: state.selectedAddOns,
-      quantity: state.quantity + 1,
-    ));
-  }
-
-  void _onDecrementQuantity(DecrementQuantityEvent event, Emitter<ItemDetailsState> emit) {
-    if (state.quantity > 1) {
-      emit(ItemDetailsState(
-        menuItem: state.menuItem,
-        selectedVariant: state.selectedVariant,
-        selectedAddOns: state.selectedAddOns,
-        quantity: state.quantity - 1,
-      ));
-    }
   }
 }

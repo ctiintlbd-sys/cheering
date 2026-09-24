@@ -26,6 +26,4 @@ class ToggleAddOnEvent extends ItemDetailsEvent {
   List<Object?> get props => [addOn];
 }
 
-class IncrementQuantityEvent extends ItemDetailsEvent {}
 
-class DecrementQuantityEvent extends ItemDetailsEvent {}
