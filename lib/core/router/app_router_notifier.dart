@@ -21,6 +21,8 @@ class AppRouterNotifier extends ChangeNotifier {
     _pendingRedirect = url;
   }
 
+
+
   void setPendingBiometricOffer(bool value) {
     if (_pendingBiometricOffer == value) return;
     _pendingBiometricOffer = value;
@@ -31,6 +33,7 @@ class AppRouterNotifier extends ChangeNotifier {
 
   void consumePendingBiometricOffer() {
     _pendingBiometricOffer = false;
+    notifyListeners();
   }
 
   void updateAuth({required bool isAuthenticated, bool? isOnboardingSeen}) {

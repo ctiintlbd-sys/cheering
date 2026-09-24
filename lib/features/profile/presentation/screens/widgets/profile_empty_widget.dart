@@ -34,10 +34,8 @@ class ProfileEmptyWidget extends StatelessWidget {
         ),
         CustomButton(
           onPressed: () {
-            {
-              getIt<AppRouterNotifier>().setPendingRedirect(RoutePaths.profileTab);
-              context.go(RoutePaths.login);
-            }
+            getIt<AppRouterNotifier>().setPendingRedirect(RoutePaths.profileTab);
+            context.go(RoutePaths.login);
           },
           label: 'Login/ Sign up',
         ),
