@@ -7,6 +7,7 @@ import 'package:cheering/features/food/presentation/blocs/restaurant_details/res
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_event.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
+import 'package:cheering/features/food/presentation/blocs/item_details/item_details_bloc.dart';
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -46,7 +47,10 @@ final List<RouteBase> foodRoutes = [
     path: RoutePaths.itemDetails,
     builder: (context, state) {
       final item = state.extra as MenuItemEntity;
-      return ItemDetailsScreen(menuItem: item);
+      return BlocProvider(
+        create: (context) => ItemDetailsBloc(item),
+        child: ItemDetailsScreen(menuItem: item),
+      );
     }
   ),
 ];

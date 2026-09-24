@@ -12,6 +12,9 @@ import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/core/router/app_router_notifier.dart';
+
 class MenuItemWidget extends StatelessWidget {
   final MenuItemEntity? menuItem;
 
@@ -19,9 +22,16 @@ class MenuItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = getIt<AppRouterNotifier>().isAuthenticated;
+    final hasVariants = menuItem?.variants?.isNotEmpty ?? false;
+    final hasAddOns = menuItem?.addOns?.isNotEmpty ?? false;
+    final hasOptions = hasVariants || hasAddOns;
+
     return GestureDetector(
       onTap: () {
-        context.push(RoutePaths.itemDetails, extra: menuItem);
+        if (isLoggedIn && hasOptions) {
+          context.push(RoutePaths.itemDetails, extra: menuItem);
+        }
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -70,18 +80,26 @@ class MenuItemWidget extends StatelessWidget {
                       if (menuItem != null)
                         BlocBuilder<CartBloc, CartState>(
                           builder: (context, state) {
-                            final count = state.cart?.quantityFor(menuItem!.id) ?? 0;
+                            final count =
+                                state.cart?.quantityFor(menuItem!.id) ?? 0;
                             return QuantityButton(
                               count: count,
                               onIncrement: () {
-                                context.read<CartBloc>().add(
-                                  AddOrUpdateCartItemEvent(
-                                    AddCartItemParams(
-                                      menuItemId: menuItem!.id,
-                                      quantity: count + 1,
+                                if (hasOptions) {
+                                  context.push(
+                                    RoutePaths.itemDetails,
+                                    extra: menuItem,
+                                  );
+                                } else {
+                                  context.read<CartBloc>().add(
+                                    AddOrUpdateCartItemEvent(
+                                      AddCartItemParams(
+                                        menuItemId: menuItem!.id,
+                                        quantity: count + 1,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               },
                               onDecrement: () {
                                 if (count > 0) {
