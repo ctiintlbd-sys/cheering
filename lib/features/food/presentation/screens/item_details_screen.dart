@@ -74,6 +74,7 @@ class ItemDetailsScreen extends StatelessWidget {
                 fontSize: 12.r,
                 color: context.colors.textSecondary,
               ),
+
             if (menuItem.variants != null && menuItem.variants!.isNotEmpty)
               ItemSizeOptionsWidget(
                 variants: menuItem.variants!,
@@ -86,15 +87,20 @@ class ItemDetailsScreen extends StatelessWidget {
                   );
                 },
               ),
+
             if (menuItem.addOns != null && menuItem.addOns!.isNotEmpty)
               ItemAddOnsWidget(
                 addOns: menuItem.addOns!,
-                selectedAddOns: state.selectedAddOns,
-                onIncrement: (addOn) {
-                  context.read<ItemDetailsBloc>().add(IncrementAddOnEvent(addOn));
-                },
-                onDecrement: (addOn) {
-                  context.read<ItemDetailsBloc>().add(DecrementAddOnEvent(addOn));
+                selectedAddOns: Map.fromEntries(
+                  menuItem.addOns!.asMap().entries.map(
+                    (e) =>
+                        MapEntry(e.key, state.selectedAddOns.contains(e.value)),
+                  ),
+                ),
+                onToggle: (index) {
+                  context.read<ItemDetailsBloc>().add(
+                    ToggleAddOnEvent(menuItem.addOns![index]),
+                  );
                 },
               ),
 
