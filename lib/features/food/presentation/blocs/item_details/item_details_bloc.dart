@@ -8,7 +8,8 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
   ItemDetailsBloc(MenuItemEntity menuItem, {CartItemEntity? cartItem}) 
       : super(_createInitialState(menuItem, cartItem)) {
     on<SelectVariantEvent>(_onSelectVariant);
-    on<ToggleAddOnEvent>(_onToggleAddOn);
+    on<IncrementAddOnEvent>(_onIncrementAddOn);
+    on<DecrementAddOnEvent>(_onDecrementAddOn);
   }
 
   static ItemDetailsState _createInitialState(
@@ -36,7 +37,12 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
 
     List<MenuAddOnEntity> initialAddOns = [];
     if (menuItem.addOns != null && initialAddOnIds.isNotEmpty) {
-      initialAddOns = menuItem.addOns!.where((a) => initialAddOnIds.contains(a.id)).toList();
+      for (var id in initialAddOnIds) {
+        final addOn = menuItem.addOns!.where((a) => a.id == id).firstOrNull;
+        if (addOn != null) {
+          initialAddOns.add(addOn);
+        }
+      }
     }
 
     return ItemDetailsState(
@@ -54,13 +60,19 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     ));
   }
 
-  void _onToggleAddOn(ToggleAddOnEvent event, Emitter<ItemDetailsState> emit) {
+  void _onIncrementAddOn(IncrementAddOnEvent event, Emitter<ItemDetailsState> emit) {
     final currentAddOns = List.of(state.selectedAddOns);
-    if (currentAddOns.contains(event.addOn)) {
-      currentAddOns.remove(event.addOn);
-    } else {
-      currentAddOns.add(event.addOn);
-    }
+    currentAddOns.add(event.addOn);
+    emit(ItemDetailsState(
+      menuItem: state.menuItem,
+      selectedVariant: state.selectedVariant,
+      selectedAddOns: currentAddOns,
+    ));
+  }
+
+  void _onDecrementAddOn(DecrementAddOnEvent event, Emitter<ItemDetailsState> emit) {
+    final currentAddOns = List.of(state.selectedAddOns);
+    currentAddOns.remove(event.addOn); // remove removes the first occurrence
     emit(ItemDetailsState(
       menuItem: state.menuItem,
       selectedVariant: state.selectedVariant,
