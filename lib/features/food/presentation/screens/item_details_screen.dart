@@ -68,41 +68,43 @@ class ItemDetailsScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
             SizedBox(height: 8.w),
-            if (menuItem.description != null && menuItem.description!.isNotEmpty)
+            if (menuItem.description != null &&
+                menuItem.description!.isNotEmpty)
               CustomText(
                 text: menuItem.description!,
                 fontSize: 12.r,
                 color: context.colors.textSecondary,
               ),
-            
+
             if (menuItem.variants != null && menuItem.variants!.isNotEmpty)
               ItemSizeOptionsWidget(
                 variants: menuItem.variants!,
-                selectedIndex: state.selectedVariant != null 
-                    ? menuItem.variants!.indexOf(state.selectedVariant!) 
+                selectedIndex: state.selectedVariant != null
+                    ? menuItem.variants!.indexOf(state.selectedVariant!)
                     : -1,
                 onChanged: (index) {
                   context.read<ItemDetailsBloc>().add(
-                    SelectVariantEvent(menuItem.variants![index])
+                    SelectVariantEvent(menuItem.variants![index]),
                   );
                 },
               ),
-              
+
             if (menuItem.addOns != null && menuItem.addOns!.isNotEmpty)
               ItemAddOnsWidget(
                 addOns: menuItem.addOns!,
                 selectedAddOns: Map.fromEntries(
                   menuItem.addOns!.asMap().entries.map(
-                    (e) => MapEntry(e.key, state.selectedAddOns.contains(e.value))
-                  )
+                    (e) =>
+                        MapEntry(e.key, state.selectedAddOns.contains(e.value)),
+                  ),
                 ),
                 onToggle: (index) {
                   context.read<ItemDetailsBloc>().add(
-                    ToggleAddOnEvent(menuItem.addOns![index])
+                    ToggleAddOnEvent(menuItem.addOns![index]),
                   );
                 },
               ),
-              
+
             SizedBox(height: 120.w),
           ],
         );
@@ -114,60 +116,62 @@ class ItemDetailsScreen extends StatelessWidget {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, cartState) {
         final count = cartState.cart?.quantityFor(menuItem.id) ?? 0;
-        
-        return Container(
-          decoration: BoxDecoration(
+
+        return CustomContainer(
+          radiusAll: 12.r,
+          paddingHorizontal: 12.w,
+            paddingVertical: 8.w,
             color: context.colors.background,
             boxShadow: [
               BoxShadow(
-                color: context.colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
+                color: context.colors.black.withValues(alpha: 0.03),
+                blurRadius: 2,
+                offset: const Offset(0, -2),
               ),
             ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomText(
-                  text: 'Total: ৳${state.totalPrice.toStringAsFixed(0)}',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16.r,
-                  color: context.colors.primary,
-                ),
-                QuantityButton(
-                  count: count,
-                  onIncrement: () {
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomText(
+                text: 'Total: ৳${state.totalPrice.toStringAsFixed(0)}',
+                fontWeight: FontWeight.w700,
+                fontSize: 16.r,
+                color: context.colors.primary,
+              ),
+              QuantityButton(
+                count: count,
+                onIncrement: () {
+                  context.read<CartBloc>().add(
+                    AddOrUpdateCartItemEvent(
+                      AddCartItemParams(
+                        menuItemId: menuItem.id,
+                        quantity: count + 1,
+                        variantId: state.selectedVariant?.id,
+                        addOnIds: state.selectedAddOns
+                            .map((a) => a.id)
+                            .toList(),
+                      ),
+                    ),
+                  );
+                },
+                onDecrement: () {
+                  if (count > 0) {
                     context.read<CartBloc>().add(
                       AddOrUpdateCartItemEvent(
                         AddCartItemParams(
                           menuItemId: menuItem.id,
-                          quantity: count + 1,
+                          quantity: count - 1,
                           variantId: state.selectedVariant?.id,
-                          addOnIds: state.selectedAddOns.map((a) => a.id).toList(),
+                          addOnIds: state.selectedAddOns
+                              .map((a) => a.id)
+                              .toList(),
                         ),
                       ),
                     );
-                  },
-                  onDecrement: () {
-                    if (count > 0) {
-                      context.read<CartBloc>().add(
-                        AddOrUpdateCartItemEvent(
-                          AddCartItemParams(
-                            menuItemId: menuItem.id,
-                            quantity: count - 1,
-                            variantId: state.selectedVariant?.id,
-                            addOnIds: state.selectedAddOns.map((a) => a.id).toList(),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
+                  }
+                },
+              ),
+            ],
           ),
         );
       },
