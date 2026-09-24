@@ -54,7 +54,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         final renderBox = key.currentContext!.findRenderObject() as RenderBox?;
         if (renderBox != null) {
           final position = renderBox.localToGlobal(Offset.zero).dy;
-          // 416.w is the expanded height, 118.w is the bottom app bar, plus some safe margin
           if (position > 0 && position < 250) {
             if (_activeIndexNotifier.value != i) {
               _activeIndexNotifier.value = i;
@@ -103,7 +102,6 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             builder: (context, cartState) {
               final itemCount = cartState.cart?.itemCount ?? 0;
               if (itemCount == 0) return const SizedBox.shrink();
-
               return ViewCartButton(
                 itemCount: itemCount,
                 totalPrice: cartState.cart?.itemTotal ?? 0,
