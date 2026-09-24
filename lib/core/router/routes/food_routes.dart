@@ -32,7 +32,8 @@ final List<RouteBase> foodRoutes = [
     path: RoutePaths.storeDetailsRoute,
     builder: (context, state) {
       final id = state.pathParameters['id'];
-      final restaurant = state.extra as RestaurantEntity?;
+      final extra = state.extra;
+      final restaurant = extra is RestaurantEntity ? extra : null;
       return BlocProvider(
         create: (context) =>
             getIt<RestaurantDetailsBloc>()
