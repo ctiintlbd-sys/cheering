@@ -1,8 +1,8 @@
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
@@ -10,11 +10,9 @@ import 'package:cheering/core/common_widgets/quantity_button.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/item_size_options_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/item_add_ons_widget.dart';
-
 import 'package:cheering/features/cart/domain/entities/add_cart_item_params.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
-
 import 'package:cheering/features/food/presentation/blocs/item_details/item_details_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/item_details/item_details_event.dart';
 import 'package:cheering/features/food/presentation/blocs/item_details/item_details_state.dart';
@@ -62,8 +60,7 @@ class ItemDetailsScreen extends StatelessWidget {
               SizedBox(width: 16.w),
             ],
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: _buildBottomBar(context, state),
+          bottomNavigationBar: _buildBottomBar(context, state),
           bodyList: [
             CustomText(
               text: menuItem.name,
@@ -114,55 +111,66 @@ class ItemDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildBottomBar(BuildContext context, ItemDetailsState state) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: CustomContainer(
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            QuantityButton(
-              count: state.quantity,
-              onIncrement: () {
-                context.read<ItemDetailsBloc>().add(IncrementQuantityEvent());
-              },
-              onDecrement: () {
-                context.read<ItemDetailsBloc>().add(DecrementQuantityEvent());
-              },
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  context.read<CartBloc>().add(
-                    AddOrUpdateCartItemEvent(
-                      AddCartItemParams(
-                        menuItemId: menuItem.id,
-                        quantity: state.quantity,
-                        variantId: state.selectedVariant?.id,
-                        addOnIds: state.selectedAddOns.map((a) => a.id).toList(),
-                      ),
-                    ),
-                  );
-                  context.pop();
-                },
-                child: CustomContainer(
-                  color: context.colors.primary,
-                  radiusAll: 99.r,
-                  paddingVertical: 14.w,
-                  alignment: Alignment.center,
-                  child: CustomText(
-                    text: 'Add to cart · ৳${state.totalPrice.toStringAsFixed(0)}',
-                    color: context.colors.white,
-                    fontSize: 16.r,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, cartState) {
+        final count = cartState.cart?.quantityFor(menuItem.id) ?? 0;
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: context.colors.background,
+            boxShadow: [
+              BoxShadow(
+                color: context.colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
               ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomText(
+                  text: 'Total: ৳${state.totalPrice.toStringAsFixed(0)}',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16.r,
+                  color: context.colors.primary,
+                ),
+                QuantityButton(
+                  count: count,
+                  onIncrement: () {
+                    context.read<CartBloc>().add(
+                      AddOrUpdateCartItemEvent(
+                        AddCartItemParams(
+                          menuItemId: menuItem.id,
+                          quantity: count + 1,
+                          variantId: state.selectedVariant?.id,
+                          addOnIds: state.selectedAddOns.map((a) => a.id).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  onDecrement: () {
+                    if (count > 0) {
+                      context.read<CartBloc>().add(
+                        AddOrUpdateCartItemEvent(
+                          AddCartItemParams(
+                            menuItemId: menuItem.id,
+                            quantity: count - 1,
+                            variantId: state.selectedVariant?.id,
+                            addOnIds: state.selectedAddOns.map((a) => a.id).toList(),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -85,17 +85,22 @@ class MenuItemWidget extends StatelessWidget {
                             return QuantityButton(
                               count: count,
                               onIncrement: () {
-                                if (hasOptions) {
+                                if (hasOptions && count == 0) {
                                   context.push(
                                     RoutePaths.itemDetails,
                                     extra: menuItem,
                                   );
                                 } else {
+                                  final cartItem = state.cart?.items
+                                      .where((i) => i.menuItemId == menuItem!.id)
+                                      .firstOrNull;
                                   context.read<CartBloc>().add(
                                     AddOrUpdateCartItemEvent(
                                       AddCartItemParams(
                                         menuItemId: menuItem!.id,
                                         quantity: count + 1,
+                                        variantId: cartItem?.variantId,
+                                        addOnIds: cartItem?.addOnIds ?? const [],
                                       ),
                                     ),
                                   );
@@ -103,11 +108,16 @@ class MenuItemWidget extends StatelessWidget {
                               },
                               onDecrement: () {
                                 if (count > 0) {
+                                  final cartItem = state.cart?.items
+                                      .where((i) => i.menuItemId == menuItem!.id)
+                                      .firstOrNull;
                                   context.read<CartBloc>().add(
                                     AddOrUpdateCartItemEvent(
                                       AddCartItemParams(
                                         menuItemId: menuItem!.id,
                                         quantity: count - 1,
+                                        variantId: cartItem?.variantId,
+                                        addOnIds: cartItem?.addOnIds ?? const [],
                                       ),
                                     ),
                                   );

@@ -1,3 +1,5 @@
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/presentation/screens/explore_restaurants_screen.dart';
 import 'package:cheering/features/food/presentation/screens/restaurant_details_screen.dart';
@@ -47,8 +49,11 @@ final List<RouteBase> foodRoutes = [
     path: RoutePaths.itemDetails,
     builder: (context, state) {
       final item = state.extra as MenuItemEntity;
+      final cartItem = context.read<CartBloc>().state.cart?.items
+          .where((i) => i.menuItemId == item.id).firstOrNull;
+      
       return BlocProvider(
-        create: (context) => ItemDetailsBloc(item),
+        create: (context) => ItemDetailsBloc(item, cartItem: cartItem),
         child: ItemDetailsScreen(menuItem: item),
       );
     }
