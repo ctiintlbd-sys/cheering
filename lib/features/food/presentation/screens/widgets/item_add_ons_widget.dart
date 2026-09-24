@@ -54,18 +54,12 @@ class ItemAddOnsWidget extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(text: addOn.name, fontWeight: FontWeight.w600),
-                  SizedBox(height: 4.w),
-                  CustomText(
-                    text: '+৳${addOn.price.toStringAsFixed(0)}',
-                    fontSize: 12.r,
-                    color: context.colors.textTertiary,
-                  ),
-                ],
-              ),
+              child: CustomText(text: addOn.name, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(width: 14.w),
+            CustomText(
+              text: '+৳${addOn.price.toStringAsFixed(0)}',
+              fontSize: 16.r,
             ),
             SizedBox(width: 14.w),
             CustomContainer(
