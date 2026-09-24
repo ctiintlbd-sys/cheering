@@ -29,7 +29,7 @@ class _TipWidgetState extends State<TipWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 12.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Row(
               children: [
                 Assets.icons.tip.svg(),
@@ -54,33 +54,48 @@ class _TipWidgetState extends State<TipWidget> {
               ],
             ),
           ),
-          SizedBox(height: 16.w),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: tipOptions.map((tipAmount) {
+          SizedBox(height: 8.w),
+
+          SizedBox(
+            height: 46.w,
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              itemCount: tipOptions.length,
+              itemBuilder: (context, index) {
+                final tipAmount = tipOptions[index];
                 final isSelected = widget.selectedTip == tipAmount;
                 final text = tipAmount == 0 ? 'Not now' : '৳${tipAmount.toInt()}';
                 return Padding(
-                  padding: EdgeInsets.only(right: 8.w),
+                  padding: EdgeInsets.symmetric(vertical: 8.w),
                   child: GestureDetector(
                     onTap: () => widget.onTipSelected(tipAmount),
                     child: CustomContainer(
+                      alignment: Alignment.center,
                       paddingHorizontal: 10.w,
-                      paddingVertical: 8.w,
                       radiusAll: 99.r,
-                      color: isSelected ? context.colors.primary : context.colors.background,
-                      bordersColor: isSelected ? context.colors.primary : context.colors.borderSecondary,
+                      color: isSelected
+                          ? context.colors.primary
+                          : context.colors.background,
+                      bordersColor: isSelected
+                          ? context.colors.primary
+                          : context.colors.borderSecondary,
                       child: CustomText(
                         text: text,
                         fontWeight: FontWeight.w500,
                         fontSize: 12.w,
-                        color: isSelected ? context.colors.white : context.colors.textPrimary,
+                        color: isSelected
+                            ? context.colors.white
+                            : context.colors.textPrimary,
                       ),
                     ),
                   ),
                 );
-              }).toList(),
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(width: 12.w);
+              },
             ),
           ),
         ],

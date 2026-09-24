@@ -173,7 +173,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
 
-              SizedBox(height: 24.w),
+              SizedBox(height: 20.w),
               BlocBuilder<CartBloc, CartState>(
                 builder: (context, cartState) {
                   return BillDetailsCard(
@@ -186,7 +186,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   );
                 },
               ),
-              SizedBox(height: 100.w),
+              SizedBox(height: 204.w),
             ],
           );
         },
