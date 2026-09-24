@@ -55,9 +55,18 @@ class CartEntity extends Equatable {
 
   bool _areAddOnsEqual(List<String> list1, List<String> list2) {
     if (list1.length != list2.length) return false;
-    final set1 = Set.from(list1);
-    final set2 = Set.from(list2);
-    return set1.containsAll(set2);
+    final map1 = <String, int>{};
+    for (var id in list1) {
+      map1[id] = (map1[id] ?? 0) + 1;
+    }
+    final map2 = <String, int>{};
+    for (var id in list2) {
+      map2[id] = (map2[id] ?? 0) + 1;
+    }
+    for (var key in map1.keys) {
+      if (map1[key] != map2[key]) return false;
+    }
+    return true;
   }
 
   int quantityForConfiguration(String menuItemId, String? variantId, List<String> addOnIds) {

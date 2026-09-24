@@ -17,11 +17,16 @@ class SelectVariantEvent extends ItemDetailsEvent {
   List<Object?> get props => [variant];
 }
 
-class ToggleAddOnEvent extends ItemDetailsEvent {
+class IncrementAddOnEvent extends ItemDetailsEvent {
   final MenuAddOnEntity addOn;
+  const IncrementAddOnEvent(this.addOn);
+  @override
+  List<Object?> get props => [addOn];
+}
 
-  const ToggleAddOnEvent(this.addOn);
-
+class DecrementAddOnEvent extends ItemDetailsEvent {
+  final MenuAddOnEntity addOn;
+  const DecrementAddOnEvent(this.addOn);
   @override
   List<Object?> get props => [addOn];
 }
