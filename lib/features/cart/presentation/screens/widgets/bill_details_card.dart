@@ -6,12 +6,18 @@ class BillDetailsCard extends StatelessWidget {
   final double itemTotal;
   final int itemCount;
   final double minOrderAmount;
+  final double? deliveryFee;
+  final double? discount;
+  final double? grandTotal;
 
   const BillDetailsCard({
     super.key,
     required this.itemTotal,
     required this.itemCount,
     required this.minOrderAmount,
+    this.deliveryFee,
+    this.discount,
+    this.grandTotal,
   });
 
   @override
@@ -40,16 +46,34 @@ class BillDetailsCard extends StatelessWidget {
           ],
           child: Column(
             children: [
-              _buildBillRow(context, 'Total Items', '$itemCount'),
+              if (grandTotal == null)
+                _buildBillRow(context, 'Total Items', '$itemCount'),
               if (minOrderAmount > 0)
                 _buildBillRow(context, 'Min Order Amount', '৳${minOrderAmount.toStringAsFixed(0)}'),
               _buildBillRow(
                 context,
-                'Subtotal',
+                grandTotal != null ? 'Item total' : 'Subtotal',
                 '৳${itemTotal.toStringAsFixed(0)}',
-                valueColor: context.colors.primary,
-                fontWeight: FontWeight.w600,
+                valueColor: grandTotal != null ? context.colors.textPrimary : context.colors.primary,
+                fontWeight: grandTotal != null ? FontWeight.w400 : FontWeight.w600,
               ),
+              if (deliveryFee != null)
+                _buildBillRow(context, 'Delivery fee', '৳${deliveryFee!.toStringAsFixed(0)}'),
+              if (discount != null && discount! > 0)
+                _buildBillRow(
+                  context,
+                  'Discount',
+                  '-৳${discount!.toStringAsFixed(0)}',
+                  valueColor: Colors.green,
+                ),
+              if (grandTotal != null)
+                _buildBillRow(
+                  context,
+                  '$itemCount pcs',
+                  '৳${grandTotal!.toStringAsFixed(0)}',
+                  valueColor: context.colors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
             ],
           ),
         ),

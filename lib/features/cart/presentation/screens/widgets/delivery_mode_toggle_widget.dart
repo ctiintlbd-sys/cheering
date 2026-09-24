@@ -8,11 +8,13 @@ class DeliveryModeToggleWidget extends StatelessWidget {
     required this.selectedIndex,
     required this.onChanged,
     this.options = const ['Delivery', 'Pickup'],
+    this.showIcons = true,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onChanged;
   final List<String> options;
+  final bool showIcons;
 
   Alignment _getAlignment(int index, int total) {
     if (total == 1) return Alignment.center;
@@ -54,16 +56,18 @@ class DeliveryModeToggleWidget extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            index == 1
-                                ? Icons.directions_walk
-                                : Icons.directions_bike,
-                            color: isSelected
-                                ? context.colors.textPrimary
-                                : context.colors.textSecondary,
-                            size: 20.r,
-                          ),
-                          SizedBox(width: 8.w),
+                          if (showIcons) ...[
+                            Icon(
+                              index == 1
+                                  ? Icons.directions_walk
+                                  : Icons.directions_bike,
+                              color: isSelected
+                                  ? context.colors.textPrimary
+                                  : context.colors.textSecondary,
+                              size: 20.r,
+                            ),
+                            SizedBox(width: 8.w),
+                          ],
                           CustomText(
                             text: options[index],
                             fontWeight: FontWeight.w500,

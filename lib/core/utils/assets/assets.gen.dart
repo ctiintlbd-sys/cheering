@@ -32,6 +32,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
 
+  /// File path: assets/icons/cash.svg
+  SvgGenImage get cash => const SvgGenImage('assets/icons/cash.svg');
+
   /// File path: assets/icons/comment.svg
   SvgGenImage get comment => const SvgGenImage('assets/icons/comment.svg');
 
@@ -177,6 +180,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/touch.svg
   SvgGenImage get touch => const SvgGenImage('assets/icons/touch.svg');
 
+  /// File path: assets/icons/visa.svg
+  SvgGenImage get visa => const SvgGenImage('assets/icons/visa.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     appLogo,
@@ -184,6 +190,7 @@ class $AssetsIconsGen {
     bikash,
     bookmark,
     cart,
+    cash,
     comment,
     community,
     communityFil,
@@ -226,6 +233,7 @@ class $AssetsIconsGen {
     store,
     storeFil,
     touch,
+    visa,
   ];
 }
 

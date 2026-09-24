@@ -8,15 +8,15 @@ class CheckoutSummaryState extends Equatable {
   final CheckoutSummaryStatus status;
   final CheckoutSummaryEntity? summary;
   final String? errorMessage;
-  
-  // Keep track of current params to easily modify them (like adding a tip later)
   final CheckoutSummaryParams? currentParams;
+  final String paymentMethod;
 
   const CheckoutSummaryState({
     this.status = CheckoutSummaryStatus.initial,
     this.summary,
     this.errorMessage,
     this.currentParams,
+    this.paymentMethod = 'COD',
   });
 
   CheckoutSummaryState copyWith({
@@ -24,6 +24,7 @@ class CheckoutSummaryState extends Equatable {
     CheckoutSummaryEntity? summary,
     String? errorMessage,
     CheckoutSummaryParams? currentParams,
+    String? paymentMethod,
     bool clearError = false,
   }) {
     return CheckoutSummaryState(
@@ -31,9 +32,10 @@ class CheckoutSummaryState extends Equatable {
       summary: summary ?? this.summary,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       currentParams: currentParams ?? this.currentParams,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
     );
   }
 
   @override
-  List<Object?> get props => [status, summary, errorMessage, currentParams];
+  List<Object?> get props => [status, summary, errorMessage, currentParams, paymentMethod];
 }

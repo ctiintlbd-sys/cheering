@@ -8,10 +8,10 @@ class AddAddressLocationCard extends StatelessWidget {
   const AddAddressLocationCard({
     super.key,
     required this.onChangeTap,
-    required this.address,
+    this.address,
   });
 
-  final AddressEntity address;
+  final AddressEntity? address;
   final VoidCallback onChangeTap;
 
   @override
@@ -44,17 +44,26 @@ class AddAddressLocationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: address.city ?? 'Dhaka',
+                  text: address?.city ?? 'Select Delivery Address',
                   fontWeight: FontWeight.w500,
                   maxLines: 1,
                 ),
-                CustomText(
-                  top: 2.w,
-                  text: address.formattedAddress,
-                  fontSize: 12.r,
-                  color: context.colors.textTertiary,
-                  maxLines: 1,
-                ),
+                if (address != null)
+                  CustomText(
+                    top: 2.w,
+                    text: address!.formattedAddress,
+                    fontSize: 12.r,
+                    color: context.colors.textTertiary,
+                    maxLines: 1,
+                  )
+                else
+                  CustomText(
+                    top: 2.w,
+                    text: 'Tap to add your location',
+                    fontSize: 12.r,
+                    color: context.colors.textTertiary,
+                    maxLines: 1,
+                  ),
               ],
             ),
           ),

@@ -130,9 +130,20 @@ class _AddressScreenState extends State<AddressScreen> {
                     SavedAddressCard(
                       address: addresses[i],
                       isActive: addresses[i].id == state.activeDefaultId,
-                      onSetDefault: () => context.read<AddressBloc>().add(
-                        UpdateActiveDefaultId(addresses[i].id),
-                      ),
+                      onSetDefault: () {
+                        if (addresses[i].isCurrentLocation && _isLoggedIn) {
+                          final addressToPass = addresses[i].copyWith(
+                            id: '',
+                            type: AddressType.home,
+                            isDefault: false,
+                          );
+                          context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
+                        } else {
+                          context.read<AddressBloc>().add(
+                            UpdateActiveDefaultId(addresses[i].id),
+                          );
+                        }
+                      },
                     ),
                   ],
                   SizedBox(height: 104.w),

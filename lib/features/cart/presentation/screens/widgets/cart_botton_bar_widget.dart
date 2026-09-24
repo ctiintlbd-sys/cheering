@@ -7,9 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class CartBottomBarWidget extends StatelessWidget {
-  const CartBottomBarWidget({super.key, required this.totalPrice});
+  const CartBottomBarWidget({
+    super.key,
+    required this.totalPrice,
+    this.buttonText = 'Processed to checkout',
+    this.onPressed,
+  });
   
   final double totalPrice;
+  final String buttonText;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +94,8 @@ class CartBottomBarWidget extends StatelessWidget {
             ),
             SizedBox(height: 12.w),
             CustomButton(
-              text: 'Processed to checkout',
-              onPressed: () {
-                context.push(RoutePaths.address);
-              },
+              text: buttonText,
+              onPressed: onPressed ?? () => context.push(RoutePaths.checkout),
               width: double.infinity,
             ),
           ],

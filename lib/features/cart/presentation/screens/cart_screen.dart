@@ -1,3 +1,4 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/bill_details_card.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
@@ -11,6 +12,7 @@ import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -57,7 +59,11 @@ class _CartScreenState extends State<CartScreen> {
           ),
           bottomNavigationBar:
               state.cart?.items != null && state.cart!.items.isNotEmpty
-              ? CartBottomBarWidget(totalPrice: state.cart!.itemTotal)
+              ? CartBottomBarWidget(
+                onPressed: (){
+                  context.push(RoutePaths.checkout);
+                },
+                  totalPrice: state.cart!.itemTotal)
               : const SizedBox.shrink(),
           bodyList: switch (state.status) {
             CartStatus.initial ||

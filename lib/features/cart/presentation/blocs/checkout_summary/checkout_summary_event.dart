@@ -34,3 +34,12 @@ class UpdateTipEvent extends CheckoutSummaryEvent {
   @override
   List<Object?> get props => [tip];
 }
+
+class UpdatePaymentMethodEvent extends CheckoutSummaryEvent {
+  final String paymentMethod;
+
+  const UpdatePaymentMethodEvent(this.paymentMethod);
+
+  @override
+  List<Object?> get props => [paymentMethod];
+}

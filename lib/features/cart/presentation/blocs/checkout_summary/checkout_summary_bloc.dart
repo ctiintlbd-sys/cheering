@@ -14,6 +14,7 @@ class CheckoutSummaryBloc
     on<LoadCheckoutSummary>(_onLoadCheckoutSummary);
     on<ApplyPromoCodeEvent>(_onApplyPromoCode);
     on<UpdateTipEvent>(_onUpdateTip);
+    on<UpdatePaymentMethodEvent>(_onUpdatePaymentMethod);
   }
 
   Future<void> _onLoadCheckoutSummary(
@@ -79,5 +80,12 @@ class CheckoutSummaryBloc
     );
 
     add(LoadCheckoutSummary(newParams));
+  }
+
+  void _onUpdatePaymentMethod(
+    UpdatePaymentMethodEvent event,
+    Emitter<CheckoutSummaryState> emit,
+  ) {
+    emit(state.copyWith(paymentMethod: event.paymentMethod));
   }
 }
