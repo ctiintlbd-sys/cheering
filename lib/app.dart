@@ -5,6 +5,7 @@ import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
 import 'package:cheering/features/address/presentation/bloc/address_event.dart';
 import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,13 @@ import 'package:cheering/core/l10n/locale_cubit.dart';
 
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
+import 'package:cheering/core/common_widgets/global_cart_listener.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<LocaleCubit>()),
@@ -41,36 +42,38 @@ class App extends StatelessWidget {
         ),
       ],
       child: ProfileSessionSync(
-        child: ScreenUtilInit(
-          designSize: DesignSizeHelper.getDesignSize(),
-          minTextAdapt: false,
-          splitScreenMode: true,
-          ensureScreenSize: true,
-          builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
-            builder: (context, locale) => MaterialApp.router(
-              scaffoldMessengerKey: ToastMessageHelper.messengerKey,
-              debugShowCheckedModeBanner: false,
-              title: 'Cheering',
-              locale: locale,
-              themeMode: ThemeMode.light,
-              theme: AppTheme.light(),
-              routerConfig: AppRouter.router,
-              supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              builder: (context, child) {
-                return MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                    textScaler:
-                        TextScaler.noScaling, // ✅ system font size ignore করবে
-                  ),
-                  child: child ?? const SizedBox.shrink(),
-                );
-              },
+        child: GlobalCartListener(
+          child: ScreenUtilInit(
+            designSize: DesignSizeHelper.getDesignSize(),
+            minTextAdapt: false,
+            splitScreenMode: true,
+            ensureScreenSize: true,
+            builder: (context, child) => BlocBuilder<LocaleCubit, Locale>(
+              builder: (context, locale) => MaterialApp.router(
+                scaffoldMessengerKey: ToastMessageHelper.messengerKey,
+                debugShowCheckedModeBanner: false,
+                title: 'Cheering',
+                locale: locale,
+                themeMode: ThemeMode.light,
+                theme: AppTheme.light(),
+                routerConfig: AppRouter.router,
+                supportedLocales: AppLocalizations.supportedLocales,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                builder: (context, child) {
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler:
+                          TextScaler.noScaling, // ✅ system font size ignore করবে
+                    ),
+                    child: child ?? const SizedBox.shrink(),
+                  );
+                },
+              ),
             ),
           ),
         ),
