@@ -35,34 +35,24 @@ class AddressState extends Equatable {
 
   bool get isSaving => mutationStatus == AddressMutationStatus.loading;
 
-  /// The current-location row followed by the saved addresses, each carrying an
-  /// `isDefault` flag that reflects the locally selected id.
+  /// The current-location row followed by the saved addresses.
   List<AddressEntity> get displayAddresses {
     final list = <AddressEntity>[];
 
     final current = currentLocationAddress;
     if (current != null) {
-      list.add(_withDefaultFlag(current, AddressEntity.currentLocationId));
+      list.add(current);
     }
-    for (final address in addresses) {
-      list.add(_withDefaultFlag(address, address.id));
-    }
+    list.addAll(addresses);
 
     return list;
   }
 
   AddressEntity? get activeAddress {
     for (final address in displayAddresses) {
-      if (address.isDefault) return address;
+      if (address.id == activeDefaultId) return address;
     }
     return null;
-  }
-
-  AddressEntity _withDefaultFlag(AddressEntity address, String id) {
-    final isDefault = activeDefaultId == id;
-    return address.isDefault == isDefault
-        ? address
-        : address.copyWith(isDefault: isDefault);
   }
 
   AddressState copyWith({

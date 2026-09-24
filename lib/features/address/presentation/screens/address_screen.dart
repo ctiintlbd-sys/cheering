@@ -129,6 +129,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     if (i > 0) SizedBox(height: 12.w),
                     SavedAddressCard(
                       address: addresses[i],
+                      isActive: addresses[i].id == state.activeDefaultId,
                       onSetDefault: () => context.read<AddressBloc>().add(
                         UpdateActiveDefaultId(addresses[i].id),
                       ),

@@ -11,9 +11,15 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/entities/address_entity.dart';
 
 class SavedAddressCard extends StatelessWidget {
-  const SavedAddressCard({super.key, required this.address, this.onSetDefault});
+  const SavedAddressCard({
+    super.key,
+    required this.address,
+    required this.isActive,
+    this.onSetDefault,
+  });
 
   final AddressEntity address;
+  final bool isActive;
   final VoidCallback? onSetDefault;
 
   bool get _isCurrentLocation => address.isCurrentLocation;
@@ -26,7 +32,7 @@ class SavedAddressCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         onSetDefault?.call();
-        if (!_isCurrentLocation && !address.isDefault) {
+        if (!_isCurrentLocation && !isActive) {
           context.read<AddressBloc>().add(
             SetDefaultAddressRequested(address.id),
           );
@@ -38,7 +44,7 @@ class SavedAddressCard extends StatelessWidget {
         radiusAll: 16.r,
         paddingVertical: 12.w,
         paddingHorizontal: 16.w,
-        boxShadow: address.isDefault
+        boxShadow: isActive
             ? [
                 BoxShadow(
                   color: context.colors.black.withValues(alpha: 0.04),
@@ -55,11 +61,11 @@ class SavedAddressCard extends StatelessWidget {
               width: 24.r,
               height: 24.r,
               shape: BoxShape.circle,
-              bordersColor: address.isDefault
+              bordersColor: isActive
                   ? context.colors.primary
                   : context.colors.bgTertiary,
-              borderWidth: address.isDefault ? 2.r : 1.6.r,
-              child: address.isDefault
+              borderWidth: isActive ? 2.r : 1.6.r,
+              child: isActive
                   ? CustomContainer(
                       height: 14.r,
                       width: 14.r,
@@ -82,7 +88,7 @@ class SavedAddressCard extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      if (address.isDefault) ...[
+                      if (address.isDefault && !_isCurrentLocation) ...[
                         SizedBox(width: 8.w),
                         CustomContainer(
                           paddingHorizontal: 12.w,
