@@ -1,8 +1,10 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/fonts.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CartBottomBarWidget extends StatelessWidget {
   const CartBottomBarWidget({super.key, required this.totalPrice});
@@ -86,7 +88,9 @@ class CartBottomBarWidget extends StatelessWidget {
             SizedBox(height: 12.w),
             CustomButton(
               text: 'Processed to checkout',
-              onPressed: () {},
+              onPressed: () {
+                context.push(RoutePaths.address);
+              },
               width: double.infinity,
             ),
           ],
