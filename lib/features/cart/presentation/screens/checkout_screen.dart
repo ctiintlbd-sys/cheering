@@ -152,7 +152,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             SizedBox(width: 8.w),
                             CustomText(
-                              text: '30-40 min',
+                              text: (checkoutState.summary?.estimatedDeliveryMinutes != null && checkoutState.summary!.estimatedDeliveryMinutes > 0)
+                                  ? '${checkoutState.summary!.estimatedDeliveryMinutes}-${checkoutState.summary!.estimatedDeliveryMinutes + 5} min'
+                                  : '30-40 min',
                               color: context.colors.textSecondary,
                             ),
                           ],
@@ -181,7 +183,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     itemCount: cartState.cart?.itemCount ?? 0,
                     minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
                     deliveryFee: checkoutState.summary?.deliveryFee ?? 0,
+                    packagingFee: checkoutState.summary?.packagingFee ?? 0,
+                    taxAmount: checkoutState.summary?.taxAmount ?? 0,
+                    platformFee: checkoutState.summary?.platformFee ?? 0,
                     discount: checkoutState.summary?.discount ?? 0,
+                    tip: checkoutState.summary?.tip ?? 0,
                     grandTotal: checkoutState.summary?.grandTotal ?? 0,
                   );
                 },

@@ -7,7 +7,11 @@ class BillDetailsCard extends StatelessWidget {
   final int itemCount;
   final double minOrderAmount;
   final double? deliveryFee;
+  final double? packagingFee;
+  final double? taxAmount;
+  final double? platformFee;
   final double? discount;
+  final double? tip;
   final double? grandTotal;
 
   const BillDetailsCard({
@@ -16,7 +20,11 @@ class BillDetailsCard extends StatelessWidget {
     required this.itemCount,
     required this.minOrderAmount,
     this.deliveryFee,
+    this.packagingFee,
+    this.taxAmount,
+    this.platformFee,
     this.discount,
+    this.tip,
     this.grandTotal,
   });
 
@@ -57,8 +65,16 @@ class BillDetailsCard extends StatelessWidget {
                 valueColor: grandTotal != null ? context.colors.textPrimary : context.colors.primary,
                 fontWeight: grandTotal != null ? FontWeight.w400 : FontWeight.w600,
               ),
-              if (deliveryFee != null)
+              if (deliveryFee != null && deliveryFee! > 0)
                 _buildBillRow(context, 'Delivery fee', '৳${deliveryFee!.toStringAsFixed(0)}'),
+              if (packagingFee != null && packagingFee! > 0)
+                _buildBillRow(context, 'Packaging fee', '৳${packagingFee!.toStringAsFixed(0)}'),
+              if (taxAmount != null && taxAmount! > 0)
+                _buildBillRow(context, 'Tax', '৳${taxAmount!.toStringAsFixed(0)}'),
+              if (platformFee != null && platformFee! > 0)
+                _buildBillRow(context, 'Platform fee', '৳${platformFee!.toStringAsFixed(0)}'),
+              if (tip != null && tip! > 0)
+                _buildBillRow(context, 'Rider tip', '৳${tip!.toStringAsFixed(0)}'),
               if (discount != null && discount! > 0)
                 _buildBillRow(
                   context,
