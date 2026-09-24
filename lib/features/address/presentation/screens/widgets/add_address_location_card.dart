@@ -8,17 +8,18 @@ class AddAddressLocationCard extends StatelessWidget {
   const AddAddressLocationCard({
     super.key,
     required this.onChangeTap,
-    this.address,
+    this.address, this.color,
   });
 
   final AddressEntity? address;
   final VoidCallback onChangeTap;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       onTap: onChangeTap,
-      color: context.colors.bgSecondary,
+      color: color ?? context.colors.bgSecondary,
       radiusAll: 12.r,
       paddingAll: 16.r,
       child: Row(

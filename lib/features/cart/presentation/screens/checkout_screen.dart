@@ -15,6 +15,7 @@ import 'package:cheering/features/cart/presentation/screens/widgets/bill_details
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/delivery_mode_toggle_widget.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/payment_methods_card.dart';
+import 'package:cheering/features/cart/presentation/screens/widgets/tip_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,9 +44,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final addressId = addressState.activeDefaultId;
     if (addressId != null) {
       context.read<CheckoutSummaryBloc>().add(
-        LoadCheckoutSummary(
-          CheckoutSummaryParams(addressId: addressId),
-        ),
+        LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)),
       );
     }
   }
@@ -88,14 +87,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 builder: (context, state) {
                   final address = state.activeAddress;
                   return AddAddressLocationCard(
+                    color: context.colors.white,
                     address: address,
-                    onChangeTap: (){
+                    onChangeTap: () {
                       context.push(RoutePaths.address);
                     },
-                  );
+                  ).horizontal(16.w);
                 },
               ),
-              SizedBox(height: 24.w),
+              SizedBox(height: 20.w),
               CustomText(
                 left: 16.w,
                 text: 'Payment method',
@@ -105,109 +105,91 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               SizedBox(height: 12.w),
               PaymentMethodsCard(
                 selectedValue: checkoutState.paymentMethod,
-                onChanged: (value) => context.read<CheckoutSummaryBloc>().add(UpdatePaymentMethodEvent(value)),
+                onChanged: (value) => context.read<CheckoutSummaryBloc>().add(
+                  UpdatePaymentMethodEvent(value),
+                ),
               ),
-              SizedBox(height: 24.w),
+              SizedBox(height: 20.w),
               CustomContainer(
+                radiusAll: 16.r,
+                color: context.colors.white,
                 horizontalMargin: 16.w,
-                child: DeliveryModeToggleWidget(
-                  selectedIndex: deliveryTypeIndex,
-                  options: const ['Delivery', 'Tip'],
-                  showIcons: false,
-                  onChanged: (index) {
-                    setState(() => deliveryTypeIndex = index);
-                  },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding:  EdgeInsets.all(12.r),
+                      child: DeliveryModeToggleWidget(
+                        selectedIndex: deliveryTypeIndex,
+                        options: const ['Delivery', 'Tip'],
+                        showIcons: false,
+                        onChanged: (index) {
+                          setState(() => deliveryTypeIndex = index);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 4.w),
+
+                    if (deliveryTypeIndex == 0)
+                      CustomContainer(
+                        horizontalMargin: 12.w,
+                        paddingVertical: 12.w,
+                        paddingHorizontal: 16.w,
+                        child: Row(
+                          children: [
+                            CustomContainer(
+                              width: 20.r,
+                              height: 20.r,
+                              shape: BoxShape.circle,
+                              color: context.colors.white,
+                              borderWidth:  6,
+                              bordersColor: context.colors.primary
+                            ),
+                            SizedBox(width: 12.w),
+                            CustomText(
+                              text: 'Standard',
+                              fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(width: 8.w),
+                            CustomText(
+                              text: '30-40 min',
+                              color: context.colors.textSecondary,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      TipWidget(
+                        selectedTip: checkoutState.currentParams?.tip ?? 0.0,
+                        onTipSelected: (tip) {
+                          context.read<CheckoutSummaryBloc>().add(
+                            UpdateTipEvent(tip),
+                          );
+                        },
+                      ),
+
+                    SizedBox(height: 12.w),
+                  ],
                 ),
               ),
-              if (deliveryTypeIndex == 0) ...[
-                SizedBox(height: 16.w),
-                _buildDeliveryOptions(),
-              ],
+
               SizedBox(height: 24.w),
-                BlocBuilder<CartBloc, CartState>(
-                  builder: (context, cartState) {
-                    return BillDetailsCard(
-                      itemTotal: checkoutState.summary?.itemTotal ?? 0,
-                      itemCount: cartState.cart?.itemCount ?? 0,
-                      minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
-                      deliveryFee: checkoutState.summary?.deliveryFee ?? 0,
-                      discount: checkoutState.summary?.discount ?? 0,
-                      grandTotal: checkoutState.summary?.grandTotal ?? 0,
-                    );
-                  },
-                ),
+              BlocBuilder<CartBloc, CartState>(
+                builder: (context, cartState) {
+                  return BillDetailsCard(
+                    itemTotal: checkoutState.summary?.itemTotal ?? 0,
+                    itemCount: cartState.cart?.itemCount ?? 0,
+                    minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
+                    deliveryFee: checkoutState.summary?.deliveryFee ?? 0,
+                    discount: checkoutState.summary?.discount ?? 0,
+                    grandTotal: checkoutState.summary?.grandTotal ?? 0,
+                  );
+                },
+              ),
               SizedBox(height: 100.w),
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildDeliveryOptions() {
-    return CustomContainer(
-      radiusAll: 16.r,
-      horizontalMargin: 16.w,
-      color: context.colors.background,
-      child: Column(
-        children: [
-          _buildDeliveryOptionRow('Standard', '30-40 min', true),
-          _buildDeliveryOptionRow('Priority', '20-30 min', false, extra: '+20'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDeliveryOptionRow(String title, String time, bool isSelected, {String? extra}) {
-    return CustomContainer(
-      paddingAll: 16.w,
-      border: isSelected
-          ? Border(bottom: BorderSide(color: context.colors.borderTertiary))
-          : null,
-      child: Row(
-        children: [
-          CustomContainer(
-            height: 20.r,
-            width: 20.r,
-            shape: BoxShape.circle,
-            borderWidth: isSelected ? 6.r : 1.r,
-            bordersColor: isSelected ? context.colors.primary : context.colors.borderSecondary,
-            child: isSelected 
-                ? Center(
-                    child: CustomContainer(
-                      height: 10.r,
-                      width: 10.r,
-                      shape: BoxShape.circle,
-                      color: context.colors.primary,
-                    ),
-                  )
-                : null,
-          ),
-          SizedBox(width: 12.w),
-          CustomText(
-            text: title,
-            fontWeight: FontWeight.w500,
-          ),
-          SizedBox(width: 8.w),
-          CustomText(
-            text: time,
-            color: context.colors.textSecondary,
-          ),
-          if (extra != null) ...[
-            const Spacer(),
-            CustomContainer(
-              paddingHorizontal: 12.w,
-              paddingVertical: 4.w,
-              radiusAll: 16.r,
-              color: context.colors.bgTertiary,
-              child: CustomText(
-                text: extra,
-                color: context.colors.textPrimary,
-                fontSize: 12.r,
-              ),
-            ),
-          ],
-        ],
       ),
     );
   }

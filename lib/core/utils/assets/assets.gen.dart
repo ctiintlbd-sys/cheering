@@ -177,6 +177,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/store_fil.svg
   SvgGenImage get storeFil => const SvgGenImage('assets/icons/store_fil.svg');
 
+  /// File path: assets/icons/tip.svg
+  SvgGenImage get tip => const SvgGenImage('assets/icons/tip.svg');
+
   /// File path: assets/icons/touch.svg
   SvgGenImage get touch => const SvgGenImage('assets/icons/touch.svg');
 
@@ -232,6 +235,7 @@ class $AssetsIconsGen {
     share,
     store,
     storeFil,
+    tip,
     touch,
     visa,
   ];
