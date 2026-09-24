@@ -5,13 +5,11 @@ import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:cheering/features/cart/domain/entities/add_cart_item_params.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/router/app_router_notifier.dart';
 
