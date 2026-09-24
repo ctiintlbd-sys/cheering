@@ -53,8 +53,28 @@ class CartEntity extends Equatable {
           .where((i) => i.menuItemId == menuItemId)
           .fold(0, (sum, i) => sum + i.quantity);
 
-  CartEntity withUpdatedQuantity(String menuItemId, String? variantId, int quantity) {
-    final itemIndex = items.indexWhere((i) => i.menuItemId == menuItemId);
+  bool _areAddOnsEqual(List<String> list1, List<String> list2) {
+    if (list1.length != list2.length) return false;
+    final set1 = Set.from(list1);
+    final set2 = Set.from(list2);
+    return set1.containsAll(set2);
+  }
+
+  int quantityForConfiguration(String menuItemId, String? variantId, List<String> addOnIds) {
+    final itemIndex = items.indexWhere((i) => 
+        i.menuItemId == menuItemId && 
+        i.variantId == variantId &&
+        _areAddOnsEqual(i.addOnIds, addOnIds));
+    if (itemIndex == -1) return 0;
+    return items[itemIndex].quantity;
+  }
+
+  CartEntity withUpdatedQuantity(String menuItemId, String? variantId, List<String> addOnIds, int quantity) {
+    final itemIndex = items.indexWhere((i) => 
+        i.menuItemId == menuItemId && 
+        i.variantId == variantId &&
+        _areAddOnsEqual(i.addOnIds, addOnIds));
+        
     if (itemIndex == -1) return this;
 
     final updatedItems = List<CartItemEntity>.from(items);

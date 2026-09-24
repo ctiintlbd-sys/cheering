@@ -61,6 +61,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final newCart = state.cart!.withUpdatedQuantity(
         event.params.menuItemId,
         event.params.variantId,
+        event.params.addOnIds,
         event.params.quantity,
       );
       emit(state.copyWith(cart: newCart));

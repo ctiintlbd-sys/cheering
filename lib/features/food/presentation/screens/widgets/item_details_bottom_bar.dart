@@ -24,7 +24,13 @@ class ItemDetailsBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, cartState) {
-        final count = cartState.cart?.quantityFor(menuItem.id) ?? 0;
+        final addOnIds = state.selectedAddOns.map((a) => a.id).toList();
+        final count = cartState.cart?.quantityForConfiguration(
+          menuItem.id, 
+          state.selectedVariant?.id, 
+          addOnIds
+        ) ?? 0;
+        
         final displayQuantity = count > 0 ? count : 1;
         final displayTotal = state.unitPrice * displayQuantity;
 

@@ -82,6 +82,25 @@ class MenuItemWidget extends StatelessWidget {
                           builder: (context, state) {
                             final count =
                                 state.cart?.quantityFor(menuItem!.id) ?? 0;
+                                
+                            if (hasOptions && count > 0) {
+                              return GestureDetector(
+                                onTap: () => context.push(RoutePaths.itemDetails, extra: menuItem),
+                                child: CustomContainer(
+                                  paddingHorizontal: 12.w,
+                                  paddingVertical: 4.w,
+                                  color: context.colors.primary,
+                                  radiusAll: 20.r,
+                                  child: CustomText(
+                                    text: '$count added',
+                                    color: context.colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12.r,
+                                  ),
+                                ),
+                              );
+                            }
+
                             return QuantityButton(
                               count: count,
                               onIncrement: () {
