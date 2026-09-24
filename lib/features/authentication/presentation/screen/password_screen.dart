@@ -74,9 +74,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
           ),
           SizedBox(height: 12.w),
           CustomText(
-            onTap: () => context.push(
-RoutePaths.forgotPassword,
-            ),
+            onTap: () => context.push(RoutePaths.forgotPassword),
             text: 'Forgot Password?',
             color: context.colors.textSecondary,
           ),
