@@ -25,6 +25,9 @@ class ItemDetailsBottomBar extends StatelessWidget {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, cartState) {
         final count = cartState.cart?.quantityFor(menuItem.id) ?? 0;
+        final displayQuantity = count > 0 ? count : 1;
+        final displayTotal = state.unitPrice * displayQuantity;
+
         return CustomContainer(
           radiusAll: 12.r,
           paddingHorizontal: 12.w,
@@ -41,7 +44,7 @@ class ItemDetailsBottomBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                text: 'Total: ৳${state.totalPrice.toStringAsFixed(0)}',
+                text: 'Total: ৳${displayTotal.toStringAsFixed(0)}',
                 fontWeight: FontWeight.w700,
                 fontSize: 16.r,
                 color: context.colors.primary,

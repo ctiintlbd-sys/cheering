@@ -14,12 +14,16 @@ class ItemDetailsState extends Equatable {
     this.quantity = 1,
   });
 
-  double get totalPrice {
+  double get unitPrice {
     double price = selectedVariant != null ? selectedVariant!.price : menuItem.basePrice;
     for (var addon in selectedAddOns) {
       price += addon.price;
     }
-    return price * quantity;
+    return price;
+  }
+
+  double get totalPrice {
+    return unitPrice * quantity;
   }
 
   @override
