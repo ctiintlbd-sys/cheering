@@ -124,6 +124,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/order_fil.svg
   SvgGenImage get orderFil => const SvgGenImage('assets/icons/order_fil.svg');
 
+  /// File path: assets/icons/order_locataion.svg
+  SvgGenImage get orderLocataion =>
+      const SvgGenImage('assets/icons/order_locataion.svg');
+
+  /// File path: assets/icons/order_placed.svg
+  SvgGenImage get orderPlaced =>
+      const SvgGenImage('assets/icons/order_placed.svg');
+
   /// File path: assets/icons/profile.svg
   SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
@@ -217,6 +225,8 @@ class $AssetsIconsGen {
     order,
     orderCompleted,
     orderFil,
+    orderLocataion,
+    orderPlaced,
     profile,
     profileAbout,
     profileAddress,
@@ -262,6 +272,10 @@ class $AssetsImagesGen {
   AssetGenImage get placeholder =>
       const AssetGenImage('assets/images/placeholder.png');
 
+  /// File path: assets/images/placing_order.png
+  AssetGenImage get placingOrder =>
+      const AssetGenImage('assets/images/placing_order.png');
+
   /// File path: assets/images/profile_empty.png
   AssetGenImage get profileEmpty =>
       const AssetGenImage('assets/images/profile_empty.png');
@@ -277,6 +291,7 @@ class $AssetsImagesGen {
     foodBanner,
     mapLocation,
     placeholder,
+    placingOrder,
     profileEmpty,
     store,
   ];

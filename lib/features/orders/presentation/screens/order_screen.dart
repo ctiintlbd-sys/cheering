@@ -1,6 +1,6 @@
 import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/features/order/presentation/screens/widgets/order_card.dart';
-import 'package:cheering/features/order/presentation/screens/widgets/order_status_tabs.dart';
+import 'package:cheering/features/orders/presentation/screens/widgets/order_card.dart';
+import 'package:cheering/features/orders/presentation/screens/widgets/order_status_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

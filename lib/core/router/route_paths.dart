@@ -18,6 +18,8 @@ abstract class RoutePaths {
   static const String itemDetails = '/item-details';
   static const String cart = '/cart';
   static const String checkout = '/checkout';
+  static const String placingOrder = '/placing-order';
+  static const String orderPlaced = '/order-placed';
 
   // ── Main Tabs (Stateful Shell) ─────────────────────────────
   static const String foodTab = '/food';
