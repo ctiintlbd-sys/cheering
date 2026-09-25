@@ -103,6 +103,21 @@ class SavedAddressCard extends StatelessWidget {
                           ),
                         ),
                       ],
+                      if (_isCurrentLocation) ...[
+                        SizedBox(width: 8.w),
+                        CustomContainer(
+                          paddingHorizontal: 12.w,
+                          paddingVertical: 2.w,
+                          color: context.colors.warning.withValues(alpha: 0.15),
+                          radiusAll: 36.r,
+                          child: CustomText(
+                            text: 'Tap to Save',
+                            fontSize: 12.r,
+                            fontWeight: FontWeight.w500,
+                            color: context.colors.warning,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   SizedBox(height: 6.w),

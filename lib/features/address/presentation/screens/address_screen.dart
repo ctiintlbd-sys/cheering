@@ -142,6 +142,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           context.read<AddressBloc>().add(
                             UpdateActiveDefaultId(addresses[i].id),
                           );
+                          if (context.canPop()) context.pop();
                         }
                       },
                     ),
