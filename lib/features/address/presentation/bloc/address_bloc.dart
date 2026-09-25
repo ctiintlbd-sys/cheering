@@ -108,13 +108,31 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   Future<void> _onSaveAddress(
     SaveAddressRequested event,
     Emitter<AddressState> emit,
-  ) {
-    return _runMutation(emit, () {
+  ) async {
+    emit(
+      state.copyWith(
+        mutationStatus: AddressMutationStatus.loading,
+        clearError: true,
+      ),
+    );
+    try {
       final id = event.addressId;
-      return id != null
-          ? _updateAddressUseCase(id, event.params)
-          : _createAddressUseCase(event.params);
-    });
+      if (id != null) {
+        await _updateAddressUseCase(id, event.params);
+      } else {
+        final newAddress = await _createAddressUseCase(event.params);
+        add(UpdateActiveDefaultId(newAddress.id));
+      }
+      add(const RefreshAddressesRequested());
+      emit(state.copyWith(mutationStatus: AddressMutationStatus.success));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          mutationStatus: AddressMutationStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _runMutation(
