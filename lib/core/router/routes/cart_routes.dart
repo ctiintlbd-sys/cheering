@@ -23,7 +23,13 @@ final List<RouteBase> cartRoutes = [
   ),
   GoRoute(
     path: RoutePaths.placingOrder,
-    builder: (context, state) => const PlacingOrderScreen(),
+    builder: (context, state) {
+      final checkoutBloc = state.extra as CheckoutSummaryBloc;
+      return BlocProvider.value(
+        value: checkoutBloc,
+        child: const PlacingOrderScreen(),
+      );
+    },
   ),
   GoRoute(
     path: RoutePaths.orderPlaced,

@@ -4,7 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderDetailsCard extends StatelessWidget {
-  const OrderDetailsCard({super.key});
+  final String restaurantName;
+  final String deliveryAddress;
+  final int itemCount;
+  final String mainItemName;
+  final String paymentMethod;
+
+  const OrderDetailsCard({
+    super.key,
+    required this.restaurantName,
+    required this.deliveryAddress,
+    required this.itemCount,
+    required this.mainItemName,
+    required this.paymentMethod,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +41,14 @@ class OrderDetailsCard extends StatelessWidget {
             children: [
               Assets.icons.orderLocataion.svg(),
               SizedBox(width: 12.w),
-              CustomText(
-                text: 'KFC - Badda',
-                fontSize: 14.r,
-                fontWeight: FontWeight.w500,
+              Expanded(
+                child: CustomText(
+                  text: restaurantName,
+                  fontSize: 14.r,
+                  fontWeight: FontWeight.w500,
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -47,10 +64,14 @@ class OrderDetailsCard extends StatelessWidget {
             children: [
               Assets.icons.orderLocataion.svg(),
               SizedBox(width: 12.w),
-              CustomText(
-                text: 'House 25, Banani Rd 11, Dhaka-1230',
-                fontSize: 14.r,
-                fontWeight: FontWeight.w400,
+              Expanded(
+                child: CustomText(
+                  text: deliveryAddress,
+                  fontSize: 14.r,
+                  fontWeight: FontWeight.w400,
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -58,16 +79,20 @@ class OrderDetailsCard extends StatelessWidget {
           Row(
             children: [
               CustomText(
-                text: '8x',
+                text: '${itemCount}x',
                 fontSize: 14.r,
                 fontWeight: FontWeight.w700,
               ),
               SizedBox(width: 16.w),
-              CustomText(
-                text: 'Fried Chicken Bucket',
-                fontSize: 14.r,
-                fontWeight: FontWeight.w500,
-                color: context.colors.textSecondary,
+              Expanded(
+                child: CustomText(
+                  text: mainItemName,
+                  fontSize: 14.r,
+                  fontWeight: FontWeight.w500,
+                  color: context.colors.textSecondary,
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -77,7 +102,7 @@ class OrderDetailsCard extends StatelessWidget {
               Icon(Icons.money, size: 20.r, color: Colors.green),
               SizedBox(width: 12.w),
               CustomText(
-                text: 'Cash on delivery',
+                text: paymentMethod,
                 fontSize: 14.r,
                 fontWeight: FontWeight.w500,
                 color: context.colors.textSecondary,
