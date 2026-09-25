@@ -71,7 +71,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     totalPrice: checkoutState.summary?.grandTotal ?? 0.0,
                     buttonText: 'Place order',
                     onPressed: () {
-                      context.go(RoutePaths.placingOrder);
+                      context.push(RoutePaths.placingOrder);
                     },
                   ),
             bodyList: [

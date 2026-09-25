@@ -1,3 +1,4 @@
+import 'package:cheering/core/common_widgets/striped_progress_painter.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -33,7 +34,7 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 12.h),
-
+        StripedProgressPainter(),
         SizedBox(height: 12.h),
         CustomText(
           text:
@@ -47,7 +48,6 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
         CustomButton(
           text: 'Looks Good',
           onPressed: () {
-            context.go(RoutePaths.orderPlaced);
           },
         ),
         SizedBox(height: 12.h),
@@ -63,3 +63,49 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
     );
   }
 }
+
+
+class _AnimatedStripedProgressPainter extends CustomPainter {
+  final Color stripeColor;
+  final double progress;
+
+  const _AnimatedStripedProgressPainter({
+    required this.stripeColor,
+    required this.progress,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    // Strictly clip to rounded bounds
+    canvas.clipRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        const Radius.circular(6),
+      ),
+    );
+
+    final paint = Paint()
+      ..color = stripeColor
+      ..strokeWidth = 3.5
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    const spacing = 12.0;
+    final offset = progress * spacing;
+    final totalWidth = size.width + size.height * 2;
+
+    for (double x = -size.height * 2 + offset; x < totalWidth; x += spacing) {
+      canvas.drawLine(Offset(x, 0), Offset(x - 10, size.height), paint);
+    }
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _AnimatedStripedProgressPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.stripeColor != stripeColor;
+  }
+}
+
