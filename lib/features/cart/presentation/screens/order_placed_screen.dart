@@ -11,40 +11,40 @@ class OrderPlacedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      backgroundColor: context.colors.white,
+      sideContentPadding: 16.w,
       appBar: CustomSliverAppBar(
-        backgroundColor: context.colors.white,
+        toolbarHeight: 0,
+        expandedHeight: kToolbarHeight,
+        flexibleChild: SizedBox.shrink(),
       ),
       bodyList: [
-        SizedBox(height: 20.h),
-        Assets.icons.orderPlaced.svg(),
-        SizedBox(height: 32.h),
+        SizedBox(height: 18.w),
+        Assets.icons.orderPlaced.svg(width: 300.w,height: 242.w),
+        SizedBox(height: 32.w),
         CustomText(
           text: 'Order placed!',
           fontSize: 24.r,
-          fontWeight: FontWeight.w700,
-          color: context.colors.textPrimary,
+          fontWeight: FontWeight.w600,
+          textAlign: TextAlign.center,
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.w),
         CustomText(
           text:
               'KFC - Badda is preparing your order.\nEstimated delivery in ~ 25-35 mins.',
-          fontSize: 14.r,
-          color: context.colors.textSecondary,
+          color: context.colors.textTertiary,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 32.h),
+        SizedBox(height: 32.w),
         CustomContainer(
-          radiusAll: 12,
+          radiusAll: 12.r,
           color: context.colors.bgSecondary,
-          paddingHorizontal: 16,
-          paddingVertical: 20,
+          paddingHorizontal: 12.w,
+          paddingVertical: 16.w,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
                 text: 'Order ID',
-                fontSize: 14.r,
                 color: context.colors.textSecondary,
               ),
               CustomText(
@@ -56,24 +56,22 @@ class OrderPlacedScreen extends StatelessWidget {
             ],
           ),
         ),
-        const Spacer(),
+        SizedBox(height: 32.w),
         CustomButton(
-          text: 'Track order',
-          backgroundColor: context.colors.primary,
-          textColor: context.colors.white,
+          label: 'Track order',
           onPressed: () {},
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.w),
         CustomButton(
           text: 'Back to home',
           backgroundColor: Colors.transparent,
           textColor: context.colors.textPrimary,
-          bordersColor: context.colors.outline,
+          bordersColor: context.colors.borderPrimary,
           onPressed: () {
             context.go(RoutePaths.foodTab);
           },
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: 100.h),
       ],
     );
   }

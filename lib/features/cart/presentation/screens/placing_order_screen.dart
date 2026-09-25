@@ -1,7 +1,10 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/cart/presentation/screens/widgets/order_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class PlacingOrderScreen extends StatefulWidget {
   const PlacingOrderScreen({super.key});
@@ -15,7 +18,11 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
   Widget build(BuildContext context) {
     return SliverScaffold(
       sideContentPadding: 16.w,
-      appBar: CustomSliverAppBar(),
+      appBar: CustomSliverAppBar(
+        toolbarHeight: 0,
+        expandedHeight: kToolbarHeight,
+        flexibleChild: SizedBox.shrink(),
+      ),
       bodyList: [
         Assets.images.placingOrder.image(width: 284.w, height: 176.w),
         SizedBox(height: 24.h),
@@ -26,16 +33,7 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 12.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10.r),
-          child: SizedBox(
-            height: 10.h,
-            child: LinearProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
-              backgroundColor: context.colors.primary.withValues(alpha: 0.2),
-            ),
-          ),
-        ),
+
         SizedBox(height: 12.h),
         CustomText(
           text:
@@ -43,101 +41,24 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
           color: context.colors.textTertiary,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 32.h),
-        CustomContainer(
-          radiusAll: 16,
-          bordersColor: context.colors.borderTertiary,
-          paddingHorizontal: 14.w,
-          paddingVertical: 12.w,
-          boxShadow: [
-            BoxShadow(
-              color: context.colors.black.withValues(alpha: 0.02),
-              offset: Offset(0, 1),
-              blurRadius: 2,
-            )
-          ],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Assets.icons.orderLocataion.svg(),
-                  SizedBox(width: 12.w),
-                  CustomText(
-                    text: 'KFC - Badda',
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 9.w, top: 4.h, bottom: 4.h),
-                child: Container(
-                  height: 20.h,
-                  width: 1,
-                  color: context.colors.outline,
-                ),
-              ),
-              Row(
-                children: [
-                  Assets.icons.orderLocataion.svg(),
-                  SizedBox(width: 12.w),
-                  CustomText(
-                    text: 'House 25, Banani Rd 11, Dhaka-1230',
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ],
-              ),
-              Divider(height: 32.h, color: context.colors.outline),
-              Row(
-                children: [
-                  CustomText(
-                    text: '8x',
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  SizedBox(width: 16.w),
-                  CustomText(
-                    text: 'Fried Chicken Bucket',
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w500,
-                    color: context.colors.textSecondary,
-                  ),
-                ],
-              ),
-              Divider(height: 32.h, color: context.colors.outline),
-              Row(
-                children: [
-                  Icon(Icons.money, size: 20.r, color: Colors.green),
-                  SizedBox(width: 12.w),
-                  CustomText(
-                    text: 'Cash on delivery',
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w500,
-                    color: context.colors.textSecondary,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const Spacer(),
+        SizedBox(height: 28.h),
+        const OrderDetailsCard(),
+        SizedBox(height: 28.h),
         CustomButton(
           text: 'Looks Good',
-          backgroundColor: context.colors.primary,
-          textColor: context.colors.white,
-          onPressed: () {},
+          onPressed: () {
+            context.go(RoutePaths.orderPlaced);
+          },
         ),
         SizedBox(height: 12.h),
         CustomButton(
           text: 'Modify(00.05)',
           backgroundColor: Colors.transparent,
           textColor: context.colors.textPrimary,
-          bordersColor: context.colors.outline,
+          bordersColor: context.colors.borderPrimary,
           onPressed: () {},
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: 100.h),
       ],
     );
   }
