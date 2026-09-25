@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
+import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -60,9 +61,15 @@ class _CartScreenState extends State<CartScreen> {
           bottomNavigationBar:
               state.cart?.items != null && state.cart!.items.isNotEmpty
               ? CartBottomBarWidget(
-                onPressed: (){
-                  context.push(RoutePaths.checkout);
-                },
+                  onPressed: () {
+                    final addressState = context.read<AddressBloc>().state;
+                    final activeAddress = addressState.activeAddress;
+                    if (activeAddress == null || activeAddress.id == 'current_location') {
+                      context.push(RoutePaths.address);
+                    } else {
+                      context.push(RoutePaths.checkout);
+                    }
+                  },
                   totalPrice: state.cart!.itemTotal)
               : const SizedBox.shrink(),
           bodyList: switch (state.status) {
