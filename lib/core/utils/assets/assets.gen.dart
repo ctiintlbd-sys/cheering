@@ -32,9 +32,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
 
-  /// File path: assets/icons/cash.svg
-  SvgGenImage get cash => const SvgGenImage('assets/icons/cash.svg');
-
   /// File path: assets/icons/comment.svg
   SvgGenImage get comment => const SvgGenImage('assets/icons/comment.svg');
 
@@ -193,7 +190,6 @@ class $AssetsIconsGen {
     bikash,
     bookmark,
     cart,
-    cash,
     comment,
     community,
     communityFil,
@@ -248,6 +244,9 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/cash.png
+  AssetGenImage get cash => const AssetGenImage('assets/images/cash.png');
+
   /// File path: assets/images/empty.png
   AssetGenImage get empty => const AssetGenImage('assets/images/empty.png');
 
@@ -273,6 +272,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<AssetGenImage> get values => [
     appIcon,
+    cash,
     empty,
     foodBanner,
     mapLocation,

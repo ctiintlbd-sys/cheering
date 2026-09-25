@@ -1,5 +1,6 @@
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaymentMethodItem {
   final String title;
@@ -19,7 +20,7 @@ class PaymentMethodItem {
       title: 'Cash on delivery',
       subtitle: 'Pay when your order arrives',
       backendValue: 'COD',
-      icon: Assets.icons.cash.svg(),
+      icon: Assets.images.cash.image(height: 24.w,width: 24.w),
     ),
     PaymentMethodItem(
       title: 'bKash',
