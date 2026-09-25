@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../orders/domain/usecases/create_order_usecase.dart';
+import '../../../../orders/domain/entities/create_order_params.dart';
 import '../../../domain/entities/checkout_summary_entity.dart';
 import '../../../domain/entities/checkout_summary_params.dart';
 import '../../../domain/usecases/get_checkout_summary_usecase.dart';
@@ -8,13 +10,17 @@ import 'checkout_summary_state.dart';
 class CheckoutSummaryBloc
     extends Bloc<CheckoutSummaryEvent, CheckoutSummaryState> {
   final GetCheckoutSummaryUseCase _getCheckoutSummaryUseCase;
+  final CreateOrderUseCase _createOrderUseCase;
 
-  CheckoutSummaryBloc(this._getCheckoutSummaryUseCase)
-      : super(const CheckoutSummaryState()) {
+  CheckoutSummaryBloc(
+    this._getCheckoutSummaryUseCase,
+    this._createOrderUseCase,
+  ) : super(const CheckoutSummaryState()) {
     on<LoadCheckoutSummary>(_onLoadCheckoutSummary);
     on<ApplyPromoCodeEvent>(_onApplyPromoCode);
     on<UpdateTipEvent>(_onUpdateTip);
     on<UpdatePaymentMethodEvent>(_onUpdatePaymentMethod);
+    on<PlaceOrderEvent>(_onPlaceOrder);
   }
 
   Future<void> _onLoadCheckoutSummary(
@@ -87,5 +93,39 @@ class CheckoutSummaryBloc
     Emitter<CheckoutSummaryState> emit,
   ) {
     emit(state.copyWith(paymentMethod: event.paymentMethod));
+  }
+
+  Future<void> _onPlaceOrder(
+    PlaceOrderEvent event,
+    Emitter<CheckoutSummaryState> emit,
+  ) async {
+    if (state.currentParams == null) return;
+
+    emit(state.copyWith(
+      isPlacingOrder: true,
+      clearPlaceOrderError: true,
+    ));
+
+    try {
+      final params = CreateOrderParams(
+        paymentMethod: state.paymentMethod,
+        addressId: state.currentParams!.addressId,
+        promoCode: state.currentParams!.promoCode,
+        tip: state.currentParams!.tip,
+        specialInstructions: event.specialInstructions,
+      );
+
+      await _createOrderUseCase(params);
+      
+      emit(state.copyWith(
+        isPlacingOrder: false,
+        orderPlacedSuccess: true,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isPlacingOrder: false,
+        placeOrderErrorMessage: e.toString(),
+      ));
+    }
   }
 }

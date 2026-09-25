@@ -10,6 +10,9 @@ class CheckoutSummaryState extends Equatable {
   final String? errorMessage;
   final CheckoutSummaryParams? currentParams;
   final String paymentMethod;
+  final bool isPlacingOrder;
+  final bool orderPlacedSuccess;
+  final String? placeOrderErrorMessage;
 
   const CheckoutSummaryState({
     this.status = CheckoutSummaryStatus.initial,
@@ -17,6 +20,9 @@ class CheckoutSummaryState extends Equatable {
     this.errorMessage,
     this.currentParams,
     this.paymentMethod = 'COD',
+    this.isPlacingOrder = false,
+    this.orderPlacedSuccess = false,
+    this.placeOrderErrorMessage,
   });
 
   CheckoutSummaryState copyWith({
@@ -25,7 +31,11 @@ class CheckoutSummaryState extends Equatable {
     String? errorMessage,
     CheckoutSummaryParams? currentParams,
     String? paymentMethod,
+    bool? isPlacingOrder,
+    bool? orderPlacedSuccess,
+    String? placeOrderErrorMessage,
     bool clearError = false,
+    bool clearPlaceOrderError = false,
   }) {
     return CheckoutSummaryState(
       status: status ?? this.status,
@@ -33,9 +43,23 @@ class CheckoutSummaryState extends Equatable {
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       currentParams: currentParams ?? this.currentParams,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      isPlacingOrder: isPlacingOrder ?? this.isPlacingOrder,
+      orderPlacedSuccess: orderPlacedSuccess ?? this.orderPlacedSuccess,
+      placeOrderErrorMessage: clearPlaceOrderError
+          ? null
+          : (placeOrderErrorMessage ?? this.placeOrderErrorMessage),
     );
   }
 
   @override
-  List<Object?> get props => [status, summary, errorMessage, currentParams, paymentMethod];
+  List<Object?> get props => [
+        status,
+        summary,
+        errorMessage,
+        currentParams,
+        paymentMethod,
+        isPlacingOrder,
+        orderPlacedSuccess,
+        placeOrderErrorMessage,
+      ];
 }

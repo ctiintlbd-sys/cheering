@@ -43,3 +43,11 @@ class UpdatePaymentMethodEvent extends CheckoutSummaryEvent {
   @override
   List<Object?> get props => [paymentMethod];
 }
+
+class PlaceOrderEvent extends CheckoutSummaryEvent {
+  final String? specialInstructions;
+  const PlaceOrderEvent({this.specialInstructions});
+  
+  @override
+  List<Object?> get props => [specialInstructions];
+}
