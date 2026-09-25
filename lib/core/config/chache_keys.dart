@@ -10,4 +10,6 @@ class CacheKeys {
   static const String cart = 'cart_data';
   static String checkoutSummary(Map<String, dynamic> query) =>
       'checkout_summary_${query.hashCode}';
+  static String orders(Map<String, dynamic> query) =>
+      'orders_${query.hashCode}';
 }

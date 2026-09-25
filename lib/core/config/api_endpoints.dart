@@ -44,4 +44,9 @@ class ApiEndpoints {
   static const String cart = '/cart';
   static const String cartItems = '/cart/items';
   static const String checkoutSummary = '/checkout/summary';
+
+  // ── Orders ──────────────────────────────────────────────────
+  static const String orders = '/orders';
+  static String orderDetails(String id) => '/orders/$id';
+  static String cancelOrder(String id) => '/orders/$id/cancel';
 }
