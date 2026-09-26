@@ -44,7 +44,7 @@ class RestaurantCardWidget extends StatelessWidget {
                         CustomText(
                           bottom: 8.w,
                           textAlign: TextAlign.center,
-                            text: 'Opens at\nSun, 11:00 AM',color: context.colors.white,fontWeight: FontWeight.w600),
+                            text: 'Closed for\nnow',color: context.colors.white,fontWeight: FontWeight.w600),
                         CustomButton(
                           backgroundColor: context.colors.white,
                           foregroundColor: context.colors.primary,

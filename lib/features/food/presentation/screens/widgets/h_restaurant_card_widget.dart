@@ -45,7 +45,7 @@ class HRestaurantCardWidget extends StatelessWidget {
                               bottom: 6.w,
                               textAlign: TextAlign.center,
                               fontSize: 10.w,
-                              text: 'Opens at\nSun, 11:00 AM',color: context.colors.white,fontWeight: FontWeight.w600),
+                              text: 'Closed for\nnow',color: context.colors.white,fontWeight: FontWeight.w600),
                           CustomButton(
                               backgroundColor: context.colors.white,
                               foregroundColor: context.colors.primary,
@@ -54,7 +54,9 @@ class HRestaurantCardWidget extends StatelessWidget {
                               height: 24.w,
                               fontSize: 10.w,
                               padding: EdgeInsets.symmetric(horizontal: 4.w),
-                              onPressed: (){},label: 'Order for later')
+                              onPressed: (){
+                                if (restaurant != null) context.push(RoutePaths.storeDetails(restaurant!.id), extra: restaurant);
+                              },label: 'Order for later')
                         ],
                       ),
                     ),
