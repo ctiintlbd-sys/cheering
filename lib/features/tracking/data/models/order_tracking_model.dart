@@ -6,6 +6,8 @@ class TrackingRiderModel extends TrackingRiderEntity {
     required super.name,
     super.phone,
     super.photoUrl,
+    super.ratingAvg,
+    super.vehicleType,
   });
 
   factory TrackingRiderModel.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,8 @@ class TrackingRiderModel extends TrackingRiderEntity {
       name: json['name'] as String? ?? json['full_name'] as String? ?? '',
       phone: json['phone'] as String? ?? json['phone_number'] as String?,
       photoUrl: json['photo_url'] as String? ?? json['avatar_url'] as String?,
+      ratingAvg: (json['rating_avg'] as num?)?.toDouble(),
+      vehicleType: json['vehicle_type'] as String?,
     );
   }
 }
@@ -22,6 +26,8 @@ class RiderLocationModel extends RiderLocationEntity {
   const RiderLocationModel({
     required super.latitude,
     required super.longitude,
+    super.heading,
+    super.speedKph,
     super.updatedAt,
   });
 
@@ -29,6 +35,8 @@ class RiderLocationModel extends RiderLocationEntity {
     return RiderLocationModel(
       latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
+      heading: (json['heading'] as num?)?.toDouble(),
+      speedKph: (json['speed_kph'] as num?)?.toDouble(),
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String).toLocal()
           : null,

@@ -5,31 +5,39 @@ class TrackingRiderEntity extends Equatable {
   final String name;
   final String? phone;
   final String? photoUrl;
+  final double? ratingAvg;
+  final String? vehicleType;
 
   const TrackingRiderEntity({
     required this.id,
     required this.name,
     this.phone,
     this.photoUrl,
+    this.ratingAvg,
+    this.vehicleType,
   });
 
   @override
-  List<Object?> get props => [id, name, phone, photoUrl];
+  List<Object?> get props => [id, name, phone, photoUrl, ratingAvg, vehicleType];
 }
 
 class RiderLocationEntity extends Equatable {
   final double latitude;
   final double longitude;
+  final double? heading;
+  final double? speedKph;
   final DateTime? updatedAt;
 
   const RiderLocationEntity({
     required this.latitude,
     required this.longitude,
+    this.heading,
+    this.speedKph,
     this.updatedAt,
   });
 
   @override
-  List<Object?> get props => [latitude, longitude, updatedAt];
+  List<Object?> get props => [latitude, longitude, heading, speedKph, updatedAt];
 }
 
 class TrackingTimelineEntity extends Equatable {
