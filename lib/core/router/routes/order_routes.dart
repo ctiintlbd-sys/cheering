@@ -14,7 +14,7 @@ final List<RouteBase> orderRoutes = [
       return BlocProvider(
         create: (_) =>
             getIt<OrderDetailsBloc>()..add(LoadOrderDetails(orderId: orderId)),
-        child: OrderDetailsScreen(orderId: orderId),
+        child: const OrderDetailsScreen(),
       );
     },
   ),

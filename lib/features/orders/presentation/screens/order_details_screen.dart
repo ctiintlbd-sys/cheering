@@ -12,9 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
-  const OrderDetailsScreen({super.key, required this.orderId});
-
-  final String orderId;
+  const OrderDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
