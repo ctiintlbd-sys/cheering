@@ -96,6 +96,24 @@ class AppDateFormatter {
     return "$twoDigitMinutes:$twoDigitSeconds";
   }
 
+  /// Format Schedule Time: Today, 10:30 AM | Tomorrow, 10:30 AM | 14 Aug, 10:30 AM
+  static String formatScheduleTime(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = today.add(const Duration(days: 1));
+    final targetDate = DateTime(date.year, date.month, date.day);
+    
+    final timeStr = formatTime(date);
+
+    if (targetDate == today) {
+      return 'Today, $timeStr';
+    } else if (targetDate == tomorrow) {
+      return 'Tomorrow, $timeStr';
+    } else {
+      return '${formatDayMonth(date)}, $timeStr';
+    }
+  }
+
   /// Get greeting based on time
   static String getGreeting() {
     final hour = DateTime.now().hour;

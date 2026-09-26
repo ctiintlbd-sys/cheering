@@ -1,14 +1,18 @@
+import 'package:flutter/foundation.dart';
+
 class OrderScheduleState {
   static String? restaurantId;
-  static DateTime? scheduledFor;
+  static final ValueNotifier<DateTime?> scheduledForNotifier = ValueNotifier(null);
+
+  static DateTime? get scheduledFor => scheduledForNotifier.value;
 
   static void setSchedule(String restId, DateTime time) {
     restaurantId = restId;
-    scheduledFor = time;
+    scheduledForNotifier.value = time;
   }
 
   static void clear() {
     restaurantId = null;
-    scheduledFor = null;
+    scheduledForNotifier.value = null;
   }
 }

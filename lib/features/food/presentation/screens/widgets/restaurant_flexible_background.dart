@@ -1,3 +1,4 @@
+import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +8,7 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/delivery_time_sheet.dart';
 import 'package:cheering/features/orders/domain/entities/order_schedule_state.dart';
+import 'package:cheering/core/utils/app_date_formatter.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
   final RestaurantEntity? restaurant;
@@ -136,25 +138,37 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                 ],
-                GestureDetector(
-                  onTap: () async {
-                    if (restaurant?.businessHours == null || restaurant!.businessHours!.isEmpty) {
-                      return;
-                    }
-                    final selectedTime = await DeliveryTimeSheet.show(context, restaurant!.businessHours!);
-                    if (selectedTime != null) {
-                      OrderScheduleState.setSchedule(restaurant!.id, selectedTime);
-                      final scheduledFor = selectedTime.toUtc().toIso8601String();
-                      debugPrint('scheduled_for saved: $scheduledFor');
-                    }
+                ValueListenableBuilder<DateTime?>(
+                  valueListenable: OrderScheduleState.scheduledForNotifier,
+                  builder: (context, scheduledDate, _) {
+                    final isScheduledForThis = OrderScheduleState.restaurantId == restaurant?.id && scheduledDate != null;
+                    final timeText = isScheduledForThis
+                        ? AppDateFormatter.formatScheduleTime(scheduledDate)
+                        : 'Order for Later';
+                    final tagColor = isScheduledForThis ? context.colors.primary : context.colors.textPrimary;
+                    final tagBgColor = isScheduledForThis ? context.colors.primary.withValues(alpha: 0.1) : context.colors.bgSecondary;
+                    final tagIcon = isScheduledForThis ? Icons.schedule : Icons.calendar_today_outlined;
+
+                    return GestureDetector(
+                      onTap: () async {
+                        if (restaurant?.businessHours == null || restaurant!.businessHours!.isEmpty) {
+                          ToastMessageHelper.show('Business hours are not available for this restaurant.');
+                          return;
+                        }
+                        final selectedTime = await DeliveryTimeSheet.show(context, restaurant!.businessHours!);
+                        if (selectedTime != null) {
+                          OrderScheduleState.setSchedule(restaurant!.id, selectedTime);
+                        }
+                      },
+                      child: _buildTag(
+                        context: context,
+                        icon: tagIcon,
+                        text: timeText,
+                        color: tagColor,
+                        bgColor: tagBgColor,
+                      ),
+                    );
                   },
-                  child: _buildTag(
-                    context: context,
-                    icon: Icons.calendar_today_outlined,
-                    text: 'Order for Later',
-                    color: context.colors.textPrimary,
-                    bgColor: context.colors.bgSecondary,
-                  ),
                 ),
               ],
             ).horizontal(16.w),
