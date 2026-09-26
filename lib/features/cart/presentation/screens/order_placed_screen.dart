@@ -1,21 +1,10 @@
+import 'package:cheering/core/router/route_args.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
-class OrderPlacedArgs {
-  final String restaurantName;
-  final int estimatedDeliveryMinutes;
-  final String orderId;
-
-  const OrderPlacedArgs({
-    required this.restaurantName,
-    required this.estimatedDeliveryMinutes,
-    required this.orderId,
-  });
-}
 
 class OrderPlacedScreen extends StatelessWidget {
   const OrderPlacedScreen({super.key, this.args});

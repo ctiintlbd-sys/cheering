@@ -47,3 +47,17 @@ class RestaurantListArgs {
     required this.params,
   });
 }
+
+// ─── Cart Args ──────────────────────────────────────────────────────────
+
+class OrderPlacedArgs {
+  final String restaurantName;
+  final int estimatedDeliveryMinutes;
+  final String orderId;
+
+  OrderPlacedArgs({
+    required this.restaurantName,
+    required this.estimatedDeliveryMinutes,
+    required this.orderId,
+  });
+}

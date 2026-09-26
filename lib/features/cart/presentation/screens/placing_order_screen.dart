@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cheering/core/common_widgets/striped_progress_painter.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
+import 'package:cheering/core/router/route_args.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -11,7 +12,6 @@ import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
-import 'package:cheering/features/cart/presentation/screens/order_placed_screen.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/order_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
