@@ -41,7 +41,7 @@ void setupCartDependencies(GetIt getIt) {
       getIt<AddCartItemUseCase>(),
     ),
   );
-  getIt.registerFactory(
+  getIt.registerLazySingleton(
     () => CheckoutSummaryBloc(
       getIt<GetCheckoutSummaryUseCase>(),
       getIt<CreateOrderUseCase>(),

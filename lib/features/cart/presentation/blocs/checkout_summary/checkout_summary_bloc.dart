@@ -4,6 +4,7 @@ import '../../../../orders/domain/entities/create_order_params.dart';
 import '../../../domain/entities/checkout_summary_entity.dart';
 import '../../../domain/entities/checkout_summary_params.dart';
 import '../../../domain/usecases/get_checkout_summary_usecase.dart';
+import '../../../../orders/domain/entities/order_schedule_state.dart';
 import 'checkout_summary_event.dart';
 import 'checkout_summary_state.dart';
 
@@ -103,19 +104,25 @@ class CheckoutSummaryBloc
 
     emit(state.copyWith(
       isPlacingOrder: true,
+      orderPlacedSuccess: false,
       clearPlaceOrderError: true,
     ));
 
     try {
+      // Pass scheduled time if available
       final params = CreateOrderParams(
         paymentMethod: state.paymentMethod,
         addressId: state.currentParams!.addressId,
         promoCode: state.currentParams!.promoCode,
         tip: state.currentParams!.tip,
         specialInstructions: event.specialInstructions,
+        scheduledFor: OrderScheduleState.scheduledFor,
       );
 
       final order = await _createOrderUseCase(params);
+      
+      // Clean schedule time after successful order placement
+      OrderScheduleState.clear();
 
       emit(state.copyWith(
         isPlacingOrder: false,

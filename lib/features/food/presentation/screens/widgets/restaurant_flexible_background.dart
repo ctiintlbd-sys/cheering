@@ -6,6 +6,7 @@ import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/delivery_time_sheet.dart';
+import 'package:cheering/features/orders/domain/entities/order_schedule_state.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
   final RestaurantEntity? restaurant;
@@ -136,8 +137,16 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                   SizedBox(width: 12.w),
                 ],
                 GestureDetector(
-                  onTap: () {
-                    DeliveryTimeSheet.show(context);
+                  onTap: () async {
+                    if (restaurant?.businessHours == null || restaurant!.businessHours!.isEmpty) {
+                      return;
+                    }
+                    final selectedTime = await DeliveryTimeSheet.show(context, restaurant!.businessHours!);
+                    if (selectedTime != null) {
+                      OrderScheduleState.setSchedule(restaurant!.id, selectedTime);
+                      final scheduledFor = selectedTime.toUtc().toIso8601String();
+                      debugPrint('scheduled_for saved: $scheduledFor');
+                    }
                   },
                   child: _buildTag(
                     context: context,

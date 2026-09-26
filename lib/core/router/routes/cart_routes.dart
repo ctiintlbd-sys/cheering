@@ -26,14 +26,12 @@ final List<RouteBase> cartRoutes = [
     path: RoutePaths.checkout,
     builder: (context, state) {
       final addressId = context.read<AddressBloc>().state.activeDefaultId;
-      return BlocProvider(
-        create: (context) {
-          final bloc = getIt<CheckoutSummaryBloc>();
-          if (addressId != null) {
-            bloc.add(LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)));
-          }
-          return bloc;
-        },
+      final bloc = getIt<CheckoutSummaryBloc>();
+      if (addressId != null && bloc.state.currentParams?.addressId != addressId) {
+        bloc.add(LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)));
+      }
+      return BlocProvider.value(
+        value: bloc,
         child: const CheckoutScreen(),
       );
     },
