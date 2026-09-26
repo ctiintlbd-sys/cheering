@@ -181,7 +181,7 @@ class _SliverScaffoldState extends State<SliverScaffold> {
           : null,
       bottomNavigationBar: widget.bottomNavigationBar != null && widget.isNavWrap
           ? RepaintBoundary(
-              child: _BottomNavWrapper(child: widget.bottomNavigationBar!),
+              child: _BottomNavWrapper(backgroundColor: widget.backgroundColor, child: widget.bottomNavigationBar!),
             )
           : widget.bottomNavigationBar,
       body: GestureDetector(
@@ -239,14 +239,15 @@ class _RefreshIndicator extends StatelessWidget {
 }
 
 class _BottomNavWrapper extends StatelessWidget {
-  const _BottomNavWrapper({required this.child});
+  const _BottomNavWrapper({required this.child,  this.backgroundColor});
 
   final Widget child;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: context.colors.background.withValues(alpha: 0.6),
+      color: backgroundColor?.withValues(alpha: 0.6) ?? context.colors.background.withValues(alpha: 0.6),
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           16.w,

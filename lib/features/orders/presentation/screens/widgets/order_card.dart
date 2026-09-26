@@ -21,9 +21,7 @@ class OrderCard extends StatelessWidget {
 
     return RepaintBoundary(
       child: CustomContainer(
-        onTap: () {
-
-        },
+        onTap: () => context.push(RoutePaths.details(order.id)),
         width: double.infinity,
         paddingAll: 16.w,
         radiusAll: 16,

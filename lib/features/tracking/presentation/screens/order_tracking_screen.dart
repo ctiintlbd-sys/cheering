@@ -1,3 +1,4 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/tracking/presentation/screens/widgets/tracking_loading_widget.dart';
 import 'package:cheering/features/tracking/presentation/screens/widgets/tracking_status_header.dart';
@@ -5,6 +6,7 @@ import 'package:cheering/features/tracking/presentation/screens/widgets/tracking
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../blocs/order_tracking/order_tracking_bloc.dart';
 import '../blocs/order_tracking/order_tracking_event.dart';
 import '../blocs/order_tracking/order_tracking_state.dart';
@@ -50,6 +52,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     fontSize: 12.w,
                     fontWeight: FontWeight.w500,
                     color: context.colors.textTertiary,
+                    onTap: () => context.push(RoutePaths.details(orderId)),
                   ),
                 ],
               ),
