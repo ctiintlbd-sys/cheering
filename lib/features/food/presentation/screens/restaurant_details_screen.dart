@@ -89,6 +89,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     final selectedTime = await DeliveryTimeSheet.show(context, restaurant.businessHours!);
     if (selectedTime != null) {
       OrderScheduleState.setSchedule(restaurant.id, selectedTime);
+    }else {
+      context.pop();
     }
   }
 
