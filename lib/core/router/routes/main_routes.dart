@@ -7,10 +7,10 @@ import 'package:go_router/go_router.dart';
 import '../../../features/bottom_nav_bar/presentation/screens/bottom_nav_screen.dart';
 import '../route_paths.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
-import '../../../features/food/presentation/blocs/home_feed/home_feed_event.dart';
 import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
+import 'package:cheering/features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 final List<RouteBase> mainRoutes = [
   StatefulShellRoute.indexedStack(
@@ -23,7 +23,8 @@ final List<RouteBase> mainRoutes = [
           GoRoute(
             path: RoutePaths.foodTab,
             builder: (context, state) => BlocProvider(
-              create: (context) => getIt<HomeFeedBloc>()..add(const LoadHomeFeed()),
+              create: (context) => getIt<HomeFeedBloc>()
+                ..loadFrom(context.read<AddressBloc>().state),
               child: const FoodScreen(),
             ),
           ),

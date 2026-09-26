@@ -19,10 +19,14 @@ class FoodScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AddressBloc, AddressState>(
-      listenWhen: (previous, current) =>
-          previous.activeDefaultId != current.activeDefaultId,
+      listenWhen: (previous, current) {
+        if (current.isFetchingLocation) return false;
+        return previous.activeDefaultId != current.activeDefaultId ||
+            previous.activeAddress != current.activeAddress ||
+            previous.isFetchingLocation;
+      },
       listener: (context, state) {
-        context.read<HomeFeedBloc>().add(const LoadHomeFeed());
+        context.read<HomeFeedBloc>().loadFrom(state);
       },
       child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
         builder: (context, state) {
