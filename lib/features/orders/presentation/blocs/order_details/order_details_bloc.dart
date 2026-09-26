@@ -13,7 +13,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
     this._cancelOrderUseCase,
   ) : super(const OrderDetailsState()) {
     on<LoadOrderDetails>(_onLoadOrderDetails);
-    on<CancelOrderEvent>(_onCancelOrder);
+    on<CancelOrder>(_onCancelOrder);
   }
 
   Future<void> _onLoadOrderDetails(
@@ -46,7 +46,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
   }
 
   Future<void> _onCancelOrder(
-    CancelOrderEvent event,
+    CancelOrder event,
     Emitter<OrderDetailsState> emit,
   ) async {
     emit(

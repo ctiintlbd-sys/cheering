@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../../../orders/domain/entities/get_orders_params.dart';
 
-abstract class OrderListEvent extends Equatable {
+sealed class OrderListEvent extends Equatable {
   const OrderListEvent();
 
   @override
