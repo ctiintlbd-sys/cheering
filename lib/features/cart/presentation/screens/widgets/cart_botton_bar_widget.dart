@@ -12,14 +12,17 @@ class CartBottomBarWidget extends StatelessWidget {
     required this.totalPrice,
     this.buttonText = 'Processed to checkout',
     this.onPressed,
+    this.errorText,
   });
-  
+
   final double totalPrice;
   final String buttonText;
+  final String? errorText;
   final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final hasError = errorText != null && errorText!.isNotEmpty;
     return CustomContainer(
       paddingHorizontal: 16.w,
       paddingVertical: 8.w,
@@ -47,7 +50,14 @@ class CartBottomBarWidget extends StatelessWidget {
                   offset: const Offset(0, 1),
                 ),
               ],
-              child: Row(
+              child: hasError
+                  ? CustomText(
+                      text: errorText!,
+                fontSize: 16.w,
+                fontWeight: FontWeight.w600,
+                color: context.colors.textPrimary,
+                    )
+                  : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -94,8 +104,11 @@ class CartBottomBarWidget extends StatelessWidget {
             ),
             SizedBox(height: 12.w),
             CustomButton(
+              isDisabled: hasError,
               text: buttonText,
-              onPressed: onPressed ?? () => context.push(RoutePaths.checkout),
+              onPressed: hasError
+                  ? null
+                  : (onPressed ?? () => context.push(RoutePaths.checkout)),
               width: double.infinity,
             ),
           ],
