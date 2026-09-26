@@ -64,7 +64,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     final addressState = context.read<AddressBloc>().state;
                     final activeAddress = addressState.activeAddress;
-                    if (activeAddress == null || activeAddress.id == 'current_location') {
+                    if (activeAddress == null || activeAddress.isCurrentLocation) {
                       context.push(RoutePaths.address);
                     } else {
                       context.push(RoutePaths.checkout);

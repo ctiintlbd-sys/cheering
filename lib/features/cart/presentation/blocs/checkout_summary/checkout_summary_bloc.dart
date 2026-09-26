@@ -115,11 +115,16 @@ class CheckoutSummaryBloc
         specialInstructions: event.specialInstructions,
       );
 
-      await _createOrderUseCase(params);
-      
+      final order = await _createOrderUseCase(params);
+
       emit(state.copyWith(
         isPlacingOrder: false,
         orderPlacedSuccess: true,
+        placedOrderId: order.orderNumber > 0
+            ? '#${order.orderNumber}'
+            : (order.id.isNotEmpty ? order.id : null),
+        placedRestaurantName:
+            order.restaurantName.isNotEmpty ? order.restaurantName : null,
       ));
     } catch (e) {
       emit(state.copyWith(

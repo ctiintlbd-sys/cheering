@@ -68,12 +68,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               title: 'Checkout',
             ),
             bottomNavigationBar: CartBottomBarWidget(
-                    totalPrice: checkoutState.summary?.grandTotal ?? 0.0,
-                    buttonText: 'Place order',
-                    onPressed: () {
-                      context.push(RoutePaths.placingOrder, extra: context.read<CheckoutSummaryBloc>());
-                    },
-                  ),
+              totalPrice: checkoutState.summary?.grandTotal ?? 0.0,
+              buttonText: 'Place order',
+              onPressed: () {
+                context.push(
+                  RoutePaths.placingOrder,
+                  extra: context.read<CheckoutSummaryBloc>(),
+                );
+              },
+            ),
             bodyList: [
               SizedBox(height: 16.w),
 

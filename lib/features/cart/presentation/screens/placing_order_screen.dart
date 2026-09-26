@@ -1,15 +1,20 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../features/cart/presentation/blocs/cart/cart_bloc.dart';
-import '../../../../features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
-import '../../../../features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
-import '../../../../features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
-import '../../../../core/router/route_paths.dart';
+
 import 'package:cheering/core/common_widgets/striped_progress_painter.dart';
+import 'package:cheering/core/helpers/toast_message_helper.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/address/domain/entities/address_entity.dart';
+import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
+import 'package:cheering/features/cart/presentation/screens/order_placed_screen.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/order_details_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,17 +32,11 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
-  }
-
-  void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsLeft > 0) {
-        setState(() {
-          _secondsLeft--;
-        });
+        setState(() => _secondsLeft--);
       } else {
-        _timer?.cancel();
+        timer.cancel();
         _placeOrder();
       }
     });
@@ -55,27 +54,31 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartState = context.read<CartBloc>().state;
+    final cart = context.read<CartBloc>().state.cart;
     final checkoutState = context.watch<CheckoutSummaryBloc>().state;
-
-    // Extracting data for OrderDetailsCard
-    final restaurantName = cartState.cart?.restaurantName ?? 'Unknown Restaurant';
-    // Ideally you'd get the actual address text from address bloc or summary state. 
-    // Assuming summary holds the addressId for now, we put a placeholder or you can pass it in via route.
-    final deliveryAddress = 'Delivery Address';
-    final itemCount = cartState.cart?.items.length ?? 0;
-    final mainItemName = itemCount > 0 ? cartState.cart!.items.first.name : 'Items';
-    final paymentMethod = checkoutState.paymentMethod == 'COD' ? 'Cash on delivery' : checkoutState.paymentMethod;
+    final deliveryAddress =
+        context.read<AddressBloc>().state.activeAddress?.formattedAddress ??
+        'Delivery Address';
 
     return BlocListener<CheckoutSummaryBloc, CheckoutSummaryState>(
-      listenWhen: (previous, current) => previous.orderPlacedSuccess != current.orderPlacedSuccess,
+      listenWhen: (previous, current) =>
+          previous.orderPlacedSuccess != current.orderPlacedSuccess ||
+          previous.placeOrderErrorMessage != current.placeOrderErrorMessage,
       listener: (context, state) {
         if (state.orderPlacedSuccess) {
-          context.go(RoutePaths.orderPlaced);
-        } else if (state.placeOrderErrorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.placeOrderErrorMessage!)),
+          context.go(
+            RoutePaths.orderPlaced,
+            extra: OrderPlacedArgs(
+              restaurantName: state.placedRestaurantName ??
+                  cart?.restaurantName ??
+                  'Restaurant',
+              estimatedDeliveryMinutes:
+                  state.summary?.estimatedDeliveryMinutes ?? 0,
+              orderId: state.placedOrderId ?? '—',
+            ),
           );
+        } else if (state.placeOrderErrorMessage != null) {
+          ToastMessageHelper.show(state.placeOrderErrorMessage ?? '');
         }
       },
       child: SliverScaffold(
@@ -105,22 +108,21 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
           ),
           SizedBox(height: 28.h),
           OrderDetailsCard(
-            restaurantName: restaurantName,
+            restaurantName: cart?.restaurantName ?? 'Restaurant',
             deliveryAddress: deliveryAddress,
-            itemCount: itemCount,
-            mainItemName: mainItemName,
-            paymentMethod: paymentMethod,
+            items: cart?.items ?? const [],
+            paymentMethod: checkoutState.paymentMethod,
           ),
           SizedBox(height: 28.h),
           CustomButton(
             text: checkoutState.isPlacingOrder ? 'Placing...' : 'Looks Good',
             isLoading: checkoutState.isPlacingOrder,
-            onPressed: () {
-              if (!checkoutState.isPlacingOrder) {
-                _timer?.cancel();
-                _placeOrder();
-              }
-            },
+            onPressed: checkoutState.isPlacingOrder
+                ? null
+                : () {
+                    _timer?.cancel();
+                    _placeOrder();
+                  },
           ),
           SizedBox(height: 12.h),
           CustomButton(
@@ -128,10 +130,12 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
             backgroundColor: Colors.transparent,
             textColor: context.colors.textPrimary,
             bordersColor: context.colors.borderPrimary,
-            onPressed: checkoutState.isPlacingOrder ? null : () {
-              _timer?.cancel();
-              context.pop();
-            },
+            onPressed: checkoutState.isPlacingOrder
+                ? null
+                : () {
+                    _timer?.cancel();
+                    context.pop();
+                  },
           ),
           SizedBox(height: 100.h),
         ],
@@ -139,49 +143,3 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
     );
   }
 }
-
-
-class _AnimatedStripedProgressPainter extends CustomPainter {
-  final Color stripeColor;
-  final double progress;
-
-  const _AnimatedStripedProgressPainter({
-    required this.stripeColor,
-    required this.progress,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.save();
-    // Strictly clip to rounded bounds
-    canvas.clipRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-        const Radius.circular(6),
-      ),
-    );
-
-    final paint = Paint()
-      ..color = stripeColor
-      ..strokeWidth = 3.5
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    const spacing = 12.0;
-    final offset = progress * spacing;
-    final totalWidth = size.width + size.height * 2;
-
-    for (double x = -size.height * 2 + offset; x < totalWidth; x += spacing) {
-      canvas.drawLine(Offset(x, 0), Offset(x - 10, size.height), paint);
-    }
-
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(covariant _AnimatedStripedProgressPainter oldDelegate) {
-    return oldDelegate.progress != progress ||
-        oldDelegate.stripeColor != stripeColor;
-  }
-}
-

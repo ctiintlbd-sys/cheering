@@ -15,12 +15,19 @@ class PaymentMethodItem {
     required this.icon,
   });
 
+  static PaymentMethodItem? byValue(String value) {
+    for (final item in options) {
+      if (item.backendValue == value) return item;
+    }
+    return null;
+  }
+
   static List<PaymentMethodItem> options = [
     PaymentMethodItem(
       title: 'Cash on delivery',
       subtitle: 'Pay when your order arrives',
       backendValue: 'COD',
-      icon: Assets.images.cash.image(height: 24.w,width: 24.w),
+      icon: Assets.images.cash.image(height: 24.w, width: 24.w),
     ),
     PaymentMethodItem(
       title: 'bKash',
