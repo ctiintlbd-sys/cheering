@@ -11,7 +11,6 @@ import 'package:cheering/features/cart/presentation/blocs/checkout_summary/check
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/bill_details_card.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
-import 'package:cheering/features/cart/presentation/screens/widgets/cart_loading_shimmer.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/delivery_or_tip_section.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/payment_methods_card.dart';
 import 'package:flutter/material.dart';
