@@ -1,3 +1,7 @@
+import 'package:cheering/core/helpers/toast_message_helper.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/delivery_time_sheet.dart';
+import 'package:cheering/features/orders/domain/entities/order_schedule_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,56 +80,77 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     _isAutoScrolling = false;
   }
 
+  Future<void> _handleClosedRestaurant(RestaurantEntity restaurant) async {
+    if (restaurant.businessHours == null || restaurant.businessHours!.isEmpty) {
+      ToastMessageHelper.show('Business hours are not available for this restaurant.');
+      context.pop();
+      return;
+    }
+    final selectedTime = await DeliveryTimeSheet.show(context, restaurant.businessHours!);
+    if (selectedTime != null) {
+      OrderScheduleState.setSchedule(restaurant.id, selectedTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RestaurantDetailsBloc, RestaurantDetailsState>(
+    return BlocConsumer<RestaurantDetailsBloc, RestaurantDetailsState>(
+      listenWhen: (previous, current) => 
+          previous.status != current.status && 
+          current.status == RestaurantDetailsStatus.success,
+      listener: (context, state) {
+        final restaurant = state.restaurant;
+        if (restaurant != null && !restaurant.isOpen) {
+          _handleClosedRestaurant(restaurant);
+        }
+      },
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         final restaurant = state.restaurant;
         return SliverScaffold(
           scrollController: _scrollController,
           appBar: CustomSliverAppBar(
-            toolbarHeight: 0,
-            expandedHeight: 416.w,
-            flexibleBackground: RestaurantFlexibleBackground(
-              restaurant: restaurant,
-            ),
-            bottom: RestaurantAppBarBottom(
-              categories: state.validMenuCategories,
-              activeIndexNotifier: _activeIndexNotifier,
-              onTabTapped: _scrollToIndex,
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: BlocBuilder<CartBloc, CartState>(
-            builder: (context, cartState) {
-              final itemCount = cartState.cart?.itemCount ?? 0;
-              if (itemCount == 0) return const SizedBox.shrink();
-              return ViewCartButton(
-                itemCount: itemCount,
-                totalPrice: cartState.cart?.itemTotal ?? 0,
-                onTap: () {
-                  context.push(RoutePaths.cart);
+                toolbarHeight: 0,
+                expandedHeight: 416.w,
+                flexibleBackground: RestaurantFlexibleBackground(
+                  restaurant: restaurant,
+                ),
+                bottom: RestaurantAppBarBottom(
+                  categories: state.validMenuCategories,
+                  activeIndexNotifier: _activeIndexNotifier,
+                  onTabTapped: _scrollToIndex,
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: BlocBuilder<CartBloc, CartState>(
+                builder: (context, cartState) {
+                  final itemCount = cartState.cart?.itemCount ?? 0;
+                  if (itemCount == 0) return const SizedBox.shrink();
+                  return ViewCartButton(
+                    itemCount: itemCount,
+                    totalPrice: cartState.cart?.itemTotal ?? 0,
+                    onTap: () {
+                      context.push(RoutePaths.cart);
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          bodyList: switch (state.status) {
-            RestaurantDetailsStatus.initial ||
-            RestaurantDetailsStatus.loading => [
-              const MenuItemShimmer(count: 6),
-            ],
-            RestaurantDetailsStatus.failure => [
-              EmptyState(message: state.errorMessage ?? ''),
-            ],
-            RestaurantDetailsStatus.success => _buildMenuSections(
-              state.validMenuCategories,
-            ),
+              ),
+              bodyList: switch (state.status) {
+                RestaurantDetailsStatus.initial ||
+                RestaurantDetailsStatus.loading => [
+                  const MenuItemShimmer(count: 6),
+                ],
+                RestaurantDetailsStatus.failure => [
+                  EmptyState(message: state.errorMessage ?? ''),
+                ],
+                RestaurantDetailsStatus.success => _buildMenuSections(
+                  state.validMenuCategories,
+                ),
+              },
+            );
           },
         );
-      },
-    );
   }
 
   List<Widget> _buildMenuSections(List<MenuCategoryEntity> categories) {

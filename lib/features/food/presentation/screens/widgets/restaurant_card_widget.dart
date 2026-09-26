@@ -52,7 +52,10 @@ class RestaurantCardWidget extends StatelessWidget {
                           radius: 6.r,
                           height: 28.w,
                           fontSize: 12.w,
-                          onPressed: (){},label: 'Order for later')
+                          onPressed: (){
+                             context.push(RoutePaths.storeDetails(restaurant.id), extra: restaurant);
+                          },
+                          label: 'Order for later')
                       ],
                     ),
                   ),
