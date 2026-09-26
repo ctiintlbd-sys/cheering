@@ -24,7 +24,7 @@ class OrderDetailsScreen extends StatelessWidget {
           sideContentPadding: 16.w,
           appBar: CustomSliverAppBar(
             title: 'Order Details',
-            backgroundColor: context.colors.bgSecondary,
+            backgroundColor: context.colors.bgSecondary.withValues(alpha: 0.8),
           ),
 
           bodyList: switch (state.status) {

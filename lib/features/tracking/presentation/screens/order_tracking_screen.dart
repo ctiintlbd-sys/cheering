@@ -8,13 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../blocs/order_tracking/order_tracking_bloc.dart';
-import '../blocs/order_tracking/order_tracking_event.dart';
 import '../blocs/order_tracking/order_tracking_state.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
-  const OrderTrackingScreen({super.key, required this.orderId});
+  const OrderTrackingScreen({super.key});
 
-  final String orderId;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +20,6 @@ class OrderTrackingScreen extends StatelessWidget {
       builder: (context, state) {
         return SliverScaffold(
           sideContentPadding: 16.w,
-          onRefresh: () async {
-            context.read<OrderTrackingBloc>().add(LoadOrderTracking(orderId));
-          },
           appBar: CustomSliverAppBar(
             backgroundColor: context.colors.background.withValues(alpha: 0),
           ),
@@ -52,7 +47,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     fontSize: 12.w,
                     fontWeight: FontWeight.w500,
                     color: context.colors.textTertiary,
-                    onTap: () => context.push(RoutePaths.details(orderId)),
+                    onTap: () => context.push(RoutePaths.details(state.tracking!.orderId)),
                   ),
                 ],
               ),
