@@ -291,6 +291,10 @@ class $AssetsImagesGen {
   AssetGenImage get placingOrder =>
       const AssetGenImage('assets/images/placing_order.png');
 
+  /// File path: assets/images/preparing.png
+  AssetGenImage get preparing =>
+      const AssetGenImage('assets/images/preparing.png');
+
   /// File path: assets/images/profile_empty.png
   AssetGenImage get profileEmpty =>
       const AssetGenImage('assets/images/profile_empty.png');
@@ -307,6 +311,7 @@ class $AssetsImagesGen {
     mapLocation,
     placeholder,
     placingOrder,
+    preparing,
     profileEmpty,
     store,
   ];

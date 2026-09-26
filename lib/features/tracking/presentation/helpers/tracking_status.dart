@@ -75,9 +75,12 @@ abstract final class TrackingStatus {
 
   static String title(OrderTrackingEntity tracking) {
     if (normalize(tracking.status) == delivered) return 'Delivered';
-    final minutes = tracking.etaMinutes;
-    if (minutes != null && minutes > 0) {
-      return 'Arriving in $minutes minutes';
+    if (tracking.rider != null) {
+      final minutes = tracking.etaMinutes;
+      if (minutes != null && minutes > 0) {
+        return 'Arriving in $minutes minutes';
+      }
+      return 'On the way';
     }
     return switch (normalize(tracking.status)) {
       pending => 'Order placed',
@@ -94,10 +97,8 @@ abstract final class TrackingStatus {
         '${tracking.restaurantName} received your order.',
       preparing =>
         '${tracking.restaurantName} is preparing your order.',
-      ready =>
-        'Your order is ready. A rider will pick it up soon.',
-      outForDelivery =>
-        'Your order on the way. get ready to enjoy your food',
+      ready => 'Your order is ready. A rider will pick it up soon.',
+      outForDelivery => 'Your order on the way. get ready to enjoy your food',
       delivered => 'Your order has been delivered. Enjoy your food!',
       _ => 'We are updating your order.',
     };
