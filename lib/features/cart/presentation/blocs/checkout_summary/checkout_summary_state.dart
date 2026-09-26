@@ -14,6 +14,7 @@ class CheckoutSummaryState extends Equatable {
   final bool orderPlacedSuccess;
   final String? placeOrderErrorMessage;
   final String? placedOrderId;
+  final String? placedOrderUuid;
   final String? placedRestaurantName;
 
   const CheckoutSummaryState({
@@ -26,6 +27,7 @@ class CheckoutSummaryState extends Equatable {
     this.orderPlacedSuccess = false,
     this.placeOrderErrorMessage,
     this.placedOrderId,
+    this.placedOrderUuid,
     this.placedRestaurantName,
   });
 
@@ -39,6 +41,7 @@ class CheckoutSummaryState extends Equatable {
     bool? orderPlacedSuccess,
     String? placeOrderErrorMessage,
     String? placedOrderId,
+    String? placedOrderUuid,
     String? placedRestaurantName,
     bool clearError = false,
     bool clearPlaceOrderError = false,
@@ -55,6 +58,7 @@ class CheckoutSummaryState extends Equatable {
           ? null
           : (placeOrderErrorMessage ?? this.placeOrderErrorMessage),
       placedOrderId: placedOrderId ?? this.placedOrderId,
+      placedOrderUuid: placedOrderUuid ?? this.placedOrderUuid,
       placedRestaurantName: placedRestaurantName ?? this.placedRestaurantName,
     );
   }
@@ -70,6 +74,7 @@ class CheckoutSummaryState extends Equatable {
         orderPlacedSuccess,
         placeOrderErrorMessage,
         placedOrderId,
+        placedOrderUuid,
         placedRestaurantName,
       ];
 }

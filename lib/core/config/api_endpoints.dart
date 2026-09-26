@@ -49,4 +49,5 @@ class ApiEndpoints {
   static const String orders = '/orders';
   static String orderDetails(String id) => '/orders/$id';
   static String cancelOrder(String id) => '/orders/$id/cancel';
+  static String orderTracking(String id) => '/orders/$id/tracking';
 }

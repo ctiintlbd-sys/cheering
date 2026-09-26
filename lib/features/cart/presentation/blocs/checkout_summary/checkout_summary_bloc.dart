@@ -123,6 +123,7 @@ class CheckoutSummaryBloc
         placedOrderId: order.orderNumber > 0
             ? '#${order.orderNumber}'
             : (order.id.isNotEmpty ? order.id : null),
+        placedOrderUuid: order.id.isNotEmpty ? order.id : null,
         placedRestaurantName:
             order.restaurantName.isNotEmpty ? order.restaurantName : null,
       ));

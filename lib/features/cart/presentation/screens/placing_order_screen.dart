@@ -78,6 +78,7 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
               estimatedDeliveryMinutes:
                   state.summary?.estimatedDeliveryMinutes ?? 0,
               orderId: state.placedOrderId ?? '—',
+              trackingOrderId: state.placedOrderUuid ?? '',
             ),
           );
         } else if (state.placeOrderErrorMessage != null) {

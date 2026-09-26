@@ -54,10 +54,12 @@ class OrderPlacedArgs {
   final String restaurantName;
   final int estimatedDeliveryMinutes;
   final String orderId;
+  final String trackingOrderId;
 
   OrderPlacedArgs({
     required this.restaurantName,
     required this.estimatedDeliveryMinutes,
     required this.orderId,
+    this.trackingOrderId = '',
   });
 }

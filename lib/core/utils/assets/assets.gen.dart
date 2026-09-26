@@ -176,6 +176,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share.svg
   SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
 
+  /// File path: assets/icons/status_order.svg
+  SvgGenImage get statusOrder =>
+      const SvgGenImage('assets/icons/status_order.svg');
+
+  /// File path: assets/icons/status_perpating.svg
+  SvgGenImage get statusPerpating =>
+      const SvgGenImage('assets/icons/status_perpating.svg');
+
+  /// File path: assets/icons/status_rider.svg
+  SvgGenImage get statusRider =>
+      const SvgGenImage('assets/icons/status_rider.svg');
+
   /// File path: assets/icons/store.svg
   SvgGenImage get store => const SvgGenImage('assets/icons/store.svg');
 
@@ -239,6 +251,9 @@ class $AssetsIconsGen {
     promo,
     search,
     share,
+    statusOrder,
+    statusPerpating,
+    statusRider,
     store,
     storeFil,
     tip,

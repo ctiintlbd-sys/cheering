@@ -20,6 +20,9 @@ abstract class RoutePaths {
   static const String checkout = '/checkout';
   static const String placingOrder = '/placing-order';
   static const String orderPlaced = '/order-placed';
+  static const String orderTracking = '/order-tracking/:id';
+  static String tracking(String id) => '/order-tracking/$id';
+  static const String orderTrackingMap = '/order-tracking-map';
 
   // ── Main Tabs (Stateful Shell) ─────────────────────────────
   static const String foodTab = '/food';

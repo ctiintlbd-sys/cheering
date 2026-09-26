@@ -62,7 +62,14 @@ class OrderPlacedScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 32.w),
-        CustomButton(label: 'Track order', onPressed: () {}),
+        CustomButton(
+          label: 'Track order',
+          onPressed: () {
+            final trackingOrderId = args?.trackingOrderId ?? '';
+            if (trackingOrderId.isEmpty) return;
+            context.push(RoutePaths.tracking(trackingOrderId));
+          },
+        ),
         SizedBox(height: 12.w),
         CustomButton(
           text: 'Back to home',
