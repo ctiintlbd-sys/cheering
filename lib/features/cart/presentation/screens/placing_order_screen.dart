@@ -27,14 +27,14 @@ class PlacingOrderScreen extends StatefulWidget {
 
 class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
   Timer? _timer;
-  int _secondsLeft = 5;
+  final _secondsLeft = ValueNotifier<int>(5);
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsLeft > 0) {
-        setState(() => _secondsLeft--);
+      if (_secondsLeft.value > 0) {
+        _secondsLeft.value--;
       } else {
         timer.cancel();
         _placeOrder();
@@ -49,6 +49,7 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _secondsLeft.dispose();
     super.dispose();
   }
 
@@ -125,17 +126,22 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
                   },
           ),
           SizedBox(height: 12.h),
-          CustomButton(
-            text: 'Modify(00:0$_secondsLeft)',
-            backgroundColor: Colors.transparent,
-            textColor: context.colors.textPrimary,
-            bordersColor: context.colors.borderPrimary,
-            onPressed: checkoutState.isPlacingOrder
-                ? null
-                : () {
-                    _timer?.cancel();
-                    context.pop();
-                  },
+          ValueListenableBuilder<int>(
+            valueListenable: _secondsLeft,
+            builder: (context, seconds, _) {
+              return CustomButton(
+                text: 'Modify(00:0$seconds)',
+                backgroundColor: Colors.transparent,
+                textColor: context.colors.textPrimary,
+                bordersColor: context.colors.borderPrimary,
+                onPressed: checkoutState.isPlacingOrder
+                    ? null
+                    : () {
+                        _timer?.cancel();
+                        context.pop();
+                      },
+              );
+            },
           ),
           SizedBox(height: 100.h),
         ],
