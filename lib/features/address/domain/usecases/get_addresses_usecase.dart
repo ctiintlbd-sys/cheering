@@ -5,4 +5,5 @@ class GetAddressesUseCase {
   final IAddressRepository repository;
   GetAddressesUseCase(this.repository);
   Stream<List<AddressEntity>> call() => repository.getAddresses();
+  Future<void> clearCache() => repository.clearLocalCache();
 }

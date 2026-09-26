@@ -48,6 +48,9 @@ class _FakeRepository implements IAddressRepository {
 
   @override
   Future<AddressEntity> setDefaultAddress(String id) async => _saved;
+
+  @override
+  Future<void> clearLocalCache() async {}
 }
 
 /// Stands in for a slow cold GPS fix, which is what Android hits.

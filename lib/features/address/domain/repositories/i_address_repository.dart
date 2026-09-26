@@ -7,4 +7,5 @@ abstract class IAddressRepository {
   Future<AddressEntity> updateAddress(String id, AddressParams params);
   Future<void> deleteAddress(String id);
   Future<AddressEntity> setDefaultAddress(String id);
+  Future<void> clearLocalCache();
 }

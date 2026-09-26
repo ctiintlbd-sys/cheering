@@ -97,4 +97,9 @@ class AddressRepositoryImpl implements IAddressRepository {
       onFailure: (e) => throw e,
     );
   }
+
+  @override
+  Future<void> clearLocalCache() {
+    return _cache.remove(CacheKeys.addresses);
+  }
 }

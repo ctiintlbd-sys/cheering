@@ -262,11 +262,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     emit(state.copyWith(activeDefaultId: event.id));
   }
 
-  void _onClearAddresses(
+  Future<void> _onClearAddresses(
     ClearAddressesEvent event,
     Emitter<AddressState> emit,
-  ) {
+  ) async {
     emit(const AddressState());
+    await _getAddressesUseCase.clearCache();
     add(const InitializeAddressScreenData());
   }
 

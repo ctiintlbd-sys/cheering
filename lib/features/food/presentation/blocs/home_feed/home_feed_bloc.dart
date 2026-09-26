@@ -1,4 +1,3 @@
-import 'package:cheering/features/address/presentation/bloc/address_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../../food/domain/entities/home_feed_entity.dart';
@@ -15,14 +14,6 @@ class HomeFeedBloc extends Bloc<HomeFeedEvent, HomeFeedState> {
   HomeFeedBloc(this._getHomeFeedUseCase, this._getCategoriesUseCase)
     : super(const HomeFeedState()) {
     on<LoadHomeFeed>(_onLoadHomeFeed);
-  }
-
-  void loadFrom(AddressState state) {
-    if (state.isFetchingLocation) return;
-    add(LoadHomeFeed(
-      lat: state.activeAddress?.latitude,
-      lng: state.activeAddress?.longitude,
-    ));
   }
 
   Future<void> _onLoadHomeFeed(

@@ -18,7 +18,6 @@ import 'core/theme/app_theme.dart';
 import 'package:cheering/core/l10n/locale_cubit.dart';
 
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
-import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/core/common_widgets/global_cart_listener.dart';
 
 class App extends StatelessWidget {
@@ -32,9 +31,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
         BlocProvider(create: (_) => getIt<ProfileBloc>()),
-        BlocProvider(
-          create: (_) => getIt<CartBloc>()..add(const LoadCart()),
-        ),
+        BlocProvider(create: (_) => getIt<CartBloc>()),
         BlocProvider(
           create: (_) => getIt<AddressBloc>()
             ..add(const InitializeAddressScreenData())

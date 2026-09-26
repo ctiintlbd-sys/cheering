@@ -3,6 +3,8 @@ import 'package:cheering/core/router/route_args.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:cheering/features/cart/domain/entities/checkout_summary_params.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
 import 'package:cheering/features/cart/presentation/screens/cart_screen.dart';
@@ -15,7 +17,10 @@ import 'package:go_router/go_router.dart';
 final List<RouteBase> cartRoutes = [
   GoRoute(
     path: RoutePaths.cart,
-    builder: (context, state) => const CartScreen(),
+    builder: (context, state) {
+      context.read<CartBloc>().add(const LoadCart());
+      return const CartScreen();
+    },
   ),
   GoRoute(
     path: RoutePaths.checkout,
