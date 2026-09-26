@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_filters_bar.dart';
-import 'package:cheering/features/food/presentation/models/filter_data.dart';
+import 'package:cheering/features/food/data/models/filter_data.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_shimmer.dart';
 
 class ExploreRestaurantsScreen extends StatelessWidget {

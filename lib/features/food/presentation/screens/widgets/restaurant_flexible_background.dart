@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/delivery_time_sheet.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
   final RestaurantEntity? restaurant;
@@ -134,12 +135,17 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                 ],
-                _buildTag(
-                  context: context,
-                  icon: Icons.calendar_today_outlined,
-                  text: 'Order for Later',
-                  color: context.colors.textPrimary,
-                  bgColor: context.colors.bgSecondary,
+                GestureDetector(
+                  onTap: () {
+                    DeliveryTimeSheet.show(context);
+                  },
+                  child: _buildTag(
+                    context: context,
+                    icon: Icons.calendar_today_outlined,
+                    text: 'Order for Later',
+                    color: context.colors.textPrimary,
+                    bgColor: context.colors.bgSecondary,
+                  ),
                 ),
               ],
             ).horizontal(16.w),
