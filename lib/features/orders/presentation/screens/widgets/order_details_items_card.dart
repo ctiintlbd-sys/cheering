@@ -68,6 +68,7 @@ class OrderDetailsItemsCard extends StatelessWidget {
           SizedBox(height: 16.w),
           ListView.separated(
             shrinkWrap: true,
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: order.items.length,
             separatorBuilder: (_, _) => SizedBox(height: 16.w),

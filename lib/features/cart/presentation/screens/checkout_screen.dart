@@ -49,7 +49,7 @@ class CheckoutScreen extends StatelessWidget {
               totalPrice: state.summary?.grandTotal ?? 0,
               buttonText: 'Place order',
               onPressed: () {
-                context.push(
+                context.pushReplacement(
                   RoutePaths.placingOrder,
                   extra: context.read<CheckoutSummaryBloc>(),
                 );
