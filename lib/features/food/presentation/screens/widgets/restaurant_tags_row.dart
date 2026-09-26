@@ -60,6 +60,17 @@ class RestaurantTagsRow extends StatelessWidget {
                   text: timeText,
                   color: tagColor,
                   bgColor: tagBgColor,
+                  suffixIcon: isScheduledForThis
+                      ? GestureDetector(
+                          onTap: () {
+                            OrderScheduleState.clear();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 6.w),
+                            child: Icon(Icons.close, color: tagColor, size: 14.r),
+                          ),
+                        )
+                      : null,
                 ),
               );
             },
@@ -75,6 +86,7 @@ class RestaurantTagsRow extends StatelessWidget {
     required String text,
     required Color color,
     required Color bgColor,
+    Widget? suffixIcon,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
@@ -93,6 +105,7 @@ class RestaurantTagsRow extends StatelessWidget {
             fontSize: 12.r,
             fontWeight: FontWeight.w600,
           ),
+          if (suffixIcon != null) suffixIcon,
         ],
       ),
     );
