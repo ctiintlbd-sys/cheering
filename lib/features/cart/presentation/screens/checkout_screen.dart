@@ -73,64 +73,49 @@ class CheckoutScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20.w),
-                ...switch (state.status) {
-                  CheckoutSummaryStatus.initial ||
-                  CheckoutSummaryStatus.loading => [
-                    const CartLoadingShimmer(),
-                  ],
-                  CheckoutSummaryStatus.failure => [
-                    EmptyState(
-                      message: state.errorMessage ?? 'Something went wrong',
-                    ),
-                  ],
-                  CheckoutSummaryStatus.success when state.summary == null => [
-                    const EmptyState(message: 'Something went wrong'),
-                  ],
-                  CheckoutSummaryStatus.success => [
-                    CustomText(
-                      left: 16.w,
-                      text: 'Payment method',
-                      fontSize: 16.r,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    SizedBox(height: 12.w),
-                    PaymentMethodsCard(
-                      selectedValue: state.paymentMethod,
-                      onChanged: (value) => context
-                          .read<CheckoutSummaryBloc>()
-                          .add(UpdatePaymentMethodEvent(value)),
-                    ),
-                    SizedBox(height: 20.w),
-                    DeliveryOrTipSection(
-                      estimatedDeliveryMinutes:
-                          state.summary!.estimatedDeliveryMinutes,
-                      selectedTip: state.currentParams?.tip ?? 0.0,
-                      onTipSelected: (tip) {
-                        context.read<CheckoutSummaryBloc>().add(
-                          UpdateTipEvent(tip),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.w),
-                    BlocBuilder<CartBloc, CartState>(
-                      builder: (context, cartState) {
-                        return BillDetailsCard(
-                          itemTotal: state.summary!.itemTotal,
-                          itemCount: cartState.cart?.itemCount ?? 0,
-                          minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
-                          deliveryFee: state.summary!.deliveryFee,
-                          packagingFee: state.summary!.packagingFee,
-                          taxAmount: state.summary!.taxAmount,
-                          platformFee: state.summary!.platformFee,
-                          discount: state.summary!.discount,
-                          tip: state.summary!.tip,
-                          grandTotal: state.summary!.grandTotal,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 204.w),
-                  ],
-                },
+
+                  CustomText(
+                    left: 16.w,
+                    text: 'Payment method',
+                    fontSize: 16.r,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  SizedBox(height: 12.w),
+                  PaymentMethodsCard(
+                    selectedValue: state.paymentMethod,
+                    onChanged: (value) => context
+                        .read<CheckoutSummaryBloc>()
+                        .add(UpdatePaymentMethodEvent(value)),
+                  ),
+                  SizedBox(height: 20.w),
+                  DeliveryOrTipSection(
+                    estimatedDeliveryMinutes:
+                    state.summary?.estimatedDeliveryMinutes ?? 0,
+                    selectedTip: state.currentParams?.tip ?? 0.0,
+                    onTipSelected: (tip) {
+                      context.read<CheckoutSummaryBloc>().add(
+                        UpdateTipEvent(tip),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20.w),
+                  BlocBuilder<CartBloc, CartState>(
+                    builder: (context, cartState) {
+                      return BillDetailsCard(
+                        itemTotal: state.summary?.itemTotal ?? 0,
+                        itemCount: cartState.cart?.itemCount ?? 0,
+                        minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
+                        deliveryFee: state.summary?.deliveryFee,
+                        packagingFee: state.summary?.packagingFee,
+                        taxAmount: state.summary?.taxAmount,
+                        platformFee: state.summary?.platformFee,
+                        discount: state.summary?.discount,
+                        tip: state.summary?.tip,
+                        grandTotal: state.summary?.grandTotal,
+                      );
+                    },
+                  ),
+                  SizedBox(height: 204.w),
               ],
             );
           },
