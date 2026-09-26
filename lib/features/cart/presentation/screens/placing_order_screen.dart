@@ -9,6 +9,7 @@ import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/address/domain/entities/address_entity.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
@@ -67,6 +68,7 @@ class _PlacingOrderScreenState extends State<PlacingOrderScreen> {
           previous.placeOrderErrorMessage != current.placeOrderErrorMessage,
       listener: (context, state) {
         if (state.orderPlacedSuccess) {
+          context.read<CartBloc>().add(const LoadCart());
           context.go(
             RoutePaths.orderPlaced,
             extra: OrderPlacedArgs(

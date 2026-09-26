@@ -11,6 +11,7 @@ import 'package:cheering/features/cart/presentation/blocs/checkout_summary/check
 import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/bill_details_card.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
+import 'package:cheering/features/cart/presentation/screens/widgets/cart_loading_shimmer.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/delivery_or_tip_section.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/payment_methods_card.dart';
 import 'package:flutter/material.dart';
@@ -18,37 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class CheckoutScreen extends StatefulWidget {
+class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
-
-  @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
-}
-
-class _CheckoutScreenState extends State<CheckoutScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadSummary();
-    });
-  }
-
-  void _loadSummary() {
-    final addressState = context.read<AddressBloc>().state;
-    final addressId = addressState.activeDefaultId;
-    if (addressId != null) {
-      context.read<CheckoutSummaryBloc>().add(
-        LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AddressBloc, AddressState>(
-      listenWhen: (prev, curr) => prev.activeDefaultId != curr.activeDefaultId,
+      listenWhen: (previous, current) =>
+          previous.activeDefaultId != current.activeDefaultId,
       listener: (context, state) {
         if (state.activeDefaultId != null) {
           context.read<CheckoutSummaryBloc>().add(
@@ -59,86 +37,104 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         }
       },
       child: BlocBuilder<CheckoutSummaryBloc, CheckoutSummaryState>(
-        builder: (context, checkoutState) {
-          return SliverScaffold(
-            isNavWrap: false,
-            backgroundColor: context.colors.bgSecondary,
-            appBar: CustomSliverAppBar(
+          builder: (context, state) {
+            return SliverScaffold(
+              isNavWrap: false,
               backgroundColor: context.colors.bgSecondary,
-              title: 'Checkout',
-            ),
-            bottomNavigationBar: CartBottomBarWidget(
-              totalPrice: checkoutState.summary?.grandTotal ?? 0.0,
-              buttonText: 'Place order',
-              onPressed: () {
-                context.push(
-                  RoutePaths.placingOrder,
-                  extra: context.read<CheckoutSummaryBloc>(),
-                );
-              },
-            ),
-            bodyList: [
-              SizedBox(height: 16.w),
-
-              BlocBuilder<AddressBloc, AddressState>(
-                builder: (context, state) {
-                  final address = state.activeAddress;
-                  return AddAddressLocationCard(
-                    color: context.colors.white,
-                    address: address,
-                    onChangeTap: () {
-                      context.push(RoutePaths.address);
+              appBar: CustomSliverAppBar(
+                backgroundColor: context.colors.bgSecondary,
+                title: 'Checkout',
+              ),
+              bottomNavigationBar: switch (state.status) {
+                CheckoutSummaryStatus.success when state.summary != null =>
+                  CartBottomBarWidget(
+                    totalPrice: state.summary!.grandTotal,
+                    buttonText: 'Place order',
+                    onPressed: () {
+                      context.push(
+                        RoutePaths.placingOrder,
+                        extra: context.read<CheckoutSummaryBloc>(),
+                      );
                     },
-                  ).horizontal(16.w);
-                },
-              ),
-              SizedBox(height: 20.w),
-              CustomText(
-                left: 16.w,
-                text: 'Payment method',
-                fontSize: 16.r,
-                fontWeight: FontWeight.w600,
-              ),
-              SizedBox(height: 12.w),
-              PaymentMethodsCard(
-                selectedValue: checkoutState.paymentMethod,
-                onChanged: (value) => context.read<CheckoutSummaryBloc>().add(
-                  UpdatePaymentMethodEvent(value),
+                  ),
+                _ => const SizedBox.shrink(),
+              },
+              bodyList: [
+                SizedBox(height: 16.w),
+                BlocBuilder<AddressBloc, AddressState>(
+                  builder: (context, addressState) {
+                    return AddAddressLocationCard(
+                      color: context.colors.white,
+                      address: addressState.activeAddress,
+                      onChangeTap: () {
+                        context.push(RoutePaths.address);
+                      },
+                    ).horizontal(16.w);
+                  },
                 ),
-              ),
-              SizedBox(height: 20.w),
-              DeliveryOrTipSection(
-                estimatedDeliveryMinutes: checkoutState.summary?.estimatedDeliveryMinutes ?? 0,
-                selectedTip: checkoutState.currentParams?.tip ?? 0.0,
-                onTipSelected: (tip) {
-                  context.read<CheckoutSummaryBloc>().add(
-                    UpdateTipEvent(tip),
-                  );
+                SizedBox(height: 20.w),
+                ...switch (state.status) {
+                  CheckoutSummaryStatus.initial ||
+                  CheckoutSummaryStatus.loading => [
+                    const CartLoadingShimmer(),
+                  ],
+                  CheckoutSummaryStatus.failure => [
+                    EmptyState(
+                      message: state.errorMessage ?? 'Something went wrong',
+                    ),
+                  ],
+                  CheckoutSummaryStatus.success when state.summary == null => [
+                    const EmptyState(message: 'Something went wrong'),
+                  ],
+                  CheckoutSummaryStatus.success => [
+                    CustomText(
+                      left: 16.w,
+                      text: 'Payment method',
+                      fontSize: 16.r,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    SizedBox(height: 12.w),
+                    PaymentMethodsCard(
+                      selectedValue: state.paymentMethod,
+                      onChanged: (value) => context
+                          .read<CheckoutSummaryBloc>()
+                          .add(UpdatePaymentMethodEvent(value)),
+                    ),
+                    SizedBox(height: 20.w),
+                    DeliveryOrTipSection(
+                      estimatedDeliveryMinutes:
+                          state.summary!.estimatedDeliveryMinutes,
+                      selectedTip: state.currentParams?.tip ?? 0.0,
+                      onTipSelected: (tip) {
+                        context.read<CheckoutSummaryBloc>().add(
+                          UpdateTipEvent(tip),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20.w),
+                    BlocBuilder<CartBloc, CartState>(
+                      builder: (context, cartState) {
+                        return BillDetailsCard(
+                          itemTotal: state.summary!.itemTotal,
+                          itemCount: cartState.cart?.itemCount ?? 0,
+                          minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
+                          deliveryFee: state.summary!.deliveryFee,
+                          packagingFee: state.summary!.packagingFee,
+                          taxAmount: state.summary!.taxAmount,
+                          platformFee: state.summary!.platformFee,
+                          discount: state.summary!.discount,
+                          tip: state.summary!.tip,
+                          grandTotal: state.summary!.grandTotal,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 204.w),
+                  ],
                 },
-              ),
-
-              SizedBox(height: 20.w),
-              BlocBuilder<CartBloc, CartState>(
-                builder: (context, cartState) {
-                  return BillDetailsCard(
-                    itemTotal: checkoutState.summary?.itemTotal ?? 0,
-                    itemCount: cartState.cart?.itemCount ?? 0,
-                    minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
-                    deliveryFee: checkoutState.summary?.deliveryFee ?? 0,
-                    packagingFee: checkoutState.summary?.packagingFee ?? 0,
-                    taxAmount: checkoutState.summary?.taxAmount ?? 0,
-                    platformFee: checkoutState.summary?.platformFee ?? 0,
-                    discount: checkoutState.summary?.discount ?? 0,
-                    tip: checkoutState.summary?.tip ?? 0,
-                    grandTotal: checkoutState.summary?.grandTotal ?? 0,
-                  );
-                },
-              ),
-              SizedBox(height: 204.w),
-            ],
-          );
-        },
-      ),
+              ],
+            );
+          },
+        ),
     );
   }
 }
