@@ -29,7 +29,7 @@ class OrderDetailsItemsCard extends StatelessWidget {
         children: [
           SizedBox(height: 14.w),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 12.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Row(
               children: [
                 Expanded(
@@ -57,7 +57,7 @@ class OrderDetailsItemsCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 12.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: CustomText(
               top: 6.w,
               text: _orderMeta(),
@@ -66,14 +66,69 @@ class OrderDetailsItemsCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.w),
-          for (var i = 0; i < order.items.length; i++) ...[
-            _OrderDetailsItemRow(item: order.items[i]),
-            if (i != order.items.length - 1) SizedBox(height: 16.w),
-          ],
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: order.items.length,
+            separatorBuilder: (_, _) => SizedBox(height: 16.w),
+            itemBuilder: (context, index) =>
+                _itemRowWidget(context, order.items[index]),
+          ),
         ],
       ),
     );
   }
+
+
+
+  Widget _itemRowWidget(BuildContext context, OrderItemEntity item) {
+    final extras = [
+      if (item.variantName != null && item.variantName!.isNotEmpty)
+        item.variantName!,
+      ...item.addOnNames,
+    ].join(' • ');
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomNetworkImage(
+          imageUrl: item.imageUrl,
+          height: 66.r,
+          width: 66.r,
+          borderRadius: 12.r,
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(
+                text: item.name,
+                fontWeight: FontWeight.w600,
+                maxLines: 1,
+              ),
+              if (extras.isNotEmpty)
+                CustomText(
+                  top: 2.w,
+                  text: extras,
+                  fontSize: 12.r,
+                  color: context.colors.textTertiary,
+                  maxLines: 1,
+                ),
+              CustomText(
+                top: 4.w,
+                text: '৳${item.lineTotal.toStringAsFixed(0)}',
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
+
 
   String _orderMeta() {
     final id = order.orderNumber > 0 ? '#${order.orderNumber}' : '';
@@ -106,60 +161,5 @@ class OrderDetailsItemsCard extends StatelessWidget {
       'CANCELLED' => ('Cancelled', context.colors.bgErrorSecondary),
       _ => (order.status, context.colors.primary),
     };
-  }
-}
-
-class _OrderDetailsItemRow extends StatelessWidget {
-  const _OrderDetailsItemRow({required this.item});
-
-  final OrderItemEntity item;
-
-  @override
-  Widget build(BuildContext context) {
-    final extras = [
-      if (item.variantName != null && item.variantName!.isNotEmpty)
-        item.variantName!,
-      ...item.addOnNames,
-    ].join(' • ');
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomNetworkImage(
-          imageUrl: item.imageUrl,
-          height: 56.r,
-          width: 56.r,
-          borderRadius: 12.r,
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: item.name,
-                fontSize: 14.r,
-                fontWeight: FontWeight.w600,
-                maxLines: 1,
-              ),
-              if (extras.isNotEmpty)
-                CustomText(
-                  top: 2.w,
-                  text: extras,
-                  fontSize: 12.r,
-                  color: context.colors.textTertiary,
-                  maxLines: 1,
-                ),
-              CustomText(
-                top: 4.w,
-                text: '৳${item.lineTotal.toStringAsFixed(0)}',
-                fontSize: 14.r,
-                fontWeight: FontWeight.w500,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }

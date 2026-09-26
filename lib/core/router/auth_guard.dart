@@ -8,7 +8,7 @@ abstract final class AppAuthGuard {
   static const _protectedRoutes = {
     RoutePaths.accountSettings,
     RoutePaths.cart,
-    // RoutePaths.orderHistory,
+     RoutePaths.ordersTab,
     // RoutePaths.savedAddresses,
   };
 
