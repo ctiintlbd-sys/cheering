@@ -23,11 +23,43 @@ class HRestaurantCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image
-            CustomNetworkImage(
-              width: 102.w,
-              height: 84.w,
-              borderRadius: 12.r,
-              imageUrl: restaurant?.logoUrl ?? restaurant?.coverImageUrl,
+            Stack(
+              children: [
+                CustomNetworkImage(
+                  width: 102.w,
+                  height: 84.w,
+                  borderRadius: 12.r,
+                  imageUrl: restaurant?.logoUrl ?? restaurant?.coverImageUrl,
+                ),
+                if(restaurant?.isOpen == false)
+                  Positioned.fill(child: CustomContainer(
+                    alignment: Alignment.center,
+                    radiusAll: 12.r,
+                    color: context.colors.black.withValues(alpha: 0.7),
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomText(
+                              bottom: 6.w,
+                              textAlign: TextAlign.center,
+                              fontSize: 10.w,
+                              text: 'Opens at\nSun, 11:00 AM',color: context.colors.white,fontWeight: FontWeight.w600),
+                          CustomButton(
+                              backgroundColor: context.colors.white,
+                              foregroundColor: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                              radius: 6.r,
+                              height: 24.w,
+                              fontSize: 10.w,
+                              padding: EdgeInsets.symmetric(horizontal: 4.w),
+                              onPressed: (){},label: 'Order for later')
+                        ],
+                      ),
+                    ),
+                  )),
+              ],
             ),
             SizedBox(width: 16.w),
 
