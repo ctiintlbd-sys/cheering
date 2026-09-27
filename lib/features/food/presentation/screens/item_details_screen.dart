@@ -92,11 +92,8 @@ class ItemDetailsScreen extends StatelessWidget {
               ItemAddOnsWidget(
                 addOns: menuItem.addOns!,
                 selectedAddOns: state.selectedAddOns,
-                onIncrement: (addOn) {
-                  context.read<ItemDetailsBloc>().add(IncrementAddOnEvent(addOn));
-                },
-                onDecrement: (addOn) {
-                  context.read<ItemDetailsBloc>().add(DecrementAddOnEvent(addOn));
+                onToggle: (addOn) {
+                  context.read<ItemDetailsBloc>().add(ToggleAddOnEvent(addOn));
                 },
               ),
 

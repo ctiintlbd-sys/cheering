@@ -8,8 +8,7 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
   ItemDetailsBloc(MenuItemEntity menuItem, {CartItemEntity? cartItem}) 
       : super(_createInitialState(menuItem, cartItem)) {
     on<SelectVariantEvent>(_onSelectVariant);
-    on<IncrementAddOnEvent>(_onIncrementAddOn);
-    on<DecrementAddOnEvent>(_onDecrementAddOn);
+    on<ToggleAddOnEvent>(_onToggleAddOn);
   }
 
   static ItemDetailsState _createInitialState(
@@ -60,19 +59,18 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     ));
   }
 
-  void _onIncrementAddOn(IncrementAddOnEvent event, Emitter<ItemDetailsState> emit) {
+  void _onToggleAddOn(ToggleAddOnEvent event, Emitter<ItemDetailsState> emit) {
     final currentAddOns = List.of(state.selectedAddOns);
-    currentAddOns.add(event.addOn);
-    emit(ItemDetailsState(
-      menuItem: state.menuItem,
-      selectedVariant: state.selectedVariant,
-      selectedAddOns: currentAddOns,
-    ));
-  }
-
-  void _onDecrementAddOn(DecrementAddOnEvent event, Emitter<ItemDetailsState> emit) {
-    final currentAddOns = List.of(state.selectedAddOns);
-    currentAddOns.remove(event.addOn); // remove removes the first occurrence
+    
+    // Check if addOn is already selected
+    final isSelected = currentAddOns.any((a) => a.id == event.addOn.id);
+    
+    if (isSelected) {
+      currentAddOns.removeWhere((a) => a.id == event.addOn.id);
+    } else {
+      currentAddOns.add(event.addOn);
+    }
+    
     emit(ItemDetailsState(
       menuItem: state.menuItem,
       selectedVariant: state.selectedVariant,
