@@ -8,16 +8,12 @@ class SearchFilterBar extends StatelessWidget {
     super.key,
     required this.filters,
     required this.onSortTap,
-    required this.onPriceTap,
-    required this.onRatingTap,
-    required this.onFastestTap,
+    required this.onChanged,
   });
 
   final SearchFilterSelection filters;
   final VoidCallback onSortTap;
-  final VoidCallback onPriceTap;
-  final VoidCallback onRatingTap;
-  final VoidCallback onFastestTap;
+  final ValueChanged<SearchFilterSelection> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +33,33 @@ class SearchFilterBar extends StatelessWidget {
           CustomFilterChip(
             label: filters.priceLabel,
             isSelected: filters.hasPriceFilter,
-            onTap: onPriceTap,
+            onTap: () => onChanged(
+              filters.copyWith(
+                priceRange: filters.hasPriceFilter
+                    ? SearchPriceRange.any
+                    : SearchPriceRange.under300,
+              ),
+            ),
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
             label: 'Rating 4+',
             isSelected: filters.rating4Plus,
-            onTap: onRatingTap,
+            onTap: () => onChanged(
+              filters.copyWith(rating4Plus: !filters.rating4Plus),
+            ),
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
             label: 'Fastest',
             isSelected: filters.sort == SearchSort.deliveryTime,
-            onTap: onFastestTap,
+            onTap: () => onChanged(
+              filters.copyWith(
+                sort: filters.sort == SearchSort.deliveryTime
+                    ? SearchSort.relevance
+                    : SearchSort.deliveryTime,
+              ),
+            ),
           ),
         ],
       ),

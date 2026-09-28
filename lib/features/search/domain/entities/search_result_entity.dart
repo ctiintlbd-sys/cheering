@@ -15,6 +15,9 @@ class SearchResultEntity extends Equatable {
     required this.categories,
   });
 
+  bool get isEmpty =>
+      categories.isEmpty && restaurants.isEmpty && items.isEmpty;
+
   @override
   List<Object?> get props => [restaurants, items, categories];
 }
