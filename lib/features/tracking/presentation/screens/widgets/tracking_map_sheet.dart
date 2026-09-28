@@ -19,12 +19,11 @@ class TrackingMapSheet extends StatelessWidget {
       color: context.colors.background,
       topLeftRadius: 24.r,
       topRightRadius: 24.r,
-      paddingHorizontal: 16.w,
-      paddingTop: 12.w,
-      paddingBottom: 24.w,
+      paddingHorizontal: 20.w,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 14.w),
           CustomContainer(
             width: 36.w,
             height: 4.w,
@@ -34,7 +33,7 @@ class TrackingMapSheet extends StatelessWidget {
           SizedBox(height: 20.w),
           CustomText(
             text: TrackingStatus.title(tracking),
-            fontSize: 20.r,
+            fontSize: 18.r,
             fontWeight: FontWeight.w600,
             textAlign: TextAlign.center,
           ),
@@ -67,6 +66,7 @@ class TrackingMapSheet extends StatelessWidget {
           ),
           SizedBox(height: 16.w),
           TrackingTimeline(tracking: tracking),
+          SizedBox(height: MediaQuery.of(context).padding.bottom + 8.w),
         ],
       ),
     );
