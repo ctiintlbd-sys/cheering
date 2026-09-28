@@ -3,9 +3,7 @@ import '../../domain/entities/home_feed_entity.dart';
 import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/entities/menu_entity.dart';
 import '../../domain/entities/category_entity.dart';
-import '../../domain/entities/search_result_entity.dart';
 import '../../domain/entities/restaurant_query_params.dart';
-import '../../domain/entities/search_food_params.dart';
 import '../datasources/food_remote_source.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/cache/cache_service.dart';
@@ -83,11 +81,5 @@ class FoodRepositoryImpl implements IFoodRepository {
       fetch: () => _remoteSource.getCategories(),
       ttl: const Duration(hours: 24),
     );
-  }
-
-  @override
-  Future<SearchResultEntity> search(SearchFoodParams params) async {
-    final result = await _remoteSource.search(params);
-    return result.fold(onSuccess: (data) => data, onFailure: (e) => throw e);
   }
 }

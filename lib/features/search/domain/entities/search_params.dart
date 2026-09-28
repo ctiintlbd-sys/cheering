@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class SearchFoodParams extends Equatable {
+class SearchParams extends Equatable {
   final String q;
   final double? lat;
   final double? lng;
@@ -8,7 +8,7 @@ class SearchFoodParams extends Equatable {
   final int offset;
   final String? sort;
 
-  const SearchFoodParams({
+  const SearchParams({
     required this.q,
     this.lat,
     this.lng,
@@ -17,7 +17,7 @@ class SearchFoodParams extends Equatable {
     this.sort,
   });
 
-  SearchFoodParams copyWith({
+  SearchParams copyWith({
     String? q,
     double? lat,
     double? lng,
@@ -25,7 +25,7 @@ class SearchFoodParams extends Equatable {
     int? offset,
     String? sort,
   }) {
-    return SearchFoodParams(
+    return SearchParams(
       q: q ?? this.q,
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,

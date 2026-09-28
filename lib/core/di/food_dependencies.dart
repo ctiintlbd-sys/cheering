@@ -7,7 +7,6 @@ import '../../features/food/domain/usecases/get_home_feed_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurant_details_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurant_menu_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurants_usecase.dart';
-import '../../features/food/domain/usecases/search_food_usecase.dart';
 import '../network/i_api_client.dart';
 import '../services/active_location_service.dart';
 import '../cache/cache_service.dart';
@@ -16,7 +15,6 @@ import '../cache/cache_service.dart';
 import '../../features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
 import '../../features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
 import '../../features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
-import '../../features/food/presentation/blocs/search_food/search_food_bloc.dart';
 
 void setupFoodDependencies(GetIt getIt) {
   // Data sources
@@ -54,12 +52,6 @@ void setupFoodDependencies(GetIt getIt) {
   getIt.registerLazySingleton(
     () => GetCategoriesUseCase(getIt<IFoodRepository>()),
   );
-  getIt.registerLazySingleton(
-    () => SearchFoodUseCase(
-      getIt<IFoodRepository>(),
-      getIt<ActiveLocationService>(),
-    ),
-  );
 
   // Blocs
   getIt.registerFactory(
@@ -77,5 +69,4 @@ void setupFoodDependencies(GetIt getIt) {
       getIt<GetRestaurantMenuUseCase>(),
     ),
   );
-  getIt.registerFactory(() => SearchFoodBloc(getIt<SearchFoodUseCase>()));
 }

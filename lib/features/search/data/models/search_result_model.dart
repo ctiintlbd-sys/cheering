@@ -1,7 +1,7 @@
+import '../../../food/data/models/category_model.dart';
+import '../../../food/data/models/menu_model.dart';
+import '../../../food/data/models/restaurant_model.dart';
 import '../../domain/entities/search_result_entity.dart';
-import 'restaurant_model.dart';
-import 'menu_model.dart';
-import 'category_model.dart';
 
 class SearchResultModel extends SearchResultEntity {
   const SearchResultModel({

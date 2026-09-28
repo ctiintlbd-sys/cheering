@@ -16,6 +16,7 @@ import 'routes/food_routes.dart';
 import 'routes/cart_routes.dart';
 import 'routes/order_routes.dart';
 import 'routes/tracking_routes.dart';
+import 'routes/search_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -47,6 +48,7 @@ class AppRouter {
       ...authRoutes,
       ...mainRoutes,
       ...foodRoutes,
+      ...searchRoutes,
       ...cartRoutes,
       ...orderRoutes,
       ...trackingRoutes,

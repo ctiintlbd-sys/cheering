@@ -1,0 +1,76 @@
+import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/category_entity.dart';
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_widget.dart';
+import 'package:cheering/features/search/presentation/widgets/search_category_chips.dart';
+import 'package:cheering/features/search/presentation/widgets/search_dish_tile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class SearchResultsView extends StatelessWidget {
+  const SearchResultsView({
+    super.key,
+    required this.query,
+    required this.categories,
+    required this.restaurants,
+    required this.items,
+    required this.onCategoryTap,
+  });
+
+  final String query;
+  final List<CategoryEntity> categories;
+  final List<RestaurantEntity> restaurants;
+  final List<MenuItemEntity> items;
+  final ValueChanged<CategoryEntity> onCategoryTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (categories.isNotEmpty) ...[
+          SizedBox(height: 16.w),
+          SearchCategoryChips(
+            categories: categories,
+            activeQuery: query,
+            onCategoryTap: onCategoryTap,
+          ),
+        ],
+        if (restaurants.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 20.w, 16.w, 4.w),
+            child: CustomText(
+              text: 'Restaurants',
+              fontSize: 16.r,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          for (var index = 0; index < restaurants.length; index++)
+            CustomItemAnimator(
+              index: index,
+              animationType: CustomItemAnimationType.slide,
+              child: HRestaurantCardWidget(restaurant: restaurants[index]),
+            ),
+        ],
+        if (items.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 4.w),
+            child: CustomText(
+              text: 'Dishes',
+              fontSize: 16.r,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          for (var index = 0; index < items.length; index++)
+            CustomItemAnimator(
+              index: index,
+              animationType: CustomItemAnimationType.slide,
+              child: SearchDishTile(item: items[index]),
+            ),
+        ],
+        SizedBox(height: 24.w),
+      ],
+    );
+  }
+}

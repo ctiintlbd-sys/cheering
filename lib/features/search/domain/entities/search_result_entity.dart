@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'restaurant_entity.dart';
-import 'menu_entity.dart';
-import 'category_entity.dart';
+
+import '../../../food/domain/entities/category_entity.dart';
+import '../../../food/domain/entities/menu_entity.dart';
+import '../../../food/domain/entities/restaurant_entity.dart';
 
 class SearchResultEntity extends Equatable {
   final List<RestaurantEntity> restaurants;

@@ -1,6 +1,8 @@
 import 'package:cheering/core/common_widgets/common_widgets.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/bites_card.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/home_feed_loading_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/home_feed_content.dart';
@@ -42,7 +44,7 @@ class FoodScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.w),
                   child: CustomTextField(
-                    onTap: () {},
+                    onTap: () => context.push(RoutePaths.search),
                     readOnly: true,
                     prefixIcon: Assets.icons.search.svg(),
                     suffixIcon: Assets.icons.filtter.svg(),

@@ -10,6 +10,7 @@ import 'core/storage/biometric_device_storage.dart';
 import 'core/storage/biometric_storage.dart';
 import 'core/storage/locale_storage.dart';
 import 'core/storage/onboarding_storage.dart';
+import 'core/storage/recent_search_storage.dart';
 import 'features/authentication/data/services/biometric_service.dart';
 
 void main() async {
@@ -22,6 +23,7 @@ void main() async {
   await ThemeStorage.init();
   await LocaleStorage.init();
   await OnboardingStorage.init();
+  await RecentSearchStorage.init();
   await setupServiceLocator();
   await getIt<BiometricService>().loadUiKind();
   await SystemChrome.setPreferredOrientations([
