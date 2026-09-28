@@ -39,10 +39,7 @@ class SearchFilterSheet extends StatefulWidget {
 }
 
 class _SearchFilterSheetState extends State<SearchFilterSheet> {
-  late SearchSort _sort;
-  late SearchPriceRange _priceRange;
-  late SearchDietary _dietary;
-  late bool _under300;
+  late SearchFilterSelection _filters;
 
   static const _sortOptions = <(SearchSort, String)>[
     (SearchSort.relevance, 'Relevance'),
@@ -66,42 +63,26 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
   @override
   void initState() {
     super.initState();
-    _sort = widget.initial.sort;
-    _priceRange = widget.initial.priceRange;
-    _dietary = widget.initial.dietary;
-    _under300 =
-        widget.initial.under300 &&
-        widget.initial.priceRange == SearchPriceRange.any;
+    _filters = widget.initial;
   }
 
-  SearchFilterSelection get _selection => SearchFilterSelection(
-    sort: _sort,
-    priceRange: _priceRange,
-    dietary: _dietary,
-    under300: _priceRange == SearchPriceRange.any && _under300,
-    rating4Plus: widget.initial.rating4Plus,
-  );
-
-  int get _resultCount => SearchResultFilter.count(
-    result: widget.result,
-    selection: _selection,
-  );
-
-  void _reset() {
-    setState(() {
-      _sort = SearchSort.relevance;
-      _priceRange = SearchPriceRange.any;
-      _dietary = SearchDietary.any;
-      _under300 = false;
-    });
+  int get _resultCount {
+    final result = widget.result;
+    if (result == null) return 0;
+    final filtered = SearchResultFilter.apply(
+      result: result,
+      filters: _filters,
+    );
+    return filtered.categories.length +
+        filtered.restaurants.length +
+        filtered.items.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final hasResults = widget.result != null;
-    final buttonLabel = hasResults
-        ? 'Show $_resultCount results'
-        : 'Show results';
+    final buttonLabel = widget.result == null
+        ? 'Show results'
+        : 'Show $_resultCount results';
 
     return SafeArea(
       child: Padding(
@@ -132,64 +113,63 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                   text: 'Reset',
                   fontWeight: FontWeight.w500,
                   color: context.colors.primary,
-                  onTap: _reset,
+                  onTap: () => setState(() {
+                    _filters = const SearchFilterSelection();
+                  }),
                 ),
               ],
             ),
             SizedBox(height: 24.w),
             _sectionTitle('Sort by'),
             SizedBox(height: 12.w),
-            _chipWrap(
-              children: [
-                for (final option in _sortOptions)
-                  _FilterChoiceChip(
-                    label: option.$2,
-                    isSelected: _sort == option.$1,
-                    onTap: () => setState(() => _sort = option.$1),
-                  ),
-              ],
-            ),
+            _chips([
+              for (final option in _sortOptions)
+                _Chip(
+                  label: option.$2,
+                  isSelected: _filters.sort == option.$1,
+                  onTap: () => setState(() {
+                    _filters = _filters.copyWith(sort: option.$1);
+                  }),
+                ),
+            ]),
             SizedBox(height: 24.w),
             _sectionTitle('Price range'),
             SizedBox(height: 12.w),
-            _chipWrap(
-              children: [
-                for (final option in _priceOptions)
-                  _FilterChoiceChip(
-                    label: option.$2,
-                    isSelected: _priceRange == option.$1,
-                    onTap: () => setState(() {
-                      _priceRange = _priceRange == option.$1
+            _chips([
+              for (final option in _priceOptions)
+                _Chip(
+                  label: option.$2,
+                  isSelected: _filters.priceRange == option.$1,
+                  onTap: () => setState(() {
+                    _filters = _filters.copyWith(
+                      priceRange: _filters.priceRange == option.$1
                           ? SearchPriceRange.any
-                          : option.$1;
-                      if (_priceRange != SearchPriceRange.any) {
-                        _under300 = false;
-                      }
-                    }),
-                  ),
-              ],
-            ),
+                          : option.$1,
+                    );
+                  }),
+                ),
+            ]),
             SizedBox(height: 24.w),
             _sectionTitle('Dietary'),
             SizedBox(height: 12.w),
-            _chipWrap(
-              children: [
-                for (final option in _dietaryOptions)
-                  _FilterChoiceChip(
-                    label: option.$2,
-                    isSelected: _dietary == option.$1,
-                    onTap: () => setState(() {
-                      _dietary = _dietary == option.$1
+            _chips([
+              for (final option in _dietaryOptions)
+                _Chip(
+                  label: option.$2,
+                  isSelected: _filters.dietary == option.$1,
+                  onTap: () => setState(() {
+                    _filters = _filters.copyWith(
+                      dietary: _filters.dietary == option.$1
                           ? SearchDietary.any
-                          : option.$1;
-                    }),
-                  ),
-              ],
-            ),
+                          : option.$1,
+                    );
+                  }),
+                ),
+            ]),
             SizedBox(height: 28.w),
             CustomButton(
               label: buttonLabel,
-              onPressed: () => Navigator.of(context).pop(_selection),
+              onPressed: () => Navigator.of(context).pop(_filters),
             ),
           ],
         ),
@@ -206,13 +186,13 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     );
   }
 
-  Widget _chipWrap({required List<Widget> children}) {
+  Widget _chips(List<Widget> children) {
     return Wrap(spacing: 8.w, runSpacing: 8.w, children: children);
   }
 }
 
-class _FilterChoiceChip extends StatelessWidget {
-  const _FilterChoiceChip({
+class _Chip extends StatelessWidget {
+  const _Chip({
     required this.label,
     required this.isSelected,
     required this.onTap,
@@ -244,7 +224,7 @@ class _FilterChoiceChip extends StatelessWidget {
         child: CustomText(
           text: label,
           fontSize: 12.r,
-          fontWeight:  FontWeight.w600,
+          fontWeight: FontWeight.w600,
           color: isSelected
               ? context.colors.primary
               : context.colors.textPrimary,

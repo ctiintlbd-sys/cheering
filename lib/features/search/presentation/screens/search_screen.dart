@@ -41,14 +41,13 @@ class _SearchScreenState extends State<SearchScreen> {
       context.read<SearchBloc>().add(const ClearSearch());
       return;
     }
-
     _debounce = Timer(const Duration(milliseconds: 400), () {
       if (!mounted) return;
       context.read<SearchBloc>().add(LoadSearch(query: value));
     });
   }
 
-  void _fillAndSearch(String query) {
+  void _search(String query) {
     _debounce?.cancel();
     _controller
       ..text = query
@@ -56,20 +55,19 @@ class _SearchScreenState extends State<SearchScreen> {
     context.read<SearchBloc>().add(LoadSearch(query: query));
   }
 
-  void _onCategoryTap(CategoryEntity category) {
-    _fillAndSearch(category.name);
+  void _apply(SearchFilterSelection filters) {
+    context.read<SearchBloc>().add(ApplySearchFilter(filters: filters));
   }
 
   Future<void> _openFilterSheet() async {
     final bloc = context.read<SearchBloc>();
-    final state = bloc.state;
     final selected = await SearchFilterSheet.show(
       context,
-      initial: state.filterSelection,
-      result: state.result,
+      initial: bloc.state.filters,
+      result: bloc.state.result,
     );
     if (selected == null || !mounted) return;
-    bloc.add(ApplySearchFilter(selection: selected));
+    _apply(selected);
   }
 
   @override
@@ -81,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
             title: 'Search Food',
             toolbarHeight: 40.w,
             expandedHeight: 160.w,
-            flexibleChild: SizedBox.shrink(),
+            flexibleChild: const SizedBox.shrink(),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(100.w),
               child: Column(
@@ -112,46 +110,37 @@ class _SearchScreenState extends State<SearchScreen> {
                           context.read<SearchBloc>().add(const ClearSearch());
                           return;
                         }
-                        context.read<SearchBloc>().add(LoadSearch(query: value));
+                        context.read<SearchBloc>().add(
+                          LoadSearch(query: value),
+                        );
                       },
                     ),
                   ),
                   SearchFilterBar(
-                    sort: state.sort,
-                    priceRange: state.priceRange,
-                    under300: state.under300,
-                    rating4Plus: state.rating4Plus,
+                    filters: state.filters,
                     onSortTap: _openFilterSheet,
                     onPriceTap: () {
-                      final hasPriceFilter =
-                          state.under300 ||
-                          state.priceRange != SearchPriceRange.any;
-                      context.read<SearchBloc>().add(
-                        ApplySearchFilter(
-                          selection: state.filterSelection.copyWith(
-                            under300: !hasPriceFilter,
-                            priceRange: SearchPriceRange.any,
-                          ),
+                      _apply(
+                        state.filters.copyWith(
+                          priceRange: state.filters.hasPriceFilter
+                              ? SearchPriceRange.any
+                              : SearchPriceRange.under300,
                         ),
                       );
                     },
-                    onRating4PlusTap: () {
-                      context.read<SearchBloc>().add(
-                        ApplySearchFilter(
-                          selection: state.filterSelection.copyWith(
-                            rating4Plus: !state.rating4Plus,
-                          ),
+                    onRatingTap: () {
+                      _apply(
+                        state.filters.copyWith(
+                          rating4Plus: !state.filters.rating4Plus,
                         ),
                       );
                     },
                     onFastestTap: () {
-                      context.read<SearchBloc>().add(
-                        ApplySearchFilter(
-                          selection: state.filterSelection.copyWith(
-                            sort: state.sort == SearchSort.deliveryTime
-                                ? SearchSort.relevance
-                                : SearchSort.deliveryTime,
-                          ),
+                      _apply(
+                        state.filters.copyWith(
+                          sort: state.filters.sort == SearchSort.deliveryTime
+                              ? SearchSort.relevance
+                              : SearchSort.deliveryTime,
                         ),
                       );
                     },
@@ -172,35 +161,30 @@ class _SearchScreenState extends State<SearchScreen> {
       return [
         SearchIdleView(
           recentSearches: state.recentSearches,
-          onRecentTap: _fillAndSearch,
+          onRecentTap: _search,
         ),
       ];
     }
 
-    if (state.status == SearchStatus.loading && state.result == null) {
-      return [const HRestaurantCardShimmer(count: 6)];
-    }
-
-    if (state.status == SearchStatus.failure && state.result == null) {
-      return [EmptyState(message: state.errorMessage ?? 'Search failed')];
-    }
-
-    if (state.status == SearchStatus.success &&
-        !SearchResultFilter.hasVisibleResults(
-          result: state.result,
-          selection: state.filterSelection,
-        )) {
-      return [const EmptyState(message: 'No results found')];
-    }
-
     if (state.result == null) {
+      if (state.status == SearchStatus.failure) {
+        return [EmptyState(message: state.errorMessage ?? 'Search failed')];
+      }
       return [const HRestaurantCardShimmer(count: 6)];
     }
 
     final filtered = SearchResultFilter.apply(
-      result: state.result,
-      selection: state.filterSelection,
+      result: state.result!,
+      filters: state.filters,
     );
+    final isEmpty =
+        filtered.categories.isEmpty &&
+        filtered.restaurants.isEmpty &&
+        filtered.items.isEmpty;
+
+    if (state.status == SearchStatus.success && isEmpty) {
+      return [const EmptyState(message: 'No results found')];
+    }
 
     return [
       SearchResultsView(
@@ -208,7 +192,7 @@ class _SearchScreenState extends State<SearchScreen> {
         categories: filtered.categories,
         restaurants: filtered.restaurants,
         items: filtered.items,
-        onCategoryTap: _onCategoryTap,
+        onCategoryTap: (CategoryEntity category) => _search(category.name),
       ),
     ];
   }

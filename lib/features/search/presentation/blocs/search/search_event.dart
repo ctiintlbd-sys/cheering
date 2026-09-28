@@ -15,12 +15,11 @@ class LoadRecentSearches extends SearchEvent {
 
 class LoadSearch extends SearchEvent {
   final String query;
-  final bool saveRecent;
 
-  const LoadSearch({required this.query, this.saveRecent = true});
+  const LoadSearch({required this.query});
 
   @override
-  List<Object?> get props => [query, saveRecent];
+  List<Object?> get props => [query];
 }
 
 class ClearSearch extends SearchEvent {
@@ -28,10 +27,10 @@ class ClearSearch extends SearchEvent {
 }
 
 class ApplySearchFilter extends SearchEvent {
-  final SearchFilterSelection selection;
+  final SearchFilterSelection filters;
 
-  const ApplySearchFilter({required this.selection});
+  const ApplySearchFilter({required this.filters});
 
   @override
-  List<Object?> get props => [selection];
+  List<Object?> get props => [filters];
 }

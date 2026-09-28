@@ -6,34 +6,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SearchFilterBar extends StatelessWidget {
   const SearchFilterBar({
     super.key,
-    required this.sort,
-    required this.priceRange,
-    required this.under300,
-    required this.rating4Plus,
+    required this.filters,
     required this.onSortTap,
     required this.onPriceTap,
-    required this.onRating4PlusTap,
+    required this.onRatingTap,
     required this.onFastestTap,
   });
 
-  final SearchSort sort;
-  final SearchPriceRange priceRange;
-  final bool under300;
-  final bool rating4Plus;
+  final SearchFilterSelection filters;
   final VoidCallback onSortTap;
   final VoidCallback onPriceTap;
-  final VoidCallback onRating4PlusTap;
+  final VoidCallback onRatingTap;
   final VoidCallback onFastestTap;
-
-  bool get _hasPriceFilter =>
-      under300 || priceRange != SearchPriceRange.any;
-
-  String get _priceLabel => switch (priceRange) {
-    SearchPriceRange.under200 => 'Under ৳200',
-    SearchPriceRange.from200to500 => '৳200 - ৳500',
-    SearchPriceRange.over500 => '৳500+',
-    SearchPriceRange.any => 'Under ৳300',
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -46,25 +30,25 @@ class SearchFilterBar extends StatelessWidget {
         children: [
           CustomFilterChip(
             label: 'Sort',
-            isSelected: sort != SearchSort.relevance,
+            isSelected: filters.sort != SearchSort.relevance,
             onTap: onSortTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
-            label: _priceLabel,
-            isSelected: _hasPriceFilter,
+            label: filters.priceLabel,
+            isSelected: filters.hasPriceFilter,
             onTap: onPriceTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
             label: 'Rating 4+',
-            isSelected: rating4Plus,
-            onTap: onRating4PlusTap,
+            isSelected: filters.rating4Plus,
+            onTap: onRatingTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
             label: 'Fastest',
-            isSelected: sort == SearchSort.deliveryTime,
+            isSelected: filters.sort == SearchSort.deliveryTime,
             onTap: onFastestTap,
           ),
         ],

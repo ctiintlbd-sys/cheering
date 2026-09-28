@@ -1,9 +1,9 @@
+import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_widget.dart';
-import 'package:cheering/features/search/presentation/widgets/search_category_chips.dart';
 import 'package:cheering/features/search/presentation/widgets/search_dish_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,16 +31,31 @@ class SearchResultsView extends StatelessWidget {
       children: [
         if (categories.isNotEmpty) ...[
           SizedBox(height: 8.w),
-          SearchCategoryChips(
-            categories: categories,
-            activeQuery: query,
-            onCategoryTap: onCategoryTap,
+          SizedBox(
+            height: 40.w,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              separatorBuilder: (_, _) => SizedBox(width: 8.w),
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                return CustomFilterChip(
+                  label: category.name,
+                  isSelected:
+                      query.trim().toLowerCase() ==
+                      category.name.toLowerCase(),
+                  onTap: () => onCategoryTap(category),
+                );
+              },
+            ),
           ),
         ],
         if (restaurants.isNotEmpty) ...[
           Padding(
             padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 4.w),
-            child: CustomText(
+            child: const CustomText(
               text: 'Restaurants',
               fontWeight: FontWeight.w600,
             ),
@@ -55,7 +70,7 @@ class SearchResultsView extends StatelessWidget {
         if (items.isNotEmpty) ...[
           Padding(
             padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 4.w),
-            child: CustomText(
+            child: const CustomText(
               text: 'Dishes',
               fontWeight: FontWeight.w600,
             ),

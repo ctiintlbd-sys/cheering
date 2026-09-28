@@ -11,11 +11,7 @@ class SearchState extends Equatable {
   final String? errorMessage;
   final String query;
   final List<String> recentSearches;
-  final SearchSort sort;
-  final SearchPriceRange priceRange;
-  final SearchDietary dietary;
-  final bool under300;
-  final bool rating4Plus;
+  final SearchFilterSelection filters;
 
   const SearchState({
     this.status = SearchStatus.initial,
@@ -23,22 +19,10 @@ class SearchState extends Equatable {
     this.errorMessage,
     this.query = '',
     this.recentSearches = const [],
-    this.sort = SearchSort.relevance,
-    this.priceRange = SearchPriceRange.any,
-    this.dietary = SearchDietary.any,
-    this.under300 = false,
-    this.rating4Plus = false,
+    this.filters = const SearchFilterSelection(),
   });
 
   bool get isIdle => query.trim().isEmpty;
-
-  SearchFilterSelection get filterSelection => SearchFilterSelection(
-    sort: sort,
-    priceRange: priceRange,
-    dietary: dietary,
-    under300: under300,
-    rating4Plus: rating4Plus,
-  );
 
   SearchState copyWith({
     SearchStatus? status,
@@ -46,11 +30,7 @@ class SearchState extends Equatable {
     String? errorMessage,
     String? query,
     List<String>? recentSearches,
-    SearchSort? sort,
-    SearchPriceRange? priceRange,
-    SearchDietary? dietary,
-    bool? under300,
-    bool? rating4Plus,
+    SearchFilterSelection? filters,
     bool clearError = false,
     bool clearResult = false,
   }) {
@@ -60,11 +40,7 @@ class SearchState extends Equatable {
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       query: query ?? this.query,
       recentSearches: recentSearches ?? this.recentSearches,
-      sort: sort ?? this.sort,
-      priceRange: priceRange ?? this.priceRange,
-      dietary: dietary ?? this.dietary,
-      under300: under300 ?? this.under300,
-      rating4Plus: rating4Plus ?? this.rating4Plus,
+      filters: filters ?? this.filters,
     );
   }
 
@@ -75,10 +51,6 @@ class SearchState extends Equatable {
     errorMessage,
     query,
     recentSearches,
-    sort,
-    priceRange,
-    dietary,
-    under300,
-    rating4Plus,
+    filters,
   ];
 }
