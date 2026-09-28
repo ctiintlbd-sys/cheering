@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/menu_category_tabs.dart';
@@ -32,6 +34,8 @@ class RestaurantAppBarBottom extends StatelessWidget
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: CustomTextField(
+              onTap: () => context.push(RoutePaths.search),
+              readOnly: true,
               validator: (_) => null,
               contentPaddingVertical: 12.w,
               hintText: 'Search Menu',

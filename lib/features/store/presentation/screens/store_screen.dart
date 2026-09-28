@@ -1,9 +1,11 @@
 import 'package:cheering/core/common_widgets/common_widgets.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/store/presentation/screens/widgets/store_categories_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
@@ -31,7 +33,7 @@ class StoreScreen extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 6.w),
             child: CustomTextField(
-              onTap: () {},
+              onTap: () => context.push(RoutePaths.search),
               readOnly: true,
               prefixIcon: Assets.icons.search.svg(),
               suffixIcon: Assets.icons.filtter.svg(),
