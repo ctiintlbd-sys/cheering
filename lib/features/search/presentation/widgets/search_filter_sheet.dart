@@ -42,6 +42,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
   late SearchSort _sort;
   late SearchPriceRange _priceRange;
   late SearchDietary _dietary;
+  late bool _under300;
 
   static const _sortOptions = <(SearchSort, String)>[
     (SearchSort.relevance, 'Relevance'),
@@ -68,13 +69,16 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     _sort = widget.initial.sort;
     _priceRange = widget.initial.priceRange;
     _dietary = widget.initial.dietary;
+    _under300 =
+        widget.initial.under300 &&
+        widget.initial.priceRange == SearchPriceRange.any;
   }
 
   SearchFilterSelection get _selection => SearchFilterSelection(
     sort: _sort,
     priceRange: _priceRange,
     dietary: _dietary,
-    under300: false,
+    under300: _priceRange == SearchPriceRange.any && _under300,
     rating4Plus: widget.initial.rating4Plus,
   );
 
@@ -88,6 +92,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
       _sort = SearchSort.relevance;
       _priceRange = SearchPriceRange.any;
       _dietary = SearchDietary.any;
+      _under300 = false;
     });
   }
 
@@ -157,6 +162,9 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                       _priceRange = _priceRange == option.$1
                           ? SearchPriceRange.any
                           : option.$1;
+                      if (_priceRange != SearchPriceRange.any) {
+                        _under300 = false;
+                      }
                     }),
                   ),
               ],

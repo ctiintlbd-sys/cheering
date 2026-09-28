@@ -57,17 +57,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     );
 
     try {
-      final result = await _getSearchResultsUseCase(
-        SearchParams(
-          q: query,
-          sort: switch (state.sort) {
-            SearchSort.rating => '-rating_avg',
-            SearchSort.deliveryTime => 'prep_time',
-            SearchSort.relevance || SearchSort.priceLowToHigh => null,
-          },
-        ),
-      );
-      await _saveRecentSearchUseCase(query);
+      final result = await _getSearchResultsUseCase(_searchParams(query));
+      if (event.saveRecent) {
+        await _saveRecentSearchUseCase(query);
+      }
       emit(
         state.copyWith(
           status: SearchStatus.success,
@@ -100,7 +93,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     ApplySearchFilter event,
     Emitter<SearchState> emit,
   ) {
-    final sortChanged = event.selection.sort != state.sort;
     emit(
       state.copyWith(
         sort: event.selection.sort,
@@ -110,8 +102,43 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         rating4Plus: event.selection.rating4Plus,
       ),
     );
-    if (sortChanged && state.query.trim().isNotEmpty) {
-      add(LoadSearch(query: state.query));
+    if (state.query.trim().isNotEmpty) {
+      add(LoadSearch(query: state.query, saveRecent: false));
+    }
+  }
+
+  SearchParams _searchParams(String query) {
+    final price = _priceBounds();
+    return SearchParams(
+      q: query,
+      sort: switch (state.sort) {
+        SearchSort.rating => '-rating_avg',
+        SearchSort.deliveryTime => 'prep_time',
+        SearchSort.priceLowToHigh => 'price',
+        SearchSort.relevance => null,
+      },
+      minRating: state.rating4Plus ? 4 : null,
+      minPrice: price.min,
+      maxPrice: price.max,
+      dietary: switch (state.dietary) {
+        SearchDietary.any => null,
+        SearchDietary.healthy => 'healthy',
+        SearchDietary.vegetarian => 'vegetarian',
+        SearchDietary.spicy => 'spicy',
+      },
+    );
+  }
+
+  ({double? min, double? max}) _priceBounds() {
+    switch (state.priceRange) {
+      case SearchPriceRange.under200:
+        return (min: null, max: 200);
+      case SearchPriceRange.from200to500:
+        return (min: 200, max: 500);
+      case SearchPriceRange.over500:
+        return (min: 500, max: null);
+      case SearchPriceRange.any:
+        return state.under300 ? (min: null, max: 300) : (min: null, max: null);
     }
   }
 }

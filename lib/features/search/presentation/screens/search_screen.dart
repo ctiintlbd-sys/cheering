@@ -118,14 +118,18 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   SearchFilterBar(
                     sort: state.sort,
+                    priceRange: state.priceRange,
                     under300: state.under300,
                     rating4Plus: state.rating4Plus,
                     onSortTap: _openFilterSheet,
-                    onUnder300Tap: () {
+                    onPriceTap: () {
+                      final hasPriceFilter =
+                          state.under300 ||
+                          state.priceRange != SearchPriceRange.any;
                       context.read<SearchBloc>().add(
                         ApplySearchFilter(
                           selection: state.filterSelection.copyWith(
-                            under300: !state.under300,
+                            under300: !hasPriceFilter,
                             priceRange: SearchPriceRange.any,
                           ),
                         ),
@@ -193,22 +197,17 @@ class _SearchScreenState extends State<SearchScreen> {
       return [const HRestaurantCardShimmer(count: 6)];
     }
 
+    final filtered = SearchResultFilter.apply(
+      result: state.result,
+      selection: state.filterSelection,
+    );
+
     return [
       SearchResultsView(
         query: state.query,
-        categories: state.result!.categories,
-        restaurants: SearchResultFilter.restaurants(
-          restaurants: state.result!.restaurants,
-          sort: state.sort,
-          rating4Plus: state.rating4Plus,
-        ),
-        items: SearchResultFilter.items(
-          items: state.result!.items,
-          sort: state.sort,
-          priceRange: state.priceRange,
-          dietary: state.dietary,
-          under300: state.under300,
-        ),
+        categories: filtered.categories,
+        restaurants: filtered.restaurants,
+        items: filtered.items,
         onCategoryTap: _onCategoryTap,
       ),
     ];

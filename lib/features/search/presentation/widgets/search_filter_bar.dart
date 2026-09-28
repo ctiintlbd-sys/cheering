@@ -7,21 +7,33 @@ class SearchFilterBar extends StatelessWidget {
   const SearchFilterBar({
     super.key,
     required this.sort,
+    required this.priceRange,
     required this.under300,
     required this.rating4Plus,
     required this.onSortTap,
-    required this.onUnder300Tap,
+    required this.onPriceTap,
     required this.onRating4PlusTap,
     required this.onFastestTap,
   });
 
   final SearchSort sort;
+  final SearchPriceRange priceRange;
   final bool under300;
   final bool rating4Plus;
   final VoidCallback onSortTap;
-  final VoidCallback onUnder300Tap;
+  final VoidCallback onPriceTap;
   final VoidCallback onRating4PlusTap;
   final VoidCallback onFastestTap;
+
+  bool get _hasPriceFilter =>
+      under300 || priceRange != SearchPriceRange.any;
+
+  String get _priceLabel => switch (priceRange) {
+    SearchPriceRange.under200 => 'Under ৳200',
+    SearchPriceRange.from200to500 => '৳200 - ৳500',
+    SearchPriceRange.over500 => '৳500+',
+    SearchPriceRange.any => 'Under ৳300',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +51,9 @@ class SearchFilterBar extends StatelessWidget {
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
-            label: 'Under ৳300',
-            isSelected: under300,
-            onTap: onUnder300Tap,
+            label: _priceLabel,
+            isSelected: _hasPriceFilter,
+            onTap: onPriceTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(

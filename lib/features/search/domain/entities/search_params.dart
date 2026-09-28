@@ -7,6 +7,10 @@ class SearchParams extends Equatable {
   final int limit;
   final int offset;
   final String? sort;
+  final double? minRating;
+  final double? minPrice;
+  final double? maxPrice;
+  final String? dietary;
 
   const SearchParams({
     required this.q,
@@ -15,6 +19,10 @@ class SearchParams extends Equatable {
     this.limit = 20,
     this.offset = 0,
     this.sort,
+    this.minRating,
+    this.minPrice,
+    this.maxPrice,
+    this.dietary,
   });
 
   SearchParams copyWith({
@@ -24,6 +32,10 @@ class SearchParams extends Equatable {
     int? limit,
     int? offset,
     String? sort,
+    double? minRating,
+    double? minPrice,
+    double? maxPrice,
+    String? dietary,
   }) {
     return SearchParams(
       q: q ?? this.q,
@@ -32,6 +44,10 @@ class SearchParams extends Equatable {
       limit: limit ?? this.limit,
       offset: offset ?? this.offset,
       sort: sort ?? this.sort,
+      minRating: minRating ?? this.minRating,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
+      dietary: dietary ?? this.dietary,
     );
   }
 
@@ -40,9 +56,24 @@ class SearchParams extends Equatable {
     if (lat != null) map['lat'] = lat;
     if (lng != null) map['lng'] = lng;
     if (sort != null) map['sort'] = sort;
+    if (minRating != null) map['min_rating'] = minRating;
+    if (minPrice != null) map['min_price'] = minPrice;
+    if (maxPrice != null) map['max_price'] = maxPrice;
+    if (dietary != null) map['dietary'] = dietary;
     return map;
   }
 
   @override
-  List<Object?> get props => [q, lat, lng, limit, offset, sort];
+  List<Object?> get props => [
+    q,
+    lat,
+    lng,
+    limit,
+    offset,
+    sort,
+    minRating,
+    minPrice,
+    maxPrice,
+    dietary,
+  ];
 }
