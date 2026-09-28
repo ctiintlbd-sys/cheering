@@ -25,12 +25,11 @@ class SearchIdleView extends StatelessWidget {
         children: [
           CustomText(
             text: 'Recent searches',
-            fontSize: 16.r,
             fontWeight: FontWeight.w600,
           ),
           SizedBox(height: 12.w),
           CustomContainer(
-            radiusAll: 12.r,
+            radiusAll: 16.r,
             color: context.colors.background,
             bordersColor: context.colors.borderTertiary,
             child: Column(
@@ -49,12 +48,11 @@ class SearchIdleView extends StatelessWidget {
                       width: double.infinity,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 16.w,
+                          horizontal: 14.w,
+                          vertical: 12.w,
                         ),
                         child: CustomText(
                           text: recentSearches[index],
-                          fontSize: 14.r,
                         ),
                       ),
                     ),

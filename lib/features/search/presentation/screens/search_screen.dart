@@ -26,14 +26,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
-  final _focusNode = FocusNode();
   Timer? _debounce;
 
   @override
   void dispose() {
     _debounce?.cancel();
     _controller.dispose();
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -81,18 +79,22 @@ class _SearchScreenState extends State<SearchScreen> {
         return SliverScaffold(
           appBar: CustomSliverAppBar(
             title: 'Search Food',
+            toolbarHeight: 40.w,
+            expandedHeight: 160.w,
+            flexibleChild: SizedBox.shrink(),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(104.w),
+              preferredSize: Size.fromHeight(100.w),
               child: Column(
                 children: [
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 8.w),
                     child: CustomTextField(
+                      contentPaddingVertical: 12.w,
+                      fillColor: context.colors.bgSecondary,
                       controller: _controller,
-                      focusNode: _focusNode,
+                      borderColor: Colors.transparent,
                       autofocus: true,
                       validatorType: null,
-                      maxLength: 100,
                       maxLines: 1,
                       textInputAction: TextInputAction.search,
                       prefixIcon: Assets.icons.search.svg(),
@@ -102,8 +104,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Assets.icons.filtter.svg(),
                       ),
                       borderRadius: 99.r,
-                      fillColor: context.colors.bgSecondary,
-                      borderColor: context.colors.borderSecondary,
                       hintText: 'Pizza, burger, biryani...',
                       onChanged: _onQueryChanged,
                       onFieldSubmitted: (value) {

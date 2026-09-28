@@ -33,33 +33,25 @@ class SearchFilterBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           CustomFilterChip(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             label: 'Sort',
-            labelSize: 14.r,
             isSelected: sort != SearchSort.relevance,
             onTap: onSortTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             label: 'Under ৳300',
-            labelSize: 14.r,
             isSelected: under300,
             onTap: onUnder300Tap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             label: 'Rating 4+',
-            labelSize: 14.r,
             isSelected: rating4Plus,
             onTap: onRating4PlusTap,
           ),
           SizedBox(width: 8.w),
           CustomFilterChip(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             label: 'Fastest',
-            labelSize: 14.r,
             isSelected: sort == SearchSort.deliveryTime,
             onTap: onFastestTap,
           ),
