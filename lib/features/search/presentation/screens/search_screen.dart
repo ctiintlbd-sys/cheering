@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/category_entity.dart';
@@ -9,10 +8,10 @@ import 'package:cheering/features/search/presentation/blocs/search/search_bloc.d
 import 'package:cheering/features/search/presentation/blocs/search/search_event.dart';
 import 'package:cheering/features/search/presentation/blocs/search/search_state.dart';
 import 'package:cheering/features/search/presentation/helpers/search_result_filter.dart';
-import 'package:cheering/features/search/presentation/widgets/search_filter_bar.dart';
-import 'package:cheering/features/search/presentation/widgets/search_filter_sheet.dart';
-import 'package:cheering/features/search/presentation/widgets/search_idle_view.dart';
-import 'package:cheering/features/search/presentation/widgets/search_results_view.dart';
+import 'package:cheering/features/search/presentation/screens/widgets/search_filter_bar.dart';
+import 'package:cheering/features/search/presentation/screens/widgets/search_filter_sheet.dart';
+import 'package:cheering/features/search/presentation/screens/widgets/search_idle_view.dart';
+import 'package:cheering/features/search/presentation/screens/widgets/search_results_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

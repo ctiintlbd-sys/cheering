@@ -4,7 +4,7 @@ import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_widget.dart';
-import 'package:cheering/features/search/presentation/widgets/search_dish_tile.dart';
+import 'package:cheering/features/search/presentation/screens/widgets/search_dish_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
