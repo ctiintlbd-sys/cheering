@@ -4,9 +4,11 @@ import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/category_entity.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/h_restaurant_card_shimmer.dart';
+import 'package:cheering/features/search/domain/entities/search_sort.dart';
 import 'package:cheering/features/search/presentation/blocs/search/search_bloc.dart';
 import 'package:cheering/features/search/presentation/blocs/search/search_event.dart';
 import 'package:cheering/features/search/presentation/blocs/search/search_state.dart';
+import 'package:cheering/features/search/presentation/helpers/search_result_filter.dart';
 import 'package:cheering/features/search/presentation/widgets/search_filter_bar.dart';
 import 'package:cheering/features/search/presentation/widgets/search_filter_sheet.dart';
 import 'package:cheering/features/search/presentation/widgets/search_idle_view.dart';
@@ -44,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     _debounce = Timer(const Duration(milliseconds: 400), () {
       if (!mounted) return;
-      context.read<SearchBloc>().add(QueryChanged(value));
+      context.read<SearchBloc>().add(LoadSearch(query: value));
     });
   }
 
@@ -53,7 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
     _controller
       ..text = query
       ..selection = TextSelection.collapsed(offset: query.length);
-    context.read<SearchBloc>().add(QueryChanged(query));
+    context.read<SearchBloc>().add(LoadSearch(query: query));
   }
 
   void _onCategoryTap(CategoryEntity category) {
@@ -67,11 +69,9 @@ class _SearchScreenState extends State<SearchScreen> {
       context,
       initial: state.filterSelection,
       result: state.result,
-      under300: state.under300,
-      rating4Plus: state.rating4Plus,
     );
     if (selected == null || !mounted) return;
-    bloc.add(ApplyFilters(selected));
+    bloc.add(ApplySearchFilter(selection: selected));
   }
 
   @override
@@ -112,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           context.read<SearchBloc>().add(const ClearSearch());
                           return;
                         }
-                        context.read<SearchBloc>().add(QueryChanged(value));
+                        context.read<SearchBloc>().add(LoadSearch(query: value));
                       },
                     ),
                   ),
@@ -122,13 +122,34 @@ class _SearchScreenState extends State<SearchScreen> {
                     rating4Plus: state.rating4Plus,
                     onSortTap: _openFilterSheet,
                     onUnder300Tap: () {
-                      context.read<SearchBloc>().add(const ToggleUnder300());
+                      context.read<SearchBloc>().add(
+                        ApplySearchFilter(
+                          selection: state.filterSelection.copyWith(
+                            under300: !state.under300,
+                            priceRange: SearchPriceRange.any,
+                          ),
+                        ),
+                      );
                     },
                     onRating4PlusTap: () {
-                      context.read<SearchBloc>().add(const ToggleRating4Plus());
+                      context.read<SearchBloc>().add(
+                        ApplySearchFilter(
+                          selection: state.filterSelection.copyWith(
+                            rating4Plus: !state.rating4Plus,
+                          ),
+                        ),
+                      );
                     },
                     onFastestTap: () {
-                      context.read<SearchBloc>().add(const ToggleFastest());
+                      context.read<SearchBloc>().add(
+                        ApplySearchFilter(
+                          selection: state.filterSelection.copyWith(
+                            sort: state.sort == SearchSort.deliveryTime
+                                ? SearchSort.relevance
+                                : SearchSort.deliveryTime,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   SizedBox(height: 8.w),
@@ -160,7 +181,11 @@ class _SearchScreenState extends State<SearchScreen> {
       return [EmptyState(message: state.errorMessage ?? 'Search failed')];
     }
 
-    if (state.status == SearchStatus.success && !state.hasVisibleResults) {
+    if (state.status == SearchStatus.success &&
+        !SearchResultFilter.hasVisibleResults(
+          result: state.result,
+          selection: state.filterSelection,
+        )) {
       return [const EmptyState(message: 'No results found')];
     }
 
@@ -171,9 +196,19 @@ class _SearchScreenState extends State<SearchScreen> {
     return [
       SearchResultsView(
         query: state.query,
-        categories: state.visibleCategories,
-        restaurants: state.visibleRestaurants,
-        items: state.visibleItems,
+        categories: state.result!.categories,
+        restaurants: SearchResultFilter.restaurants(
+          restaurants: state.result!.restaurants,
+          sort: state.sort,
+          rating4Plus: state.rating4Plus,
+        ),
+        items: SearchResultFilter.items(
+          items: state.result!.items,
+          sort: state.sort,
+          priceRange: state.priceRange,
+          dietary: state.dietary,
+          under300: state.under300,
+        ),
         onCategoryTap: _onCategoryTap,
       ),
     ];

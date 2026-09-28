@@ -13,10 +13,10 @@ class LoadRecentSearches extends SearchEvent {
   const LoadRecentSearches();
 }
 
-class QueryChanged extends SearchEvent {
-  const QueryChanged(this.query);
-
+class LoadSearch extends SearchEvent {
   final String query;
+
+  const LoadSearch({required this.query});
 
   @override
   List<Object?> get props => [query];
@@ -26,22 +26,10 @@ class ClearSearch extends SearchEvent {
   const ClearSearch();
 }
 
-class ToggleUnder300 extends SearchEvent {
-  const ToggleUnder300();
-}
-
-class ToggleRating4Plus extends SearchEvent {
-  const ToggleRating4Plus();
-}
-
-class ToggleFastest extends SearchEvent {
-  const ToggleFastest();
-}
-
-class ApplyFilters extends SearchEvent {
-  const ApplyFilters(this.selection);
-
+class ApplySearchFilter extends SearchEvent {
   final SearchFilterSelection selection;
+
+  const ApplySearchFilter({required this.selection});
 
   @override
   List<Object?> get props => [selection];

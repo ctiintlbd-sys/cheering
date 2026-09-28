@@ -1,7 +1,7 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/search/domain/entities/search_result_entity.dart';
 import 'package:cheering/features/search/domain/entities/search_sort.dart';
-import 'package:cheering/features/search/presentation/blocs/search/search_state.dart';
+import 'package:cheering/features/search/presentation/helpers/search_result_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,21 +10,15 @@ class SearchFilterSheet extends StatefulWidget {
     super.key,
     required this.initial,
     this.result,
-    this.under300 = false,
-    this.rating4Plus = false,
   });
 
   final SearchFilterSelection initial;
   final SearchResultEntity? result;
-  final bool under300;
-  final bool rating4Plus;
 
   static Future<SearchFilterSelection?> show(
     BuildContext context, {
     required SearchFilterSelection initial,
     SearchResultEntity? result,
-    bool under300 = false,
-    bool rating4Plus = false,
   }) {
     return showModalBottomSheet<SearchFilterSelection>(
       context: context,
@@ -36,8 +30,6 @@ class SearchFilterSheet extends StatefulWidget {
       builder: (context) => SearchFilterSheet(
         initial: initial,
         result: result,
-        under300: under300,
-        rating4Plus: rating4Plus,
       ),
     );
   }
@@ -82,13 +74,13 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     sort: _sort,
     priceRange: _priceRange,
     dietary: _dietary,
+    under300: false,
+    rating4Plus: widget.initial.rating4Plus,
   );
 
-  int get _resultCount => SearchState.countVisible(
+  int get _resultCount => SearchResultFilter.count(
     result: widget.result,
     selection: _selection,
-    under300: widget.under300 && _priceRange == SearchPriceRange.any,
-    rating4Plus: widget.rating4Plus,
   );
 
   void _reset() {
