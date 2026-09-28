@@ -19,7 +19,7 @@ class SearchIdleView extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 20.w, 16.w, 24.w),
+      padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 24.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

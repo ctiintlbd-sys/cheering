@@ -30,7 +30,7 @@ class SearchResultsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (categories.isNotEmpty) ...[
-          SizedBox(height: 16.w),
+          SizedBox(height: 8.w),
           SearchCategoryChips(
             categories: categories,
             activeQuery: query,
@@ -39,10 +39,9 @@ class SearchResultsView extends StatelessWidget {
         ],
         if (restaurants.isNotEmpty) ...[
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 20.w, 16.w, 4.w),
+            padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 4.w),
             child: CustomText(
               text: 'Restaurants',
-              fontSize: 16.r,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -58,7 +57,6 @@ class SearchResultsView extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 4.w),
             child: CustomText(
               text: 'Dishes',
-              fontSize: 16.r,
               fontWeight: FontWeight.w600,
             ),
           ),

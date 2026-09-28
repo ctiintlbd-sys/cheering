@@ -35,9 +35,7 @@ class SearchCategoryChips extends StatelessWidget {
               category.name.toLowerCase() == query;
 
           return CustomFilterChip(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
             label: category.name,
-            labelSize: 14.r,
             isSelected: isActive,
             onTap: () => onCategoryTap(category),
           );

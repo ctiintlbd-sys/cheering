@@ -119,13 +119,12 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                 Expanded(
                   child: CustomText(
                     text: 'Filter & Sort',
-                    fontSize: 20.r,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 16.r,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 CustomText(
                   text: 'Reset',
-                  fontSize: 14.r,
                   fontWeight: FontWeight.w500,
                   color: context.colors.primary,
                   onTap: _reset,
@@ -182,10 +181,6 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
             SizedBox(height: 28.w),
             CustomButton(
               label: buttonLabel,
-              height: 52.w,
-              radius: 99,
-              fontWeight: FontWeight.w600,
-              fontSize: 16.r,
               onPressed: () => Navigator.of(context).pop(_selection),
             ),
           ],
@@ -197,7 +192,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
   Widget _sectionTitle(String text) {
     return CustomText(
       text: text,
-      fontSize: 14.r,
+      fontSize: 12.r,
       fontWeight: FontWeight.w500,
       color: context.colors.textSecondary,
     );
@@ -226,7 +221,7 @@ class _FilterChoiceChip extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
         decoration: BoxDecoration(
           color: isSelected
               ? context.colors.primaryLight
@@ -235,13 +230,13 @@ class _FilterChoiceChip extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? context.colors.primaryLight
-                : context.colors.outline,
+                : context.colors.borderTertiary,
           ),
         ),
         child: CustomText(
           text: label,
-          fontSize: 14.r,
-          fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+          fontSize: 12.r,
+          fontWeight:  FontWeight.w600,
           color: isSelected
               ? context.colors.primary
               : context.colors.textPrimary,
