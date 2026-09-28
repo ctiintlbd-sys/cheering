@@ -2,6 +2,7 @@ import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/app_date_formatter.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/orders/domain/entities/order_entity.dart';
+import 'package:cheering/features/orders/presentation/helpers/order_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,7 @@ class OrderCard extends StatelessWidget {
     final date = order.placedAt != null
         ? '${AppDateFormatter.formatDayMonth(order.placedAt!)}, ${AppDateFormatter.formatTime(order.placedAt!)}'
         : '';
-    final (statusLabel, statusColor) = _statusStyle(context);
+    final (statusLabel, statusColor) = OrderStatus.badge(context, order.status);
 
     return RepaintBoundary(
       child: CustomContainer(
@@ -157,19 +158,5 @@ class OrderCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  (String, Color) _statusStyle(BuildContext context) {
-    return switch (order.status.toUpperCase()) {
-      'PENDING' => ('New', context.colors.primary),
-      'PREPARING' ||
-      'READY' => ('Preparing', context.colors.bgWarningSecondary),
-      'PICKED_UP' ||
-      'DELIVERED' => ('Complete', context.colors.bgSuccessSecondary),
-      'ON_THE_WAY' ||
-      'OUT_FOR_DELIVERY' => ('Active', context.colors.bgWarningSecondary),
-      'CANCELLED' => ('Cancelled', context.colors.bgErrorSecondary),
-      _ => (order.status, context.colors.primary),
-    };
   }
 }

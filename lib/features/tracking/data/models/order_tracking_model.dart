@@ -13,9 +13,9 @@ class TrackingRiderModel extends TrackingRiderEntity {
   factory TrackingRiderModel.fromJson(Map<String, dynamic> json) {
     return TrackingRiderModel(
       id: json['id'] as String? ?? '',
-      name: json['name'] as String? ?? json['full_name'] as String? ?? '',
+      name: json['full_name'] as String? ?? json['name'] as String? ?? '',
       phone: json['phone'] as String? ?? json['phone_number'] as String?,
-      photoUrl: json['photo_url'] as String? ?? json['avatar_url'] as String?,
+      photoUrl: json['avatar_url'] as String? ?? json['photo_url'] as String?,
       ratingAvg: (json['rating_avg'] as num?)?.toDouble(),
       vehicleType: json['vehicle_type'] as String?,
     );

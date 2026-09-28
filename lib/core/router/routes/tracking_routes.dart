@@ -16,7 +16,7 @@ final List<RouteBase> trackingRoutes = [
       return BlocProvider(
         create: (_) =>
             getIt<OrderTrackingBloc>()..add(LoadOrderTracking(orderId)),
-        child: OrderTrackingScreen(),
+        child: const OrderTrackingScreen(),
       );
     },
   ),
