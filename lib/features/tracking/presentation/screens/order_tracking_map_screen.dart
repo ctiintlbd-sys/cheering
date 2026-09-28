@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/helpers/map_marker_helper.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -8,7 +7,6 @@ import 'package:cheering/features/tracking/domain/entities/order_tracking_entity
 import 'package:cheering/features/tracking/presentation/screens/widgets/tracking_map_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderTrackingMapScreen extends StatefulWidget {
@@ -60,11 +58,16 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
     return LatLng(lat, lng);
   }
 
-  List<LatLng> get _routePoints => [
-    ?_restaurantLatLng,
-    ?_riderLatLng,
-    ?_deliveryLatLng,
-  ];
+  List<LatLng> get _routePoints {
+    if (_riderLatLng != null && _deliveryLatLng != null) {
+      return [_riderLatLng!, _deliveryLatLng!];
+    }
+    return [
+      ?_restaurantLatLng,
+      ?_riderLatLng,
+      ?_deliveryLatLng,
+    ];
+  }
 
   LatLng get _initialTarget =>
       _riderLatLng ??
@@ -73,40 +76,62 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
       MapLocationDefaults.dhaka;
 
   Future<void> _buildMapOverlay() async {
-    final destinationIcon = await MapMarkerHelper.createLocationMarker();
+    final customerIcon = await MapMarkerHelper.createLocationMarker();
+    final restaurantIcon = _restaurantLatLng == null
+        ? null
+        : await MapMarkerHelper.createCircularBadgeMarker(
+            size: 64,
+            circleColor: const Color(0xFFEA580C),
+            assetPath: Assets.images.store.path,
+          );
     if (!mounted) return;
+    _applyOverlay(customerIcon: customerIcon, restaurantIcon: restaurantIcon);
 
-    final markers = <Marker>{
-      if (_restaurantLatLng != null)
-        Marker(
-          markerId: const MarkerId('restaurant'),
-          position: _restaurantLatLng!,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueOrange,
-          ),
-          infoWindow: InfoWindow(title: _tracking.restaurantName),
-        ),
-      if (_riderLatLng != null)
-        Marker(
-          markerId: const MarkerId('rider'),
-          position: _riderLatLng!,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueAzure,
-          ),
-          infoWindow: InfoWindow(title: _tracking.rider?.name ?? 'Rider'),
-        ),
-      if (_deliveryLatLng != null)
-        Marker(
-          markerId: const MarkerId('delivery'),
-          position: _deliveryLatLng!,
-          icon: destinationIcon,
-          infoWindow: InfoWindow(title: _tracking.deliveryAddressText),
-        ),
-    };
+    if (_riderLatLng == null) return;
 
+    final riderIcon = await MapMarkerHelper.createProfileMarker(
+      photoUrl: _tracking.rider?.photoUrl,
+    );
+    if (!mounted) return;
+    _applyOverlay(
+      customerIcon: customerIcon,
+      restaurantIcon: restaurantIcon,
+      riderIcon: riderIcon,
+    );
+  }
+
+  void _applyOverlay({
+    required BitmapDescriptor customerIcon,
+    BitmapDescriptor? restaurantIcon,
+    BitmapDescriptor? riderIcon,
+  }) {
     final points = _routePoints;
     setState(() {
-      _markers = markers;
+      _markers = {
+        if (_deliveryLatLng != null)
+          Marker(
+            markerId: const MarkerId('customer'),
+            position: _deliveryLatLng!,
+            icon: customerIcon,
+            zIndexInt: 2,
+            infoWindow: InfoWindow(title: _tracking.deliveryAddressText),
+          ),
+        if (_riderLatLng != null && riderIcon != null)
+          Marker(
+            markerId: const MarkerId('rider'),
+            position: _riderLatLng!,
+            icon: riderIcon,
+            zIndexInt: 3,
+            infoWindow: InfoWindow(title: _tracking.rider?.name ?? 'Rider'),
+          ),
+        if (_restaurantLatLng != null && restaurantIcon != null)
+          Marker(
+            markerId: const MarkerId('restaurant'),
+            position: _restaurantLatLng!,
+            icon: restaurantIcon,
+            infoWindow: InfoWindow(title: _tracking.restaurantName),
+          ),
+      };
       _polylines = points.length < 2
           ? {}
           : {
@@ -115,10 +140,10 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
                 color: const Color(0xFF2563EB),
                 width: 4,
                 points: points,
+                patterns: [PatternItem.dash(18), PatternItem.gap(12)],
               ),
             };
     });
-
     _fitRoute();
   }
 
@@ -169,6 +194,7 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.background,
+      bottomSheet: TrackingMapSheet(tracking: _tracking),
       body: Stack(
         children: [
           Positioned.fill(
@@ -189,18 +215,6 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
               compassEnabled: false,
               mapToolbarEnabled: false,
               padding: EdgeInsets.only(bottom: 360.w),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.sizeOf(context).height * 0.58,
-              ),
-              child: SingleChildScrollView(
-                child: TrackingMapSheet(tracking: _tracking),
-              ),
             ),
           ),
         ],
