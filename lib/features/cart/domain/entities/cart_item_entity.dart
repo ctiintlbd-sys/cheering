@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'cart_add_on_entity.dart';
 
 class CartItemEntity extends Equatable {
-  final String id;
+  final String lineId;
+  String get id => lineId;
   final String menuItemId;
   final String name;
   final String? imageUrl;
@@ -10,6 +12,7 @@ class CartItemEntity extends Equatable {
   final String? variantName;
   final List<String> addOnIds;
   final List<String> addOnNames;
+  final List<CartAddOnEntity> addOns;
   final double unitPrice;
   final double addOnsTotal;
   final double lineTotal;
@@ -17,24 +20,27 @@ class CartItemEntity extends Equatable {
   final bool isAvailable;
 
   const CartItemEntity({
-    required this.id,
+    String? id,
+    String? lineId,
     required this.menuItemId,
     required this.name,
     this.imageUrl,
     required this.quantity,
     this.variantId,
     this.variantName,
-    required this.addOnIds,
-    required this.addOnNames,
+    this.addOnIds = const [],
+    this.addOnNames = const [],
+    this.addOns = const [],
     required this.unitPrice,
     required this.addOnsTotal,
     required this.lineTotal,
     this.notes,
     required this.isAvailable,
-  });
+  }) : lineId = lineId ?? id ?? '';
 
   CartItemEntity copyWith({
     String? id,
+    String? lineId,
     String? menuItemId,
     String? name,
     String? imageUrl,
@@ -43,6 +49,7 @@ class CartItemEntity extends Equatable {
     String? variantName,
     List<String>? addOnIds,
     List<String>? addOnNames,
+    List<CartAddOnEntity>? addOns,
     double? unitPrice,
     double? addOnsTotal,
     double? lineTotal,
@@ -50,7 +57,7 @@ class CartItemEntity extends Equatable {
     bool? isAvailable,
   }) {
     return CartItemEntity(
-      id: id ?? this.id,
+      lineId: lineId ?? id ?? this.lineId,
       menuItemId: menuItemId ?? this.menuItemId,
       name: name ?? this.name,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -59,6 +66,7 @@ class CartItemEntity extends Equatable {
       variantName: variantName ?? this.variantName,
       addOnIds: addOnIds ?? this.addOnIds,
       addOnNames: addOnNames ?? this.addOnNames,
+      addOns: addOns ?? this.addOns,
       unitPrice: unitPrice ?? this.unitPrice,
       addOnsTotal: addOnsTotal ?? this.addOnsTotal,
       lineTotal: lineTotal ?? this.lineTotal,
@@ -69,7 +77,7 @@ class CartItemEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
+        lineId,
         menuItemId,
         name,
         imageUrl,
@@ -78,6 +86,7 @@ class CartItemEntity extends Equatable {
         variantName,
         addOnIds,
         addOnNames,
+        addOns,
         unitPrice,
         addOnsTotal,
         lineTotal,

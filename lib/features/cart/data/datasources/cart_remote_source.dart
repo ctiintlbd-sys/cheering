@@ -26,6 +26,28 @@ class CartRemoteSource {
     );
   }
 
+  Future<ApiResult<CartModel>> updateCartItemQuantity({
+    required String lineId,
+    required int quantity,
+    String? notes,
+  }) async {
+    return _apiClient.patch<CartModel>(
+      ApiEndpoints.cartItem(lineId),
+      body: {
+        'quantity': quantity,
+        if (notes != null) 'notes': notes,
+      },
+      fromJson: (json) => CartModel.fromJson(json['data'] ?? {}),
+    );
+  }
+
+  Future<ApiResult<CartModel?>> deleteCartItem(String lineId) async {
+    return _apiClient.delete<CartModel>(
+      ApiEndpoints.cartItem(lineId),
+      fromJson: (json) => CartModel.fromJson(json['data'] ?? {}),
+    );
+  }
+
   Future<ApiResult<CheckoutSummaryModel>> getCheckoutSummary(CheckoutSummaryParams params) async {
     return _apiClient.get<CheckoutSummaryModel>(
       ApiEndpoints.checkoutSummary,
@@ -34,4 +56,3 @@ class CartRemoteSource {
     );
   }
 }
-

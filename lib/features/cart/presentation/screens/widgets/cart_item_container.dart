@@ -1,8 +1,11 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../domain/entities/cart_entity.dart';
 import '../../../domain/entities/add_cart_item_params.dart';
+import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/cart/cart_event.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
@@ -10,12 +13,12 @@ import 'cart_item_widget.dart';
 
 class CartItemContainer extends StatelessWidget {
   final CartEntity cart;
-  final Function(AddCartItemParams) onUpdateItem;
+  final Function(AddCartItemParams)? onUpdateItem;
 
   const CartItemContainer({
     super.key,
     required this.cart,
-    required this.onUpdateItem,
+    this.onUpdateItem,
   });
 
   @override
@@ -57,9 +60,39 @@ class CartItemContainer extends StatelessWidget {
             itemCount: cart.items.length,
             separatorBuilder: (context, index) => SizedBox(height: 16.w),
             itemBuilder: (context, index) {
+              final item = cart.items[index];
               return CartItemWidget(
-                item: cart.items[index],
-                onUpdateItem: onUpdateItem,
+                item: item,
+                onIncrement: () {
+                  context.read<CartBloc>().add(
+                    UpdateCartLineQuantityEvent(
+                      lineId: item.lineId,
+                      quantity: item.quantity + 1,
+                    ),
+                  );
+                },
+                onDecrement: () {
+                  context.read<CartBloc>().add(
+                    UpdateCartLineQuantityEvent(
+                      lineId: item.lineId,
+                      quantity: item.quantity - 1,
+                    ),
+                  );
+                },
+                onUpdateAddOnQuantity: (addOnId, quantity) {
+                  context.read<CartBloc>().add(
+                    UpdateCartAddOnQuantityEvent(
+                      item: item,
+                      addOnId: addOnId,
+                      quantity: quantity,
+                    ),
+                  );
+                },
+                onRemove: () {
+                  context.read<CartBloc>().add(
+                    RemoveCartItemEvent(lineId: item.lineId),
+                  );
+                },
               );
             },
           ),
@@ -85,7 +118,10 @@ class CartItemContainer extends StatelessWidget {
                     minOrderAmount: cart.minOrderAmount,
                     isOpen: cart.restaurantIsOpen,
                   );
-                  context.push(RoutePaths.storeDetails(dummyRestaurant.id), extra: dummyRestaurant);
+                  context.push(
+                    RoutePaths.storeDetails(dummyRestaurant.id),
+                    extra: dummyRestaurant,
+                  );
                 }
               },
               label: 'Add more items',

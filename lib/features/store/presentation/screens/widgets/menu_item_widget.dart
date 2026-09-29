@@ -111,16 +111,24 @@ class MenuItemWidget extends StatelessWidget {
                                   final cartItem = state.cart?.items
                                       .where((i) => i.menuItemId == menuItem!.id)
                                       .firstOrNull;
-                                  context.read<CartBloc>().add(
-                                    AddOrUpdateCartItemEvent(
-                                      AddCartItemParams(
-                                        menuItemId: menuItem!.id,
-                                        quantity: count + 1,
-                                        variantId: cartItem?.variantId,
-                                        addOnIds: cartItem?.addOnIds ?? const [],
+                                  if (cartItem != null) {
+                                    context.read<CartBloc>().add(
+                                      UpdateCartLineQuantityEvent(
+                                        lineId: cartItem.lineId,
+                                        quantity: cartItem.quantity + 1,
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    context.read<CartBloc>().add(
+                                      AddOrUpdateCartItemEvent(
+                                        AddCartItemParams(
+                                          menuItemId: menuItem!.id,
+                                          quantity: 1,
+                                          mode: 'add',
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                               onDecrement: () {
@@ -128,16 +136,14 @@ class MenuItemWidget extends StatelessWidget {
                                   final cartItem = state.cart?.items
                                       .where((i) => i.menuItemId == menuItem!.id)
                                       .firstOrNull;
-                                  context.read<CartBloc>().add(
-                                    AddOrUpdateCartItemEvent(
-                                      AddCartItemParams(
-                                        menuItemId: menuItem!.id,
-                                        quantity: count - 1,
-                                        variantId: cartItem?.variantId,
-                                        addOnIds: cartItem?.addOnIds ?? const [],
+                                  if (cartItem != null) {
+                                    context.read<CartBloc>().add(
+                                      UpdateCartLineQuantityEvent(
+                                        lineId: cartItem.lineId,
+                                        quantity: cartItem.quantity - 1,
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 }
                               },
                             );

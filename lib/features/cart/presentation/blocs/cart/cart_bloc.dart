@@ -1,30 +1,31 @@
-import 'package:cheering/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
+import '../../../domain/entities/add_cart_item_params.dart';
 import '../../../domain/entities/cart_entity.dart';
 import '../../../domain/usecases/get_cart_usecase.dart';
 import '../../../domain/usecases/add_cart_item_usecase.dart';
+import '../../../domain/usecases/update_cart_item_quantity_usecase.dart';
+import '../../../domain/usecases/remove_cart_item_usecase.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final GetCartUseCase _getCartUseCase;
   final AddCartItemUseCase _addCartItemUseCase;
+  final UpdateCartItemQuantityUseCase _updateCartItemQuantityUseCase;
+  final RemoveCartItemUseCase _removeCartItemUseCase;
 
-  CartBloc(this._getCartUseCase, this._addCartItemUseCase)
-    : super(const CartState()) {
+  CartBloc(
+    this._getCartUseCase,
+    this._addCartItemUseCase,
+    this._updateCartItemQuantityUseCase,
+    this._removeCartItemUseCase,
+  ) : super(const CartState()) {
     on<LoadCart>(_onLoadCart);
     on<ClearCart>(_onClearCart);
     on<AddOrUpdateCartItemEvent>(_onAddOrUpdateCartItem);
-    on<SyncCartItemEvent>(
-      _onSyncCartItem,
-      transformer: (events, mapper) => events
-          .groupBy((e) => e.params.menuItemId)
-          .flatMap(
-            (group) => group.debounceTime(const Duration(milliseconds: 600)),
-          )
-          .asyncExpand(mapper),
-    );
+    on<UpdateCartLineQuantityEvent>(_onUpdateCartLineQuantity);
+    on<UpdateCartAddOnQuantityEvent>(_onUpdateCartAddOnQuantity);
+    on<RemoveCartItemEvent>(_onRemoveCartItem);
   }
 
   void _onClearCart(ClearCart event, Emitter<CartState> emit) {
@@ -53,25 +54,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  void _onAddOrUpdateCartItem(
+  Future<void> _onAddOrUpdateCartItem(
     AddOrUpdateCartItemEvent event,
-    Emitter<CartState> emit,
-  ) {
-    if (state.cart != null) {
-      final newCart = state.cart!.withUpdatedQuantity(
-        event.params.menuItemId,
-        event.params.variantId,
-        event.params.addOnIds,
-        event.params.quantity,
-      );
-      emit(state.copyWith(cart: newCart));
-    }
-
-    add(SyncCartItemEvent(event.params));
-  }
-
-  Future<void> _onSyncCartItem(
-    SyncCartItemEvent event,
     Emitter<CartState> emit,
   ) async {
     final itemId = event.params.menuItemId;
@@ -83,12 +67,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
     try {
       final updatedCart = await _addCartItemUseCase(event.params);
-
-      final currentPending = Set<String>.from(state.updatingItemIds)
-        ..remove(itemId);
-      final finalCart = _mergeWithPending(updatedCart, currentPending);
-
-      emit(state.copyWith(cart: finalCart, updatingItemIds: currentPending));
+      emit(
+        state.copyWith(
+          status: CartStatus.success,
+          cart: updatedCart,
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(itemId),
+        ),
+      );
     } catch (e) {
       emit(
         state.copyWith(
@@ -99,39 +84,128 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  CartEntity _mergeWithPending(CartEntity apiCart, Set<String> pendingIds) {
-    if (pendingIds.isEmpty) return apiCart;
-    if (state.cart == null) return apiCart;
-
-    final List<CartItemEntity> mergedItems = [];
-
-    for (final apiItem in apiCart.items) {
-      if (pendingIds.contains(apiItem.menuItemId)) {
-        final localItem = state.cart!.items
-            .where((i) => i.menuItemId == apiItem.menuItemId)
-            .firstOrNull;
-
-        if (localItem != null) {
-          mergedItems.add(localItem);
-        }
+  Future<void> _onUpdateCartLineQuantity(
+    UpdateCartLineQuantityEvent event,
+    Emitter<CartState> emit,
+  ) async {
+    final lineId = event.lineId;
+    emit(
+      state.copyWith(
+        updatingItemIds: {...state.updatingItemIds, lineId},
+        clearError: true,
+      ),
+    );
+    try {
+      final CartEntity updatedCart;
+      if (event.quantity <= 0) {
+        updatedCart = await _removeCartItemUseCase(lineId);
       } else {
-        mergedItems.add(apiItem);
+        updatedCart = await _updateCartItemQuantityUseCase(
+          lineId: lineId,
+          quantity: event.quantity,
+          notes: event.notes,
+        );
       }
+      emit(
+        state.copyWith(
+          status: CartStatus.success,
+          cart: updatedCart,
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+          errorMessage: e.toString(),
+        ),
+      );
     }
+  }
 
-    final newItemTotal = mergedItems.fold(
-      0.0,
-      (sum, item) => sum + item.lineTotal,
-    );
-    final newItemCount = mergedItems.fold(
-      0,
-      (sum, item) => sum + item.quantity,
+  Future<void> _onUpdateCartAddOnQuantity(
+    UpdateCartAddOnQuantityEvent event,
+    Emitter<CartState> emit,
+  ) async {
+    final item = event.item;
+    final lineId = item.lineId;
+    emit(
+      state.copyWith(
+        updatingItemIds: {...state.updatingItemIds, lineId},
+        clearError: true,
+      ),
     );
 
-    return apiCart.copyWith(
-      items: mergedItems,
-      itemTotal: newItemTotal,
-      itemCount: newItemCount,
+    try {
+      final updatedAddOns = <CartAddOnParam>[];
+      for (final addOn in item.addOns) {
+        if (addOn.id == event.addOnId) {
+          if (event.quantity > 0) {
+            updatedAddOns.add(
+              CartAddOnParam(addOnId: addOn.id, quantity: event.quantity),
+            );
+          }
+        } else {
+          updatedAddOns.add(
+            CartAddOnParam(addOnId: addOn.id, quantity: addOn.quantity),
+          );
+        }
+      }
+
+      final params = AddCartItemParams(
+        menuItemId: item.menuItemId,
+        variantId: item.variantId,
+        quantity: item.quantity,
+        mode: 'set',
+        addOns: updatedAddOns,
+        notes: item.notes,
+      );
+
+      final updatedCart = await _addCartItemUseCase(params);
+      emit(
+        state.copyWith(
+          status: CartStatus.success,
+          cart: updatedCart,
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onRemoveCartItem(
+    RemoveCartItemEvent event,
+    Emitter<CartState> emit,
+  ) async {
+    final lineId = event.lineId;
+    emit(
+      state.copyWith(
+        updatingItemIds: {...state.updatingItemIds, lineId},
+        clearError: true,
+      ),
     );
+    try {
+      final updatedCart = await _removeCartItemUseCase(lineId);
+      emit(
+        state.copyWith(
+          status: CartStatus.success,
+          cart: updatedCart,
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          updatingItemIds: Set.from(state.updatingItemIds)..remove(lineId),
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

@@ -2,92 +2,226 @@ import 'package:cheering/core/common_widgets/quantity_button.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../domain/entities/cart_add_on_entity.dart';
 import '../../../domain/entities/cart_item_entity.dart';
 import '../../../domain/entities/add_cart_item_params.dart';
 
 class CartItemWidget extends StatelessWidget {
   final CartItemEntity item;
-  final Function(AddCartItemParams) onUpdateItem;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
+  final void Function(String addOnId, int quantity)? onUpdateAddOnQuantity;
+  final VoidCallback? onRemove;
+  final Function(AddCartItemParams)? onUpdateItem;
 
   const CartItemWidget({
     super.key,
     required this.item,
-    required this.onUpdateItem,
+    this.onIncrement,
+    this.onDecrement,
+    this.onUpdateAddOnQuantity,
+    this.onRemove,
+    this.onUpdateItem,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomNetworkImage(
-          borderRadius: 12.r,
-          imageUrl: item.imageUrl ?? '',
-          width: 66.w,
-          height: 66.w,
-          fit: BoxFit.cover,
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(
-                text: item.name,
-                fontWeight: FontWeight.w600,
-                maxLines: 1,
-              ),
-              if (item.variantName != null || item.addOnNames.isNotEmpty)
-                CustomText(
-                  top: 2.w,
-                  text: [
-                    if (item.variantName != null) item.variantName,
-                    if (item.addOnNames.isNotEmpty) item.addOnNames.join(', '),
-                  ].join(' · '),
-                  fontSize: 12.r,
-                  color: context.colors.textTertiary,
-                  maxLines: 1,
-                  bottom: 2.w,
-                ),
-              Row(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomNetworkImage(
+              borderRadius: 12.r,
+              imageUrl: item.imageUrl ?? '',
+              width: 66.w,
+              height: 66.w,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: CustomText(
-                      text: '৳${item.unitPrice.toStringAsFixed(0)}',
-                      fontWeight: FontWeight.w500,
-                    ),
+                  CustomText(
+                    text: item.name,
+                    fontWeight: FontWeight.w600,
+                    maxLines: 1,
                   ),
-                  QuantityButton(
-                    count: item.quantity,
-                    onIncrement: () {
-                      onUpdateItem(
-                        AddCartItemParams(
-                          menuItemId: item.menuItemId,
-                          variantId: item.variantId,
-                          addOnIds: item.addOnIds,
-                          quantity: item.quantity + 1,
-                          notes: item.notes,
+                  if (item.variantName != null || (item.addOns.isEmpty && item.addOnNames.isNotEmpty))
+                    CustomText(
+                      top: 2.w,
+                      text: [
+                        if (item.variantName != null) item.variantName,
+                        if (item.addOns.isEmpty && item.addOnNames.isNotEmpty)
+                          item.addOnNames.join(', '),
+                      ].join(' · '),
+                      fontSize: 12.r,
+                      color: context.colors.textTertiary,
+                      maxLines: 1,
+                      bottom: 2.w,
+                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomText(
+                          text: '৳${item.unitPrice.toStringAsFixed(0)}',
+                          fontWeight: FontWeight.w500,
                         ),
-                      );
-                    },
-                    onDecrement: () {
-                      onUpdateItem(
-                        AddCartItemParams(
-                          menuItemId: item.menuItemId,
-                          variantId: item.variantId,
-                          addOnIds: item.addOnIds,
-                          quantity: item.quantity - 1,
-                          notes: item.notes,
-                        ),
-                      );
-                    },
+                      ),
+                      QuantityButton(
+                        count: item.quantity,
+                        onIncrement: () {
+                          if (onIncrement != null) {
+                            onIncrement!();
+                          } else if (onUpdateItem != null) {
+                            onUpdateItem!(
+                              AddCartItemParams(
+                                menuItemId: item.menuItemId,
+                                variantId: item.variantId,
+                                addOnIds: item.addOnIds,
+                                quantity: item.quantity + 1,
+                                notes: item.notes,
+                              ),
+                            );
+                          }
+                        },
+                        onDecrement: () {
+                          if (onDecrement != null) {
+                            onDecrement!();
+                          } else if (onUpdateItem != null) {
+                            onUpdateItem!(
+                              AddCartItemParams(
+                                menuItemId: item.menuItemId,
+                                variantId: item.variantId,
+                                addOnIds: item.addOnIds,
+                                quantity: item.quantity - 1,
+                                notes: item.notes,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        if (item.addOns.isNotEmpty) ...[
+          SizedBox(height: 10.w),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.w),
+            decoration: BoxDecoration(
+              color: context.colors.bgSecondary,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(
+                  text: 'Add-ons',
+                  fontSize: 11.r,
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.textSecondary,
+                  bottom: 6.w,
+                ),
+                ...item.addOns.map((addOn) => _buildAddOnItem(context, addOn)),
+              ],
+            ),
+          ),
+        ],
       ],
+    );
+  }
+
+  Widget _buildAddOnItem(BuildContext context, CartAddOnEntity addOn) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.w),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(
+                  text: addOn.name,
+                  fontSize: 13.r,
+                  fontWeight: FontWeight.w500,
+                ),
+                if (addOn.unitPrice > 0)
+                  CustomText(
+                    text: '+৳${(addOn.unitPrice * addOn.quantity).toStringAsFixed(0)}',
+                    fontSize: 11.r,
+                    color: context.colors.textTertiary,
+                  ),
+              ],
+            ),
+          ),
+          _buildAddOnStepper(context, addOn),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddOnStepper(BuildContext context, CartAddOnEntity addOn) {
+    return Container(
+      padding: EdgeInsets.all(2.r),
+      decoration: BoxDecoration(
+        color: context.colors.bgTertiary,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              onUpdateAddOnQuantity?.call(addOn.id, addOn.quantity - 1);
+            },
+            child: Container(
+              padding: EdgeInsets.all(4.r),
+              decoration: BoxDecoration(
+                color: context.colors.background,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+              child: Icon(
+                addOn.quantity == 1 ? Icons.delete_outline : Icons.remove,
+                color: addOn.quantity == 1 ? context.colors.error : context.colors.textSecondary,
+                size: 14.r,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: CustomText(
+              text: '${addOn.quantity}',
+              fontSize: 12.r,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              onUpdateAddOnQuantity?.call(addOn.id, addOn.quantity + 1);
+            },
+            child: Container(
+              padding: EdgeInsets.all(4.r),
+              decoration: BoxDecoration(
+                color: context.colors.primary,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+              child: Icon(
+                Icons.add,
+                color: context.colors.white,
+                size: 14.r,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

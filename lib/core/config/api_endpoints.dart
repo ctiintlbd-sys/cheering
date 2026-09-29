@@ -43,6 +43,7 @@ class ApiEndpoints {
   // ── Cart & Checkout ────────────────────────────────────────
   static const String cart = '/cart';
   static const String cartItems = '/cart/items';
+  static String cartItem(String lineId) => '/cart/items/$lineId';
   static const String checkoutSummary = '/checkout/summary';
 
   // ── Orders ──────────────────────────────────────────────────

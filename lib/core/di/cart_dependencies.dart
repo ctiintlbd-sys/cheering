@@ -6,6 +6,8 @@ import '../../features/cart/domain/repositories/i_cart_repository.dart';
 import '../../features/cart/domain/usecases/add_cart_item_usecase.dart';
 import '../../features/cart/domain/usecases/get_cart_usecase.dart';
 import '../../features/cart/domain/usecases/get_checkout_summary_usecase.dart';
+import '../../features/cart/domain/usecases/remove_cart_item_usecase.dart';
+import '../../features/cart/domain/usecases/update_cart_item_quantity_usecase.dart';
 import '../../features/cart/presentation/blocs/cart/cart_bloc.dart';
 import '../../features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
 import '../../features/orders/domain/usecases/create_order_usecase.dart';
@@ -31,6 +33,12 @@ void setupCartDependencies(GetIt getIt) {
     () => AddCartItemUseCase(getIt<ICartRepository>()),
   );
   getIt.registerLazySingleton(
+    () => UpdateCartItemQuantityUseCase(getIt<ICartRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => RemoveCartItemUseCase(getIt<ICartRepository>()),
+  );
+  getIt.registerLazySingleton(
     () => GetCheckoutSummaryUseCase(getIt<ICartRepository>()),
   );
 
@@ -39,6 +47,8 @@ void setupCartDependencies(GetIt getIt) {
     () => CartBloc(
       getIt<GetCartUseCase>(),
       getIt<AddCartItemUseCase>(),
+      getIt<UpdateCartItemQuantityUseCase>(),
+      getIt<RemoveCartItemUseCase>(),
     ),
   );
   getIt.registerLazySingleton(

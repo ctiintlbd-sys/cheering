@@ -40,6 +40,48 @@ class CartRepositoryImpl implements ICartRepository {
   }
 
   @override
+  Future<CartEntity> updateCartItemQuantity({
+    required String lineId,
+    required int quantity,
+    String? notes,
+  }) async {
+    final response = await _remoteSource.updateCartItemQuantity(
+      lineId: lineId,
+      quantity: quantity,
+      notes: notes,
+    );
+    return response.fold(
+      onSuccess: (data) {
+        _cache.set<CartModel>(CacheKeys.cart, data, toJson: (d) => d.toJson());
+        return data;
+      },
+      onFailure: (exception) => throw exception,
+    );
+  }
+
+  @override
+  Future<CartEntity> removeCartItem(String lineId) async {
+    final response = await _remoteSource.deleteCartItem(lineId);
+    return response.fold(
+      onSuccess: (data) async {
+        if (data != null) {
+          _cache.set<CartModel>(CacheKeys.cart, data, toJson: (d) => d.toJson());
+          return data;
+        }
+        final freshCart = await _remoteSource.getCart();
+        return freshCart.fold(
+          onSuccess: (cart) {
+            _cache.set<CartModel>(CacheKeys.cart, cart, toJson: (d) => d.toJson());
+            return cart;
+          },
+          onFailure: (e) => throw e,
+        );
+      },
+      onFailure: (exception) => throw exception,
+    );
+  }
+
+  @override
   Stream<CheckoutSummaryEntity> getCheckoutSummary(
     CheckoutSummaryParams params,
   ) {
