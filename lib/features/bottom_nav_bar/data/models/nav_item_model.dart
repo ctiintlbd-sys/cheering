@@ -21,11 +21,11 @@ class NavItemModel {
       icon: Assets.icons.food.path,
       activeIcon: Assets.icons.foodFil.path,
     ),
-    NavItemModel(
+   /* NavItemModel(
       label: 'Store',
       icon: Assets.icons.store.path,
       activeIcon: Assets.icons.storeFil.path,
-    ),
+    ),*/
     NavItemModel(
       label: 'Order',
       icon: Assets.icons.order.path,

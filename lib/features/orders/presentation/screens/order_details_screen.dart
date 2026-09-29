@@ -61,7 +61,10 @@ class OrderDetailsScreen extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         bordersColor: context.colors.borderSecondary,
                         textColor: context.colors.textPrimary,
-                        onPressed: () {},
+                        onPressed: () => context.push(
+                          RoutePaths.rateOrder,
+                          extra: order,
+                        ),
                       ),
                     ),
                     SizedBox(width: 12.w),

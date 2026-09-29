@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cheering/features/tracking/domain/entities/order_tracking_entity.dart';
 
 class OrderEntity extends Equatable {
   final String id;
@@ -17,6 +18,7 @@ class OrderEntity extends Equatable {
   final DateTime? estimatedDeliveryAt;
   final bool canReview;
   final bool canCancel;
+  final TrackingRiderEntity? rider;
 
   const OrderEntity({
     required this.id,
@@ -35,6 +37,7 @@ class OrderEntity extends Equatable {
     this.estimatedDeliveryAt,
     this.canReview = false,
     this.canCancel = false,
+    this.rider,
   });
 
   @override
@@ -55,5 +58,6 @@ class OrderEntity extends Equatable {
         estimatedDeliveryAt,
         canReview,
         canCancel,
+        rider,
       ];
 }

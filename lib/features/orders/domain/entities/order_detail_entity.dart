@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cheering/features/tracking/domain/entities/order_tracking_entity.dart';
 import 'order_entity.dart';
 
 class OrderItemEntity extends Equatable {
@@ -75,7 +76,8 @@ class OrderDetailEntity extends OrderEntity {
   final String? specialInstructions;
   final String? cancellationReason;
   final List<OrderTimelineEntity> timeline;
-  final dynamic rider; // Can be updated when rider entity is known
+  @override
+  final TrackingRiderEntity? rider;
 
   const OrderDetailEntity({
     required super.id,

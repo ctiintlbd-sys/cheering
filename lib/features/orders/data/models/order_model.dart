@@ -1,3 +1,4 @@
+import 'package:cheering/features/tracking/data/models/order_tracking_model.dart';
 import '../../domain/entities/order_entity.dart';
 
 class OrderModel extends OrderEntity {
@@ -18,6 +19,7 @@ class OrderModel extends OrderEntity {
     super.estimatedDeliveryAt,
     super.canReview,
     super.canCancel,
+    super.rider,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,9 @@ class OrderModel extends OrderEntity {
           : null,
       canReview: json['can_review'] as bool? ?? false,
       canCancel: json['can_cancel'] as bool? ?? false,
+      rider: json['rider'] != null
+          ? TrackingRiderModel.fromJson(json['rider'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -67,6 +72,7 @@ class OrderModel extends OrderEntity {
       'estimated_delivery_at': estimatedDeliveryAt?.toUtc().toIso8601String(),
       'can_review': canReview,
       'can_cancel': canCancel,
+      'rider': rider,
     };
   }
 }

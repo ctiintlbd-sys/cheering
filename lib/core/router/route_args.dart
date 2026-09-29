@@ -63,3 +63,89 @@ class OrderPlacedArgs {
     this.trackingOrderId = '',
   });
 }
+
+// ─── Orders Args ─────────────────────────────────────────────────────────
+
+class RateOrderArgs {
+  final String orderId;
+  final String restaurantName;
+  final String? restaurantLogoUrl;
+  final bool hasRider;
+  final String? riderName;
+  final String? riderPhotoUrl;
+  final double? riderRating;
+  final int deliveryMinutes;
+
+  const RateOrderArgs({
+    this.orderId = '',
+    this.restaurantName = 'KFC - Badda',
+    this.restaurantLogoUrl,
+    this.hasRider = true,
+    this.riderName = 'Jayed Khan',
+    this.riderPhotoUrl,
+    this.riderRating = 4.9,
+    this.deliveryMinutes = 24,
+  });
+
+  factory RateOrderArgs.fromOrder(dynamic order) {
+    if (order == null) return const RateOrderArgs();
+
+    String name = 'KFC - Badda';
+    String? logo;
+    String id = '';
+    
+    bool hasRider = false;
+    String? riderName;
+    String? riderPhotoUrl;
+    double? riderRating;
+    int deliveryMinutes = 24;
+
+    try {
+      final orderName = order.restaurantName?.toString();
+      if (orderName != null && orderName.isNotEmpty) {
+        name = orderName;
+      }
+      logo = order.restaurantLogoUrl?.toString();
+      id = order.id?.toString() ?? '';
+
+      try {
+        if (order.deliveredAt != null && order.placedAt != null) {
+          final diff = (order.deliveredAt as DateTime).difference(order.placedAt as DateTime);
+          deliveryMinutes = diff.inMinutes > 0 ? diff.inMinutes : 24;
+        }
+      } catch (_) {}
+
+      try {
+        final riderData = order.rider;
+        if (riderData != null) {
+          hasRider = true;
+          if (riderData is Map) {
+            riderName = riderData['full_name']?.toString() ?? 'Rider';
+            riderPhotoUrl = riderData['avatar_url']?.toString();
+            final rAvg = riderData['rating_avg'];
+            if (rAvg != null) {
+              riderRating = double.tryParse(rAvg.toString()) ?? 5.0;
+            } else {
+              riderRating = 5.0;
+            }
+          } else {
+            try { riderName = riderData.fullName?.toString() ?? riderData.name?.toString() ?? 'Rider'; } catch (_) {}
+            try { riderPhotoUrl = riderData.avatarUrl?.toString() ?? riderData.photoUrl?.toString(); } catch (_) {}
+            try { riderRating = double.tryParse(riderData.ratingAvg?.toString() ?? '5.0'); } catch (_) {}
+          }
+        }
+      } catch (_) {}
+    } catch (_) {}
+
+    return RateOrderArgs(
+      orderId: id,
+      restaurantName: name,
+      restaurantLogoUrl: logo,
+      hasRider: hasRider,
+      riderName: riderName ?? (hasRider ? 'Rider' : null),
+      riderPhotoUrl: riderPhotoUrl,
+      riderRating: riderRating ?? (hasRider ? 5.0 : null),
+      deliveryMinutes: deliveryMinutes,
+    );
+  }
+}

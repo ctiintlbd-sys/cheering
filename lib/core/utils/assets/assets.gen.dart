@@ -176,6 +176,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share.svg
   SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
 
+  /// File path: assets/icons/star.svg
+  SvgGenImage get star => const SvgGenImage('assets/icons/star.svg');
+
   /// File path: assets/icons/status_order.svg
   SvgGenImage get statusOrder =>
       const SvgGenImage('assets/icons/status_order.svg');
@@ -251,6 +254,7 @@ class $AssetsIconsGen {
     promo,
     search,
     share,
+    star,
     statusOrder,
     statusPerpating,
     statusRider,
@@ -299,6 +303,14 @@ class $AssetsImagesGen {
   AssetGenImage get profileEmpty =>
       const AssetGenImage('assets/images/profile_empty.png');
 
+  /// File path: assets/images/rate_restaurant_logo.png
+  AssetGenImage get rateRestaurantLogo =>
+      const AssetGenImage('assets/images/rate_restaurant_logo.png');
+
+  /// File path: assets/images/rate_rider_avatar.png
+  AssetGenImage get rateRiderAvatar =>
+      const AssetGenImage('assets/images/rate_rider_avatar.png');
+
   /// File path: assets/images/store.png
   AssetGenImage get store => const AssetGenImage('assets/images/store.png');
 
@@ -313,6 +325,8 @@ class $AssetsImagesGen {
     placingOrder,
     preparing,
     profileEmpty,
+    rateRestaurantLogo,
+    rateRiderAvatar,
     store,
   ];
 }

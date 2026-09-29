@@ -1,3 +1,4 @@
+import 'package:cheering/features/tracking/data/models/order_tracking_model.dart';
 import '../../domain/entities/order_detail_entity.dart';
 
 class OrderItemModel extends OrderItemEntity {
@@ -158,7 +159,9 @@ class OrderDetailModel extends OrderDetailEntity {
               ?.map((e) => OrderTimelineModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      rider: json['rider'],
+      rider: json['rider'] != null
+          ? TrackingRiderModel.fromJson(json['rider'] as Map<String, dynamic>)
+          : null,
     );
   }
 

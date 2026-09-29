@@ -44,7 +44,7 @@ final darkColorPalette = AppThemeColors.internal(
   warning: const Color(0xFFFBBF24),
   info: const Color(0xFF3B82F6),
   blue500: const Color(0xFF3B82F6),
-  ratingColor: const Color(0xFFFF9D00),
+  ratingColor: const Color(0xFFFACC15),
 
   // Icons
   iconPrimary: const Color(0xFFF8FAFC),

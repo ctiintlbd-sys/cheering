@@ -31,14 +31,14 @@ final List<RouteBase> mainRoutes = [
           ),
         ],
       ),
-      StatefulShellBranch(
+    /*  StatefulShellBranch(
         routes: [
           GoRoute(
             path: RoutePaths.storeTab,
             builder: (context, state) => const StoreScreen(),
           ),
         ],
-      ),
+      ),*/
       StatefulShellBranch(
         routes: [
           GoRoute(

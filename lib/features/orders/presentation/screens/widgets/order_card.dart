@@ -108,7 +108,10 @@ class OrderCard extends StatelessWidget {
                 ),
                 if (order.status == 'DELIVERED') ...[
                   CustomContainer(
-                    onTap: () {},
+                    onTap: () => context.push(
+                      RoutePaths.rateOrder,
+                      extra: order,
+                    ),
                     radiusAll: 38.r,
                     paddingHorizontal: 12.w,
                     paddingVertical: 8.w,
