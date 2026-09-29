@@ -33,10 +33,14 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
   }
 
   Future<void> _loadOverlay() async {
-    final overlay = await TrackingMapOverlay.build(tracking: widget.tracking);
-    if (!mounted) return;
-    _overlay.value = overlay;
-    _fitRoute();
+    try {
+      final overlay = await TrackingMapOverlay.build(tracking: widget.tracking);
+      if (!mounted) return;
+      _overlay.value = overlay;
+      _fitRoute();
+    } catch (error, stackTrace) {
+      debugPrint('Tracking overlay failed: $error\n$stackTrace');
+    }
   }
 
   void _fitRoute() {
@@ -69,7 +73,7 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
             zoomControlsEnabled: false,
             compassEnabled: false,
             mapToolbarEnabled: false,
-            padding: EdgeInsets.only(bottom: 360.w),
+            padding: EdgeInsets.only(bottom: 360.h),
           );
         },
       ),

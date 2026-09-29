@@ -85,11 +85,11 @@ class OrderTrackingModel extends OrderTrackingEntity {
     return OrderTrackingModel(
       orderId: json['order_id'] as String? ?? '',
       status: json['status'] as String? ?? 'PENDING',
-      timeline: (json['timeline'] as List<dynamic>?)
+      timeline:
+          (json['timeline'] as List<dynamic>?)
               ?.map(
-                (e) => TrackingTimelineModel.fromJson(
-                  e as Map<String, dynamic>,
-                ),
+                (e) =>
+                    TrackingTimelineModel.fromJson(e as Map<String, dynamic>),
               )
               .toList() ??
           const [],

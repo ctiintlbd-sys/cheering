@@ -1,258 +1,306 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:cheering/core/utils/assets/assets.gen.dart';
 
 abstract final class MapMarkerHelper {
-  // ── Singleton cache — একবার render হলে memory তে থাকে ──────────────
-  static BitmapDescriptor? _cachedLocationMarker;
-  static final Map<String, BitmapDescriptor> _cachedProfileMarkers = {};
+  /// Markers are drawn at this scale and displayed at 1/scale size,
+  /// so they look sharp and the same size on every device.
+  static const _pixelRatio = 3.0;
 
-  /// Main location pin marker:
-  /// - Ground এ: 20×20 solid red circle + 48px border ring (10% red/500 — Figma exact)
-  /// - উপরে: map_location.png asset icon
-  static Future<BitmapDescriptor> createLocationMarker({
-    double width = 96, // ← বড় করা: 48px border ring + pin icon ধরতে
-    double height = 96,
-    Color circleColor = const Color(0xFFEF4444), // red/500 — Figma exact
-    bool useCache = true,
-  }) async {
-    // ✅ Cache hit — re-render এড়ানো
-    if (useCache && _cachedLocationMarker != null) {
-      return _cachedLocationMarker!;
-    }
+  static BitmapDescriptor? _locationMarker;
+  static final Map<String, BitmapDescriptor> _profileMarkers = {};
+  static final Map<String, BitmapDescriptor> _badgeMarkers = {};
 
-    // ── 1. Asset image load ──────────────────────────────────────────
-    final ByteData byteData = await rootBundle.load(
-      Assets.images.mapLocation.path,
-    );
-    final ui.Codec codec = await ui.instantiateImageCodec(
-      byteData.buffer.asUint8List(),
-    );
-    final ui.FrameInfo frameInfo = await codec.getNextFrame();
-    final ui.Image image = frameInfo.image;
-
-    // ── 2. Canvas setup ──────────────────────────────────────────────
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-
-    final double cx = width / 2; // horizontal center
-    final double cy =
-        height - 14; // ground dot vertical center (pin tip এর কাছে)
-
-    // ── 3. Border ring — 48px, red/500 @ 10% opacity (Figma exact) ──
-    canvas.drawCircle(
-      Offset(cx, cy),
-      24, // radius = 48 / 2
-      Paint()
-        ..color = circleColor.withValues(alpha: 0.10)
-        ..style = PaintingStyle.fill,
-    );
-
-    // ── 4. Solid red dot — 20×20 perfect circle (Figma exact) ───────
-    canvas.drawCircle(
-      Offset(cx, cy),
-      10, // radius = 20 / 2
-      Paint()
-        ..color = circleColor
-        ..style = PaintingStyle.fill,
-    );
-
-    // ── 5. Pin icon — dot এর উপরে, canvas top থেকে ─────────────────
-    //    pin bottom = cy (dot center), top থেকে সেই পর্যন্ত
-    final double pinH = cy;
-    final double pinW = pinH * (image.width / image.height);
-    final double pinL = (width - pinW) / 2;
-
-    canvas.drawImageRect(
-      image,
-      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-      Rect.fromLTWH(pinL, 0, pinW, pinH),
-      Paint()
-        ..filterQuality =
-            FilterQuality.medium, // ✅ high → medium: low-end GPU ভালো
-    );
-
-    // ── 6. PNG render ────────────────────────────────────────────────
-    final picture = recorder.endRecording();
-    final renderedImage = await picture.toImage(width.toInt(), height.toInt());
-    final pngBytes = await renderedImage.toByteData(
-      format: ui.ImageByteFormat.png,
-    );
-
-    if (pngBytes == null) {
-      throw StateError('Failed to render map marker to PNG bytes');
-    }
-
-    final marker = BitmapDescriptor.bytes(pngBytes.buffer.asUint8List());
-
-    if (useCache) _cachedLocationMarker = marker;
-
-    // ✅ Memory cleanup — Flutter GC কে hint দেওয়া
-    image.dispose();
-    renderedImage.dispose();
-
-    return marker;
+  static void clearCache() {
+    _locationMarker = null;
+    _profileMarkers.clear();
+    _badgeMarkers.clear();
   }
 
-  /// Circular badge marker — background circle + icon inside
+  /// Red pin with a ground dot and a soft ring.
+  static Future<BitmapDescriptor> createLocationMarker({
+    double size = 42,
+  }) async {
+    final cached = _locationMarker;
+    if (cached != null) return cached;
+
+    const design = 96.0;
+    final scale = size / design;
+    final cx = size / 2;
+    final cy = size - 14 * scale;
+    const color = Color(0xFFEF4444);
+
+    final image = await _loadAsset(Assets.images.mapLocation.path);
+    try {
+      final pinH = cy;
+      final pinW = pinH * image.width / image.height;
+
+      return _locationMarker = await _render(size, size, (canvas) {
+        canvas.drawCircle(
+          Offset(cx, cy),
+          24 * scale,
+          Paint()..color = color.withValues(alpha: 0.10),
+        );
+        canvas.drawCircle(Offset(cx, cy), 10 * scale, Paint()..color = color);
+        canvas.drawImageRect(
+          image,
+          Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+          Rect.fromLTWH((size - pinW) / 2, 0, pinW, pinH),
+          Paint()..filterQuality = FilterQuality.medium,
+        );
+      });
+    } finally {
+      image.dispose();
+    }
+  }
+
+  /// Red circle with a white ring and an icon inside.
   static Future<BitmapDescriptor> createCircularBadgeMarker({
-    double size = 64,
+    double size = 42,
     Color circleColor = const Color(0xFFDC2626),
     String? assetPath,
   }) async {
-    final path = assetPath ?? Assets.images.mapLocation.path;
-    final ByteData byteData = await rootBundle.load(path);
-    final ui.Codec codec = await ui.instantiateImageCodec(
-      byteData.buffer.asUint8List(),
-    );
-    final ui.FrameInfo frameInfo = await codec.getNextFrame();
-    final ui.Image image = frameInfo.image;
+    final image = await _loadAsset(assetPath ?? Assets.images.mapLocation.path);
+    try {
+      final padding = size * 12 / 64;
+      final center = Offset(size / 2, size / 2);
 
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-
-    // Background red circle
-    canvas.drawCircle(
-      Offset(size / 2, size / 2),
-      size / 2,
-      Paint()
-        ..color = circleColor
-        ..style = PaintingStyle.fill,
-    );
-
-    // White border ring
-    canvas.drawCircle(
-      Offset(size / 2, size / 2),
-      (size / 2) - 1.5,
-      Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3,
-    );
-
-    // Icon inside
-    const double padding = 12.0;
-    final double iconSize = size - (padding * 2);
-    canvas.drawImageRect(
-      image,
-      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-      Rect.fromLTWH(padding, padding, iconSize, iconSize),
-      Paint()
-        ..filterQuality = FilterQuality.medium, // ✅ medium — low-end friendly
-    );
-
-    final picture = recorder.endRecording();
-    final renderedImage = await picture.toImage(size.toInt(), size.toInt());
-    final pngBytes = await renderedImage.toByteData(
-      format: ui.ImageByteFormat.png,
-    );
-
-    if (pngBytes == null) {
-      throw StateError('Failed to render circular badge marker to PNG bytes');
+      return await _render(size, size, (canvas) {
+        canvas.drawCircle(center, size / 2, Paint()..color = circleColor);
+        canvas.drawCircle(
+          center,
+          size / 2 - size * 1.5 / 64,
+          Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = size * 3 / 64,
+        );
+        canvas.drawImageRect(
+          image,
+          Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+          Rect.fromLTWH(
+            padding,
+            padding,
+            size - padding * 2,
+            size - padding * 2,
+          ),
+          Paint()..filterQuality = FilterQuality.medium,
+        );
+      });
+    } finally {
+      image.dispose();
     }
-
-    final marker = BitmapDescriptor.bytes(pngBytes.buffer.asUint8List());
-
-    // ✅ Memory cleanup
-    image.dispose();
-    renderedImage.dispose();
-
-    return marker;
   }
 
-  /// Circular profile pin — photo (or fallback) with a white ring and pointer.
-  static Future<BitmapDescriptor> createProfileMarker({
-    String? photoUrl,
-    String? fallbackAsset,
-    double size = 88,
+  /// Yellow rounded-square pin with a white icon and a downward tail.
+  static Future<BitmapDescriptor> createSvgBadgeMarker({
+    required String assetPath,
+    double size = 42,
+    Color color = const Color(0xFFF5B400),
+    double padFactor = 0.14,
   }) async {
-    final fallback = fallbackAsset ?? Assets.images.placeholder.path;
-    final cacheKey = (photoUrl != null && photoUrl.isNotEmpty)
-        ? photoUrl
-        : fallback;
-    final cached = _cachedProfileMarkers[cacheKey];
+    final cacheKey = '$size|${color.toARGB32()}|$assetPath|$padFactor';
+    final cached = _badgeMarkers[cacheKey];
     if (cached != null) return cached;
 
-    final image = await _loadProfileImage(photoUrl, fallback);
-    final pointer = size * 0.16;
-    final width = size;
-    final height = size + pointer;
-    final center = Offset(size / 2, size / 2);
-    final radius = (size / 2) - 4;
+    final icon = await vg.loadPicture(SvgAssetLoader(assetPath), null);
+    try {
+      final tail = size * 0.2;
+      final bodyHeight = size;
+      final height = bodyHeight + tail;
+      final pad = size * padFactor;
+      final iconRect = Rect.fromLTWH(
+        pad,
+        pad,
+        size - pad * 2,
+        bodyHeight - pad * 2,
+      );
 
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
+      return _badgeMarkers[cacheKey] = await _render(size, height, (canvas) {
+        final center = Offset(size / 2, bodyHeight / 2);
+        final radius = size / 2;
 
-    final pinPath = Path()
-      ..addOval(Rect.fromCircle(center: center, radius: radius + 3))
-      ..moveTo(center.dx - 10, center.dy + radius - 4)
-      ..lineTo(center.dx + 10, center.dy + radius - 4)
-      ..lineTo(center.dx, height - 1)
-      ..close();
+        final circlePath = Path()
+          ..addOval(Rect.fromCircle(center: center, radius: radius));
+        final tailPath = Path()
+          ..moveTo(size * 0.36, bodyHeight * 0.95)
+          ..lineTo(size * 0.64, bodyHeight * 0.95)
+          ..lineTo(size / 2, height - 1)
+          ..close();
 
-    canvas.drawPath(
-      pinPath,
-      Paint()
-        ..color = Colors.black.withValues(alpha: 0.16)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-    );
-    canvas.drawPath(pinPath, Paint()..color = Colors.white);
+        canvas.drawShadow(circlePath, Colors.black, 2, false);
+        canvas.drawCircle(center, radius, Paint()..color = color);
+        canvas.drawPath(tailPath, Paint()..color = color);
 
-    canvas.save();
-    canvas.clipPath(
-      Path()..addOval(Rect.fromCircle(center: center, radius: radius)),
-    );
-    paintImage(
-      canvas: canvas,
-      rect: Rect.fromCircle(center: center, radius: radius),
-      image: image,
-      fit: BoxFit.cover,
-      filterQuality: FilterQuality.medium,
-    );
-    canvas.restore();
-
-    final picture = recorder.endRecording();
-    final renderedImage = await picture.toImage(
-      width.toInt(),
-      height.toInt(),
-    );
-    final pngBytes = await renderedImage.toByteData(
-      format: ui.ImageByteFormat.png,
-    );
-
-    image.dispose();
-    renderedImage.dispose();
-
-    if (pngBytes == null) {
-      throw StateError('Failed to render profile marker to PNG bytes');
+        canvas.save();
+        canvas.translate(iconRect.left, iconRect.top);
+        canvas.scale(
+          iconRect.width / icon.size.width,
+          iconRect.height / icon.size.height,
+        );
+        canvas.drawPicture(icon.picture);
+        canvas.restore();
+      });
+    } finally {
+      icon.picture.dispose();
     }
-
-    final marker = BitmapDescriptor.bytes(pngBytes.buffer.asUint8List());
-    _cachedProfileMarkers[cacheKey] = marker;
-    return marker;
   }
 
-  static Future<ui.Image> _loadProfileImage(
+  static Future<BitmapDescriptor> createProfileMarker({
     String? photoUrl,
-    String fallbackAsset,
-  ) async {
-    if (photoUrl != null && photoUrl.isNotEmpty) {
-      final networkImage = await _loadNetworkImage(photoUrl);
-      if (networkImage != null) return networkImage;
+    bool showOnlineDot = false,
+    double size = 42,
+  }) async {
+    final image =
+    _isNetworkPhoto(photoUrl) ? await _loadNetworkImage(photoUrl!) : null;
+
+    final cacheKey = '$size|$showOnlineDot|${image != null ? photoUrl : 'person'}';
+    final cached = _profileMarkers[cacheKey];
+    if (cached != null) {
+      image?.dispose();
+      return cached;
     }
 
-    final byteData = await rootBundle.load(fallbackAsset);
-    return _decodeImage(byteData.buffer.asUint8List());
+    try {
+      const ring = 5.0;
+      final tail = size * 0.18;
+      final width = size + ring * 2;
+      final height = size + ring * 2 + tail;
+      final center = Offset(width / 2, ring + size / 2);
+      final photoRadius = size / 2 - 2;
+      final photoRect = Rect.fromCircle(center: center, radius: photoRadius);
+
+      return _profileMarkers[cacheKey] = await _render(width, height, (canvas) {
+        canvas.drawCircle(
+          center,
+          size / 2 + ring,
+          Paint()..color = const Color(0xFFE4D7FF),
+        );
+        final tailPath = Path()
+          ..moveTo(center.dx - 6, center.dy + size / 2 - 1)
+          ..lineTo(center.dx + 6, center.dy + size / 2 - 1)
+          ..lineTo(center.dx, height - 1)
+          ..close();
+        canvas.drawPath(tailPath, Paint()..color = const Color(0xFFE4D7FF));
+        canvas.drawCircle(center, size / 2, Paint()..color = Colors.white);
+
+        canvas
+          ..save()
+          ..clipPath(Path()..addOval(photoRect));
+
+        if (image != null) {
+          paintImage(
+            canvas: canvas,
+            rect: photoRect,
+            image: image,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+          );
+        } else {
+          // image null hole Icons.person
+          canvas.drawCircle(
+            center,
+            photoRadius,
+            Paint()..color = const Color(0xFFF8FAFC),
+          );
+          final icon = Icons.person;
+          final painter = TextPainter(
+            text: TextSpan(
+              text: String.fromCharCode(icon.codePoint),
+              style: TextStyle(
+                fontSize: photoRadius * 1.5,
+                fontFamily: icon.fontFamily,
+                package: icon.fontPackage,
+                color: const Color(0xFF94A3B8),
+              ),
+            ),
+            textDirection: TextDirection.ltr,
+          )..layout();
+          painter.paint(
+            canvas,
+            center - Offset(painter.width / 2, painter.height / 2),
+          );
+        }
+        canvas.restore();
+
+        if (showOnlineDot) {
+          final dot = Offset(
+            center.dx + photoRadius * 0.72,
+            center.dy + photoRadius * 0.72,
+          );
+          canvas.drawCircle(dot, 6.2, Paint()..color = Colors.white);
+          canvas.drawCircle(dot, 4.6, Paint()..color = const Color(0xFF22C55E));
+        }
+      });
+    } finally {
+      image?.dispose();
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────
+
+  static Future<ui.Image> _loadAsset(String path) async {
+    final data = await rootBundle.load(path);
+    return _decode(data.buffer.asUint8List());
+  }
+
+  static Future<ui.Image> _decode(Uint8List bytes) async {
+    final codec = await ui.instantiateImageCodec(bytes, targetWidth: 192);
+    try {
+      return (await codec.getNextFrame()).image;
+    } finally {
+      codec.dispose();
+    }
+  }
+
+  /// Draws in logical units, outputs a PNG at [_pixelRatio] density.
+  static Future<BitmapDescriptor> _render(
+    double width,
+    double height,
+    void Function(Canvas canvas) paint,
+  ) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder)..scale(_pixelRatio);
+    paint(canvas);
+
+    final picture = recorder.endRecording();
+    try {
+      final image = await picture.toImage(
+        (width * _pixelRatio).round(),
+        (height * _pixelRatio).round(),
+      );
+      try {
+        final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+        if (bytes == null) throw StateError('Marker PNG render failed');
+        return BitmapDescriptor.bytes(
+          bytes.buffer.asUint8List(),
+          imagePixelRatio: _pixelRatio,
+        );
+      } finally {
+        image.dispose();
+      }
+    } finally {
+      picture.dispose();
+    }
+  }
+
+  static bool _isNetworkPhoto(String? url) {
+    if (url == null || url.isEmpty) return false;
+    final uri = Uri.tryParse(url);
+    return uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
   }
 
   static Future<ui.Image?> _loadNetworkImage(String url) async {
     try {
-      final provider = NetworkImage(url);
       final completer = Completer<ui.Image>();
-      final stream = provider.resolve(const ImageConfiguration());
+      final stream = NetworkImage(url).resolve(const ImageConfiguration());
       late final ImageStreamListener listener;
       listener = ImageStreamListener(
         (info, _) {
@@ -275,31 +323,27 @@ abstract final class MapMarkerHelper {
     }
   }
 
-  static Future<ui.Image> _decodeImage(Uint8List bytes) async {
-    final codec = await ui.instantiateImageCodec(
-      bytes,
-      targetWidth: 192,
-      targetHeight: 192,
-    );
-    final frame = await codec.getNextFrame();
-    return frame.image;
-  }
+  // ── Widget version of the location pin (center-pin overlays) ───────
+  // Move this to its own widget file if it is used outside markers.
 
-  /// Cache manually clear করতে হলে (hot reload / theme change এ দরকার হলে)
-  static void clearCache() {
-    _cachedLocationMarker = null;
-    _cachedProfileMarkers.clear();
-  }
-
-  /// Same Figma pin as [createLocationMarker], for fixed center-pin map overlays.
   static Widget buildLocationPinOverlay({
     double width = 96,
     double height = 96,
     Color circleColor = const Color(0xFFEF4444),
   }) {
-    final double cx = width / 2;
-    final double cy = height - 14;
-    final double scale = height / 96;
+    final cx = width / 2;
+    final cy = height - 14;
+    final scale = height / 96;
+
+    Widget circle(double diameter, Color color) => Positioned(
+      left: cx - diameter * scale / 2,
+      top: cy - diameter * scale / 2,
+      width: diameter * scale,
+      height: diameter * scale,
+      child: DecoratedBox(
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      ),
+    );
 
     return SizedBox(
       width: width,
@@ -307,30 +351,8 @@ abstract final class MapMarkerHelper {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(
-            left: cx - (24 * scale),
-            top: cy - (24 * scale),
-            width: 48 * scale,
-            height: 48 * scale,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: circleColor.withValues(alpha: 0.10),
-              ),
-            ),
-          ),
-          Positioned(
-            left: cx - (10 * scale),
-            top: cy - (10 * scale),
-            width: 20 * scale,
-            height: 20 * scale,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: circleColor,
-              ),
-            ),
-          ),
+          circle(48, circleColor.withValues(alpha: 0.10)),
+          circle(20, circleColor),
           Positioned(
             left: 0,
             right: 0,

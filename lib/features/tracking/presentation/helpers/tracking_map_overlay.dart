@@ -24,42 +24,61 @@ class TrackingMapOverlay {
     final delivery = TrackingMapGeometry.deliveryOf(tracking);
 
     final icons = await Future.wait<BitmapDescriptor?>([
-      MapMarkerHelper.createLocationMarker(),
+      if (delivery == null)
+        Future<BitmapDescriptor?>.value(null)
+      else
+        _loadIcon(
+          () => MapMarkerHelper.createLocationMarker(
+            size: 58,
+          ),
+        ),
       if (restaurant == null)
         Future<BitmapDescriptor?>.value(null)
       else
-        MapMarkerHelper.createCircularBadgeMarker(
-          size: 64,
-          assetPath: Assets.images.store.path,
+        _loadIcon(
+          () => MapMarkerHelper.createSvgBadgeMarker(
+            assetPath: Assets.icons.statusOrder.path,
+            size: 42,
+          ),
         ),
       if (rider == null)
         Future<BitmapDescriptor?>.value(null)
       else
-        MapMarkerHelper.createProfileMarker(
-          photoUrl: tracking.rider?.photoUrl,
+        _loadIcon(
+          () => MapMarkerHelper.createProfileMarker(
+            photoUrl: tracking.rider?.photoUrl,
+            showOnlineDot: true,
+            size: 34,
+          ),
         ),
     ]);
 
-    final customerIcon = icons[0]!;
+    final customerIcon = icons[0];
     final restaurantIcon = icons[1];
     final riderIcon = icons[2];
     final points = TrackingMapGeometry.routePointsOf(tracking);
 
     return TrackingMapOverlay(
       markers: {
-        if (delivery != null)
+        if (delivery != null && customerIcon != null)
           Marker(
             markerId: const MarkerId('customer'),
             position: delivery,
             icon: customerIcon,
+            anchor: const Offset(0.5, 1.0),
             zIndexInt: 2,
             infoWindow: InfoWindow(title: tracking.deliveryAddressText),
           ),
-        if (rider != null && riderIcon != null)
+        if (rider != null)
           Marker(
             markerId: const MarkerId('rider'),
             position: rider,
-            icon: riderIcon,
+            icon:
+                riderIcon ??
+                BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueAzure,
+                ),
+            anchor: const Offset(0.5, 1.0),
             zIndexInt: 3,
             infoWindow: InfoWindow(title: tracking.rider?.name ?? 'Rider'),
           ),
@@ -68,6 +87,7 @@ class TrackingMapOverlay {
             markerId: const MarkerId('restaurant'),
             position: restaurant,
             icon: restaurantIcon,
+            anchor: const Offset(0.5, 1.0),
             infoWindow: InfoWindow(title: tracking.restaurantName),
           ),
       },
@@ -76,12 +96,26 @@ class TrackingMapOverlay {
           : {
               Polyline(
                 polylineId: const PolylineId('route'),
-                width: 4,
+                color: const Color(0xFF2563EB),
+                width: 5,
                 points: points,
-                patterns: [PatternItem.dash(18), PatternItem.gap(12)],
+                startCap: Cap.roundCap,
+                endCap: Cap.roundCap,
+                jointType: JointType.round,
               ),
             },
     );
+  }
+
+  static Future<BitmapDescriptor?> _loadIcon(
+    Future<BitmapDescriptor> Function() load,
+  ) async {
+    try {
+      return await load();
+    } catch (error, stackTrace) {
+      debugPrint('Tracking marker failed: $error\n$stackTrace');
+      return null;
+    }
   }
 }
 
@@ -103,15 +137,7 @@ abstract final class TrackingMapGeometry {
       _validLatLng(tracking.deliveryLatitude, tracking.deliveryLongitude);
 
   static List<LatLng> routePointsOf(OrderTrackingEntity tracking) {
-    final rider = riderOf(tracking);
-    final delivery = deliveryOf(tracking);
-    if (rider != null && delivery != null) return [rider, delivery];
-
-    return [
-      ?restaurantOf(tracking),
-      ?rider,
-      ?delivery,
-    ];
+    return [?restaurantOf(tracking), ?riderOf(tracking), ?deliveryOf(tracking)];
   }
 
   static LatLng initialTargetOf(OrderTrackingEntity tracking) =>

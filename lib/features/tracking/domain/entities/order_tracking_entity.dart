@@ -18,7 +18,14 @@ class TrackingRiderEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, phone, photoUrl, ratingAvg, vehicleType];
+  List<Object?> get props => [
+    id,
+    name,
+    phone,
+    photoUrl,
+    ratingAvg,
+    vehicleType,
+  ];
 }
 
 class RiderLocationEntity extends Equatable {
@@ -37,7 +44,13 @@ class RiderLocationEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [latitude, longitude, heading, speedKph, updatedAt];
+  List<Object?> get props => [
+    latitude,
+    longitude,
+    heading,
+    speedKph,
+    updatedAt,
+  ];
 }
 
 class TrackingTimelineEntity extends Equatable {
@@ -90,19 +103,19 @@ class OrderTrackingEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        orderId,
-        status,
-        timeline,
-        restaurantLatitude,
-        restaurantLongitude,
-        restaurantName,
-        deliveryLatitude,
-        deliveryLongitude,
-        deliveryAddressText,
-        estimatedDeliveryAt,
-        etaMinutes,
-        rider,
-        riderLocation,
-        liveTrackingAvailable,
-      ];
+    orderId,
+    status,
+    timeline,
+    restaurantLatitude,
+    restaurantLongitude,
+    restaurantName,
+    deliveryLatitude,
+    deliveryLongitude,
+    deliveryAddressText,
+    estimatedDeliveryAt,
+    etaMinutes,
+    rider,
+    riderLocation,
+    liveTrackingAvailable,
+  ];
 }
