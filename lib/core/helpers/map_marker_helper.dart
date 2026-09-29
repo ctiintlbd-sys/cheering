@@ -156,89 +156,134 @@ abstract final class MapMarkerHelper {
     bool showOnlineDot = false,
     double size = 42,
   }) async {
-    final image =
-    _isNetworkPhoto(photoUrl) ? await _loadNetworkImage(photoUrl!) : null;
+    final image = _isNetworkPhoto(photoUrl)
+        ? await _loadNetworkImage(photoUrl!)
+        : null;
 
-    final cacheKey = '$size|$showOnlineDot|${image != null ? photoUrl : 'person'}';
+    final cacheKey =
+        '$size|$showOnlineDot|${image != null ? photoUrl : 'person'}';
     final cached = _profileMarkers[cacheKey];
     if (cached != null) {
       image?.dispose();
       return cached;
     }
 
+    PictureInfo? riderIcon;
     try {
-      const ring = 5.0;
+      if (showOnlineDot) {
+        riderIcon = await vg.loadPicture(
+          SvgAssetLoader(Assets.icons.statusRider.path),
+          null,
+        );
+      }
+
+      const ring = 1.0;
       final tail = size * 0.18;
       final width = size + ring * 2;
       final height = size + ring * 2 + tail;
       final center = Offset(width / 2, ring + size / 2);
       final photoRadius = size / 2 - 2;
       final photoRect = Rect.fromCircle(center: center, radius: photoRadius);
-
-      return _profileMarkers[cacheKey] = await _render(width, height, (canvas) {
-        canvas.drawCircle(
-          center,
-          size / 2 + ring,
-          Paint()..color = const Color(0xFFE4D7FF),
+      const badge = 16.0;
+      const edge = 2.0;
+      var padX = 0.0;
+      var padTop = 0.0;
+      if (riderIcon != null) {
+        final badgeCenter = Offset(
+          center.dx + photoRadius * 0.78,
+          center.dy - photoRadius * 0.55,
         );
-        final tailPath = Path()
-          ..moveTo(center.dx - 6, center.dy + size / 2 - 1)
-          ..lineTo(center.dx + 6, center.dy + size / 2 - 1)
-          ..lineTo(center.dx, height - 1)
-          ..close();
-        canvas.drawPath(tailPath, Paint()..color = const Color(0xFFE4D7FF));
-        canvas.drawCircle(center, size / 2, Paint()..color = Colors.white);
+        final overflowRight = badgeCenter.dx + badge / 2 + edge - width;
+        final overflowTop = edge - (badgeCenter.dy - badge / 2);
+        if (overflowRight > 0) padX = overflowRight;
+        if (overflowTop > 0) padTop = overflowTop;
+      }
 
-        canvas
-          ..save()
-          ..clipPath(Path()..addOval(photoRect));
-
-        if (image != null) {
-          paintImage(
-            canvas: canvas,
-            rect: photoRect,
-            image: image,
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.medium,
-          );
-        } else {
-          // image null hole Icons.person
+      return _profileMarkers[cacheKey] = await _render(
+        width + padX * 2,
+        height + padTop,
+        (canvas) {
+          canvas.translate(padX, padTop);
           canvas.drawCircle(
             center,
-            photoRadius,
-            Paint()..color = const Color(0xFFF8FAFC),
+            size / 2 + ring,
+            Paint()..color = const Color(0xFFE4D7FF),
           );
-          final icon = Icons.person;
-          final painter = TextPainter(
-            text: TextSpan(
-              text: String.fromCharCode(icon.codePoint),
-              style: TextStyle(
-                fontSize: photoRadius * 1.5,
-                fontFamily: icon.fontFamily,
-                package: icon.fontPackage,
-                color: const Color(0xFF94A3B8),
-              ),
-            ),
-            textDirection: TextDirection.ltr,
-          )..layout();
-          painter.paint(
-            canvas,
-            center - Offset(painter.width / 2, painter.height / 2),
-          );
-        }
-        canvas.restore();
+          final tailPath = Path()
+            ..moveTo(center.dx - 6, center.dy + size / 2 - 1)
+            ..lineTo(center.dx + 6, center.dy + size / 2 - 1)
+            ..lineTo(center.dx, height - 1)
+            ..close();
+          canvas.drawPath(tailPath, Paint()..color = const Color(0xFFE4D7FF));
+          canvas.drawCircle(center, size / 2, Paint()..color = Colors.white);
 
-        if (showOnlineDot) {
-          final dot = Offset(
-            center.dx + photoRadius * 0.72,
-            center.dy + photoRadius * 0.72,
-          );
-          canvas.drawCircle(dot, 6.2, Paint()..color = Colors.white);
-          canvas.drawCircle(dot, 4.6, Paint()..color = const Color(0xFF22C55E));
-        }
-      });
+          canvas
+            ..save()
+            ..clipPath(Path()..addOval(photoRect));
+
+          if (image != null) {
+            paintImage(
+              canvas: canvas,
+              rect: photoRect,
+              image: image,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.medium,
+            );
+          } else {
+            // image null hole Icons.person
+            canvas.drawCircle(
+              center,
+              photoRadius,
+              Paint()..color = const Color(0xFFF8FAFC),
+            );
+            final icon = Icons.person;
+            final painter = TextPainter(
+              text: TextSpan(
+                text: String.fromCharCode(icon.codePoint),
+                style: TextStyle(
+                  fontSize: photoRadius * 1.5,
+                  fontFamily: icon.fontFamily,
+                  package: icon.fontPackage,
+                  color: const Color(0xFF94A3B8),
+                ),
+              ),
+              textDirection: TextDirection.ltr,
+            )..layout();
+            painter.paint(
+              canvas,
+              center - Offset(painter.width / 2, painter.height / 2),
+            );
+          }
+          canvas.restore();
+
+          if (riderIcon != null) {
+            final origin = Offset(
+              center.dx + photoRadius * 0.78 - badge / 2,
+              center.dy - photoRadius * 0.55 - badge / 2,
+            );
+            final iconRect = Rect.fromCircle(
+              center: origin + const Offset(badge / 2, badge / 2),
+              radius: badge / 2 - 2.5,
+            );
+            canvas.drawCircle(
+              iconRect.center,
+              badge / 2,
+              Paint()..color = const Color(0xFF16A34A),
+            );
+            canvas.save();
+            canvas.translate(iconRect.left, iconRect.top);
+            canvas.scale(
+              iconRect.width / riderIcon.size.width,
+              iconRect.height / riderIcon.size.height,
+            );
+            canvas.drawPicture(riderIcon.picture);
+            canvas.restore();
+          }
+        },
+      );
     } finally {
       image?.dispose();
+      riderIcon?.picture.dispose();
     }
   }
 
