@@ -5,6 +5,7 @@ import 'package:cheering/features/tracking/presentation/blocs/order_tracking/ord
 import 'package:cheering/features/tracking/presentation/blocs/order_tracking/order_tracking_event.dart';
 import 'package:cheering/features/tracking/presentation/screens/order_tracking_map_screen.dart';
 import 'package:cheering/features/tracking/presentation/screens/order_tracking_screen.dart';
+import 'package:cheering/features/tracking/presentation/screens/rider_chat_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,6 +26,13 @@ final List<RouteBase> trackingRoutes = [
     builder: (context, state) {
       final tracking = state.extra as OrderTrackingEntity;
       return OrderTrackingMapScreen(tracking: tracking);
+    },
+  ),
+  GoRoute(
+    path: RoutePaths.riderChat,
+    builder: (context, state) {
+      final rider = state.extra as TrackingRiderEntity?;
+      return RiderChatScreen(rider: rider);
     },
   ),
 ];

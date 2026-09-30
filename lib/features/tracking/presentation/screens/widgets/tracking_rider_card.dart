@@ -1,8 +1,10 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/tracking/domain/entities/order_tracking_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TrackingRiderCard extends StatelessWidget {
@@ -80,9 +82,9 @@ class TrackingRiderCard extends StatelessWidget {
           ),
           _buildActionButton(
             context: context,
-            onTap: phone == null || phone.isEmpty
-                ? null
-                : () => _open(Uri(scheme: 'sms', path: phone)),
+            onTap: () {
+              context.push(RoutePaths.riderChat, extra: rider);
+            },
             child: Assets.icons.comment.svg(width: 18.r, height: 18.r),
           ),
           SizedBox(width: 8.w),
