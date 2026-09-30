@@ -107,6 +107,7 @@ class OrderCard extends StatelessWidget {
                   ),
                 ),
                 if (order.status == 'DELIVERED') ...[
+                  if(order.canReview)
                   CustomContainer(
                     onTap: () => context.push(
                       RoutePaths.rateOrder,

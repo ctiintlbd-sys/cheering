@@ -55,19 +55,22 @@ class OrderDetailsScreen extends StatelessWidget {
               : order.status == 'DELIVERED'
               ? Row(
                   children: [
-                    Expanded(
-                      child: CustomButton(
-                        label: 'Rate Order',
-                        backgroundColor: Colors.transparent,
-                        bordersColor: context.colors.borderSecondary,
-                        textColor: context.colors.textPrimary,
-                        onPressed: () => context.push(
-                          RoutePaths.rateOrder,
-                          extra: order,
+                    if(order.canReview)...[
+                      Expanded(
+                        child: CustomButton(
+                          label: 'Rate Order',
+                          backgroundColor: Colors.transparent,
+                          bordersColor: context.colors.borderSecondary,
+                          textColor: context.colors.textPrimary,
+                          onPressed: () => context.push(
+                            RoutePaths.rateOrder,
+                            extra: order,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
+                      SizedBox(width: 12.w),
+                    ],
+
                     Expanded(
                       child: CustomButton(
                         label: 'Order Again',
