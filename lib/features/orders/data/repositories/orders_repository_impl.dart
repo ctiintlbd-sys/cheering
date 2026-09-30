@@ -6,6 +6,7 @@ import '../../domain/entities/create_order_params.dart';
 import '../../domain/entities/get_orders_params.dart';
 import '../../domain/entities/order_detail_entity.dart';
 import '../../domain/entities/order_entity.dart';
+import '../../domain/entities/submit_review_params.dart';
 import '../../domain/repositories/i_orders_repository.dart';
 import '../datasources/orders_remote_source.dart';
 import '../models/order_model.dart';
@@ -47,6 +48,12 @@ class OrdersRepositoryImpl implements IOrdersRepository {
   @override
   Future<void> cancelOrder(String orderId, String reason) async {
     final result = await _remoteSource.cancelOrder(orderId, reason);
+    return result.fold(onSuccess: (_) {}, onFailure: (e) => throw e);
+  }
+
+  @override
+  Future<void> submitReview(SubmitReviewParams params) async {
+    final result = await _remoteSource.submitReview(params);
     return result.fold(onSuccess: (_) {}, onFailure: (e) => throw e);
   }
 }

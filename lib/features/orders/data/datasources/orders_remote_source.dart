@@ -3,6 +3,7 @@ import '../../../../core/network/api_result.dart';
 import '../../../../core/network/i_api_client.dart';
 import '../../domain/entities/create_order_params.dart';
 import '../../domain/entities/get_orders_params.dart';
+import '../../domain/entities/submit_review_params.dart';
 import '../models/order_model.dart';
 import '../models/order_detail_model.dart';
 import 'package:uuid/uuid.dart';
@@ -52,6 +53,15 @@ class OrdersRemoteSource {
     return _apiClient.post<void>(
       ApiEndpoints.cancelOrder(orderId),
       body: {'reason': reason},
+      fromJson: (_) {},
+      requiresAuth: true,
+    );
+  }
+
+  Future<ApiResult<void>> submitReview(SubmitReviewParams params) async {
+    return _apiClient.post<void>(
+      ApiEndpoints.orderReviews(params.orderId),
+      body: params.toMap(),
       fromJson: (_) {},
       requiresAuth: true,
     );

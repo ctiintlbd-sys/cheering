@@ -18,25 +18,31 @@ class RatingStarsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: CustomText(
-            text: title,
-            fontWeight: FontWeight.w500,
-          ),
+        CustomText(
+          text: title,
+          fontWeight: FontWeight.w500,
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (i) {
+            final isFilled = i < rating;
             return GestureDetector(
               onTap: () => onChanged(i + 1),
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2.w),
-                child: Assets.icons.star.svg(
-                  color: i < rating
-                      ? context.colors.ratingColor
-                      : context.colors.borderSecondary,
+                child: AnimatedScale(
+                  scale: isFilled ? 1.1 : 1.0,
+                  duration: const Duration(milliseconds: 150),
+                  child: Assets.icons.star.svg(
+                    width: 22.r,
+                    height: 22.r,
+                    color: isFilled
+                        ? context.colors.ratingColor
+                        : context.colors.borderSecondary,
+                  ),
                 ),
               ),
             );
