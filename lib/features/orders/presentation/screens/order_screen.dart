@@ -25,6 +25,7 @@ class OrderScreen extends StatelessWidget {
             context.read<OrderListBloc>().add(RefreshOrders(params: params));
           },
           appBar: CustomSliverAppBar(
+            showLeading: false,
             toolbarHeight: 18.w,
             flexibleChild: CustomText(
               text: 'Order',
