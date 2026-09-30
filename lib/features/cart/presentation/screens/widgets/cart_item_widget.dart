@@ -2,9 +2,9 @@ import 'package:cheering/core/common_widgets/quantity_button.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../domain/entities/cart_add_on_entity.dart';
 import '../../../domain/entities/cart_item_entity.dart';
 import '../../../domain/entities/add_cart_item_params.dart';
+import 'cart_item_add_ons_widget.dart';
 
 class CartItemWidget extends StatelessWidget {
   final CartItemEntity item;
@@ -49,7 +49,8 @@ class CartItemWidget extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     maxLines: 1,
                   ),
-                  if (item.variantName != null || (item.addOns.isEmpty && item.addOnNames.isNotEmpty))
+                  if (item.variantName != null ||
+                      (item.addOns.isEmpty && item.addOnNames.isNotEmpty))
                     CustomText(
                       top: 2.w,
                       text: [
@@ -110,118 +111,12 @@ class CartItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (item.addOns.isNotEmpty) ...[
-          SizedBox(height: 10.w),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.w),
-            decoration: BoxDecoration(
-              color: context.colors.bgSecondary,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: 'Add-ons',
-                  fontSize: 11.r,
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.textSecondary,
-                  bottom: 6.w,
-                ),
-                ...item.addOns.map((addOn) => _buildAddOnItem(context, addOn)),
-              ],
-            ),
+        if (item.addOns.isNotEmpty)
+          CartItemAddOnsWidget(
+            addOns: item.addOns,
+            onUpdateAddOnQuantity: onUpdateAddOnQuantity,
           ),
-        ],
       ],
-    );
-  }
-
-  Widget _buildAddOnItem(BuildContext context, CartAddOnEntity addOn) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.w),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText(
-                  text: addOn.name,
-                  fontSize: 13.r,
-                  fontWeight: FontWeight.w500,
-                ),
-                if (addOn.unitPrice > 0)
-                  CustomText(
-                    text: '+৳${(addOn.unitPrice * addOn.quantity).toStringAsFixed(0)}',
-                    fontSize: 11.r,
-                    color: context.colors.textTertiary,
-                  ),
-              ],
-            ),
-          ),
-          _buildAddOnStepper(context, addOn),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddOnStepper(BuildContext context, CartAddOnEntity addOn) {
-    return Container(
-      padding: EdgeInsets.all(2.r),
-      decoration: BoxDecoration(
-        color: context.colors.bgTertiary,
-        borderRadius: BorderRadius.circular(6.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              onUpdateAddOnQuantity?.call(addOn.id, addOn.quantity - 1);
-            },
-            child: Container(
-              padding: EdgeInsets.all(4.r),
-              decoration: BoxDecoration(
-                color: context.colors.background,
-                borderRadius: BorderRadius.circular(4.r),
-              ),
-              child: Icon(
-                addOn.quantity == 1 ? Icons.delete_outline : Icons.remove,
-                color: addOn.quantity == 1 ? context.colors.error : context.colors.textSecondary,
-                size: 14.r,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: CustomText(
-              text: '${addOn.quantity}',
-              fontSize: 12.r,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              onUpdateAddOnQuantity?.call(addOn.id, addOn.quantity + 1);
-            },
-            child: Container(
-              padding: EdgeInsets.all(4.r),
-              decoration: BoxDecoration(
-                color: context.colors.primary,
-                borderRadius: BorderRadius.circular(4.r),
-              ),
-              child: Icon(
-                Icons.add,
-                color: context.colors.white,
-                size: 14.r,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
