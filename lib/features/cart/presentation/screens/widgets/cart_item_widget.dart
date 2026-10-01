@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../domain/entities/cart_item_entity.dart';
 import '../../../domain/entities/add_cart_item_params.dart';
-import 'cart_item_add_ons_widget.dart';
 
 class CartItemWidget extends StatelessWidget {
   final CartItemEntity item;
@@ -26,6 +25,14 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final addOnLabel = item.addOns.isNotEmpty
+        ? item.addOns.map((a) => a.name).join(', ') // field name tomar model onujayi
+        : item.addOnNames.join(', ');
+
+    final subtitle = [
+      if (item.variantName != null) item.variantName!,
+      if (addOnLabel.isNotEmpty) addOnLabel,
+    ].join(' · ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,15 +56,10 @@ class CartItemWidget extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     maxLines: 1,
                   ),
-                  if (item.variantName != null ||
-                      (item.addOns.isEmpty && item.addOnNames.isNotEmpty))
+                  if (item.variantName != null || (item.addOnNames.isNotEmpty))
                     CustomText(
                       top: 2.w,
-                      text: [
-                        if (item.variantName != null) item.variantName,
-                        if (item.addOns.isEmpty && item.addOnNames.isNotEmpty)
-                          item.addOnNames.join(', '),
-                      ].join(' · '),
+                      text: subtitle,
                       fontSize: 12.r,
                       color: context.colors.textTertiary,
                       maxLines: 1,
@@ -111,11 +113,11 @@ class CartItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (item.addOns.isNotEmpty)
-          CartItemAddOnsWidget(
-            addOns: item.addOns,
-            onUpdateAddOnQuantity: onUpdateAddOnQuantity,
-          ),
+        // if (item.addOns.isNotEmpty)
+        //   CartItemAddOnsWidget(
+        //     addOns: item.addOns,
+        //     onUpdateAddOnQuantity: onUpdateAddOnQuantity,
+        //   ),
       ],
     );
   }
