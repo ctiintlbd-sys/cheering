@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/helpers/toast_message_helper.dart';
 import '../../../../core/utils/app_date_formatter.dart';
 import '../../../../core/widgets/widgets.dart';
