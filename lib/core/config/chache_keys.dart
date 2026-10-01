@@ -12,4 +12,5 @@ class CacheKeys {
       'checkout_summary_${query.hashCode}';
   static String orders(Map<String, dynamic> query) =>
       'orders_${query.hashCode}';
+  static String orderMessages(String orderId) => 'order_messages_$orderId';
 }

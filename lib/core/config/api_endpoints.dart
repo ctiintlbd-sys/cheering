@@ -52,4 +52,5 @@ class ApiEndpoints {
   static String cancelOrder(String id) => '/orders/$id/cancel';
   static String orderTracking(String id) => '/orders/$id/tracking';
   static String orderReviews(String id) => '/orders/$id/reviews';
+  static String orderMessages(String id) => '/orders/$id/messages';
 }

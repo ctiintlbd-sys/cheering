@@ -400,21 +400,6 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
         top: false,
         child: Row(
           children: [
-            InkWell(
-              onTap: () {
-                ToastMessageHelper.show('Attachments coming soon');
-              },
-              borderRadius: BorderRadius.circular(20.r),
-              child: Padding(
-                padding: EdgeInsets.all(6.r),
-                child: Icon(
-                  Icons.add,
-                  size: 26.r,
-                  color: context.colors.textPrimary,
-                ),
-              ),
-            ),
-            SizedBox(width: 8.w),
             Expanded(
               child: Container(
                 height: 44.h,

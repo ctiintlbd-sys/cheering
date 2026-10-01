@@ -8,6 +8,7 @@ import 'cart_dependencies.dart';
 import 'orders_dependencies.dart';
 import 'tracking_dependencies.dart';
 import 'search_dependencies.dart';
+import 'chat_dependencies.dart';
 
 /// Global GetIt instance alias
 final GetIt getIt = GetIt.instance;
@@ -23,4 +24,5 @@ Future<void> setupServiceLocator() async {
   setupOrdersDependencies(getIt);
   setupTrackingDependencies(getIt);
   setupSearchDependencies(getIt);
+  setupChatDependencies(getIt);
 }
