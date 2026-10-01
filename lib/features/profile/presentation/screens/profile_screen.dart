@@ -40,6 +40,7 @@ class ProfileScreen extends StatelessWidget {
           return SliverScaffold(
             sideContentPadding: 16.w,
             appBar: CustomSliverAppBar(
+              showLeading: false,
               expandedHeight: isAuthenticated ? 0 : 414.w,
               title: 'Profile',
               flexibleChild: isAuthenticated
@@ -47,7 +48,6 @@ class ProfileScreen extends StatelessWidget {
                   : const ProfileEmptyWidget(),
             ),
             bodyList: [
-              // ── Profile Header (only when authenticated) ──
               if (isAuthenticated) ...[
                 SizedBox(height: 16.w),
                 profileState.isLoadProfileLoading

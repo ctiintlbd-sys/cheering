@@ -35,7 +35,9 @@ class SuperDealsCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: Stack(
         children: [
-          CustomNetworkImage(borderRadius: 12.r, imageUrl: _imageUrl),
+          CustomNetworkImage(
+            width: 248.w,
+            borderRadius: 12.r, imageUrl: _imageUrl),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
