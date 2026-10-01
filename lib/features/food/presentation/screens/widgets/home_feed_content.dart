@@ -18,7 +18,6 @@ import 'super_deals_card.dart';
 
 const int _kMaxVisibleCategories = 10;
 
-// CategoriesSection
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key, required this.categories});
 
