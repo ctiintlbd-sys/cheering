@@ -23,8 +23,6 @@ class RiderChatScreen extends StatefulWidget {
 class _RiderChatScreenState extends State<RiderChatScreen> {
   final ScrollController _scrollController = ScrollController();
   Timer? _pollTimer;
-  bool _isFirstLoad = true;
-
   @override
   void initState() {
     super.initState();
@@ -39,6 +37,7 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
   }
 
   void _startPolling() {
+    _jumpToBottom();
     _pollTimer?.cancel();
     _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!mounted) return;
@@ -47,13 +46,6 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
         context.read<ChatBloc>().add(PollChatThread(state.orderId));
       }
     });
-  }
-
-  bool get _isNearBottom {
-    if (!_scrollController.hasClients) return true;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return (maxScroll - currentScroll) <= 150.0;
   }
 
   void _jumpToBottom() {
@@ -95,15 +87,6 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
       listener: (context, state) {
         if (state.sendErrorMessage != null) {
           ToastMessageHelper.show(state.sendErrorMessage!);
-        }
-
-        if (state.thread != null && state.thread!.messages.isNotEmpty) {
-          if (_isFirstLoad) {
-            _isFirstLoad = false;
-            _jumpToBottom();
-          } else if (_isNearBottom) {
-            _scrollToBottom();
-          }
         }
       },
       builder: (context, state) {
@@ -161,9 +144,7 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
             onSend: (text) => _sendMessage(state.orderId, text),
             onInputTap: () {
               Future.delayed(const Duration(milliseconds: 250), () {
-                if (_isNearBottom) {
                   _scrollToBottom();
-                }
               });
             },
           ),

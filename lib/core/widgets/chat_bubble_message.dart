@@ -1,3 +1,4 @@
+import 'package:cheering/core/utils/assets/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cheering/core/theme/app_theme_colors.dart';
@@ -22,87 +23,78 @@ class ChatBubbleMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bubbleColor = isMe ? context.colors.primary : context.colors.white;
-    final textColor = isMe ? Colors.white : context.colors.textPrimary;
+    final bubbleColor = isMe ? context.colors.primary : context.colors.background;
+    final textColor = isMe ? context.colors.white : context.colors.textPrimary;
     final timeColor = isMe
-        ? Colors.white.withValues(alpha: 0.85)
+        ? context.colors.white.withValues(alpha: 0.7)
         : context.colors.textTertiary;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
       child: Align(
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 0.78.sw,
-            minWidth: 72.w,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: bubbleColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.r),
+              topRight: Radius.circular(16.r),
+              bottomLeft: Radius.circular(isMe ? 16.r : 0),
+              bottomRight: Radius.circular(isMe ? 0 : 16.r),
+            )
           ),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: bubbleColor,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: isMe
-                  ? null
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-            ),
-            child: Column(
-              crossAxisAlignment:
-                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildMessageContent(textColor),
-                SizedBox(height: 4.h),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment:
-                      isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      time,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w400,
+          child: Column(
+            crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildMessageContent(textColor),
+              SizedBox(height: 4.h),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment:
+                    isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                children: [
+                  Text(
+                    time,
+                    style: TextStyle(
+                      fontSize: 14.w,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: FontFamily.sFPro,
+                      color: timeColor,
+                    ),
+                  ),
+                  if (isMe) ...[
+                    SizedBox(width: 4.w),
+                    if (status == 'pending')
+                      Icon(
+                        Icons.access_time_rounded,
+                        size: 12.r,
+                        color: timeColor,
+                      )
+                    else if (status == 'failed')
+                      Icon(
+                        Icons.error_outline_rounded,
+                        size: 12.r,
+                        color: timeColor,
+                      )
+                    else if (isSeen)
+                      Icon(
+                        Icons.done_all,
+                        size: 12.r,
+                        color: timeColor,
+                      )
+                    else
+                      Icon(
+                        Icons.check,
+                        size: 12.r,
                         color: timeColor,
                       ),
-                    ),
-                    if (isMe) ...[
-                      SizedBox(width: 4.w),
-                      if (status == 'pending')
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 12.r,
-                          color: Colors.white.withValues(alpha: 0.85),
-                        )
-                      else if (status == 'failed')
-                        Icon(
-                          Icons.error_outline_rounded,
-                          size: 13.r,
-                          color: Colors.white,
-                        )
-                      else if (isSeen)
-                        Icon(
-                          Icons.done_all,
-                          size: 14.r,
-                          color: Colors.white,
-                        )
-                      else
-                        Icon(
-                          Icons.check,
-                          size: 13.r,
-                          color: Colors.white,
-                        ),
-                    ],
                   ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -115,10 +107,10 @@ class ChatBubbleMessage extends StatelessWidget {
         text!,
         textAlign: isMe ? TextAlign.right : TextAlign.left,
         style: TextStyle(
-          fontSize: 14.sp,
+          fontSize: 16.w,
           fontWeight: FontWeight.w400,
+          fontFamily: FontFamily.sFPro,
           color: textColor,
-          height: 1.35,
         ),
       );
     } else if (images != null && images!.isNotEmpty) {
