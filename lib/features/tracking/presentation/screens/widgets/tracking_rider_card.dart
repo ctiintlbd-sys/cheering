@@ -8,9 +8,11 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TrackingRiderCard extends StatelessWidget {
-  const TrackingRiderCard({super.key, required this.rider});
+  const TrackingRiderCard({super.key, required this.tracking});
 
-  final TrackingRiderEntity rider;
+  final OrderTrackingEntity tracking;
+
+  TrackingRiderEntity? get rider => tracking.rider;
 
   Future<void> _open(Uri uri) async {
     if (await canLaunchUrl(uri)) {
@@ -20,7 +22,10 @@ class TrackingRiderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phone = rider.phone?.trim();
+    final currentRider = rider;
+    if (currentRider == null) return const SizedBox.shrink();
+
+    final phone = currentRider.phone?.trim();
 
     return CustomContainer(
       radiusAll: 12.r,
@@ -32,7 +37,7 @@ class TrackingRiderCard extends StatelessWidget {
             width: 44.r,
             height: 44.r,
             boxShape: BoxShape.circle,
-            imageUrl: rider.photoUrl,
+            imageUrl: currentRider.photoUrl,
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -40,7 +45,7 @@ class TrackingRiderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  text: rider.name,
+                  text: currentRider.name,
                   fontSize: 16.w,
                   fontWeight: FontWeight.w600,
                   maxLines: 1,
@@ -55,24 +60,25 @@ class TrackingRiderCard extends StatelessWidget {
                       color: context.colors.textTertiary,
                     ),
                     children: [
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: Icon(
-                            Icons.star_rounded,
-                            size: 12.r,
-                            color: context.colors.ratingColor,
-                          ),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.star_rounded,
+                          size: 12.r,
+                          color: context.colors.ratingColor,
                         ),
-                        TextSpan(
-                          text: ' ${rider.ratingAvg?.toStringAsFixed(1) ?? 0}',
-                          style: TextStyle(
-                            color: context.colors.textSecondary,
-                          ),
-                        ),
-                        const TextSpan(text: ' • '),
+                      ),
                       TextSpan(
                         text:
-                            'ID ${rider.id.substring(rider.id.length - 6).toUpperCase()}',
+                            ' ${currentRider.ratingAvg?.toStringAsFixed(1) ?? 0}',
+                        style: TextStyle(
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
+                      const TextSpan(text: ' • '),
+                      TextSpan(
+                        text:
+                            'ID ${currentRider.id.length >= 6 ? currentRider.id.substring(currentRider.id.length - 6).toUpperCase() : currentRider.id}',
                       ),
                     ],
                   ),
@@ -83,7 +89,10 @@ class TrackingRiderCard extends StatelessWidget {
           _buildActionButton(
             context: context,
             onTap: () {
-              context.push(RoutePaths.riderChat, extra: rider);
+              context.push(
+                RoutePaths.riderChatPath(tracking.orderId),
+                extra: tracking,
+              );
             },
             child: Assets.icons.comment.svg(width: 18.r, height: 18.r),
           ),

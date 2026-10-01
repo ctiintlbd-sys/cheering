@@ -24,7 +24,8 @@ abstract class RoutePaths {
   static const String orderTracking = '/order-tracking/:id';
   static String tracking(String id) => '/order-tracking/$id';
   static const String orderTrackingMap = '/order-tracking-map';
-  static const String riderChat = '/rider-chat';
+  static const String riderChat = '/rider-chat/:id';
+  static String riderChatPath(String id) => '/rider-chat/$id';
   static const String orderDetails = '/order-details/:id';
   static String details(String id) => '/order-details/$id';
   static const String rateOrder = '/rate-order';

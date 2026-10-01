@@ -92,7 +92,7 @@ class _TrackingMapSheetState extends State<TrackingMapSheet> {
               ),
               if (rider != null) ...[
                 SizedBox(height: 20.w),
-                TrackingRiderCard(rider: rider),
+                TrackingRiderCard(tracking: tracking),
               ],
               SizedBox(height: 12.w),
             ],
