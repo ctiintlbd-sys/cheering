@@ -2,10 +2,12 @@ import '../../../../core/config/api_endpoints.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/network/i_api_client.dart';
 import '../../domain/entities/restaurant_query_params.dart';
+import '../../domain/entities/reel_query_params.dart';
 import '../models/home_feed_model.dart';
 import '../models/restaurant_model.dart';
 import '../models/menu_model.dart';
 import '../models/category_model.dart';
+import '../models/reel_model.dart';
 
 class FoodRemoteSource {
   final IApiClient _apiClient;
@@ -85,6 +87,16 @@ class FoodRemoteSource {
             .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
             .toList();
       },
+      requiresAuth: false,
+    );
+  }
+
+  Future<ApiResult<ReelsResponseModel>> getReels(ReelQueryParams params) async {
+    return _apiClient.get<ReelsResponseModel>(
+      ApiEndpoints.reels,
+      queryParameters: params.toMap(),
+      fromJson: (json) =>
+          ReelsResponseModel.fromJson(json as Map<String, dynamic>),
       requiresAuth: false,
     );
   }

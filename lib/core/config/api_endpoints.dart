@@ -35,6 +35,7 @@ class ApiEndpoints {
   // ── Food ───────────────────────────────────────────────────
   static const String homeFeed = '/home/feed';
   static const String restaurants = '/restaurants';
+  static const String reels = '/reels';
   static String restaurantDetails(String id) => '/restaurants/$id';
   static String restaurantMenu(String id) => '/restaurants/$id/menu';
   static const String categories = '/categories';

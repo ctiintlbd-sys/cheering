@@ -7,6 +7,7 @@ import '../../features/food/domain/usecases/get_home_feed_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurant_details_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurant_menu_usecase.dart';
 import '../../features/food/domain/usecases/get_restaurants_usecase.dart';
+import '../../features/food/domain/usecases/get_reels_usecase.dart';
 import '../network/i_api_client.dart';
 import '../services/active_location_service.dart';
 import '../cache/cache_service.dart';
@@ -51,6 +52,12 @@ void setupFoodDependencies(GetIt getIt) {
   );
   getIt.registerLazySingleton(
     () => GetCategoriesUseCase(getIt<IFoodRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => GetReelsUseCase(
+      getIt<IFoodRepository>(),
+      getIt<ActiveLocationService>(),
+    ),
   );
 
   // Blocs

@@ -4,6 +4,8 @@ import '../../domain/entities/restaurant_entity.dart';
 import '../../domain/entities/menu_entity.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/restaurant_query_params.dart';
+import '../../domain/entities/reel_entity.dart';
+import '../../domain/entities/reel_query_params.dart';
 import '../datasources/food_remote_source.dart';
 import '../../../../core/network/api_result.dart';
 import '../../../../core/cache/cache_service.dart';
@@ -11,6 +13,7 @@ import '../../../../core/config/chache_keys.dart';
 import '../models/home_feed_model.dart';
 import '../models/restaurant_model.dart';
 import '../models/category_model.dart';
+import '../models/reel_model.dart';
 
 class FoodRepositoryImpl implements IFoodRepository {
   final FoodRemoteSource _remoteSource;
@@ -80,6 +83,17 @@ class FoodRepositoryImpl implements IFoodRepository {
       toJson: (list) => {'data': list.map((e) => e.toJson()).toList()},
       fetch: () => _remoteSource.getCategories(),
       ttl: const Duration(hours: 24),
+    );
+  }
+
+  @override
+  Stream<ReelsResponseEntity> getReels(ReelQueryParams params) {
+    return _cache.getOrFetch<ReelsResponseModel>(
+      CacheKeys.reels(params.toMap()),
+      fromJson: (json) => ReelsResponseModel.fromJson(json),
+      toJson: (data) => data.toJson(),
+      fetch: () => _remoteSource.getReels(params),
+      ttl: const Duration(minutes: 30),
     );
   }
 }

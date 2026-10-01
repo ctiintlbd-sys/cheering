@@ -3,6 +3,8 @@ import '../entities/restaurant_entity.dart';
 import '../entities/menu_entity.dart';
 import '../entities/category_entity.dart';
 import '../entities/restaurant_query_params.dart';
+import '../entities/reel_entity.dart';
+import '../entities/reel_query_params.dart';
 
 abstract class IFoodRepository {
   Stream<HomeFeedEntity> getHomeFeed({double? lat, double? lng});
@@ -18,4 +20,7 @@ abstract class IFoodRepository {
   Future<List<MenuCategoryEntity>> getRestaurantMenu(String restaurantId);
 
   Stream<List<CategoryEntity>> getCategories();
+
+  Stream<ReelsResponseEntity> getReels(ReelQueryParams params);
 }
+

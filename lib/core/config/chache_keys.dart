@@ -7,6 +7,7 @@ class CacheKeys {
   static const String categories = 'categories_data';
   static String restaurants(Map<String, dynamic> query) =>
       'restaurants_${query.hashCode}';
+  static String reels(Map<String, dynamic> query) => 'reels_${query.hashCode}';
   static const String cart = 'cart_data';
   static String checkoutSummary(Map<String, dynamic> query) =>
       'checkout_summary_${query.hashCode}';
