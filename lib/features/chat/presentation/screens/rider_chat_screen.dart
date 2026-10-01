@@ -36,8 +36,6 @@ class RiderChatScreen extends StatefulWidget {
 class _RiderChatScreenState extends State<RiderChatScreen> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  bool _showCallMenu = false;
-
   late final List<ChatMessageItem> _messages;
 
   @override
@@ -128,7 +126,6 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
   }
 
   Future<void> _makeCellularCall() async {
-    setState(() => _showCallMenu = false);
     final phone = widget.rider?.phone?.trim() ?? '';
     if (phone.isNotEmpty) {
       final uri = Uri(scheme: 'tel', path: phone);
@@ -140,10 +137,6 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
     ToastMessageHelper.show('Cellular call is not available');
   }
 
-  void _makeInAppCall() {
-    setState(() => _showCallMenu = false);
-    ToastMessageHelper.show('Connecting in-app call...');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +240,7 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
                     ),
                   ),
                   CustomContainer(
-                    onTap: () {
-                      setState(() {
-                        _showCallMenu = !_showCallMenu;
-                      });
-                    },
+                    onTap: _makeCellularCall,
                     width: 40.r,
                     height: 40.r,
                     shape: BoxShape.circle,
@@ -273,121 +262,24 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Stack(
-              children: [
-                ListView.builder(
-                  controller: _scrollController,
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = _messages[index];
-                    return ChatBubbleMessage(
-                      key: ValueKey(msg.id),
-                      time: msg.time,
-                      text: msg.text,
-                      isMe: msg.isMe,
-                      isSeen: msg.isSeen,
-                    );
-                  },
-                ),
-                if (_showCallMenu) ...[
-                  Positioned.fill(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => setState(() => _showCallMenu = false),
-                      child: const SizedBox.expand(),
-                    ),
-                  ),
-                  Positioned(
-                    top: 4.h,
-                    right: 16.w,
-                    child: _buildCallMenu(context),
-                  ),
-                ],
-              ],
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.symmetric(vertical: 12.h),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final msg = _messages[index];
+                return ChatBubbleMessage(
+                  key: ValueKey(msg.id),
+                  time: msg.time,
+                  text: msg.text,
+                  isMe: msg.isMe,
+                  isSeen: msg.isSeen,
+                );
+              },
             ),
           ),
           _buildBottomInput(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCallMenu(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      elevation: 0,
-      child: Container(
-        width: 190.w,
-        decoration: BoxDecoration(
-          color: context.colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 16,
-              spreadRadius: 0,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              onTap: _makeInAppCall,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.wifi_calling_3_outlined,
-                      size: 20.r,
-                      color: context.colors.textPrimary,
-                    ),
-                    SizedBox(width: 12.w),
-                    CustomText(
-                      text: 'In app call',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: context.colors.textPrimary,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Divider(
-              height: 1,
-              thickness: 0.8,
-              color: context.colors.outline.withValues(alpha: 0.6),
-            ),
-            InkWell(
-              onTap: _makeCellularCall,
-              borderRadius:
-                  BorderRadius.vertical(bottom: Radius.circular(16.r)),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.signal_cellular_alt_rounded,
-                      size: 20.r,
-                      color: context.colors.textPrimary,
-                    ),
-                    SizedBox(width: 12.w),
-                    CustomText(
-                      text: 'Cellular call',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: context.colors.textPrimary,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
