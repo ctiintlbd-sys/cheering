@@ -16,6 +16,7 @@ import '../cache/cache_service.dart';
 import '../../features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
 import '../../features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
 import '../../features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
+import '../../features/food/presentation/blocs/reels/reels_bloc.dart';
 
 void setupFoodDependencies(GetIt getIt) {
   // Data sources
@@ -75,5 +76,8 @@ void setupFoodDependencies(GetIt getIt) {
       getIt<GetRestaurantDetailsUseCase>(),
       getIt<GetRestaurantMenuUseCase>(),
     ),
+  );
+  getIt.registerFactory(
+    () => ReelsBloc(getIt<GetReelsUseCase>()),
   );
 }

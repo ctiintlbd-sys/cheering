@@ -3,7 +3,7 @@ import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cheering/features/food/presentation/screens/widgets/bites_card.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/bites_section.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/home_feed_loading_widget.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/home_feed_content.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/home_feed/home_feed_bloc.dart';
 import '../blocs/home_feed/home_feed_event.dart';
 import '../blocs/home_feed/home_feed_state.dart';
+import '../blocs/reels/reels_bloc.dart';
+import '../blocs/reels/reels_event.dart';
 import '../../../../features/address/presentation/bloc/address_bloc.dart';
 import '../../../../features/address/presentation/bloc/address_state.dart';
 
@@ -31,6 +33,7 @@ class FoodScreen extends StatelessWidget {
           return SliverScaffold(
             onRefresh: () async {
               context.read<HomeFeedBloc>().add(const LoadHomeFeed());
+              context.read<ReelsBloc>().add(const RefreshReels());
             },
             appBar: CustomSliverAppBar(
               toolbarHeight: 0,
@@ -75,14 +78,7 @@ class FoodScreen extends StatelessWidget {
 
                 // if (state.feed!.promoted.isNotEmpty)
                 // SuperDealsSection(promoted: state.feed!.promoted),
-                SectionHeaderWidget(
-                  title: 'Bites 🔥',
-                  subtitle: "Discover what everyone's eating",
-                  onTap: () {},
-                ).horizontal(16.w),
-                SizedBox(height: 8.w),
-                const BitesItems(),
-                SizedBox(height: 20.w),
+                const BitesSection(),
 
                 if (state.feed!.topRated.isNotEmpty)
                   TopRestaurantsSection(topRated: state.feed!.topRated),
