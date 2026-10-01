@@ -23,6 +23,7 @@ class RiderChatScreen extends StatefulWidget {
 class _RiderChatScreenState extends State<RiderChatScreen> {
   final ScrollController _scrollController = ScrollController();
   Timer? _pollTimer;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
@@ -43,8 +44,29 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
       if (!mounted) return;
       final state = context.read<ChatBloc>().state;
       if (state.orderId.isNotEmpty && (state.thread?.isOpen ?? true)) {
-       // context.read<ChatBloc>().add(PollChatThread(state.orderId));
+        context.read<ChatBloc>().add(PollChatThread(state.orderId));
       }
+    });
+  }
+
+  bool get _isNearBottom {
+    if (!_scrollController.hasClients) return true;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return (maxScroll - currentScroll) <= 150.0;
+  }
+
+  void _jumpToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients &&
+            _scrollController.offset <
+                _scrollController.position.maxScrollExtent) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      });
     });
   }
 
@@ -74,7 +96,15 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
         if (state.sendErrorMessage != null) {
           ToastMessageHelper.show(state.sendErrorMessage!);
         }
-        _scrollToBottom();
+
+        if (state.thread != null && state.thread!.messages.isNotEmpty) {
+          if (_isFirstLoad) {
+            _isFirstLoad = false;
+            _jumpToBottom();
+          } else if (_isNearBottom) {
+            _scrollToBottom();
+          }
+        }
       },
       builder: (context, state) {
         final thread = state.thread;
@@ -130,8 +160,10 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
             closedReason: thread?.closedReason,
             onSend: (text) => _sendMessage(state.orderId, text),
             onInputTap: () {
-              Future.delayed(const Duration(milliseconds: 300), () {
-                _scrollToBottom();
+              Future.delayed(const Duration(milliseconds: 250), () {
+                if (_isNearBottom) {
+                  _scrollToBottom();
+                }
               });
             },
           ),
