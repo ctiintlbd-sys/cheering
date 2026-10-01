@@ -24,11 +24,6 @@ class EmptyState extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontSize: 20.w,
               textAlign: TextAlign.center,
-            ),CustomText(
-              top: 8.w,
-              text: 'We couldn’t find any restaurants\nin this area right now',
-              color: context.colors.textSecondary,
-              textAlign: TextAlign.center,
             ),
           ],
         ),

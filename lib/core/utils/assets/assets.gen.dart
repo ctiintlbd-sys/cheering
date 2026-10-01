@@ -29,8 +29,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bookmark.svg
   SvgGenImage get bookmark => const SvgGenImage('assets/icons/bookmark.svg');
 
+  /// File path: assets/icons/call.svg
+  SvgGenImage get call => const SvgGenImage('assets/icons/call.svg');
+
   /// File path: assets/icons/cart.svg
   SvgGenImage get cart => const SvgGenImage('assets/icons/cart.svg');
+
+  /// File path: assets/icons/chat.svg
+  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
   /// File path: assets/icons/comment.svg
   SvgGenImage get comment => const SvgGenImage('assets/icons/comment.svg');
@@ -212,7 +218,9 @@ class $AssetsIconsGen {
     arrowBack,
     bikash,
     bookmark,
+    call,
     cart,
+    chat,
     comment,
     community,
     communityFil,

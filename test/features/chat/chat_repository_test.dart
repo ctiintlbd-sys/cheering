@@ -152,6 +152,28 @@ void main() {
       expect(result.deliveredOverWebsocket, true);
     });
 
+    test('fetchOrderChatThread returns fresh data and saves to cache', () async {
+      final threadModel = OrderChatThreadModel(
+        orderId: 'order-123',
+        isOpen: true,
+        counterpartyName: 'Rider Fresh',
+        counterpartyRole: 'RIDER',
+        unreadCount: 0,
+        messages: [],
+      );
+
+      fakeRemoteSource.getThreadResult = Success(threadModel, statusCode: 200);
+
+      final fresh = await repository.fetchOrderChatThread('order-123');
+
+      expect(fresh.counterpartyName, 'Rider Fresh');
+      final inCache = fakeCache.get<OrderChatThreadModel>(
+        'order_messages_order-123',
+        fromJson: (json) => OrderChatThreadModel.fromJson(json),
+      );
+      expect(inCache?.counterpartyName, 'Rider Fresh');
+    });
+
     test('sendMessage throws AppException on failure', () async {
       fakeRemoteSource.sendMessageResult = const Failure(
         BadRequestException('Thread is closed'),

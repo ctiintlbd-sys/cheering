@@ -25,6 +25,23 @@ class ChatRepositoryImpl implements IChatRepository {
   }
 
   @override
+  Future<OrderChatThreadEntity> fetchOrderChatThread(String orderId) async {
+    final result = await _remoteSource.getOrderChatThread(orderId);
+    return result.fold(
+      onSuccess: (data) {
+        _cache.set<OrderChatThreadModel>(
+          CacheKeys.orderMessages(orderId),
+          data,
+          toJson: (d) => d.toJson(),
+          ttl: const Duration(minutes: 5),
+        );
+        return data;
+      },
+      onFailure: (error) => throw error,
+    );
+  }
+
+  @override
   Future<SendMessageResultEntity> sendMessage({
     required String orderId,
     required String body,

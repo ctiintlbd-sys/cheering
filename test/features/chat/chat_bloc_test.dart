@@ -23,6 +23,19 @@ class MockRepo implements IChatRepository {
   }
 
   @override
+  Future<OrderChatThreadEntity> fetchOrderChatThread(String orderId) async {
+    return threadToEmit ??
+        OrderChatThreadEntity(
+          orderId: orderId,
+          isOpen: true,
+          counterpartyName: 'Rider',
+          counterpartyRole: 'RIDER',
+          unreadCount: 0,
+          messages: [],
+        );
+  }
+
+  @override
   Future<SendMessageResultEntity> sendMessage({
     required String orderId,
     required String body,
@@ -116,11 +129,61 @@ void main() {
       await expectLater(
         bloc.stream,
         emitsInOrder([
-          isA<ChatState>().having((s) => s.isSending, 'isSending', true),
+          isA<ChatState>()
+              .having((s) => s.isSending, 'isSending', true)
+              .having((s) => s.thread?.messages.length, 'optimistic message count', 1)
+              .having((s) => s.thread?.messages.first.isSending, 'isSending on msg', true),
           isA<ChatState>()
               .having((s) => s.isSending, 'isSending', false)
+              .having((s) => s.thread?.messages.length, 'confirmed messages count', 1)
+              .having((s) => s.thread?.messages.first.body, 'message body', 'I am downstairs')
+              .having((s) => s.thread?.messages.first.isSending, 'isSending on msg', false),
+        ]),
+      );
+    });
+
+    test('PollChatThread updates thread silently without emitting loading status', () async {
+      repo.threadToEmit = const OrderChatThreadEntity(
+        orderId: 'order-123',
+        isOpen: true,
+        counterpartyName: 'Rider Hridoy',
+        counterpartyRole: 'RIDER',
+        unreadCount: 0,
+        messages: [],
+      );
+
+      bloc.add(const LoadChatThread(orderId: 'order-123'));
+      await bloc.stream.firstWhere((s) => s.status == ChatStatus.success);
+
+      // New message arrived from rider on server
+      repo.threadToEmit = OrderChatThreadEntity(
+        orderId: 'order-123',
+        isOpen: true,
+        counterpartyName: 'Rider Hridoy',
+        counterpartyRole: 'RIDER',
+        unreadCount: 0,
+        messages: [
+          ChatMessageEntity(
+            id: 'm-rider-1',
+            orderId: 'order-123',
+            senderRole: 'RIDER',
+            senderName: 'Rider Hridoy',
+            body: 'I have arrived!',
+            createdAt: DateTime.now(),
+            isMine: false,
+          ),
+        ],
+      );
+
+      bloc.add(const PollChatThread('order-123'));
+
+      await expectLater(
+        bloc.stream,
+        emitsInOrder([
+          isA<ChatState>()
+              .having((s) => s.status, 'status remains success', ChatStatus.success)
               .having((s) => s.thread?.messages.length, 'messages count', 1)
-              .having((s) => s.thread?.messages.first.body, 'message body', 'I am downstairs'),
+              .having((s) => s.thread?.messages.first.body, 'message body', 'I have arrived!'),
         ]),
       );
     });

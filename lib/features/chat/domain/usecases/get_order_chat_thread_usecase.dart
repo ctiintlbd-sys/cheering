@@ -9,4 +9,8 @@ class GetOrderChatThreadUseCase {
   Stream<OrderChatThreadEntity> call(String orderId) {
     return _repository.getOrderChatThread(orderId);
   }
+
+  Future<OrderChatThreadEntity> fetchFresh(String orderId) {
+    return _repository.fetchOrderChatThread(orderId);
+  }
 }

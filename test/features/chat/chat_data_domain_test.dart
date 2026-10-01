@@ -125,6 +125,19 @@ class _MockChatRepository implements IChatRepository {
   }
 
   @override
+  Future<OrderChatThreadEntity> fetchOrderChatThread(String orderId) async {
+    calledOrderId = orderId;
+    return OrderChatThreadEntity(
+      orderId: orderId,
+      isOpen: true,
+      counterpartyName: 'Rider Hridoy',
+      counterpartyRole: 'RIDER',
+      unreadCount: 0,
+      messages: const [],
+    );
+  }
+
+  @override
   Future<SendMessageResultEntity> sendMessage({
     required String orderId,
     required String body,

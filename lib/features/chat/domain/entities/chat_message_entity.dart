@@ -9,6 +9,8 @@ class ChatMessageEntity extends Equatable {
   final DateTime createdAt;
   final DateTime? readAt;
   final bool isMine;
+  final bool isSending;
+  final bool isFailed;
 
   const ChatMessageEntity({
     required this.id,
@@ -19,6 +21,8 @@ class ChatMessageEntity extends Equatable {
     required this.createdAt,
     this.readAt,
     required this.isMine,
+    this.isSending = false,
+    this.isFailed = false,
   });
 
   ChatMessageEntity copyWith({
@@ -30,6 +34,8 @@ class ChatMessageEntity extends Equatable {
     DateTime? createdAt,
     DateTime? readAt,
     bool? isMine,
+    bool? isSending,
+    bool? isFailed,
   }) {
     return ChatMessageEntity(
       id: id ?? this.id,
@@ -40,6 +46,8 @@ class ChatMessageEntity extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       readAt: readAt ?? this.readAt,
       isMine: isMine ?? this.isMine,
+      isSending: isSending ?? this.isSending,
+      isFailed: isFailed ?? this.isFailed,
     );
   }
 
@@ -53,5 +61,7 @@ class ChatMessageEntity extends Equatable {
         createdAt,
         readAt,
         isMine,
+        isSending,
+        isFailed,
       ];
 }

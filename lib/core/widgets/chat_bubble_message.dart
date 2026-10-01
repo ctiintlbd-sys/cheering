@@ -74,11 +74,30 @@ class ChatBubbleMessage extends StatelessWidget {
                     ),
                     if (isMe) ...[
                       SizedBox(width: 4.w),
-                      Icon(
-                        Icons.check,
-                        size: 13.r,
-                        color: Colors.white,
-                      ),
+                      if (status == 'pending')
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 12.r,
+                          color: Colors.white.withValues(alpha: 0.85),
+                        )
+                      else if (status == 'failed')
+                        Icon(
+                          Icons.error_outline_rounded,
+                          size: 13.r,
+                          color: Colors.white,
+                        )
+                      else if (isSeen)
+                        Icon(
+                          Icons.done_all,
+                          size: 14.r,
+                          color: Colors.white,
+                        )
+                      else
+                        Icon(
+                          Icons.check,
+                          size: 13.r,
+                          color: Colors.white,
+                        ),
                     ],
                   ],
                 ),

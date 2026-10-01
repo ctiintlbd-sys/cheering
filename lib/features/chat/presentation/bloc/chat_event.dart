@@ -34,3 +34,12 @@ class SendMessageEvent extends ChatEvent {
   @override
   List<Object?> get props => [orderId, body];
 }
+
+class PollChatThread extends ChatEvent {
+  final String orderId;
+
+  const PollChatThread(this.orderId);
+
+  @override
+  List<Object?> get props => [orderId];
+}

@@ -30,8 +30,9 @@ class CommonDetailsActions extends StatelessWidget {
 class CommonActionIcon extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
+  final Color? color;
 
-  const CommonActionIcon({super.key, required this.icon, required this.onTap});
+  const CommonActionIcon({super.key, required this.icon, required this.onTap, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class CommonActionIcon extends StatelessWidget {
       onTap: onTap,
       paddingAll: 10.r,
       shape: BoxShape.circle,
-      color: context.colors.white,
+      color: color ?? context.colors.white,
       alignment: Alignment.center,
       child: SvgPicture.asset(
         icon,
