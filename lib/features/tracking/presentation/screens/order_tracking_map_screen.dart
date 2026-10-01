@@ -72,7 +72,7 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
                   _fitRoute();
                 },
                 markers: overlay.markers,
-                polylines: overlay.polylines,
+               // polylines: overlay.polylines,
                 myLocationEnabled: false,
                 myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
