@@ -123,12 +123,17 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
                   );
                 },
               ),
-             // SizedBox(height: 104.w),
+              SizedBox(height: 16.h),
             ],
           },
           bottomNavigationBar: ChatInputBar(
             closedReason: thread?.closedReason,
             onSend: (text) => _sendMessage(state.orderId, text),
+            onInputTap: () {
+              Future.delayed(const Duration(milliseconds: 300), () {
+                _scrollToBottom();
+              });
+            },
           ),
         );
       },

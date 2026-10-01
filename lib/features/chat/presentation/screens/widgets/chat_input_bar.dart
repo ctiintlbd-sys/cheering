@@ -1,3 +1,4 @@
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,11 +7,13 @@ import '../../../../../core/widgets/widgets.dart';
 class ChatInputBar extends StatefulWidget {
   final String? closedReason;
   final ValueChanged<String> onSend;
+  final VoidCallback? onInputTap;
 
   const ChatInputBar({
     super.key,
     this.closedReason,
     required this.onSend,
+    this.onInputTap,
   });
 
   @override
@@ -35,63 +38,31 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final viewInsetsBottom = MediaQuery.viewInsetsOf(context).bottom;
+    final viewPaddingBottom = MediaQuery.viewPaddingOf(context).bottom;
+    final bottomInset = viewInsetsBottom > 0 ? viewInsetsBottom : viewPaddingBottom;
     return Container(
       color: context.colors.white,
-      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 10.h),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 44.h,
-                decoration: BoxDecoration(
-                  color: context.colors.bgSecondary,
-                  borderRadius: BorderRadius.circular(10.r),
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 10.h + bottomInset),
+      child: Row(
+        children: [
+          Expanded(
+            child: CustomTextField(
+              contentPaddingVertical: 12.w,
+              borderColor: context.colors.bgSecondary,
+              validator: (_) => null,
+              fillColor: context.colors.bgSecondary,
+                     controller: _controller,
+                onTap: widget.onInputTap,
+                  hintText: 'Type a message ...',
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 14.w),
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: _controller,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: context.colors.textPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: 'Type a message ...',
-                    hintStyle: TextStyle(
-                      fontSize: 14.sp,
-                      color: context.colors.textPlaceholder,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  onSubmitted: (_) => _handleSend(),
-                ),
-              ),
-            ),
-            SizedBox(width: 12.w),
-            GestureDetector(
-              onTap: _handleSend,
-              child: Container(
-                width: 44.r,
-                height: 44.r,
-                decoration: BoxDecoration(
-                  color: context.colors.primary,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: 20.r,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(width: 12.w),
+          GestureDetector(
+            onTap: _handleSend,
+            child: Assets.icons.sendMessage.svg(),
+          ),
+        ],
       ),
     );
   }

@@ -92,6 +92,7 @@ class ChatAppBar extends StatelessWidget {
           ),
           SizedBox(width: 10.w),
           CommonActionIcon(
+            color: context.colors.bgSecondary,
             onTap: _makeCall,
             icon: Assets.icons.call.path,
           ),

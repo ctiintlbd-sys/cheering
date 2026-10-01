@@ -1,3 +1,4 @@
+import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -86,47 +87,23 @@ class TrackingRiderCard extends StatelessWidget {
               ],
             ),
           ),
-          _buildActionButton(
-            context: context,
+          CommonActionIcon(
             onTap: () {
               context.push(
                 RoutePaths.riderChatPath(tracking.orderId),
                 extra: tracking,
               );
             },
-            child: Assets.icons.comment.svg(width: 18.r, height: 18.r),
+            icon: Assets.icons.chat.path,
           ),
           SizedBox(width: 8.w),
-          _buildActionButton(
-            context: context,
-            onTap: phone == null || phone.isEmpty
-                ? null
-                : () => _open(Uri(scheme: 'tel', path: phone)),
-            child: Icon(
-              Icons.phone_outlined,
-              size: 18.r,
-              color: context.colors.textPrimary,
-            ),
+          CommonActionIcon(
+            onTap: () => _open(Uri(scheme: 'tel', path: phone)),
+            icon: Assets.icons.call.path,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButton({
-    required BuildContext context,
-    required Widget child,
-    VoidCallback? onTap,
-  }) {
-    return CustomContainer(
-      onTap: onTap,
-      width: 40.r,
-      height: 40.r,
-      shape: BoxShape.circle,
-      color: context.colors.background,
-      bordersColor: context.colors.borderTertiary,
-      alignment: Alignment.center,
-      child: child,
-    );
-  }
 }

@@ -179,6 +179,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
 
+  /// File path: assets/icons/send_message.svg
+  SvgGenImage get sendMessage =>
+      const SvgGenImage('assets/icons/send_message.svg');
+
   /// File path: assets/icons/share.svg
   SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
 
@@ -261,6 +265,7 @@ class $AssetsIconsGen {
     profilePayment,
     promo,
     search,
+    sendMessage,
     share,
     star,
     statusOrder,
