@@ -106,27 +106,24 @@ class _RiderChatScreenState extends State<RiderChatScreen> {
               ),
             ],
             ChatStatus.success => [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                sliver: SliverList.builder(
-                  itemCount: state.thread!.messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = state.thread!.messages[index];
-                    final timeStr = AppDateFormatter.formatTime(msg.createdAt);
-                    return ChatBubbleMessage(
-                      key: ValueKey(msg.id),
-                      time: timeStr,
-                      text: msg.body,
-                      isMe: msg.isMine,
-                      isSeen: msg.readAt != null,
-                      status: msg.isSending
-                          ? 'pending'
-                          : (msg.isFailed ? 'failed' : 'sent'),
-                    );
-                  },
-                ),
+              SliverList.builder(
+                itemCount: state.thread!.messages.length,
+                itemBuilder: (context, index) {
+                  final msg = state.thread!.messages[index];
+                  final timeStr = AppDateFormatter.formatTime(msg.createdAt);
+                  return ChatBubbleMessage(
+                    key: ValueKey(msg.id),
+                    time: timeStr,
+                    text: msg.body,
+                    isMe: msg.isMine,
+                    isSeen: msg.readAt != null,
+                    status: msg.isSending
+                        ? 'pending'
+                        : (msg.isFailed ? 'failed' : 'sent'),
+                  );
+                },
               ),
-              SizedBox(height: 104.w),
+             // SizedBox(height: 104.w),
             ],
           },
           bottomNavigationBar: ChatInputBar(
