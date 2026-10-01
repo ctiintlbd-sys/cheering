@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,7 +42,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
   Widget build(BuildContext context) {
     final viewInsetsBottom = MediaQuery.viewInsetsOf(context).bottom;
     final viewPaddingBottom = MediaQuery.viewPaddingOf(context).bottom;
-    final bottomInset = viewInsetsBottom > 0 ? viewInsetsBottom : viewPaddingBottom;
+    final bottomInset = math.max(viewInsetsBottom, viewPaddingBottom);
     return Container(
       color: context.colors.white,
       padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 10.h + bottomInset),
@@ -52,10 +54,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
               borderColor: context.colors.bgSecondary,
               validator: (_) => null,
               fillColor: context.colors.bgSecondary,
-                     controller: _controller,
-                onTap: widget.onInputTap,
-                  hintText: 'Type a message ...',
-                ),
+              controller: _controller,
+              onTap: widget.onInputTap,
+              hintText: 'Type a message ...',
+            ),
           ),
           SizedBox(width: 12.w),
           GestureDetector(
