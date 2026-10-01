@@ -3,7 +3,6 @@ import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cheering/features/food/domain/entities/reel_entity.dart';
-
 import 'package:cheering/features/food/presentation/screens/widgets/reel_item_view.dart';
 
 class ReelsViewerScreen extends StatefulWidget {
@@ -21,19 +20,20 @@ class ReelsViewerScreen extends StatefulWidget {
 }
 
 class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
-  late PageController _pageController;
-  late int _currentIndex;
+  late final PageController _pageController;
+  late final ValueNotifier<int> _currentIndexNotifier;
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.initialIndex;
+    _currentIndexNotifier = ValueNotifier<int>(widget.initialIndex);
     _pageController = PageController(initialPage: widget.initialIndex);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _currentIndexNotifier.dispose();
     super.dispose();
   }
 
@@ -48,12 +48,19 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
             scrollDirection: Axis.vertical,
             itemCount: widget.reels.length,
             allowImplicitScrolling: true,
-            onPageChanged: (index) => setState(() => _currentIndex = index),
-            itemBuilder: (context, index) => ReelItemView(
-              key: ValueKey(widget.reels[index].id),
-              reel: widget.reels[index],
-              isActive: index == _currentIndex,
-            ),
+            onPageChanged: (index) => _currentIndexNotifier.value = index,
+            itemBuilder: (context, index) {
+              return ValueListenableBuilder<int>(
+                valueListenable: _currentIndexNotifier,
+                builder: (context, currentIndex, _) {
+                  return ReelItemView(
+                    key: ValueKey(widget.reels[index].id),
+                    reel: widget.reels[index],
+                    isActive: index == currentIndex,
+                  );
+                },
+              );
+            },
           ),
           Positioned(
             top: MediaQuery.of(context).padding.top,
@@ -68,4 +75,3 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
     );
   }
 }
-

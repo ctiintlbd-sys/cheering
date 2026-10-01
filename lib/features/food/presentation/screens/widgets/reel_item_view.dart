@@ -39,24 +39,26 @@ class ReelItemView extends StatelessWidget {
       overlayBuilder: (context, controller) {
         final isInitialized =
             controller != null && controller.value.isInitialized;
+
         return Stack(
           fit: StackFit.expand,
           children: [
-            // Bottom gradient
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               height: 200.h,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.8),
-                      Colors.transparent,
-                    ],
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.8),
+                        Colors.transparent,
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -85,7 +87,7 @@ class ReelItemView extends StatelessWidget {
                       ),
                       CustomContainer(
                         radiusAll: 10.r,
-                        paddingVertical: 6.w,
+                        paddingVertical: 6.h,
                         paddingHorizontal: 10.w,
                         color: context.colors.white,
                         onTap: () {
@@ -115,10 +117,8 @@ class ReelItemView extends StatelessWidget {
                       ),
                     ),
                   SizedBox(height: 12.h),
-                  RichText(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
+                  Text.rich(
+                    TextSpan(
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -148,14 +148,17 @@ class ReelItemView extends StatelessWidget {
                         ),
                         TextSpan(
                           text:
-                              ' ${reel.restaurant.avgPrepTimeMins} mins  •  ',
+                              ' ${reel.restaurant.avgPrepTimeMins} mins',
                         ),
-                        TextSpan(
-                          text:
-                              '${reel.restaurant.distanceKm > 0 ? (reel.restaurant.distanceKm % 1 == 0 ? reel.restaurant.distanceKm.toInt() : reel.restaurant.distanceKm.toStringAsFixed(1)) : reel.restaurant.distanceKm}Km',
-                        ),
+                        if (reel.restaurant.distanceKm > 0)
+                          TextSpan(
+                            text:
+                                '  •  ${reel.restaurant.distanceKm % 1 == 0 ? reel.restaurant.distanceKm.toInt() : reel.restaurant.distanceKm.toStringAsFixed(1)}Km',
+                          ),
                       ],
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

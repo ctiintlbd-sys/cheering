@@ -6,12 +6,13 @@ import 'package:video_player/video_player.dart';
 /// vertical reels, feeds, and cards.
 ///
 /// Features:
-/// - Smooth cross-fade from placeholder to video (no black flicker)
-/// - [isActive] lifecycle control for PageView / scroll lists (pauses when inactive)
-/// - [isMuted] volume control with audio session optimization (`mixWithOthers`)
+/// - Smooth cross-fade from placeholder to video texture
+/// - [isActive] visibility control for PageView / scroll lists (auto play/pause)
+/// - [isMuted] volume control with audio session optimization ([mixWithOthers])
+/// - [WidgetsBindingObserver] lifecycle management (auto pause in background)
 /// - [RepaintBoundary] to isolate video texture repaints for 60fps performance
-/// - Optional tap-to-play/pause with visual feedback
-/// - Custom [overlayBuilder] and [overlay] support (e.g. progress bar, badges, controls)
+/// - Tap-to-play/pause with visual indicator
+/// - [overlayBuilder] and [overlay] support (progress bars, badges, controls)
 class PreviewVideo extends StatefulWidget {
   const PreviewVideo({
     super.key,
@@ -19,6 +20,7 @@ class PreviewVideo extends StatefulWidget {
     this.placeholder,
     this.isActive = true,
     this.isMuted = true,
+    this.mixWithOthers,
     this.autoPlay = true,
     this.isLooping = true,
     this.fit = BoxFit.cover,
@@ -39,8 +41,11 @@ class PreviewVideo extends StatefulWidget {
   final bool isActive;
 
   /// Whether audio is muted (default: true).
-  /// When muted, audio session allows background music (`mixWithOthers`).
   final bool isMuted;
+
+  /// Whether audio session allows background music.
+  /// If null, defaults to [isMuted].
+  final bool? mixWithOthers;
 
   /// Whether to start playback automatically once initialized.
   final bool autoPlay;
@@ -71,31 +76,69 @@ class PreviewVideo extends StatefulWidget {
   State<PreviewVideo> createState() => _PreviewVideoState();
 }
 
-class _PreviewVideoState extends State<PreviewVideo> {
+class _PreviewVideoState extends State<PreviewVideo>
+    with WidgetsBindingObserver {
   VideoPlayerController? _controller;
   final ValueNotifier<bool> _ready = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _isPlaying = ValueNotifier<bool>(false);
   bool _disposed = false;
+  bool _wasPlayingBeforeBackground = false;
+
+  bool get _effectiveMixWithOthers => widget.mixWithOthers ?? widget.isMuted;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initController();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final controller = _controller;
+    if (controller == null || !_ready.value) return;
+
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        // Capture playing state only if actively playing.
+        // Don't overwrite if subsequent states (e.g. inactive -> paused) arrive.
+        if (controller.value.isPlaying) {
+          _wasPlayingBeforeBackground = true;
+          controller.pause();
+          _isPlaying.value = false;
+        }
+        break;
+      case AppLifecycleState.resumed:
+        if (_wasPlayingBeforeBackground && widget.isActive && widget.autoPlay) {
+          controller.play();
+          _isPlaying.value = true;
+        }
+        _wasPlayingBeforeBackground = false;
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
   Future<void> _initController() async {
-    if (widget.videoUrl.trim().isEmpty) return;
+    final url = widget.videoUrl.trim();
+    if (url.isEmpty) return;
 
     final controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoUrl),
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: widget.isMuted),
+      Uri.parse(url),
+      videoPlayerOptions: VideoPlayerOptions(
+        mixWithOthers: _effectiveMixWithOthers,
+      ),
     );
     _controller = controller;
 
     try {
       await controller.initialize();
+      // If widget was disposed or URL changed while waiting for initialize:
       if (_disposed || _controller != controller) {
-        await controller.dispose();
+        // Old controller was already disposed or orphaned
         return;
       }
 
@@ -110,7 +153,7 @@ class _PreviewVideoState extends State<PreviewVideo> {
         _isPlaying.value = false;
       }
 
-      if (!_disposed) {
+      if (!_disposed && _controller == controller) {
         _ready.value = true;
         widget.onControllerInitialized?.call(controller);
       }
@@ -140,7 +183,19 @@ class _PreviewVideoState extends State<PreviewVideo> {
     }
 
     final controller = _controller;
-    if (controller == null || !_ready.value) return;
+    if (controller == null) return;
+
+    final oldMix = oldWidget.mixWithOthers ?? oldWidget.isMuted;
+    final newMix = widget.mixWithOthers ?? widget.isMuted;
+    if (oldMix != newMix) {
+      _ready.value = false;
+      _isPlaying.value = false;
+      _disposeController();
+      _initController();
+      return;
+    }
+
+    if (!_ready.value) return;
 
     if (oldWidget.isMuted != widget.isMuted) {
       controller.setVolume(widget.isMuted ? 0.0 : 1.0);
@@ -154,6 +209,7 @@ class _PreviewVideoState extends State<PreviewVideo> {
       if (widget.isActive && widget.autoPlay) {
         controller.play();
       } else {
+        _wasPlayingBeforeBackground = false;
         controller.pause();
       }
     }
@@ -182,6 +238,7 @@ class _PreviewVideoState extends State<PreviewVideo> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _disposed = true;
     _ready.dispose();
     _isPlaying.dispose();
@@ -200,21 +257,23 @@ class _PreviewVideoState extends State<PreviewVideo> {
             valueListenable: _ready,
             builder: (context, ready, _) {
               final controller = _controller;
-              if (!ready || controller == null) {
-                return const SizedBox.shrink();
-              }
+              final isReady =
+                  ready && controller != null && controller.value.isInitialized;
               return AnimatedOpacity(
-                opacity: ready ? 1.0 : 0.0,
+                opacity: isReady ? 1.0 : 0.0,
                 duration: widget.fadeDuration,
-                child: FittedBox(
-                  fit: widget.fit,
-                  clipBehavior: Clip.hardEdge,
-                  child: SizedBox(
-                    width: controller.value.size.width,
-                    height: controller.value.size.height,
-                    child: VideoPlayer(controller),
-                  ),
-                ),
+                curve: Curves.easeInOut,
+                child: isReady
+                    ? FittedBox(
+                        fit: widget.fit,
+                        clipBehavior: Clip.hardEdge,
+                        child: SizedBox(
+                          width: controller.value.size.width,
+                          height: controller.value.size.height,
+                          child: VideoPlayer(controller),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               );
             },
           ),
