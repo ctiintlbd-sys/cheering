@@ -35,6 +35,7 @@ class ItemDetailsScreen extends StatelessWidget {
             expandedHeight: 210.w,
             collapsedTitle: menuItem.name,
             flexibleBackground: CustomNetworkImage(
+              width: double.infinity.toDouble(),
               height: 280.w,
               imageUrl: menuItem.imageUrl,
             ),

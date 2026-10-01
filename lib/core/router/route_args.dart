@@ -1,5 +1,15 @@
 import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
+import 'package:cheering/features/food/domain/entities/reel_entity.dart';
 
+class ReelsViewerArgs {
+  final List<ReelEntity> reels;
+  final int initialIndex;
+
+  ReelsViewerArgs({
+    required this.reels,
+    this.initialIndex = 0,
+  });
+}
 // ─── Auth Args ──────────────────────────────────────────────────────────
 
 class OtpScreenArgs {

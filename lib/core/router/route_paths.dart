@@ -13,6 +13,7 @@ abstract class RoutePaths {
   static const String enableBiometrics = '/enable-biometrics';
 
   static const String search = '/search';
+  static const String reelsViewer = '/reels-viewer';
   static const String restaurantList = '/restaurant-list';
   static const String storeDetailsRoute = '/store-details/:id';
   static String storeDetails(String id) => '/store-details/$id';

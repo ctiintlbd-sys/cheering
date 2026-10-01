@@ -4,6 +4,7 @@ import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/presentation/screens/explore_restaurants_screen.dart';
 import 'package:cheering/features/food/presentation/screens/restaurant_details_screen.dart';
 import 'package:cheering/features/food/presentation/screens/item_details_screen.dart';
+import 'package:cheering/features/food/presentation/screens/reels_viewer_screen.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_details/restaurant_details_event.dart';
@@ -17,6 +18,16 @@ import '../route_paths.dart';
 import '../route_args.dart';
 
 final List<RouteBase> foodRoutes = [
+  GoRoute(
+    path: RoutePaths.reelsViewer,
+    builder: (context, state) {
+      final args = state.extra as ReelsViewerArgs;
+      return ReelsViewerScreen(
+        reels: args.reels,
+        initialIndex: args.initialIndex,
+      );
+    },
+  ),
   GoRoute(
     path: RoutePaths.restaurantList,
     builder: (context, state) {

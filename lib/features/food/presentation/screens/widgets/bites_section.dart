@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/blocs/reels/reels_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/reels/reels_state.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cheering/core/router/route_paths.dart';
+import 'package:cheering/core/router/route_args.dart';
 import 'bites_card.dart';
 
 class BitesSection extends StatelessWidget {
@@ -38,7 +41,18 @@ class BitesSection extends StatelessWidget {
                   final reel = state.reels[index];
                   return CustomItemAnimator(
                     index: index,
-                    child: BitesCard(reel: reel, onTap: () {}),
+                    child: BitesCard(
+                      reel: reel, 
+                      onTap: () {
+                        context.push(
+                          RoutePaths.reelsViewer,
+                          extra: ReelsViewerArgs(
+                            reels: state.reels,
+                            initialIndex: index,
+                          ),
+                        );
+                      }
+                    ),
                   );
                 },
               ),
