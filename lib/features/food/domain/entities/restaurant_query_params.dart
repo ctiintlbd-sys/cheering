@@ -61,8 +61,8 @@ class RestaurantQueryParams extends Equatable {
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{'limit': limit, 'offset': offset};
-    if (lat != null) map['lat'] = lat;
-    if (lng != null) map['lng'] = lng;
+    if (lat != null && lat != 0) map['lat'] = lat;
+    if (lng != null && lng != 0) map['lng'] = lng;
     if (radius != null) map['radius'] = radius;
     if (cuisine != null) map['cuisine'] = cuisine;
     if (category != null) map['category'] = category;

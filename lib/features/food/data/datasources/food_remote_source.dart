@@ -19,8 +19,8 @@ class FoodRemoteSource {
     double? lng,
   }) async {
     final query = <String, dynamic>{};
-    if (lat != null) query['lat'] = lat;
-    if (lng != null) query['lng'] = lng;
+    if (lat != null && lat != 0) query['lat'] = lat;
+    if (lng != null && lng != 0) query['lng'] = lng;
 
     return _apiClient.get<HomeFeedModel>(
       ApiEndpoints.homeFeed,
@@ -52,8 +52,8 @@ class FoodRemoteSource {
     double? lng,
   }) async {
     final query = <String, dynamic>{};
-    if (lat != null) query['lat'] = lat;
-    if (lng != null) query['lng'] = lng;
+    if (lat != null && lat != 0) query['lat'] = lat;
+    if (lng != null && lng != 0) query['lng'] = lng;
 
     return _apiClient.get<RestaurantModel>(
       ApiEndpoints.restaurantDetails(restaurantId),

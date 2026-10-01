@@ -1,4 +1,5 @@
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,14 +7,27 @@ import 'package:go_router/go_router.dart';
 import 'package:cheering/core/router/route_paths.dart';
 
 class SuperDealsCard extends StatelessWidget {
-  const SuperDealsCard({super.key});
+  final RestaurantEntity restaurant;
+
+  const SuperDealsCard({super.key, required this.restaurant});
+
+  String get _imageUrl {
+    bool valid(String? u) => u != null && u.startsWith('http');
+    if (valid(restaurant.coverImageUrl)) return restaurant.coverImageUrl!;
+    if (valid(restaurant.logoUrl)) return restaurant.logoUrl!;
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final r = restaurant;
+    final cuisines = r.cuisineTypes.where((e) => e.isNotEmpty).join(' • ');
+
     return CustomContainer(
-      onTap: () {
-        context.push(RoutePaths.itemDetails);
-      },
+      onTap: () => context.push(
+        RoutePaths.storeDetails(restaurant.id),
+        extra: restaurant,
+      ),
       verticalMargin: 4.w,
       width: 248.w,
       height: 220.w,
@@ -21,12 +35,7 @@ class SuperDealsCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: Stack(
         children: [
-          CustomNetworkImage(
-            borderRadius: 12.r,
-            imageUrl:
-                'https://images.unsplash.com/photo-1513104890138-7c749659a591',
-          ),
-          // Gradient overlay
+          CustomNetworkImage(borderRadius: 12.r, imageUrl: _imageUrl),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -40,7 +49,6 @@ class SuperDealsCard extends StatelessWidget {
               ),
             ),
           ),
-          // Top Badges
           Positioned(
             top: 12.w,
             left: 12.w,
@@ -51,14 +59,13 @@ class SuperDealsCard extends StatelessWidget {
               paddingVertical: 4.w,
               paddingHorizontal: 8.w,
               child: CustomText(
-                text: '20%Off',
+                text: r.isOpen ? 'Open' : 'Closed',
                 color: context.colors.primary,
                 fontWeight: FontWeight.w600,
                 fontSize: 12.r,
               ),
             ),
           ),
-          // Bottom Info
           Positioned(
             bottom: 12.w,
             left: 12.w,
@@ -67,31 +74,23 @@ class SuperDealsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: CustomText(
-                        text: 'Tandoori Pizza',
-                        color: context.colors.white,
-                        fontWeight: FontWeight.w600,
-                        maxLines: 1,
-                        textOverflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    CustomText(
-                      text: '৳350',
-                      color: context.colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4.w),
                 CustomText(
-                  text: 'Pizza House • Fast Food',
-                  color: context.colors.white.withValues(alpha: 0.66),
-                  fontSize: 12.r,
+                  text: r.name,
+                  color: context.colors.white,
+                  fontWeight: FontWeight.w600,
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
                 ),
+                if (cuisines.isNotEmpty) ...[
+                  SizedBox(height: 4.w),
+                  CustomText(
+                    text: cuisines,
+                    color: context.colors.white.withValues(alpha: 0.66),
+                    fontSize: 12.r,
+                    maxLines: 1,
+                    textOverflow: TextOverflow.ellipsis,
+                  ),
+                ],
                 SizedBox(height: 4.w),
                 RichText(
                   maxLines: 1,
@@ -111,9 +110,8 @@ class SuperDealsCard extends StatelessWidget {
                           size: 12.r,
                         ),
                       ),
-                      TextSpan(text: ' 4.5 '),
-                      TextSpan(text: '•'),
-                      TextSpan(text: ' '),
+                      TextSpan(text: ' ${r.ratingAvg.toStringAsFixed(1)} '),
+                      const TextSpan(text: '• '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: Icon(
@@ -122,9 +120,12 @@ class SuperDealsCard extends StatelessWidget {
                           size: 12.r,
                         ),
                       ),
-                      TextSpan(text: ' ৳65(1.5Km) '),
-                      TextSpan(text: '•'),
-                      TextSpan(text: ' '),
+                      TextSpan(
+                        text:
+                            ' ৳${r.deliveryFee}'
+                            '${'(${r.distanceKm.toStringAsFixed(1)}Km)'} ',
+                      ),
+                      const TextSpan(text: '• '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: Icon(
@@ -133,7 +134,7 @@ class SuperDealsCard extends StatelessWidget {
                           size: 12.r,
                         ),
                       ),
-                      TextSpan(text: ' 10-20 mins'),
+                      TextSpan(text: ' ${r.avgPrepTimeMins} mins'),
                     ],
                   ),
                 ),

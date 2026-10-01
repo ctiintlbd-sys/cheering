@@ -1,9 +1,12 @@
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/features/community/presentation/screens/community_screen.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
 import 'package:cheering/features/food/presentation/blocs/home_feed/home_feed_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/home_feed/home_feed_event.dart';
 import 'package:cheering/features/food/presentation/blocs/reels/reels_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/reels/reels_event.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
 import 'package:cheering/features/food/presentation/screens/food_screen.dart';
 import 'package:cheering/features/orders/domain/entities/get_orders_params.dart';
 import 'package:cheering/features/orders/presentation/blocs/order_list/order_list_bloc.dart';
@@ -32,6 +35,13 @@ final List<RouteBase> mainRoutes = [
                 ),
                 BlocProvider(
                   create: (_) => getIt<ReelsBloc>()..add(const LoadReels()),
+                ),
+                BlocProvider(
+                  create: (_) => getIt<RestaurantListBloc>()..add(const LoadRestaurants(params: RestaurantQueryParams(
+                    limit: 50,
+                    lat: 0,
+                    lng: 0
+                  ))),
                 ),
               ],
               child: const FoodScreen(),

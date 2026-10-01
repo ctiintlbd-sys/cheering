@@ -83,9 +83,9 @@ class SuperDealsSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SectionHeaderWidget(
-          title: 'Super Deals 🔥',
+          title: 'Today’s Deals',
           onTap: () {
-            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Super Deals 🔥', params: const RestaurantQueryParams(sort: 'offers')));
+            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Today’s Deals', params: const RestaurantQueryParams(sort: 'offers')));
           },
         ).horizontal(16.w),
         SizedBox(height: 10.w),
@@ -99,7 +99,7 @@ class SuperDealsSection extends StatelessWidget {
             itemBuilder: (context, index) {
               return CustomItemAnimator(
                 index: index,
-                child: const SuperDealsCard(),
+                child: RestaurantCardWidget(restaurant: promoted[index]),
               );
             },
           ),
@@ -122,9 +122,9 @@ class NearbyRestaurantsSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SectionHeaderWidget(
-          title: 'Nearby', 
+          title: 'Food Near 🔥',
           onTap: () {
-            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Nearby Restaurants', params: const RestaurantQueryParams(radius: 5000)));
+            context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Food Near 🔥', params: const RestaurantQueryParams(radius: 5000)));
           }
         ).horizontal(16.w),
         SizedBox(height: 10.w),
@@ -140,7 +140,7 @@ class NearbyRestaurantsSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 4.w),
                 child: CustomItemAnimator(
                   index: index,
-                  child: RestaurantCardWidget(restaurant: nearby[index]),
+                  child:  SuperDealsCard(restaurant: nearby[index]),
                 ),
               );
             },
@@ -187,6 +187,8 @@ class TopRestaurantsSection extends StatelessWidget {
             },
           ),
         ),
+
+        SizedBox(height: 18.w),
       ],
     );
   }

@@ -2,6 +2,10 @@ import 'package:cheering/core/common_widgets/common_widgets.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/restaurant_query_params.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
+import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/all_restaurants_section.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/bites_section.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/home_feed_loading_widget.dart';
@@ -33,6 +37,11 @@ class FoodScreen extends StatelessWidget {
           return SliverScaffold(
             onRefresh: () async {
               context.read<HomeFeedBloc>().add(const LoadHomeFeed());
+              context.read<RestaurantListBloc>().add(
+                LoadRestaurants(
+                  params: RestaurantQueryParams(limit: 50, lat: 0, lng: 0),
+                ),
+              );
               context.read<ReelsBloc>().add(const RefreshReels());
             },
             appBar: CustomSliverAppBar(
@@ -76,12 +85,15 @@ class FoodScreen extends StatelessWidget {
                 if (state.feed!.nearby.isNotEmpty)
                   NearbyRestaurantsSection(nearby: state.feed!.nearby),
 
-                // if (state.feed!.promoted.isNotEmpty)
-                // SuperDealsSection(promoted: state.feed!.promoted),
                 const BitesSection(),
+
+                if (state.feed!.promoted.isNotEmpty)
+                  SuperDealsSection(promoted: state.feed!.promoted),
 
                 if (state.feed!.topRated.isNotEmpty)
                   TopRestaurantsSection(topRated: state.feed!.topRated),
+
+                const AllRestaurantsSection(),
 
                 SizedBox(height: 120.w),
               ],
