@@ -47,7 +47,7 @@ class _ReelsViewerScreenState extends State<ReelsViewerScreen> {
             controller: _pageController,
             scrollDirection: Axis.vertical,
             itemCount: widget.reels.length,
-            cacheExtent: MediaQuery.of(context).size.height, // age-pore 1 ta page build hobe
+            allowImplicitScrolling: true,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) => ReelItemView(
               key: ValueKey(widget.reels[index].id),
