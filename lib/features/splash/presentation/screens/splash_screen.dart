@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Assets.icons.appLogo.svg(width: 61.w, height: 57.w),
+            Assets.images.appLogo.image(width: 61.w, height: 57.w),
             CustomText(
               top: 16.w,
               text: 'CHEERING',

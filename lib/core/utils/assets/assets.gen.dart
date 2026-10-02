@@ -17,9 +17,6 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/app_logo.svg
-  SvgGenImage get appLogo => const SvgGenImage('assets/icons/app_logo.svg');
-
   /// File path: assets/icons/arrow_back.svg
   SvgGenImage get arrowBack => const SvgGenImage('assets/icons/arrow_back.svg');
 
@@ -218,7 +215,6 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
-    appLogo,
     arrowBack,
     bikash,
     bookmark,
@@ -286,6 +282,10 @@ class $AssetsImagesGen {
   AssetGenImage get appIcon =>
       const AssetGenImage('assets/images/app_icon.png');
 
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
   /// File path: assets/images/cash.png
   AssetGenImage get cash => const AssetGenImage('assets/images/cash.png');
 
@@ -316,20 +316,13 @@ class $AssetsImagesGen {
   AssetGenImage get profileEmpty =>
       const AssetGenImage('assets/images/profile_empty.png');
 
-  /// File path: assets/images/rate_restaurant_logo.png
-  AssetGenImage get rateRestaurantLogo =>
-      const AssetGenImage('assets/images/rate_restaurant_logo.png');
-
-  /// File path: assets/images/rate_rider_avatar.png
-  AssetGenImage get rateRiderAvatar =>
-      const AssetGenImage('assets/images/rate_rider_avatar.png');
-
   /// File path: assets/images/store.png
   AssetGenImage get store => const AssetGenImage('assets/images/store.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [
     appIcon,
+    appLogo,
     cash,
     empty,
     foodBanner,
@@ -338,8 +331,6 @@ class $AssetsImagesGen {
     placingOrder,
     preparing,
     profileEmpty,
-    rateRestaurantLogo,
-    rateRiderAvatar,
     store,
   ];
 }
