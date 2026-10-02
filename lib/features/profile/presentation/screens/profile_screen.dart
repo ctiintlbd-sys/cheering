@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/helpers/toast_message_helper.dart';
-import '../../../../core/l10n/locale_cubit.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
 import '../../../../core/widgets/widgets.dart';
 import 'widgets/profile_empty_widget.dart';
@@ -17,7 +16,6 @@ import 'widgets/profile_header_card.dart';
 import 'widgets/profile_header_shimmer.dart';
 import 'widgets/profile_menu_tile.dart';
 import 'widgets/profile_menu_content.dart';
-import 'widgets/trailing_dropdown.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -57,61 +55,28 @@ class ProfileScreen extends StatelessWidget {
 
               SizedBox(height: 20.w),
 
-              // ── My Account (only when authenticated) ──
               ProfileMenuContent(
                 title: 'My Account',
                 list: [
                   ProfileMenuTile(
+                    title: 'Edit Profile',
+                    icon: Assets.icons.profile.svg(),
+                    isLocked: isAuthenticated,
+                    onTap: () => context.push(RoutePaths.accountSettings),
+                  ),
+                  ProfileMenuTile(
                     title: 'Address',
                     icon: Assets.icons.profileAddress.svg(),
-                    isLocked: true,
-                    onTap: () => context.push(RoutePaths.address),
-                  ),
-                  ProfileMenuTile(
-                    title: 'Payment Method',
-                    icon: Assets.icons.profilePayment.svg(),
-                    onTap: () {},
                     isLocked: isAuthenticated,
                     isBorder: false,
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.w),
-
-              // ── Preferences (always visible) ──
-              ProfileMenuContent(
-                title: 'Preferences',
-                list: [
-                  ProfileMenuTile(
-                    title: 'Notification',
-                    icon: Assets.icons.profileNotification.svg(),
-                    onTap: () {},
-                    isLocked: isAuthenticated,
-                  ),
-                  BlocBuilder<LocaleCubit, Locale>(
-                    builder: (context, locale) {
-                      final localeCubit = context.read<LocaleCubit>();
-                      return ProfileMenuTile(
-                        title: 'Language',
-                        icon: Assets.icons.profileLanguage.svg(),
-                        onTap: () {},
-                        isBorder: false,
-                        trailingWidget: TrailingDropdown(
-                          items: const ['English', 'Bangla'],
-                          initialValue: localeCubit.currentLanguageName,
-                          onChanged: (value) {
-                            localeCubit.updateLocaleFromName(value.toString());
-                          },
-                        ),
-                      );
-                    },
+                    onTap: () => context.push(RoutePaths.address),
                   ),
                 ],
               ),
 
               SizedBox(height: 20.w),
 
-              // ── Support (only when authenticated) ──
+              // ── Support ──
               ProfileMenuContent(
                 title: 'Support',
                 list: [
