@@ -89,7 +89,9 @@ class ProfileScreen extends StatelessWidget {
                   ProfileMenuTile(
                     title: 'About us',
                     icon: Assets.icons.profileAbout.svg(),
-                    onTap: () {},
+                    onTap: () {
+                      context.push(RoutePaths.about);
+                    },
                     isLocked: true,
                     isBorder: false,
                   ),
