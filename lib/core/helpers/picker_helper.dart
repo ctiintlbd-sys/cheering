@@ -364,38 +364,43 @@ class ImageCropHelper {
   }) async {
     if (config.cropWidth <= 0 || config.cropHeight <= 0) return null;
 
-    final primaryColor = context != null
-        ? context.colors.primary
-        : const Color(0xFF0E8A45);
-    final toolbarColor = context != null
-        ? context.colors.textPrimary
-        : Colors.black;
+    try {
+      final primaryColor = context != null
+          ? context.colors.primary
+          : const Color(0xFF0E8A45);
+      final toolbarColor = context != null
+          ? context.colors.textPrimary
+          : Colors.black;
 
-    final cropped = await ImageCropper().cropImage(
-      sourcePath: imagePath,
-      aspectRatio: CropAspectRatio(
-        ratioX: config.cropWidth,
-        ratioY: config.cropHeight,
-      ),
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: toolbarColor,
-          toolbarWidgetColor: Colors.white,
-          activeControlsWidgetColor: primaryColor,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: true,
-          cropStyle: config.cropStyle,
+      final cropped = await ImageCropper().cropImage(
+        sourcePath: imagePath,
+        aspectRatio: CropAspectRatio(
+          ratioX: config.cropWidth,
+          ratioY: config.cropHeight,
         ),
-        IOSUiSettings(
-          title: 'Crop Image',
-          aspectRatioLockEnabled: true,
-          resetAspectRatioEnabled: false,
-          cropStyle: config.cropStyle,
-        ),
-      ],
-    );
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: toolbarColor,
+            toolbarWidgetColor: Colors.white,
+            activeControlsWidgetColor: primaryColor,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true,
+            cropStyle: config.cropStyle,
+          ),
+          IOSUiSettings(
+            title: 'Crop Image',
+            aspectRatioLockEnabled: true,
+            resetAspectRatioEnabled: false,
+            cropStyle: config.cropStyle,
+          ),
+        ],
+      );
 
-    return cropped != null ? File(cropped.path) : null;
+      return cropped != null ? File(cropped.path) : null;
+    } catch (e) {
+      debugPrint('Image crop error: $e');
+      return File(imagePath);
+    }
   }
 }
