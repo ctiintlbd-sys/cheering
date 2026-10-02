@@ -1,5 +1,6 @@
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/route_paths.dart';
+import 'package:cheering/core/utils/validators.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -166,7 +167,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   hintText: '01************',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  validatorType: null,
+                  validatorType: ValidatorType.phone,
                   prefixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
