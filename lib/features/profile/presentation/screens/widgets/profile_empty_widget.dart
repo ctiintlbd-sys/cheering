@@ -20,7 +20,7 @@ class ProfileEmptyWidget extends StatelessWidget {
         CustomText(
           top: 14.w,
           textAlign: TextAlign.center,
-          text: 'Welcome to Cheering Shop',
+          text: 'Welcome to Cheering',
           fontSize: 24.r,
           fontWeight: FontWeight.w500,
         ),
