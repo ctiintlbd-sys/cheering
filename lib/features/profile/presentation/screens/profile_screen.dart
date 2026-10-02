@@ -83,7 +83,9 @@ class ProfileScreen extends StatelessWidget {
                   ProfileMenuTile(
                     title: 'Help Center',
                     icon: Assets.icons.profileHelp.svg(),
-                    onTap: () {},
+                    onTap: () {
+                      context.push(RoutePaths.helpCenter);
+                    },
                     isLocked: true,
                   ),
                   ProfileMenuTile(

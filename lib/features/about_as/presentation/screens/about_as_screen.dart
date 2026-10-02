@@ -1,9 +1,11 @@
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/profile_menu_content.dart';
 import 'package:cheering/features/profile/presentation/screens/widgets/profile_menu_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -47,16 +49,26 @@ class AboutUsScreen extends StatelessWidget {
 
         ProfileMenuContent(
           list: [
-            ProfileMenuTile(title: 'Our Story', isLocked: true, onTap: () {}),
+            ProfileMenuTile(
+              title: 'Our Story',
+              isLocked: true,
+              onTap: () {
+                context.push(RoutePaths.ourStory);
+              },
+            ),
             ProfileMenuTile(
               title: 'Terms & Conditions',
               isLocked: true,
-              onTap: () {},
+              onTap: () {
+                context.push(RoutePaths.terms);
+              },
             ),
             ProfileMenuTile(
               title: 'Privacy Policy',
               isLocked: true,
-              onTap: () {},
+              onTap: () {
+                context.push(RoutePaths.privacy);
+              },
               isBorder: false,
             ),
           ],

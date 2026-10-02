@@ -51,11 +51,10 @@ class _SupportScreenState extends State<SupportScreen> {
   Widget build(BuildContext context) {
     return SliverScaffold(
       backgroundColor: context.colors.background,
-      appBar: CustomSliverAppBar(
-        title: 'Support',
+      appBar: const CustomSliverAppBar(
+        title: 'Help Center',
         centerTitle: true,
         showLeading: true,
-        backAction: () => Navigator.pop(context),
       ),
       bodyList: [
         SizedBox(height: 16.w),

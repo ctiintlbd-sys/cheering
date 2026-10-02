@@ -1,6 +1,7 @@
 import 'package:cheering/core/router/routes/about_routes.dart';
 import 'package:cheering/core/router/routes/main_routes.dart';
 import 'package:cheering/core/router/routes/profile_routes.dart';
+import 'package:cheering/core/router/routes/support_routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +56,7 @@ class AppRouter {
       ...trackingRoutes,
       ...profileRoutes,
       ...aboutRoutes,
+      ...supportRoutes,
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(),
