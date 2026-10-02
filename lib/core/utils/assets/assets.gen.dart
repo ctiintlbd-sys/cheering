@@ -296,6 +296,9 @@ class $AssetsImagesGen {
   AssetGenImage get foodBanner =>
       const AssetGenImage('assets/images/food_banner.png');
 
+  /// File path: assets/images/fosol.png
+  AssetGenImage get fosol => const AssetGenImage('assets/images/fosol.png');
+
   /// File path: assets/images/map_location.png
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
@@ -326,6 +329,7 @@ class $AssetsImagesGen {
     cash,
     empty,
     foodBanner,
+    fosol,
     mapLocation,
     placeholder,
     placingOrder,

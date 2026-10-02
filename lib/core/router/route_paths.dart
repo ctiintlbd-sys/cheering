@@ -43,4 +43,5 @@ abstract class RoutePaths {
   static const String address = '/profile/address';
   static const String manualAddressMap = '/profile/address/manual-map';
   static const String addAddress = '/profile/address/add';
+  static const String aboutAs = '/profile/about';
 }

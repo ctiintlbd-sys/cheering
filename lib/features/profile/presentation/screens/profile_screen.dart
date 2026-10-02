@@ -90,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'About us',
                     icon: Assets.icons.profileAbout.svg(),
                     onTap: () {
-                      context.push(RoutePaths.about);
+                      context.push(RoutePaths.aboutAs);
                     },
                     isLocked: true,
                     isBorder: false,

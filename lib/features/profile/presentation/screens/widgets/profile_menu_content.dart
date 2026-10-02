@@ -4,12 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Modular Profile menu item tile widget.
 class ProfileMenuContent extends StatelessWidget {
-  final String title;
+  final String? title;
   final List<Widget> list;
 
   const ProfileMenuContent({
     super.key,
-    required this.title,
+     this.title,
     required this.list,
   });
 
@@ -20,11 +20,12 @@ class ProfileMenuContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if(title != null)
           CustomText(
             fontSize: 16.r,
             fontWeight: FontWeight.w600,
             bottom: 12.w,
-            text: title,
+            text: title!,
           ),
 
           CustomContainer(

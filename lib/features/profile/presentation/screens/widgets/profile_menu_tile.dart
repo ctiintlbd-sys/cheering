@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// Modular Profile menu item tile widget.
 class ProfileMenuTile extends StatelessWidget {
   final String title;
-  final Widget icon;
+  final Widget? icon;
   final VoidCallback? onTap;
   final Color? textColor;
   final Color? bgColor;
@@ -19,7 +19,7 @@ class ProfileMenuTile extends StatelessWidget {
   const ProfileMenuTile({
     super.key,
     required this.title,
-    required this.icon,
+     this.icon,
     this.onTap,
     this.textColor,
     this.isBorder = true,
@@ -49,7 +49,7 @@ class ProfileMenuTile extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Row(
               children: [
-                icon,
+                ?icon,
                 SizedBox(width: 11.w),
                 Expanded(
                   child: CustomText(
