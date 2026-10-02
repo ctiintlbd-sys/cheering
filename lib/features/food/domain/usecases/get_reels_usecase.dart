@@ -14,8 +14,12 @@ class GetReelsUseCase {
 
     // Inject active location if not provided to calculate distance & delivery fee
     final finalParams = params.copyWith(
-      lat: params.lat ?? activeAddress?.latitude,
-      lng: params.lng ?? activeAddress?.longitude,
+      lat: (params.lat != null && params.lat != 0)
+          ? params.lat
+          : activeAddress?.latitude,
+      lng: (params.lng != null && params.lng != 0)
+          ? params.lng
+          : activeAddress?.longitude,
     );
 
     return _repository.getReels(finalParams);

@@ -40,8 +40,8 @@ class ReelQueryParams extends Equatable {
       'limit': limit,
       'offset': offset,
     };
-    if (lat != null) map['lat'] = lat;
-    if (lng != null) map['lng'] = lng;
+    if (lat != null && lat != 0) map['lat'] = lat;
+    if (lng != null && lng != 0) map['lng'] = lng;
     if (restaurantId != null) map['restaurant_id'] = restaurantId;
     if (sort != null) map['sort'] = sort;
     return map;

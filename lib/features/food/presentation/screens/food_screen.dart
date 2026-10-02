@@ -31,6 +31,7 @@ class FoodScreen extends StatelessWidget {
           previous.activeAddress != current.activeAddress,
       listener: (context, state) {
         context.read<HomeFeedBloc>().add(const LoadHomeFeed());
+        context.read<ReelsBloc>().add(const RefreshReels());
       },
       child: BlocBuilder<HomeFeedBloc, HomeFeedState>(
         builder: (context, state) {
@@ -38,8 +39,8 @@ class FoodScreen extends StatelessWidget {
             onRefresh: () async {
               context.read<HomeFeedBloc>().add(const LoadHomeFeed());
               context.read<RestaurantListBloc>().add(
-                LoadRestaurants(
-                  params: RestaurantQueryParams(limit: 50, lat: 0, lng: 0),
+                const LoadRestaurants(
+                  params: RestaurantQueryParams(limit: 50),
                 ),
               );
               context.read<ReelsBloc>().add(const RefreshReels());
