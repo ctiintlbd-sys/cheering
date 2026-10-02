@@ -132,8 +132,10 @@ class CustomNetworkImage extends StatelessWidget {
     if (url.isNotEmpty) {
       return CachedNetworkImage(
         imageUrl: url,
-        memCacheWidth: width?.toInt(),
-        memCacheHeight: height?.toInt(),
+        memCacheWidth:
+            (width != null && width!.isFinite) ? width!.toInt() : null,
+        memCacheHeight:
+            (height != null && height!.isFinite) ? height!.toInt() : null,
         fadeInDuration: Duration.zero,
         fadeOutDuration: Duration.zero,
 

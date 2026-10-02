@@ -44,4 +44,8 @@ class RecentSearchStorage {
 
     await _box?.put(_key, jsonEncode(current));
   }
+
+  static Future<void> clear() async {
+    await _box?.delete(_key);
+  }
 }

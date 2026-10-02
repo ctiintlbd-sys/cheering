@@ -26,6 +26,10 @@ class ClearSearch extends SearchEvent {
   const ClearSearch();
 }
 
+class ClearRecentSearches extends SearchEvent {
+  const ClearRecentSearches();
+}
+
 class ApplySearchFilter extends SearchEvent {
   final SearchFilterSelection filters;
 

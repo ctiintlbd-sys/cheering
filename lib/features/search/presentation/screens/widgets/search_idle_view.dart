@@ -7,10 +7,12 @@ class SearchIdleView extends StatelessWidget {
     super.key,
     required this.recentSearches,
     required this.onRecentTap,
+    this.onClearTap,
   });
 
   final List<String> recentSearches;
   final ValueChanged<String> onRecentTap;
+  final VoidCallback? onClearTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,21 @@ class SearchIdleView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(
-            text: 'Recent searches',
-            fontWeight: FontWeight.w600,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const CustomText(
+                text: 'Recent searches',
+                fontWeight: FontWeight.w600,
+              ),
+              CustomText(
+                text: 'Clear',
+                fontSize: 12.w,
+                fontWeight: FontWeight.w600,
+                color: context.colors.primary,
+                onTap: onClearTap,
+              ),
+            ],
           ),
           SizedBox(height: 12.w),
           CustomContainer(

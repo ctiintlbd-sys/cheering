@@ -14,6 +14,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<LoadRecentSearches>(_onLoadRecentSearches);
     on<LoadSearch>(_onLoadSearch);
     on<ClearSearch>(_onClearSearch);
+    on<ClearRecentSearches>(_onClearRecentSearches);
     on<ApplySearchFilter>(_onApplySearchFilter);
   }
 
@@ -88,6 +89,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         clearError: true,
       ),
     );
+  }
+
+  Future<void> _onClearRecentSearches(
+    ClearRecentSearches event,
+    Emitter<SearchState> emit,
+  ) async {
+    await RecentSearchStorage.clear();
+    emit(state.copyWith(recentSearches: const []));
   }
 
   void _onApplySearchFilter(

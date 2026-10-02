@@ -128,6 +128,9 @@ class _SearchScreenState extends State<SearchScreen> {
               SearchIdleView(
                 recentSearches: state.recentSearches,
                 onRecentTap: _search,
+                onClearTap: () {
+                  context.read<SearchBloc>().add(const ClearRecentSearches());
+                },
               ),
             ],
             SearchStatus.loading => [const HRestaurantCardShimmer(count: 6)],
