@@ -27,7 +27,7 @@ class MenuItemWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (isLoggedIn && hasOptions) {
+        if (isLoggedIn) {
           context.push(RoutePaths.itemDetails, extra: menuItem);
         }
       },
