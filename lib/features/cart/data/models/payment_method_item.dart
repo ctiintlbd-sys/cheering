@@ -29,17 +29,17 @@ class PaymentMethodItem {
       backendValue: 'COD',
       icon: Assets.images.cash.image(height: 24.w, width: 24.w),
     ),
-    PaymentMethodItem(
-      title: 'bKash',
-      subtitle: '01XXX-XXXXXX',
-      backendValue: 'BKASH',
-      icon: Assets.icons.bikash.svg(),
-    ),
-    PaymentMethodItem(
-      title: 'Visa/Mastercard',
-      subtitle: 'Visa •••• 4242',
-      backendValue: 'CARD',
-      icon: Assets.icons.visa.svg(),
-    ),
+    // PaymentMethodItem(
+    //   title: 'bKash',
+    //   subtitle: '01XXX-XXXXXX',
+    //   backendValue: 'BKASH',
+    //   icon: Assets.icons.bikash.svg(),
+    // ),
+    // PaymentMethodItem(
+    //   title: 'Visa/Mastercard',
+    //   subtitle: 'Visa •••• 4242',
+    //   backendValue: 'CARD',
+    //   icon: Assets.icons.visa.svg(),
+    // ),
   ];
 }
