@@ -6,12 +6,14 @@ class SectionHeaderWidget extends StatelessWidget {
   final String title;
   final String? subtitle;
   final VoidCallback? onTap;
+  final  String? tapLabel;
 
   const SectionHeaderWidget({
     super.key,
     required this.title,
     this.subtitle,
     this.onTap,
+    this.tapLabel,
   });
 
   @override
@@ -46,7 +48,7 @@ class SectionHeaderWidget extends StatelessWidget {
                 CustomText(
                   color: context.colors.textSecondary,
                   fontWeight: FontWeight.w600,
-                  text: 'See All',
+                  text: tapLabel ?? 'See All',
                 ),
                 SizedBox(width: 4.w),
                 Icon(

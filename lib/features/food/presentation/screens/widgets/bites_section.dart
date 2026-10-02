@@ -24,9 +24,15 @@ class BitesSection extends StatelessWidget {
           children: [
             SectionHeaderWidget(
               title: 'Bites 🔥',
+              tapLabel: 'Watch',
               subtitle: "Discover what everyone's eating",
               onTap: () {
-                // Navigate to the full reels page
+                context.push(
+                  RoutePaths.reelsViewer,
+                  extra: ReelsViewerArgs(
+                    reels: state.reels,
+                  ),
+                );
               },
             ).horizontal(16.w),
             SizedBox(height: 8.w),

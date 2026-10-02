@@ -1,181 +1,51 @@
+import 'package:cheering/core/common_widgets/common_details_actions.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/support/data/models/faq_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SupportScreen extends StatefulWidget {
-  const SupportScreen({super.key});
+class SupportScreen extends StatelessWidget {
+  SupportScreen({super.key});
 
-  @override
-  State<SupportScreen> createState() => _SupportScreenState();
-}
-
-class _SupportScreenState extends State<SupportScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  int? _expandedFaqIndex = 1; // 2nd FAQ expanded by default
-
-  final List<Map<String, String>> _faqs = [
-    {
-      'question': 'How do I update my menu?',
-      'answer':
-          'You can add or edit items directly in the Menu tab from the bottom navigation.',
-    },
-    {
-      'question': 'How do refunds work?',
-      'answer':
-          'You can reach our support team via the “Contact Us” option available in the app.',
-    },
-    {
-      'question': 'When do payouts arrive?',
-      'answer':
-          'Payouts are processed instantly to your mobile wallet or within 1–2 business days to your bank.',
-    },
-    {
-      'question': 'How is my rating calculated?',
-      'answer':
-          'Your rating is an average of customer reviews submitted over the last 90 days.',
-    },
-    {
-      'question': 'How do I pause my store?',
-      'answer':
-          'You can toggle store status from your store settings or dashboard.',
-    },
-  ];
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+  final ValueNotifier<int?> _expandedFaqIndex = ValueNotifier<int?>(-1);
 
   @override
   Widget build(BuildContext context) {
     return SliverScaffold(
-      backgroundColor: context.colors.background,
-      appBar: const CustomSliverAppBar(
+      sideContentPadding: 16.w,
+      appBar: CustomSliverAppBar(
         title: 'Help Center',
-        centerTitle: true,
-        showLeading: true,
+        backgroundColor: context.colors.background.withValues(alpha: 0.4),
       ),
       bodyList: [
         SizedBox(height: 16.w),
-
-        // ── 1. Search Bar ────────────────────────────────────────
-        Container(
-          height: 48.w,
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: context.colors.bgSecondary,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: context.colors.outline, width: 1),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.search_rounded,
-                size: 20.r,
-                color: context.colors.textSecondary,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  style: TextStyle(
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w400,
-                    color: context.colors.textPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    hintStyle: TextStyle(
-                      fontSize: 14.r,
-                      fontWeight: FontWeight.w400,
-                      color: context.colors.textSecondary,
-                    ),
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ).horizontal(16),
-
-        SizedBox(height: 16.w),
-
-        // ── 2. Quick Actions (Chat / Call) ───────────────────────
-        Row(
-          children: [
-            Expanded(
-              child: _buildContactCard(
-                icon: Icons.chat_bubble_outline_rounded,
-                title: 'Chat with us',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Connecting to live chat support...'),
-                      backgroundColor: context.colors.primary,
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: _buildContactCard(
-                icon: Icons.phone_outlined,
-                title: 'Call support',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text(
-                        'Calling partner support helpline...',
-                      ),
-                      backgroundColor: context.colors.primary,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ).horizontal(16),
-
+        CustomTextField(
+          prefixIcon: Assets.icons.search.svg(),
+          fillColor: context.colors.bgSecondary,
+          borderRadius: 99.r,
+          borderColor: context.colors.bgSecondary,
+          hintText: 'Search for help',
+          validatorType: null,
+        ),
         SizedBox(height: 24.w),
-
-        // ── 3. Frequently Asked Section ──────────────────────────
-        CustomText(
-          text: 'Frequently asked',
-          fontSize: 14.r,
-          fontWeight: FontWeight.w600,
-          color: context.colors.textSecondary,
-        ).horizontal(16),
-
-        SizedBox(height: 12.w),
-
-        ..._faqs.asMap().entries.map((entry) {
+        ...faqs.asMap().entries.map((entry) {
           final index = entry.key;
           final faq = entry.value;
-          final isExpanded = _expandedFaqIndex == index;
-
-          return Padding(
-            padding: EdgeInsets.only(bottom: 8.w),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  _expandedFaqIndex = isExpanded ? null : index;
-                });
-              },
-              borderRadius: BorderRadius.circular(12.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: isExpanded ? 16.w : 14.w,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colors.bgSecondary,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: context.colors.outline, width: 1),
-                ),
+          return ValueListenableBuilder<int?>(
+            valueListenable: _expandedFaqIndex,
+            builder: (context, expandedIndex, _) {
+              final isExpanded = expandedIndex == index;
+              return CustomContainer(
+                radiusAll: 12.w,
+                paddingVertical: 16.w,
+                paddingHorizontal: 12.w,
+                bordersColor: context.colors.borderTertiary,
+                onTap: () {
+                  _expandedFaqIndex.value = isExpanded ? null : index;
+                },
+                marginBottom: 8.w,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -184,10 +54,9 @@ class _SupportScreenState extends State<SupportScreen> {
                       children: [
                         Expanded(
                           child: CustomText(
-                            text: faq['question']!,
-                            fontSize: 14.r,
+                            text: faq.question,
+                            fontSize: 16.r,
                             fontWeight: FontWeight.w500,
-                            color: context.colors.textPrimary,
                           ),
                         ),
                         Icon(
@@ -199,57 +68,41 @@ class _SupportScreenState extends State<SupportScreen> {
                         ),
                       ],
                     ),
-                    if (isExpanded) ...[
-                      SizedBox(height: 10.w),
+                    if (isExpanded)
                       CustomText(
-                        text: faq['answer']!,
-                        fontSize: 13.r,
-                        fontWeight: FontWeight.w400,
-                        color: context.colors.textSecondary,
-                        textHeight: 1.4,
+                        top: 12.w,
+                        text: faq.answer,
+                        color: context.colors.textTertiary,
                       ),
-                    ],
                   ],
                 ),
-              ),
-            ),
-          ).horizontal(16);
+              );
+            },
+          );
         }),
-
         SizedBox(height: 40.w),
       ],
-    );
-  }
 
-  Widget _buildContactCard({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.w),
-        decoration: BoxDecoration(
-          color: context.colors.bgSecondary,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: context.colors.outline, width: 1),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 24.r, color: context.colors.textPrimary),
-            SizedBox(height: 8.w),
-            CustomText(
-              text: title,
-              fontSize: 14.r,
-              fontWeight: FontWeight.w500,
-              color: context.colors.textPrimary,
-            ),
-          ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 80.w, right: 6.w),
+        child: SizedBox(
+          height: 48.w,
+          width: 48.w,
+          child: CommonActionIcon(
+            color: context.colors.primary,
+            iconColor: context.colors.white,
+            icon: Assets.icons.call.path,
+            onTap: () => _open(Uri.parse('tel:+8801878740266')),
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _open(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
   }
 }

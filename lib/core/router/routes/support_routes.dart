@@ -6,6 +6,6 @@ import '../route_paths.dart';
 final List<RouteBase> supportRoutes = [
   GoRoute(
     path: RoutePaths.helpCenter,
-    builder: (context, state) => const SupportScreen(),
+    builder: (context, state) => SupportScreen(),
   ),
 ];

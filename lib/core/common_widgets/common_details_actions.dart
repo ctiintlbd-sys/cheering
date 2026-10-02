@@ -31,8 +31,9 @@ class CommonActionIcon extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
   final Color? color;
+  final Color? iconColor;
 
-  const CommonActionIcon({super.key, required this.icon, required this.onTap, this.color});
+  const CommonActionIcon({super.key, required this.icon, required this.onTap, this.color, this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class CommonActionIcon extends StatelessWidget {
         height: 24.r,
         width: 24.r,
         colorFilter: ColorFilter.mode(
+          iconColor ??
           context.colors.textPrimary,
           BlendMode.srcIn,
         ),
