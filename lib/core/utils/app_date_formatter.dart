@@ -86,10 +86,15 @@ class AppDateFormatter {
 
   /// Format remaining time: 9:20 (Hours:Minutes)
   static String formatRemainingTime(Duration duration) {
-    if (duration.isNegative) return '0:00';
-    final hours = duration.inHours;
+    if (duration.isNegative) return '0m';
+
+    final days = duration.inDays;
+    final hours = duration.inHours.remainder(24);
     final minutes = duration.inMinutes.remainder(60);
-    return '$hours:${minutes.toString().padLeft(2, '0')}';
+
+    if (days > 0) return '${days}d ${hours}Hours';
+    if (hours > 0) return '${hours}H ${minutes}Mins';
+    return '${minutes}Mins';
   }
 
   /// Duration format: 02:30 (Minutes:Seconds)
