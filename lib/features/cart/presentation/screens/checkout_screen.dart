@@ -85,8 +85,7 @@ class CheckoutScreen extends StatelessWidget {
               ),
               SizedBox(height: 20.w),
               DeliveryOrTipSection(
-                estimatedDeliveryMinutes:
-                    state.summary?.estimatedDeliveryMinutes ?? 0,
+                deliveryOptions: state.summary?.deliveryOptions ?? [],
                 selectedTip: state.currentParams?.tip ?? 0.0,
                 onTipSelected: (tip) {
                   context.read<CheckoutSummaryBloc>().add(UpdateTipEvent(tip));
@@ -100,8 +99,6 @@ class CheckoutScreen extends StatelessWidget {
                     itemCount: cartState.cart?.itemCount ?? 0,
                     minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
                     deliveryFee: state.summary?.deliveryFee,
-                    packagingFee: state.summary?.packagingFee,
-                    taxAmount: state.summary?.taxAmount,
                     platformFee: state.summary?.platformFee,
                     discount: state.summary?.discount,
                     tip: state.summary?.tip,
