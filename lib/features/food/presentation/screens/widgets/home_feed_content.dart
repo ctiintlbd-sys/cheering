@@ -89,7 +89,7 @@ class SuperDealsSection extends StatelessWidget {
         ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
-          height: 228.w,
+          height: 204.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -128,7 +128,7 @@ class NearbyRestaurantsSection extends StatelessWidget {
         ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
-          height: 202.w,
+          height: 228.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,
@@ -169,7 +169,7 @@ class TopRestaurantsSection extends StatelessWidget {
         ).horizontal(16.w),
         SizedBox(height: 10.w),
         SizedBox(
-          height: 202.w,
+          height: 204.w,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             scrollDirection: Axis.horizontal,

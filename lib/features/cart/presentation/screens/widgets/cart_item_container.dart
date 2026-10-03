@@ -61,38 +61,41 @@ class CartItemContainer extends StatelessWidget {
             separatorBuilder: (context, index) => SizedBox(height: 16.w),
             itemBuilder: (context, index) {
               final item = cart.items[index];
-              return CartItemWidget(
-                item: item,
-                onIncrement: () {
-                  context.read<CartBloc>().add(
-                    UpdateCartLineQuantityEvent(
-                      lineId: item.lineId,
-                      quantity: item.quantity + 1,
-                    ),
-                  );
-                },
-                onDecrement: () {
-                  context.read<CartBloc>().add(
-                    UpdateCartLineQuantityEvent(
-                      lineId: item.lineId,
-                      quantity: item.quantity - 1,
-                    ),
-                  );
-                },
-                onUpdateAddOnQuantity: (addOnId, quantity) {
-                  context.read<CartBloc>().add(
-                    UpdateCartAddOnQuantityEvent(
-                      item: item,
-                      addOnId: addOnId,
-                      quantity: quantity,
-                    ),
-                  );
-                },
-                onRemove: () {
-                  context.read<CartBloc>().add(
-                    RemoveCartItemEvent(lineId: item.lineId),
-                  );
-                },
+              return CustomItemAnimator(
+                index: index,
+                child: CartItemWidget(
+                  item: item,
+                  onIncrement: () {
+                    context.read<CartBloc>().add(
+                      UpdateCartLineQuantityEvent(
+                        lineId: item.lineId,
+                        quantity: item.quantity + 1,
+                      ),
+                    );
+                  },
+                  onDecrement: () {
+                    context.read<CartBloc>().add(
+                      UpdateCartLineQuantityEvent(
+                        lineId: item.lineId,
+                        quantity: item.quantity - 1,
+                      ),
+                    );
+                  },
+                  onUpdateAddOnQuantity: (addOnId, quantity) {
+                    context.read<CartBloc>().add(
+                      UpdateCartAddOnQuantityEvent(
+                        item: item,
+                        addOnId: addOnId,
+                        quantity: quantity,
+                      ),
+                    );
+                  },
+                  onRemove: () {
+                    context.read<CartBloc>().add(
+                      RemoveCartItemEvent(lineId: item.lineId),
+                    );
+                  },
+                ),
               );
             },
           ),
