@@ -1,4 +1,5 @@
 import 'package:cheering/core/router/route_paths.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/bill_details_card.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
@@ -76,11 +77,21 @@ class _CartScreenState extends State<CartScreen> {
             CartStatus.initial ||
             CartStatus.loading => [const CartLoadingShimmer()],
             CartStatus.failure => [
-              EmptyState(message: state.errorMessage ?? 'Something went wrong'),
+              EmptyState(
+                icon: Assets.images.cartEmpty.image(width: 76.w, height: 76.w),
+                  message: state.errorMessage ?? 'Something went wrong'),
             ],
             CartStatus.success
                 when state.cart == null || state.cart!.items.isEmpty =>
-              [const EmptyState(message: 'Your cart is empty')],
+              [ EmptyState(
+                icon: Assets.images.cartEmpty.image(width: 76.w, height: 76.w),
+                  message: 'Your cart is empty',
+                  subMessage: 'Looks like you haven\'t added anything yet.\nExplore restaurants to get started.',
+                  onPressed: () {
+                    context.go(RoutePaths.foodTab);
+                  },
+              )
+              ],
             CartStatus.success => [
               SizedBox(height: 16.w),
               CartItemContainer(

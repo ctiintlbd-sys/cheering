@@ -1,3 +1,5 @@
+import 'package:cheering/core/router/route_paths.dart';
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/orders/domain/entities/get_orders_params.dart';
 import 'package:cheering/features/orders/presentation/blocs/order_list/order_list_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:cheering/features/orders/presentation/screens/widgets/order_stat
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -42,10 +45,20 @@ class OrderScreen extends StatelessWidget {
             OrderListStatus.initial ||
             OrderListStatus.loading => [const OrderLoadingWidget()],
             OrderListStatus.failure => [
-              EmptyState(message: state.errorMessage ?? 'No orders'),
+              EmptyState(
+                  icon: Assets.images.orderEmpty.image(width: 76.w, height: 76.w),
+                  message: state.errorMessage ?? 'No orders'),
             ],
             OrderListStatus.success when state.orders.isEmpty => [
-              const EmptyState(message: 'No orders found yet.'),
+               EmptyState(
+                icon: Assets.images.orderEmpty.image(width: 76.w, height: 76.w),
+                message: 'No Order Yet',
+                subMessage: 'Looks like you haven\'t any order yet.\nExplore our categories and order now.',
+                buttonText: 'Start Explore',
+                onPressed: () {
+                  context.go(RoutePaths.foodTab);
+                },
+              )
             ],
             OrderListStatus.success => [
               SizedBox(height: 16.w),

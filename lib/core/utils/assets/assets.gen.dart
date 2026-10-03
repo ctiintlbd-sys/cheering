@@ -286,8 +286,16 @@ class $AssetsImagesGen {
   AssetGenImage get appLogo =>
       const AssetGenImage('assets/images/app_logo.png');
 
+  /// File path: assets/images/cart_empty.png
+  AssetGenImage get cartEmpty =>
+      const AssetGenImage('assets/images/cart_empty.png');
+
   /// File path: assets/images/cash.png
   AssetGenImage get cash => const AssetGenImage('assets/images/cash.png');
+
+  /// File path: assets/images/cti-logo.png
+  AssetGenImage get ctiLogo =>
+      const AssetGenImage('assets/images/cti-logo.png');
 
   /// File path: assets/images/empty.png
   AssetGenImage get empty => const AssetGenImage('assets/images/empty.png');
@@ -302,6 +310,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/map_location.png
   AssetGenImage get mapLocation =>
       const AssetGenImage('assets/images/map_location.png');
+
+  /// File path: assets/images/order_empty.png
+  AssetGenImage get orderEmpty =>
+      const AssetGenImage('assets/images/order_empty.png');
 
   /// File path: assets/images/placeholder.png
   AssetGenImage get placeholder =>
@@ -326,11 +338,14 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [
     appIcon,
     appLogo,
+    cartEmpty,
     cash,
+    ctiLogo,
     empty,
     foodBanner,
     fosol,
     mapLocation,
+    orderEmpty,
     placeholder,
     placingOrder,
     preparing,

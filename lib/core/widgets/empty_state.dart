@@ -5,9 +5,12 @@ import 'package:cheering/core/widgets/widgets.dart';
 
 class EmptyState extends StatelessWidget {
   final String message;
+  final String? subMessage;
   final Widget? icon;
+  final VoidCallback? onPressed;
+  final String? buttonText;
 
-  const EmptyState({super.key, this.message = 'No data found', this.icon});
+  const EmptyState({super.key, this.message = 'No data found', this.subMessage, this.icon, this.onPressed, this.buttonText = 'Browse Food'});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,23 @@ class EmptyState extends StatelessWidget {
               fontSize: 20.w,
               textAlign: TextAlign.center,
             ),
+            if (subMessage != null)
+              CustomText(
+                top: 4.w,
+                text: subMessage!,
+                color: context.colors.textTertiary,
+                textAlign: TextAlign.center,
+              ),
+            if (onPressed != null)...[
+              SizedBox(height: 24.w),
+              CustomButton(
+                width: 218.w,
+                height: 48.w,
+                onPressed: onPressed,
+                text: buttonText,
+              ),
+            ],
+
           ],
         ),
       ),
