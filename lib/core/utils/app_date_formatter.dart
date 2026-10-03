@@ -27,7 +27,7 @@ class AppDateFormatter {
 
   /// Format: 10:30 AM
   static String formatTime(DateTime date) {
-    return DateFormat('hh:mm a').format(date);
+    return DateFormat('hh:mm a').format(date.toUtc());
   }
 
   /// Format '14:30' -> '2:30 PM'
@@ -85,18 +85,20 @@ class AppDateFormatter {
   }
 
   /// Format remaining time: 9:20 (Hours:Minutes)
-  static String formatRemainingTime(Duration duration) {
-    if (duration.isNegative) return '0m';
+  static String formatRemainingTime(DateTime? scheduledFor) {
+    if (scheduledFor == null) return 'Now';
+    final duration = scheduledFor.toUtc().difference(DateTime.now().toUtc());
+
+    if (duration.inMinutes <= 0) return 'Now';
 
     final days = duration.inDays;
     final hours = duration.inHours.remainder(24);
     final minutes = duration.inMinutes.remainder(60);
 
     if (days > 0) return '${days}d ${hours}Hours';
-    if (hours > 0) return '${hours}H ${minutes}Mins';
+    if (hours > 0) return '${hours}h ${minutes}Mins';
     return '${minutes}Mins';
   }
-
   /// Duration format: 02:30 (Minutes:Seconds)
   static String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");

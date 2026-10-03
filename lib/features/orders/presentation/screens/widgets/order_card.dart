@@ -47,7 +47,7 @@ class OrderCard extends StatelessWidget {
                   _buildActionButton(
                     context: context,
                     text:
-                        'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor!.difference(DateTime.now()))}',
+                        'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor)}',
                     icon: Icons.access_time,
                   )
                 else if (order.status == 'DELIVERED') ...[

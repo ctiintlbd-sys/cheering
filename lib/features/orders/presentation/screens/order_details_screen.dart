@@ -59,8 +59,7 @@ class OrderDetailsScreen extends StatelessWidget {
               ? null
               : isScheduled
               ? CustomButton(
-                  label:
-                      'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor!.difference(DateTime.now()))} Hour',
+                  label: 'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor)}',
                   prefixIcon: Icon(
                     Icons.access_time,
                     color: context.colors.white,
