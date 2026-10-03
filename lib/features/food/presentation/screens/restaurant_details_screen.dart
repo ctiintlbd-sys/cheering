@@ -130,23 +130,40 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 ),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
-                floatingActionButton: BlocBuilder<CartBloc, CartState>(
-                  builder: (context, cartState) {
-                    final itemCount = cartState.cart?.itemCount ?? 0;
-                    if (itemCount == 0) return const SizedBox.shrink();
-                    return CartTarget(
-                      controller: _fly,
-                      child: ViewCartButton(
-                        itemCount: itemCount,
-                        totalPrice: cartState.cart?.itemTotal ?? 0,
-                        onTap: () {
-                          context.push(RoutePaths.cart);
-                        },
+            floatingActionButton: BlocBuilder<CartBloc, CartState>(
+              builder: (context, cartState) {
+                final itemCount = cartState.cart?.itemCount ?? 0;
+                return CartTarget(
+                  controller: _fly,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: ScaleTransition(scale: animation, child: child),
+                    ),
+                    child: itemCount == 0
+                        ? const SizedBox(key: ValueKey('empty'), width: 1, height: 1)
+                        : KeyedSubtree(
+                      key: const ValueKey('cart'),
+                      child: TweenAnimationBuilder<double>(
+                        key: ValueKey(itemCount),
+                        tween: Tween(begin: 1.08, end: 1.0),
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOut,
+                        builder: (_, scale, child) =>
+                            Transform.scale(scale: scale, child: child),
+                        child: ViewCartButton(
+                          itemCount: itemCount,
+                          totalPrice: cartState.cart?.itemTotal ?? 0,
+                          onTap: () => context.push(RoutePaths.cart),
+                        ),
                       ),
-                    );
-                  },
-                ),
-                bodyList: switch (state.status) {
+                    ),
+                  ),
+                );
+              },
+            ),
+            bodyList: switch (state.status) {
                   RestaurantDetailsStatus.initial ||
                   RestaurantDetailsStatus.loading => [
                     const MenuItemShimmer(count: 6),
