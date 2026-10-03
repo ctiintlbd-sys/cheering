@@ -55,7 +55,7 @@ class OrderDetailsScreen extends StatelessWidget {
             ],
           },
 
-          bottomNavigationBar: order == null
+          bottomNavigationBar: order == null || order.status == 'CANCELLED'
               ? null
               : isScheduled
               ? CustomButton(

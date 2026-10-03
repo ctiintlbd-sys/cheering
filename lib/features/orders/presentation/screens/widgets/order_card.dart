@@ -69,7 +69,7 @@ class OrderCard extends StatelessWidget {
                             RoutePaths.storeDetails(order.restaurantId),
                           ),
                   ),
-                ] else
+                ] else if(order.status != 'CANCELLED')
                   _buildActionButton(
                     context: context,
                     text: 'Track Order',
