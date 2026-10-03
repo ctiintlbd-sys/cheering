@@ -39,11 +39,29 @@ class QuantityButton extends StatelessWidget {
 
   bool get _hasQuantity => (count ?? 0) > 0;
 
+  static Widget _scaleFadeTransition(Widget child, Animation<double> animation) {
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(scale: animation, child: child),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _hasQuantity
-        ? _buildQuantityControl(context)
-        : _buildAddButton(context);
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 180),
+      transitionBuilder: _scaleFadeTransition,
+      child: _hasQuantity
+          ? KeyedSubtree(
+        key: const ValueKey('quantity_control'),
+        child: _buildQuantityControl(context),
+      )
+          : KeyedSubtree(
+        key: const ValueKey('add_button'),
+        child: _buildAddButton(context),
+      ),
+    );
   }
 
   Widget _buildAddButton(BuildContext context) {
@@ -88,10 +106,17 @@ class QuantityButton extends StatelessWidget {
             paddingAll: effectiveButtonPadding,
             radiusAll: buttonRadius,
             color: context.colors.background,
-            child: Icon(
-              isDelete ? Icons.delete_outline_rounded : Icons.remove,
-              color: isDelete ? context.colors.error : context.colors.textSecondary,
-              size: effectiveIconSize,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              transitionBuilder: _scaleFadeTransition,
+              child: Icon(
+                isDelete ? Icons.delete_outline_rounded : Icons.remove,
+                key: ValueKey<bool>(isDelete),
+                color: isDelete
+                    ? context.colors.error
+                    : context.colors.textSecondary,
+                size: effectiveIconSize,
+              ),
             ),
           ),
           Padding(
