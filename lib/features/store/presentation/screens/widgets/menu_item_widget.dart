@@ -25,9 +25,9 @@ class MenuItemWidget extends StatelessWidget {
     final hasAddOns = menuItem?.addOns?.isNotEmpty ?? false;
     final hasOptions = hasVariants || hasAddOns;
 
-    return GestureDetector(
+    return CustomContainer(
       onTap: () {
-        if (isLoggedIn) {
+        if (isLoggedIn && hasOptions) {
           context.push(RoutePaths.itemDetails, extra: menuItem);
         }
       },
@@ -80,7 +80,7 @@ class MenuItemWidget extends StatelessWidget {
                           builder: (context, state) {
                             final count =
                                 state.cart?.quantityFor(menuItem!.id) ?? 0;
-                                
+
                             if (hasOptions && count > 0) {
                               return GestureDetector(
                                 onTap: () => context.push(RoutePaths.itemDetails, extra: menuItem),
