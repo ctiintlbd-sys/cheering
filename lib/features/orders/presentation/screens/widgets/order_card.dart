@@ -48,10 +48,7 @@ class OrderCard extends StatelessWidget {
                     context: context,
                     text:
                         'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor!.difference(DateTime.now()))} Hour',
-                    onTap: () => context.push(RoutePaths.tracking(order.id)),
                     icon: Icons.access_time,
-                    paddingHorizontal: 16.w,
-                    fontSize: 13.r,
                   )
                 else if (order.status == 'DELIVERED') ...[
                   if (order.canReview)
@@ -92,13 +89,11 @@ class OrderCard extends StatelessWidget {
     VoidCallback? onTap,
     bool isPrimary = true,
     IconData? icon,
-    double? paddingHorizontal,
-    double? fontSize,
   }) {
     return CustomContainer(
       onTap: onTap,
       radiusAll: 38.r,
-      paddingHorizontal: paddingHorizontal ?? 12.w,
+      paddingHorizontal:  12.w,
       paddingVertical: 8.w,
       color: isPrimary ? context.colors.primary : null,
       bordersColor: isPrimary ? null : context.colors.borderSecondary,
@@ -116,7 +111,7 @@ class OrderCard extends StatelessWidget {
             SizedBox(width: 8.w),
           ],
           CustomText(
-            fontSize: fontSize ?? 12.r,
+            fontSize:  12.r,
             fontWeight: FontWeight.w600,
             color: isPrimary ? context.colors.white : null,
             text: text,

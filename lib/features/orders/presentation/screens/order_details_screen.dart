@@ -6,6 +6,7 @@ import 'package:cheering/features/orders/presentation/screens/widgets/order_deta
 import 'package:cheering/features/orders/presentation/screens/widgets/order_details_delivery_card.dart';
 import 'package:cheering/features/orders/presentation/screens/widgets/order_details_items_card.dart';
 import 'package:cheering/features/orders/presentation/screens/widgets/order_details_loading_widget.dart';
+import 'package:cheering/core/utils/app_date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +20,10 @@ class OrderDetailsScreen extends StatelessWidget {
     return BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
       builder: (context, state) {
         final order = state.orderDetails;
+        final isScheduled =
+            order != null &&
+            order.scheduledFor != null &&
+            order.scheduledFor!.isAfter(DateTime.now());
         return SliverScaffold(
           backgroundColor: context.colors.bgSecondary,
           sideContentPadding: 16.w,
@@ -52,20 +57,29 @@ class OrderDetailsScreen extends StatelessWidget {
 
           bottomNavigationBar: order == null
               ? null
+              : isScheduled
+              ? CustomButton(
+                  label:
+                      'Order In ${AppDateFormatter.formatRemainingTime(order.scheduledFor!.difference(DateTime.now()))} Hour',
+                  prefixIcon: Icon(
+                    Icons.access_time,
+                    color: context.colors.white,
+                    size: 20.r,
+                  ),
+                  onPressed: () => context.push(RoutePaths.tracking(order.id)),
+                )
               : order.status == 'DELIVERED'
               ? Row(
                   children: [
-                    if(order.canReview)...[
+                    if (order.canReview) ...[
                       Expanded(
                         child: CustomButton(
                           label: 'Rate Order',
                           backgroundColor: Colors.transparent,
                           bordersColor: context.colors.borderSecondary,
                           textColor: context.colors.textPrimary,
-                          onPressed: () => context.push(
-                            RoutePaths.rateOrder,
-                            extra: order,
-                          ),
+                          onPressed: () =>
+                              context.push(RoutePaths.rateOrder, extra: order),
                         ),
                       ),
                       SizedBox(width: 12.w),

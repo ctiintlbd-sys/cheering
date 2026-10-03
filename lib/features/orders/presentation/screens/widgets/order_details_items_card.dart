@@ -13,6 +13,9 @@ class OrderDetailsItemsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (statusLabel, statusColor) = OrderStatus.badge(context, order.status);
+    final isScheduled =
+        order.scheduledFor != null &&
+        order.scheduledFor!.isAfter(DateTime.now());
 
     return CustomContainer(
       color: context.colors.background,
@@ -41,19 +44,35 @@ class OrderDetailsItemsCard extends StatelessWidget {
                     maxLines: 1,
                   ),
                 ),
-                CustomContainer(
-                  paddingHorizontal: 12.w,
-                  paddingVertical: 4.w,
-                  color: statusColor.withValues(alpha: 0.1),
-                  radiusAll: 36.r,
-                  child: CustomText(
-                    text: statusLabel,
-                    fontSize: 12.r,
-                    fontWeight: FontWeight.w500,
-                    color: statusColor,
-                    maxLines: 1,
+                if (isScheduled)
+                  CustomContainer(
+                    paddingHorizontal: 10.w,
+                    paddingVertical: 4.w,
+                    color: context.colors.scheduledBg,
+                    radiusAll: 36.r,
+                    child: CustomText(
+                      text:
+                          'Scheduled at ${AppDateFormatter.formatTime(order.scheduledFor!)}',
+                      fontSize: 12.r,
+                      fontWeight: FontWeight.w500,
+                      color: context.colors.scheduledPrimary,
+                      maxLines: 1,
+                    ),
+                  )
+                else
+                  CustomContainer(
+                    paddingHorizontal: 12.w,
+                    paddingVertical: 4.w,
+                    color: statusColor.withValues(alpha: 0.1),
+                    radiusAll: 36.r,
+                    child: CustomText(
+                      text: statusLabel,
+                      fontSize: 12.r,
+                      fontWeight: FontWeight.w500,
+                      color: statusColor,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -80,8 +99,6 @@ class OrderDetailsItemsCard extends StatelessWidget {
       ),
     );
   }
-
-
 
   Widget _itemRowWidget(BuildContext context, OrderItemEntity item) {
     final extras = [
@@ -128,9 +145,6 @@ class OrderDetailsItemsCard extends StatelessWidget {
       ],
     );
   }
-
-
-
 
   String _orderMeta() {
     final id = order.orderNumber > 0 ? '#${order.orderNumber}' : '';
