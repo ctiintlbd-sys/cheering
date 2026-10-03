@@ -20,6 +20,8 @@ final darkColorPalette = AppThemeColors.internal(
   bgSuccessSecondary: const Color(0xFF16A34A),
   bgWarningSecondary: const Color(0xFFEA580C),
   bgInfoPrimary: const Color(0xFF2563EB),
+  scheduledPrimary: const Color(0xFFA855F7),
+  scheduledBg: const Color(0x1AA855F7),
 
   // Pure
   white: const Color(0xFFFFFFFF),

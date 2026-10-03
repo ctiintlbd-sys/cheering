@@ -22,6 +22,8 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color bgSuccessSecondary;
   final Color bgWarningSecondary;
   final Color bgInfoPrimary;
+  final Color scheduledPrimary;
+  final Color scheduledBg;
 
   // ── Standard Pure Colors ──────────────────────────────────
   final Color white;
@@ -72,6 +74,8 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     required this.bgSuccessSecondary,
     required this.bgWarningSecondary,
     required this.bgInfoPrimary,
+    required this.scheduledPrimary,
+    required this.scheduledBg,
     required this.white,
     required this.black,
     required this.borderPrimary,

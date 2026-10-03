@@ -84,6 +84,14 @@ class AppDateFormatter {
     }
   }
 
+  /// Format remaining time: 9:20 (Hours:Minutes)
+  static String formatRemainingTime(Duration duration) {
+    if (duration.isNegative) return '0:00';
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    return '$hours:${minutes.toString().padLeft(2, '0')}';
+  }
+
   /// Duration format: 02:30 (Minutes:Seconds)
   static String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
