@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../domain/entities/address_entity.dart';
 import '../bloc/address_bloc.dart';
 import '../bloc/address_event.dart';
@@ -125,28 +124,39 @@ class _AddressScreenState extends State<AddressScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(height: 16.w),
-                  for (var i = 0; i < addresses.length; i++) ...[
-                    if (i > 0) SizedBox(height: 12.w),
-                    SavedAddressCard(
-                      address: addresses[i],
-                      isActive: addresses[i].id == state.activeDefaultId,
-                      onSetDefault: () {
-                        if (addresses[i].isCurrentLocation && _isLoggedIn) {
-                          final addressToPass = addresses[i].copyWith(
-                            id: '',
-                            type: AddressType.home,
-                            isDefault: false,
-                          );
-                          context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
-                        } else {
-                          context.read<AddressBloc>().add(
-                            UpdateActiveDefaultId(addresses[i].id),
-                          );
-                          if (context.canPop()) context.pop();
-                        }
-                      },
-                    ),
-                  ],
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: addresses.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 12.w),
+                    itemBuilder: (context, index) {
+                      return CustomItemAnimator(
+                        delayBase: Duration(milliseconds: 100),
+                        animationType: CustomItemAnimationType.slide,
+                        index: index,
+                        child: SavedAddressCard(
+                          address: addresses[index],
+                          isActive: addresses[index].id == state.activeDefaultId,
+                          onSetDefault: () {
+                            if (addresses[index].isCurrentLocation && _isLoggedIn) {
+                              final addressToPass = addresses[index].copyWith(
+                                id: '',
+                                type: AddressType.home,
+                                isDefault: false,
+                              );
+                              context.push<bool>(RoutePaths.addAddress, extra: addressToPass);
+                            } else {
+                              context.read<AddressBloc>().add(
+                                UpdateActiveDefaultId(addresses[index].id),
+                              );
+                              if (context.canPop()) context.pop();
+                            }
+                          },
+                        ),
+                      );
+                    }
+                  ),
                   SizedBox(height: 104.w),
                 ],
               );
