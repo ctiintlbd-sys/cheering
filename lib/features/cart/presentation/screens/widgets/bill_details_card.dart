@@ -7,7 +7,7 @@ class BillDetailsCard extends StatelessWidget {
   final int itemCount;
   final double minOrderAmount;
   final double? deliveryFee;
-  final double? packagingFee;
+  final double? priorityFee;
   final double? taxAmount;
   final double? platformFee;
   final double? discount;
@@ -20,7 +20,7 @@ class BillDetailsCard extends StatelessWidget {
     required this.itemCount,
     required this.minOrderAmount,
     this.deliveryFee,
-    this.packagingFee,
+    this.priorityFee,
     this.taxAmount,
     this.platformFee,
     this.discount,
@@ -67,8 +67,8 @@ class BillDetailsCard extends StatelessWidget {
               ),
               if (deliveryFee != null && deliveryFee! > 0)
                 _buildBillRow(context, 'Delivery fee', '৳${deliveryFee!.toStringAsFixed(0)}'),
-              if (packagingFee != null && packagingFee! > 0)
-                _buildBillRow(context, 'Packaging fee', '৳${packagingFee!.toStringAsFixed(0)}'),
+              if (priorityFee != null && priorityFee! > 0)
+                _buildBillRow(context, 'Priority fee', '৳${priorityFee!.toStringAsFixed(0)}'),
               if (taxAmount != null && taxAmount! > 0)
                 _buildBillRow(context, 'Tax', '৳${taxAmount!.toStringAsFixed(0)}'),
               if (platformFee != null && platformFee! > 0)

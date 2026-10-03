@@ -20,6 +20,7 @@ class CheckoutSummaryBloc
     on<LoadCheckoutSummary>(_onLoadCheckoutSummary);
     on<ApplyPromoCodeEvent>(_onApplyPromoCode);
     on<UpdateTipEvent>(_onUpdateTip);
+    on<UpdateDeliveryTypeEvent>(_onUpdateDeliveryType);
     on<UpdatePaymentMethodEvent>(_onUpdatePaymentMethod);
     on<PlaceOrderEvent>(_onPlaceOrder);
   }
@@ -69,6 +70,7 @@ class CheckoutSummaryBloc
       addressId: state.currentParams!.addressId,
       promoCode: event.promoCode,
       tip: state.currentParams!.tip,
+      deliveryType: state.currentParams!.deliveryType,
     );
 
     add(LoadCheckoutSummary(newParams));
@@ -84,6 +86,23 @@ class CheckoutSummaryBloc
       addressId: state.currentParams!.addressId,
       promoCode: state.currentParams!.promoCode,
       tip: event.tip,
+      deliveryType: state.currentParams!.deliveryType,
+    );
+
+    add(LoadCheckoutSummary(newParams));
+  }
+
+  void _onUpdateDeliveryType(
+    UpdateDeliveryTypeEvent event,
+    Emitter<CheckoutSummaryState> emit,
+  ) {
+    if (state.currentParams == null) return;
+
+    final newParams = CheckoutSummaryParams(
+      addressId: state.currentParams!.addressId,
+      promoCode: state.currentParams!.promoCode,
+      tip: state.currentParams!.tip,
+      deliveryType: event.deliveryType,
     );
 
     add(LoadCheckoutSummary(newParams));
@@ -115,6 +134,7 @@ class CheckoutSummaryBloc
         addressId: state.currentParams!.addressId,
         promoCode: state.currentParams!.promoCode,
         tip: state.currentParams!.tip,
+        deliveryType: state.currentParams!.deliveryType,
         specialInstructions: event.specialInstructions,
         scheduledFor: OrderScheduleState.scheduledFor,
       );

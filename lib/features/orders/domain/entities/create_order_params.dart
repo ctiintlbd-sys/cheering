@@ -5,6 +5,7 @@ class CreateOrderParams extends Equatable {
   final String addressId;
   final String? promoCode;
   final double? tip;
+  final String? deliveryType;
   final String? specialInstructions;
   final DateTime? scheduledFor;
 
@@ -13,6 +14,7 @@ class CreateOrderParams extends Equatable {
     required this.addressId,
     this.promoCode,
     this.tip,
+    this.deliveryType,
     this.specialInstructions,
     this.scheduledFor,
   });
@@ -23,6 +25,8 @@ class CreateOrderParams extends Equatable {
       'address_id': addressId,
       if (promoCode != null && promoCode!.isNotEmpty) 'promo_code': promoCode,
       if (tip != null) 'tip': tip,
+      if (deliveryType != null && deliveryType!.isNotEmpty)
+        'delivery_type': deliveryType,
       if (specialInstructions != null)
         'special_instructions': specialInstructions,
       if (scheduledFor != null)
@@ -36,6 +40,7 @@ class CreateOrderParams extends Equatable {
         addressId,
         promoCode,
         tip,
+        deliveryType,
         specialInstructions,
         scheduledFor,
       ];

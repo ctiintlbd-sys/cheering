@@ -44,6 +44,15 @@ class UpdatePaymentMethodEvent extends CheckoutSummaryEvent {
   List<Object?> get props => [paymentMethod];
 }
 
+class UpdateDeliveryTypeEvent extends CheckoutSummaryEvent {
+  final String deliveryType;
+
+  const UpdateDeliveryTypeEvent(this.deliveryType);
+
+  @override
+  List<Object?> get props => [deliveryType];
+}
+
 class PlaceOrderEvent extends CheckoutSummaryEvent {
   final String? specialInstructions;
   const PlaceOrderEvent({this.specialInstructions});

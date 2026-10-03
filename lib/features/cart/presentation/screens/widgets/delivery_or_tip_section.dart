@@ -1,6 +1,7 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/cart/domain/entities/delivery_option_entity.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/delivery_mode_toggle_widget.dart';
+import 'package:cheering/features/cart/presentation/screens/widgets/delivery_options_widget.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/tip_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,11 +12,15 @@ class DeliveryOrTipSection extends StatefulWidget {
     required this.deliveryOptions,
     required this.selectedTip,
     required this.onTipSelected,
+    this.selectedDeliveryType,
+    this.onDeliveryOptionSelected,
   });
 
   final List<DeliveryOptionEntity> deliveryOptions;
   final double selectedTip;
   final ValueChanged<double> onTipSelected;
+  final String? selectedDeliveryType;
+  final ValueChanged<DeliveryOptionEntity>? onDeliveryOptionSelected;
 
   @override
   State<DeliveryOrTipSection> createState() => _DeliveryOrTipSectionState();
@@ -55,44 +60,10 @@ class _DeliveryOrTipSectionState extends State<DeliveryOrTipSection> {
               ),
               SizedBox(height: 4.w),
               if (deliveryTypeIndex == 0)
-                ...widget.deliveryOptions.map(
-                  (option) => CustomContainer(
-                    horizontalMargin: 12.w,
-                    paddingVertical: 12.w,
-                    paddingHorizontal: 16.w,
-                    child: Row(
-                      children: [
-                        CustomContainer(
-                          width: 20.r,
-                          height: 20.r,
-                          shape: BoxShape.circle,
-                          color: context.colors.white,
-                          borderWidth: option.isSelected ? 6 : 1.5,
-                          bordersColor: option.isSelected
-                              ? context.colors.primary
-                              : context.colors.borderPrimary,
-                        ),
-                        SizedBox(width: 12.w),
-                        CustomText(
-                          text: option.label,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        SizedBox(width: 8.w),
-                        if (option.extraFee > 0)
-                          CustomText(
-                            text:
-                                '+${option.extraFee.toStringAsFixed(2)}',
-                            color: context.colors.textSecondary,
-                          ),
-                        const Spacer(),
-                        CustomText(
-                          text:
-                              '${option.etaMinMinutes}-${option.etaMaxMinutes} min',
-                          color: context.colors.textSecondary,
-                        ),
-                      ],
-                    ),
-                  ),
+                DeliveryOptionsWidget(
+                  deliveryOptions: widget.deliveryOptions,
+                  selectedDeliveryType: widget.selectedDeliveryType,
+                  onDeliveryOptionSelected: widget.onDeliveryOptionSelected,
                 )
               else
                 TipWidget(
