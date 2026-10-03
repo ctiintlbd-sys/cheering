@@ -1,22 +1,48 @@
 import 'package:cheering/core/common_widgets/quantity_button.dart';
+import 'package:cheering/core/di/service_locator.dart';
+import 'package:cheering/core/helpers/fly_to_cart.dart';
+import 'package:cheering/core/router/app_router_notifier.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
-import 'package:cheering/features/food/domain/entities/menu_entity.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:cheering/features/cart/domain/entities/add_cart_item_params.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
+import 'package:cheering/features/food/domain/entities/menu_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cheering/core/di/service_locator.dart';
-import 'package:cheering/core/router/app_router_notifier.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-class MenuItemWidget extends StatelessWidget {
+class MenuItemWidget extends StatefulWidget {
   final MenuItemEntity? menuItem;
 
   const MenuItemWidget({super.key, this.menuItem});
+
+  @override
+  State<MenuItemWidget> createState() => _MenuItemWidgetState();
+}
+
+class _MenuItemWidgetState extends State<MenuItemWidget> {
+  final GlobalKey _imageKey = GlobalKey();
+
+  MenuItemEntity? get menuItem => widget.menuItem;
+
+  void _fly() {
+    final imageContext = _imageKey.currentContext;
+    final url = menuItem?.imageUrl;
+    if (!mounted || imageContext == null || url == null || url.isEmpty) return;
+
+    FlyToCartScope.maybeOf(context)?.fly(
+      from: imageContext,
+      child: CustomNetworkImage(
+        width: 66.r,
+        height: 66.r,
+        borderRadius: 12.r,
+        imageUrl: url,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +62,14 @@ class MenuItemWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomNetworkImage(
-              width: 66.r,
-              height: 66.r,
-              borderRadius: 12.r,
-              imageUrl: menuItem?.imageUrl,
+            KeyedSubtree(
+              key: _imageKey,
+              child: CustomNetworkImage(
+                width: 66.r,
+                height: 66.r,
+                borderRadius: 12.r,
+                imageUrl: menuItem?.imageUrl,
+              ),
             ),
             SizedBox(width: 12.w),
 
@@ -69,7 +98,7 @@ class MenuItemWidget extends StatelessWidget {
                     children: [
                       CustomText(
                         text:
-                            '৳${menuItem?.basePrice.toStringAsFixed(0) ?? '0'}',
+                        '৳${menuItem?.basePrice.toStringAsFixed(0) ?? '0'}',
                         color: context.colors.primary,
                         fontWeight: FontWeight.w700,
                         fontSize: 14.r,
@@ -83,7 +112,10 @@ class MenuItemWidget extends StatelessWidget {
 
                             if (hasOptions && count > 0) {
                               return GestureDetector(
-                                onTap: () => context.push(RoutePaths.itemDetails, extra: menuItem),
+                                onTap: () => context.push(
+                                  RoutePaths.itemDetails,
+                                  extra: menuItem,
+                                ),
                                 child: CustomContainer(
                                   paddingHorizontal: 12.w,
                                   paddingVertical: 4.w,
@@ -107,29 +139,32 @@ class MenuItemWidget extends StatelessWidget {
                                     RoutePaths.itemDetails,
                                     extra: menuItem,
                                   );
-                                } else {
-                                  final cartItem = state.cart?.items
-                                      .where((i) => i.menuItemId == menuItem!.id)
-                                      .firstOrNull;
-                                  if (cartItem != null) {
-                                    context.read<CartBloc>().add(
-                                      UpdateCartLineQuantityEvent(
-                                        lineId: cartItem.lineId,
-                                        quantity: cartItem.quantity + 1,
-                                      ),
-                                    );
-                                  } else {
-                                    context.read<CartBloc>().add(
-                                      AddOrUpdateCartItemEvent(
-                                        AddCartItemParams(
-                                          menuItemId: menuItem!.id,
-                                          quantity: 1,
-                                          mode: 'add',
-                                        ),
-                                      ),
-                                    );
-                                  }
+                                  return;
                                 }
+
+                                final cartItem = state.cart?.items
+                                    .where((i) => i.menuItemId == menuItem!.id)
+                                    .firstOrNull;
+
+                                if (cartItem != null) {
+                                  context.read<CartBloc>().add(
+                                    UpdateCartLineQuantityEvent(
+                                      lineId: cartItem.lineId,
+                                      quantity: cartItem.quantity + 1,
+                                    ),
+                                  );
+                                } else {
+                                  context.read<CartBloc>().add(
+                                    AddOrUpdateCartItemEvent(
+                                      AddCartItemParams(
+                                        menuItemId: menuItem!.id,
+                                        quantity: 1,
+                                        mode: 'add',
+                                      ),
+                                    ),
+                                  );
+                                }
+                                _fly();
                               },
                               onDecrement: () {
                                 if (count > 0) {

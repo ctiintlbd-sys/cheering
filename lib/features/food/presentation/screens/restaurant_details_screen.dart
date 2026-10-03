@@ -1,3 +1,4 @@
+import 'package:cheering/core/helpers/fly_to_cart.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/delivery_time_sheet.dart';
@@ -32,6 +33,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   late AutoScrollController _scrollController;
   final ValueNotifier<int> _activeIndexNotifier = ValueNotifier<int>(0);
   final List<GlobalKey> _sectionKeys = [];
+  final FlyToCartController _fly = FlyToCartController();
+
   bool _isAutoScrolling = false;
 
   @override
@@ -109,48 +112,54 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         final restaurant = state.restaurant;
-        return SliverScaffold(
-          scrollController: _scrollController,
-          appBar: CustomSliverAppBar(
-                toolbarHeight: 0,
-                expandedHeight: 416.w,
-                flexibleBackground: RestaurantFlexibleBackground(
-                  restaurant: restaurant,
+        return FlyToCartScope(
+          controller: _fly,
+          child: SliverScaffold(
+            scrollController: _scrollController,
+            appBar: CustomSliverAppBar(
+                  toolbarHeight: 0,
+                  expandedHeight: 416.w,
+                  flexibleBackground: RestaurantFlexibleBackground(
+                    restaurant: restaurant,
+                  ),
+                  bottom: RestaurantAppBarBottom(
+                    categories: state.validMenuCategories,
+                    activeIndexNotifier: _activeIndexNotifier,
+                    onTabTapped: _scrollToIndex,
+                  ),
                 ),
-                bottom: RestaurantAppBarBottom(
-                  categories: state.validMenuCategories,
-                  activeIndexNotifier: _activeIndexNotifier,
-                  onTabTapped: _scrollToIndex,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: BlocBuilder<CartBloc, CartState>(
+                  builder: (context, cartState) {
+                    final itemCount = cartState.cart?.itemCount ?? 0;
+                    if (itemCount == 0) return const SizedBox.shrink();
+                    return CartTarget(
+                      controller: _fly,
+                      child: ViewCartButton(
+                        itemCount: itemCount,
+                        totalPrice: cartState.cart?.itemTotal ?? 0,
+                        onTap: () {
+                          context.push(RoutePaths.cart);
+                        },
+                      ),
+                    );
+                  },
                 ),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: BlocBuilder<CartBloc, CartState>(
-                builder: (context, cartState) {
-                  final itemCount = cartState.cart?.itemCount ?? 0;
-                  if (itemCount == 0) return const SizedBox.shrink();
-                  return ViewCartButton(
-                    itemCount: itemCount,
-                    totalPrice: cartState.cart?.itemTotal ?? 0,
-                    onTap: () {
-                      context.push(RoutePaths.cart);
-                    },
-                  );
+                bodyList: switch (state.status) {
+                  RestaurantDetailsStatus.initial ||
+                  RestaurantDetailsStatus.loading => [
+                    const MenuItemShimmer(count: 6),
+                  ],
+                  RestaurantDetailsStatus.failure => [
+                    EmptyState(message: state.errorMessage ?? ''),
+                  ],
+                  RestaurantDetailsStatus.success => _buildMenuSections(
+                    state.validMenuCategories,
+                  ),
                 },
               ),
-              bodyList: switch (state.status) {
-                RestaurantDetailsStatus.initial ||
-                RestaurantDetailsStatus.loading => [
-                  const MenuItemShimmer(count: 6),
-                ],
-                RestaurantDetailsStatus.failure => [
-                  EmptyState(message: state.errorMessage ?? ''),
-                ],
-                RestaurantDetailsStatus.success => _buildMenuSections(
-                  state.validMenuCategories,
-                ),
-              },
-            );
+        );
           },
         );
   }
