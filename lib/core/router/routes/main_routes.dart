@@ -39,8 +39,7 @@ final List<RouteBase> mainRoutes = [
                 BlocProvider(
                   create: (_) => getIt<RestaurantListBloc>()..add(const LoadRestaurants(params: RestaurantQueryParams(
                     limit: 50,
-                    lat: 0,
-                    lng: 0
+                    radius: 25000,
                   ))),
                 ),
               ],

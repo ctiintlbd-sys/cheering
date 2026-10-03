@@ -40,7 +40,7 @@ class FoodScreen extends StatelessWidget {
               context.read<HomeFeedBloc>().add(const LoadHomeFeed());
               context.read<RestaurantListBloc>().add(
                 const LoadRestaurants(
-                  params: RestaurantQueryParams(limit: 50, lat: 0, lng: 0),
+                  params: RestaurantQueryParams(limit: 50, radius: 25000),
                 ),
               );
               context.read<ReelsBloc>().add(const RefreshReels());

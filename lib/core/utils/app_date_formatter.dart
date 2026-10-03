@@ -140,4 +140,104 @@ class AppDateFormatter {
       return 'Good Evening';
     }
   }
+
+  // --- Scheduling Utility Methods ---
+
+  static String getWeekdayKey(int weekday) {
+    switch (weekday) {
+      case 1: return 'mon';
+      case 2: return 'tue';
+      case 3: return 'wed';
+      case 4: return 'thu';
+      case 5: return 'fri';
+      case 6: return 'sat';
+      case 7: return 'sun';
+      default: return 'mon';
+    }
+  }
+
+  static List<DateTime> generateDates(Map<String, dynamic> businessHours) {
+    List<DateTime> availableDates = [];
+    DateTime now = DateTime.now();
+    for (int i = 0; i < 7; i++) {
+      DateTime date = now.add(Duration(days: i));
+      String key = getWeekdayKey(date.weekday);
+      if (businessHours.containsKey(key)) {
+        var hours = businessHours[key]!;
+        if (hours.isOpen) {
+          availableDates.add(date);
+        }
+      }
+    }
+    return availableDates;
+  }
+
+  static List<DateTime> generateTimesForDate(DateTime date, Map<String, dynamic> businessHours) {
+    List<DateTime> newTimes = [];
+    String key = getWeekdayKey(date.weekday);
+    var hours = businessHours[key];
+
+    if (hours != null && hours.isOpen && hours.opensAt != null && hours.closesAt != null) {
+      List<String> openParts = hours.opensAt.split(':');
+      List<String> closeParts = hours.closesAt.split(':');
+
+      if (openParts.length >= 2 && closeParts.length >= 2) {
+        int openHour = int.parse(openParts[0]);
+        int openMin = int.parse(openParts[1]);
+        int closeHour = int.parse(closeParts[0]);
+        int closeMin = int.parse(closeParts[1]);
+
+        DateTime startTime = DateTime(date.year, date.month, date.day, openHour, openMin);
+        DateTime endTime = DateTime(date.year, date.month, date.day, closeHour, closeMin);
+
+        DateTime now = DateTime.now();
+
+        if (startTime.isBefore(now)) {
+          int min = now.minute;
+          if (min < 30) {
+            startTime = DateTime(now.year, now.month, now.day, now.hour, 30);
+          } else {
+            startTime = DateTime(now.year, now.month, now.day, now.hour + 1, 0);
+          }
+        }
+
+        while (startTime.isBefore(endTime)) {
+          DateTime nextTime = startTime.add(const Duration(minutes: 30));
+          if (nextTime.isAfter(endTime)) break;
+
+          newTimes.add(startTime);
+          startTime = nextTime;
+        }
+      }
+    }
+    
+    return newTimes;
+  }
+
+  static String formatSheetTime(DateTime time) {
+    int h = time.hour;
+    int m = time.minute;
+    String ampm = h >= 12 ? 'PM' : 'AM';
+    if (h > 12) h -= 12;
+    if (h == 0) h = 12;
+    return '$h:${m.toString().padLeft(2, '0')} $ampm';
+  }
+
+  static String formatSheetDate(DateTime date) {
+    List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]}';
+  }
+
+  static String getSheetDayName(DateTime date) {
+    DateTime now = DateTime.now();
+    if (date.year == now.year && date.month == now.month && date.day == now.day) {
+      return 'Today';
+    }
+    DateTime tomorrow = now.add(const Duration(days: 1));
+    if (date.year == tomorrow.year && date.month == tomorrow.month && date.day == tomorrow.day) {
+      return 'Tomorrow';
+    }
+    List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days[date.weekday - 1];
+  }
 }
