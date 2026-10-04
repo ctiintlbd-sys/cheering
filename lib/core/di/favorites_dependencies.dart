@@ -4,6 +4,7 @@ import '../../features/favorites/data/repositories/favorites_repository_impl.dar
 import '../../features/favorites/domain/repositories/i_favorites_repository.dart';
 import '../../features/favorites/domain/usecases/get_favorites_usecase.dart';
 import '../../features/favorites/domain/usecases/toggle_favorite_usecase.dart';
+import '../../features/favorites/presentation/blocs/favorites_bloc.dart';
 import '../cache/cache_service.dart';
 import '../network/i_api_client.dart';
 
@@ -27,5 +28,13 @@ void setupFavoritesDependencies(GetIt getIt) {
   );
   getIt.registerLazySingleton(
     () => ToggleFavoriteUseCase(getIt<IFavoritesRepository>()),
+  );
+
+  // Blocs
+  getIt.registerFactory(
+    () => FavoritesBloc(
+      getIt<GetFavoritesUseCase>(),
+      getIt<ToggleFavoriteUseCase>(),
+    ),
   );
 }
