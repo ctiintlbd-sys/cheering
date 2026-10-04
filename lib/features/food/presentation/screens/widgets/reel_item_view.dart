@@ -90,10 +90,14 @@ class ReelItemView extends StatelessWidget {
                         paddingVertical: 6.h,
                         paddingHorizontal: 10.w,
                         color: context.colors.white,
-                        onTap: () {
-                          context.push(
+                        onTap: () async {
+                          controller?.pause();
+                          await context.push(
                             RoutePaths.storeDetails(reel.restaurant.id),
                           );
+                          if (isActive && context.mounted) {
+                            controller?.play();
+                          }
                         },
                         child: CustomText(
                           text: 'View',
