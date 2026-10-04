@@ -27,6 +27,11 @@ class ApiEndpoints {
   static const String currentUser = '/users/me';
   static const String addresses = '/users/me/addresses';
 
+  // ── Favorites ───────────────────────────────────────────────
+  static const String favorites = '/users/me/favorites';
+  static String toggleFavorite(String restaurantId) =>
+      '/users/me/favorites/$restaurantId';
+
   // ── Upload ─────────────────────────────────────────────────
   static const String presignedUpload = '/uploads/presigned-url';
   static const String uploadApplicationDoc = '/vendor/applications/uploads';

@@ -1,3 +1,4 @@
+import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
@@ -52,8 +53,8 @@ class _CartScreenState extends State<CartScreen> {
                 child: DeliveryModeToggleWidget(
                   selectedIndex: selectedIndex,
                   onChanged: (int value) {
-                    selectedIndex = value;
-                    setState(() {});
+                      ToastMessageHelper.show(
+                          'Pickup mode is not available yet');
                   },
                 ),
               ),

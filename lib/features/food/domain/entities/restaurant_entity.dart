@@ -86,6 +86,54 @@ class RestaurantEntity extends Equatable {
     );
   }
 
+  RestaurantEntity copyWith({
+    String? id,
+    String? name,
+    String? slug,
+    List<String>? cuisineTypes,
+    String? logoUrl,
+    String? coverImageUrl,
+    double? ratingAvg,
+    int? ratingCount,
+    int? avgPrepTimeMins,
+    double? deliveryFee,
+    double? minOrderAmount,
+    bool? isOpen,
+    double? distanceKm,
+    bool? isFavorite,
+    String? description,
+    String? phone,
+    String? addressLine,
+    double? latitude,
+    double? longitude,
+    Map<String, BusinessHoursEntity>? businessHours,
+    List<PromotionEntity>? promotions,
+  }) {
+    return RestaurantEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      cuisineTypes: cuisineTypes ?? this.cuisineTypes,
+      logoUrl: logoUrl ?? this.logoUrl,
+      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+      ratingAvg: ratingAvg ?? this.ratingAvg,
+      ratingCount: ratingCount ?? this.ratingCount,
+      avgPrepTimeMins: avgPrepTimeMins ?? this.avgPrepTimeMins,
+      deliveryFee: deliveryFee ?? this.deliveryFee,
+      minOrderAmount: minOrderAmount ?? this.minOrderAmount,
+      isOpen: isOpen ?? this.isOpen,
+      distanceKm: distanceKm ?? this.distanceKm,
+      isFavorite: isFavorite ?? this.isFavorite,
+      description: description ?? this.description,
+      phone: phone ?? this.phone,
+      addressLine: addressLine ?? this.addressLine,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      businessHours: businessHours ?? this.businessHours,
+      promotions: promotions ?? this.promotions,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

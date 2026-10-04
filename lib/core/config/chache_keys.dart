@@ -14,4 +14,5 @@ class CacheKeys {
   static String orders(Map<String, dynamic> query) =>
       'orders_${query.hashCode}';
   static String orderMessages(String orderId) => 'order_messages_$orderId';
+  static const String favorites = 'favorites_data';
 }
