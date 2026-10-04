@@ -1,3 +1,4 @@
+import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,12 +43,14 @@ class FavoritesScreen extends StatelessWidget {
               FavoritesStatus.loading => [const FavoritesGridShimmer(count: 6)],
               FavoritesStatus.failure => [
                 EmptyState(
+                  icon: Assets.images.fevEmpty.image(width: 76.w, height: 76.w),
                   message: state.errorMessage ?? 'Failed to load favorites',
                 ),
               ],
 
               FavoritesStatus.success when state.favorites.isNotEmpty => [
                 EmptyState(
+                  icon: Assets.images.fevEmpty.image(width: 76.w, height: 76.w),
                   message: 'Your Favorite is empty',
                   subMessage:
                       'You haven\'t added anything to your favorite yet',

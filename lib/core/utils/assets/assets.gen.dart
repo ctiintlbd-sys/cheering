@@ -300,6 +300,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/empty.png
   AssetGenImage get empty => const AssetGenImage('assets/images/empty.png');
 
+  /// File path: assets/images/fev_empty.png
+  AssetGenImage get fevEmpty =>
+      const AssetGenImage('assets/images/fev_empty.png');
+
   /// File path: assets/images/food_banner.png
   AssetGenImage get foodBanner =>
       const AssetGenImage('assets/images/food_banner.png');
@@ -342,6 +346,7 @@ class $AssetsImagesGen {
     cash,
     ctiLogo,
     empty,
+    fevEmpty,
     foodBanner,
     fosol,
     mapLocation,
