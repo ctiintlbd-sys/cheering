@@ -48,7 +48,7 @@ class FavoritesScreen extends StatelessWidget {
                 ),
               ],
 
-              FavoritesStatus.success when state.favorites.isNotEmpty => [
+              FavoritesStatus.success when state.favorites.isEmpty => [
                 EmptyState(
                   icon: Assets.images.fevEmpty.image(width: 76.w, height: 76.w),
                   message: 'Your Favorite is empty',
