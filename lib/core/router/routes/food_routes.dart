@@ -36,8 +36,9 @@ final List<RouteBase> foodRoutes = [
     builder: (context, state) {
       final args = state.extra as RestaurantListArgs;
       return BlocProvider(
-        create: (context) => getIt<RestaurantListBloc>()
-          ..add(LoadRestaurants(params: args.params)),
+        create: (context) =>
+            getIt<RestaurantListBloc>()
+              ..add(LoadRestaurants(params: args.params)),
         child: ExploreRestaurantsScreen(
           title: args.title,
           initialParams: args.params,
@@ -63,9 +64,14 @@ final List<RouteBase> foodRoutes = [
     path: RoutePaths.itemDetails,
     builder: (context, state) {
       final item = state.extra as MenuItemEntity;
-      final cartItem = context.read<CartBloc>().state.cart?.items
-          .where((i) => i.menuItemId == item.id).firstOrNull;
-      
+      final cartItem = context
+          .read<CartBloc>()
+          .state
+          .cart
+          ?.items
+          .where((i) => i.menuItemId == item.id)
+          .firstOrNull;
+
       return BlocProvider(
         create: (context) => ItemDetailsBloc(item, cartItem: cartItem),
         child: ItemDetailsScreen(menuItem: item),
@@ -74,6 +80,11 @@ final List<RouteBase> foodRoutes = [
   ),
   GoRoute(
     path: RoutePaths.favorites,
-    builder: (context, state) => const FavoritesScreen(),
+    builder: (context, state) {
+      return BlocProvider(
+        create: (context) => getIt<FavoritesBloc>()..add(const LoadFavorites()),
+        child: const FavoritesScreen(),
+      );
+    },
   ),
 ];

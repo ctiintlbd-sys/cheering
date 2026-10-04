@@ -6,20 +6,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class RestaurantCardWidget extends StatelessWidget {
-  const RestaurantCardWidget({super.key, required this.restaurant});
+  const RestaurantCardWidget({
+    super.key,
+    required this.restaurant,
+    this.isFavorite,
+    this.onFavoriteTap,
+  });
 
   final RestaurantEntity restaurant;
+  final bool? isFavorite;
+  final VoidCallback? onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap:  () {
+      onTap: () {
         context.push(RoutePaths.storeDetails(restaurant.id), extra: restaurant);
       },
       child: SizedBox(
-        width: 174.w,
-        height: 194.w,
+        width:  174.w,
+        height:  194.w,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,35 +38,68 @@ class RestaurantCardWidget extends StatelessWidget {
                   borderRadius: 12.r,
                   imageUrl: restaurant.logoUrl,
                 ),
-                if(!restaurant.isOpen)
-                Positioned.fill(child: CustomContainer(
-                  alignment: Alignment.center,
-                  radiusAll: 12.r,
-                  color: context.colors.black.withValues(alpha: 0.7),
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomText(
-                          bottom: 8.w,
-                          textAlign: TextAlign.center,
-                            text: 'Closed for\nnow',color: context.colors.white,fontWeight: FontWeight.w600),
-                        CustomButton(
-                          backgroundColor: context.colors.white,
-                          foregroundColor: context.colors.primary,
-                          fontWeight: FontWeight.w600,
-                          radius: 6.r,
-                          height: 28.w,
-                          fontSize: 12.w,
-                          onPressed: (){
-                             context.push(RoutePaths.storeDetails(restaurant.id), extra: restaurant);
-                          },
-                          label: 'Order for later')
-                      ],
+                if (!restaurant.isOpen)
+                  Positioned.fill(
+                    child: CustomContainer(
+                      alignment: Alignment.center,
+                      radiusAll: 12.r,
+                      color: context.colors.black.withValues(alpha: 0.7),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomText(
+                              bottom: 8.w,
+                              textAlign: TextAlign.center,
+                              text: 'Closed for\nnow',
+                              color: context.colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            CustomButton(
+                              backgroundColor: context.colors.white,
+                              foregroundColor: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                              radius: 6.r,
+                              height: 28.w,
+                              fontSize: 12.w,
+                              onPressed: () {
+                                context.push(
+                                  RoutePaths.storeDetails(restaurant.id),
+                                  extra: restaurant,
+                                );
+                              },
+                              label: 'Order for later',
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                )),
+                  Positioned(
+                    top: 8.w,
+                    right: 8.w,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: onFavoriteTap,
+                      child: CustomContainer(
+                        alignment: Alignment.center,
+                        height: 28.w,
+                        width: 28.w,
+                        shape: BoxShape.circle,
+                        color: context.colors.black.withValues(alpha: 0.1),
+                        child: Icon(
+                          (isFavorite ?? restaurant.isFavorite) == true
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: (isFavorite ?? restaurant.isFavorite) == true
+                              ? context.colors.primary
+                              : context.colors.white,
+                          size: 16.r,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
             CustomText(

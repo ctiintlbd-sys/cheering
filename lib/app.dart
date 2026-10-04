@@ -5,9 +5,10 @@ import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/app_router.dart';
 import 'package:cheering/features/address/presentation/bloc/address_event.dart';
 import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dart';
-import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_bloc.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -32,6 +33,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => getIt<AuthBloc>()),
         BlocProvider(create: (_) => getIt<ProfileBloc>()),
         BlocProvider(create: (_) => getIt<CartBloc>()),
+        BlocProvider(create: (_) => getIt<FavoritesBloc>()),
         BlocProvider(
           create: (_) => getIt<AddressBloc>()
             ..add(const InitializeAddressScreenData())

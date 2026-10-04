@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cheering/core/helpers/toast_message_helper.dart';
+import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_card_widget.dart';
 import '../blocs/favorites_bloc.dart';
@@ -30,62 +32,64 @@ class FavoritesScreen extends StatelessWidget {
             onRefresh: () async {
               context.read<FavoritesBloc>().add(const RefreshFavorites());
             },
-            appBar: const CustomSliverAppBar(
+            appBar: CustomSliverAppBar(
               title: 'My Favorites',
-              showLeading: true,
               pinned: true,
+              backgroundColor: context.colors.background,
             ),
             bodyList: switch (state.status) {
-              FavoritesStatus.initial || FavoritesStatus.loading
-                  when state.favorites.isEmpty =>
-                [const FavoritesGridShimmer(count: 6)],
-              FavoritesStatus.failure when state.favorites.isEmpty => [
+              FavoritesStatus.initial ||
+              FavoritesStatus.loading => [const FavoritesGridShimmer(count: 6)],
+              FavoritesStatus.failure => [
                 EmptyState(
                   message: state.errorMessage ?? 'Failed to load favorites',
                 ),
               ],
-              _ when state.favorites.isEmpty => [
-                const EmptyState(message: 'No favorite restaurants yet'),
-              ],
-              _ => [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.w,
-                  ),
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16.w,
-                      crossAxisSpacing: 12.w,
-                      childAspectRatio: 174 / 200,
-                    ),
-                    itemCount: state.favorites.length,
-                    itemBuilder: (context, index) {
-                      final restaurant = state.favorites[index];
-                      return CustomItemAnimator(
-                        index: index,
-                        animationType: CustomItemAnimationType.slide,
-                        child: RestaurantCardWidget(
-                          restaurant: restaurant,
-                          isFavorite: state.isFavorite(restaurant.id),
-                          onFavoriteTap: () {
-                            context.read<FavoritesBloc>().add(
-                              ToggleFavoriteRestaurant(
-                                restaurant.id,
-                                restaurant: restaurant,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
+
+              FavoritesStatus.success when state.favorites.isNotEmpty => [
+                EmptyState(
+                  message: 'Your Favorite is empty',
+                  subMessage:
+                      'You haven\'t added anything to your favorite yet',
+                  buttonText: 'Start Explore',
+                  onPressed: () => context.go(RoutePaths.foodTab),
                 ),
-                SizedBox(height: 100.w),
+              ],
+
+              FavoritesStatus.success => [
+                SizedBox(height: 16.w),
+                GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16.w,
+                    crossAxisSpacing: 12.w,
+                    childAspectRatio: 174 / 200,
+                  ),
+                  itemCount: state.favorites.length,
+                  itemBuilder: (context, index) {
+                    final restaurant = state.favorites[index];
+                    return CustomItemAnimator(
+                      index: index,
+                      animationType: CustomItemAnimationType.slide,
+                      child: RestaurantCardWidget(
+                        restaurant: restaurant,
+                        isFavorite: state.isFavorite(restaurant.id),
+                        onFavoriteTap: () {
+                          context.read<FavoritesBloc>().add(
+                            ToggleFavoriteRestaurant(
+                              restaurant.id,
+                              restaurant: restaurant,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ).horizontal(16.w),
+                SizedBox(height: 120.w),
               ],
             },
           );
