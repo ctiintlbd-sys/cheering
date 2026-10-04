@@ -31,7 +31,7 @@ void setupFavoritesDependencies(GetIt getIt) {
   );
 
   // Blocs
-  getIt.registerFactory(
+  getIt.registerLazySingleton<FavoritesBloc>(
     () => FavoritesBloc(
       getIt<GetFavoritesUseCase>(),
       getIt<ToggleFavoriteUseCase>(),

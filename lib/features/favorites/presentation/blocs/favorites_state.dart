@@ -18,7 +18,12 @@ class FavoritesState extends Equatable {
     this.actionErrorMessage,
   });
 
-  bool isFavorite(String restaurantId) => favoriteIds.contains(restaurantId);
+  bool isFavorite(String restaurantId, {bool fallback = false}) {
+    if (status == FavoritesStatus.success || favoriteIds.isNotEmpty) {
+      return favoriteIds.contains(restaurantId);
+    }
+    return fallback;
+  }
 
   FavoritesState copyWith({
     FavoritesStatus? status,

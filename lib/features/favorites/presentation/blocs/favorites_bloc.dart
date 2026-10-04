@@ -86,7 +86,10 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     Emitter<FavoritesState> emit,
   ) async {
     final restaurantId = event.restaurantId;
-    final isCurrentlyFavorite = state.isFavorite(restaurantId);
+    final isCurrentlyFavorite = state.isFavorite(
+      restaurantId,
+      fallback: event.restaurant?.isFavorite ?? false,
+    );
     final previousFavorites = state.favorites;
     final previousFavoriteIds = Set<String>.from(state.favoriteIds);
 
@@ -114,6 +117,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     // Immediately emit optimistic update
     emit(
       state.copyWith(
+        status: FavoritesStatus.success,
         favorites: updatedFavorites,
         favoriteIds: updatedFavoriteIds,
         clearActionError: true,
@@ -132,7 +136,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         serverFavoriteIds.remove(result.restaurantId);
       }
 
-      emit(state.copyWith(favoriteIds: serverFavoriteIds));
+      emit(
+        state.copyWith(
+          status: FavoritesStatus.success,
+          favoriteIds: serverFavoriteIds,
+        ),
+      );
     } catch (e) {
       // Revert to previous state if API call fails
       emit(

@@ -8,7 +8,6 @@ import 'package:cheering/features/authentication/presentation/bloc/auth_bloc.dar
 import 'package:cheering/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
 import 'package:cheering/features/favorites/presentation/blocs/favorites_bloc.dart';
-import 'package:cheering/features/favorites/presentation/blocs/favorites_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
