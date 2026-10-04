@@ -44,10 +44,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
           right: 16.w,
           child: BlocBuilder<FavoritesBloc, FavoritesState>(
             builder: (context, favState) {
-              final isFav = restaurant != null &&
-                  (favState.isFavorite(restaurant!.id) ||
-                      (favState.status == FavoritesStatus.initial &&
-                          restaurant!.isFavorite));
+              final isFav = restaurant != null && (favState.isFavorite(restaurant!.id) || restaurant!.isFavorite);
               return CommonDetailsActions(
                 isFavorite: isFav,
                 onShareTap: () {},
