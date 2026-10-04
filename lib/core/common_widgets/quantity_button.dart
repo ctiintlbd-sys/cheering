@@ -1,5 +1,6 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum QuantityButtonSize {
@@ -68,18 +69,19 @@ class QuantityButton extends StatelessWidget {
     final isSmall = size == QuantityButtonSize.small;
     final effectiveAddPadding = paddingAll ?? (isSmall ? 3.r : 4.r);
     final effectiveAddIconSize = iconSize ?? (isSmall ? 16.r : 20.r);
-    return GestureDetector(
-      onTap: onIncrement,
-      child: CustomContainer(
-        paddingAll: effectiveAddPadding,
-        shape: BoxShape.circle,
-        bordersColor: context.colors.borderSecondary,
-        borderWidth: isSmall ? 1.0 : 1.5,
-        child: Icon(
-          Icons.add,
-          color: context.colors.primary,
-          size: effectiveAddIconSize,
-        ),
+    return CustomContainer(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onIncrement.call();
+      },
+      paddingAll: effectiveAddPadding,
+      shape: BoxShape.circle,
+      bordersColor: context.colors.borderSecondary,
+      borderWidth: isSmall ? 1.0 : 1.5,
+      child: Icon(
+        Icons.add,
+        color: context.colors.primary,
+        size: effectiveAddIconSize,
       ),
     );
   }
@@ -102,7 +104,10 @@ class QuantityButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomContainer(
-            onTap: onDecrement,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onDecrement.call();
+            },
             paddingAll: effectiveButtonPadding,
             radiusAll: buttonRadius,
             color: context.colors.background,
@@ -128,7 +133,10 @@ class QuantityButton extends StatelessWidget {
             ),
           ),
           CustomContainer(
-            onTap: onIncrement,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onIncrement.call();
+            },
             paddingAll: effectiveButtonPadding,
             radiusAll: buttonRadius,
             color: context.colors.primary,
