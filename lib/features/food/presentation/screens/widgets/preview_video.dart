@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:cheering/features/food/presentation/helpers/reels_video_controller_manager.dart';
 
 /// A high-performance, reusable video player widget optimized for previews,
 /// vertical reels, feeds, and cards.
@@ -13,6 +14,7 @@ import 'package:video_player/video_player.dart';
 /// - [RepaintBoundary] to isolate video texture repaints for 60fps performance
 /// - Tap-to-play/pause with visual indicator
 /// - [overlayBuilder] and [overlay] support (progress bars, badges, controls)
+/// - [useSharedPool] shares initialized controllers across screens for 0ms loading
 class PreviewVideo extends StatefulWidget {
   const PreviewVideo({
     super.key,
@@ -23,6 +25,7 @@ class PreviewVideo extends StatefulWidget {
     this.mixWithOthers,
     this.autoPlay = true,
     this.isLooping = true,
+    this.useSharedPool = true,
     this.fit = BoxFit.cover,
     this.enableTapToPlayPause = false,
     this.fadeDuration = const Duration(milliseconds: 250),
@@ -33,6 +36,9 @@ class PreviewVideo extends StatefulWidget {
 
   /// URL of the video (network URL).
   final String videoUrl;
+
+  /// Whether to use the shared [ReelsVideoControllerManager] pool to avoid re-initializing.
+  final bool useSharedPool;
 
   /// Optional widget displayed while video initializes or on error.
   final Widget? placeholder;
@@ -125,6 +131,52 @@ class _PreviewVideoState extends State<PreviewVideo>
   Future<void> _initController() async {
     final url = widget.videoUrl.trim();
     if (url.isEmpty) return;
+
+    if (widget.useSharedPool) {
+      final cached = ReelsVideoControllerManager.instance.getController(url);
+      if (cached != null && cached.value.isInitialized) {
+        _controller = cached;
+        _controller!.addListener(_onControllerUpdate);
+        cached.setLooping(widget.isLooping);
+        cached.setVolume(widget.isMuted ? 0.0 : 1.0);
+
+        if (widget.isActive && widget.autoPlay) {
+          cached.play();
+          _isPlaying.value = true;
+        } else {
+          _isPlaying.value = cached.value.isPlaying;
+        }
+
+        _ready.value = true;
+        widget.onControllerInitialized?.call(cached);
+        return;
+      }
+
+      try {
+        final controller = await ReelsVideoControllerManager.instance
+            .getOrCreateController(
+          url,
+          isMuted: widget.isMuted,
+          isLooping: widget.isLooping,
+          autoPlay: widget.isActive && widget.autoPlay,
+          mixWithOthers: _effectiveMixWithOthers,
+        );
+
+        if (_disposed || widget.videoUrl.trim() != url) {
+          return;
+        }
+
+        _controller = controller;
+        controller.addListener(_onControllerUpdate);
+        _isPlaying.value = controller.value.isPlaying;
+        _ready.value = true;
+        widget.onControllerInitialized?.call(controller);
+        return;
+      } catch (e) {
+        debugPrint('PreviewVideo pool init error: $e');
+        return;
+      }
+    }
 
     final controller = VideoPlayerController.networkUrl(
       Uri.parse(url),
@@ -231,8 +283,10 @@ class _PreviewVideoState extends State<PreviewVideo>
     _controller = null;
     if (controller != null) {
       controller.removeListener(_onControllerUpdate);
-      controller.pause();
-      controller.dispose();
+      if (!widget.useSharedPool) {
+        controller.pause();
+        controller.dispose();
+      }
     }
   }
 
