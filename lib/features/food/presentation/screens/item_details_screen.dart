@@ -52,10 +52,6 @@ class ItemDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            actions: [
-              CommonActionIcon(icon: Assets.icons.foodShare.path, onTap: () {}),
-              SizedBox(width: 16.w),
-            ],
           ),
           bottomNavigationBar: ItemDetailsBottomBar(
             menuItem: menuItem,
