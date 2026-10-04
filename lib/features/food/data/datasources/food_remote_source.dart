@@ -26,7 +26,7 @@ class FoodRemoteSource {
       ApiEndpoints.homeFeed,
       queryParameters: query.isNotEmpty ? query : null,
       fromJson: (json) => HomeFeedModel.fromJson(json['data'] ?? {}),
-      requiresAuth: false,
+      //requiresAuth: false,
     );
   }
 
@@ -42,7 +42,7 @@ class FoodRemoteSource {
             .map((e) => RestaurantModel.fromJson(e as Map<String, dynamic>))
             .toList();
       },
-      requiresAuth: false,
+     // requiresAuth: false,
     );
   }
 
@@ -59,7 +59,7 @@ class FoodRemoteSource {
       ApiEndpoints.restaurantDetails(restaurantId),
       queryParameters: query.isNotEmpty ? query : null,
       fromJson: (json) => RestaurantModel.fromJson(json['data'] ?? {}),
-      requiresAuth: false,
+      //requiresAuth: false,
     );
   }
 
