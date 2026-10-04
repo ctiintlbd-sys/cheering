@@ -64,7 +64,9 @@ class DeliveryTitleWidget extends StatelessWidget {
           context: context,
           icon: Assets.icons.foodLove.svg(),
           backgroundColor: context.colors.white.withValues(alpha: 0.15),
-          onTap: () {},
+          onTap: () {
+            context.push(RoutePaths.favorites);
+          },
         ),
         SizedBox(width: 12.w),
         _buildCircularIconButton(

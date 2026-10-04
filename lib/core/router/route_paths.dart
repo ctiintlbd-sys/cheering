@@ -48,4 +48,5 @@ abstract class RoutePaths {
   static const String privacy = '/profile/about/privacy';
   static const String terms = '/profile/about/terms';
   static const String helpCenter = '/profile/help-center';
+  static const String favorites = '/favorites';
 }

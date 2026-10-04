@@ -11,6 +11,9 @@ import 'package:cheering/features/food/presentation/blocs/restaurant_details/res
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_bloc.dart';
 import 'package:cheering/features/food/presentation/blocs/restaurant_list/restaurant_list_event.dart';
 import 'package:cheering/features/food/presentation/blocs/item_details/item_details_bloc.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_bloc.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_event.dart';
+import 'package:cheering/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:cheering/core/di/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -67,6 +70,10 @@ final List<RouteBase> foodRoutes = [
         create: (context) => ItemDetailsBloc(item, cartItem: cartItem),
         child: ItemDetailsScreen(menuItem: item),
       );
-    }
+    },
+  ),
+  GoRoute(
+    path: RoutePaths.favorites,
+    builder: (context, state) => const FavoritesScreen(),
   ),
 ];

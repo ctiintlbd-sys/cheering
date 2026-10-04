@@ -1,5 +1,9 @@
+import 'package:cheering/features/favorites/presentation/blocs/favorites_bloc.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_event.dart';
+import 'package:cheering/features/favorites/presentation/blocs/favorites_state.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
@@ -38,7 +42,28 @@ class RestaurantFlexibleBackground extends StatelessWidget {
         Positioned(
           top: kToolbarHeight,
           right: 16.w,
-          child: CommonDetailsActions(onShareTap: () {}, onLoveTap: () {}),
+          child: BlocBuilder<FavoritesBloc, FavoritesState>(
+            builder: (context, favState) {
+              final isFav = restaurant != null &&
+                  (favState.isFavorite(restaurant!.id) ||
+                      (favState.status == FavoritesStatus.initial &&
+                          restaurant!.isFavorite));
+              return CommonDetailsActions(
+                isFavorite: isFav,
+                onShareTap: () {},
+                onLoveTap: () {
+                  if (restaurant != null) {
+                    context.read<FavoritesBloc>().add(
+                          ToggleFavoriteRestaurant(
+                            restaurant!.id,
+                            restaurant: restaurant,
+                          ),
+                        );
+                  }
+                },
+              );
+            },
+          ),
         ),
       ],
     );

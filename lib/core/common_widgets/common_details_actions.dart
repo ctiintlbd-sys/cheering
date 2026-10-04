@@ -7,11 +7,13 @@ import 'package:cheering/core/widgets/widgets.dart';
 class CommonDetailsActions extends StatelessWidget {
   final VoidCallback onShareTap;
   final VoidCallback onLoveTap;
+  final bool isFavorite;
 
   const CommonDetailsActions({
     super.key,
     required this.onShareTap,
     required this.onLoveTap,
+    this.isFavorite = false,
   });
 
   @override
@@ -21,7 +23,15 @@ class CommonDetailsActions extends StatelessWidget {
       children: [
         CommonActionIcon(icon: Assets.icons.foodShare.path, onTap: onShareTap),
         SizedBox(width: 8.w),
-        CommonActionIcon(icon: Assets.icons.foodLove.path, onTap: onLoveTap),
+        CommonActionIcon(
+          icon: isFavorite
+              ? Assets.icons.love.path
+              : Assets.icons.foodLove.path,
+          iconColor: isFavorite
+              ? context.colors.primary
+              : context.colors.textPrimary,
+          onTap: onLoveTap,
+        ),
       ],
     );
   }
