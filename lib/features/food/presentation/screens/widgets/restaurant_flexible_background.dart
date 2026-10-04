@@ -10,6 +10,7 @@ import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/core/common_widgets/common_details_actions.dart';
 import 'package:cheering/features/food/presentation/screens/widgets/restaurant_tags_row.dart';
+import 'package:share_plus/share_plus.dart';
 
 class RestaurantFlexibleBackground extends StatelessWidget {
   final RestaurantEntity? restaurant;
@@ -47,7 +48,7 @@ class RestaurantFlexibleBackground extends StatelessWidget {
               final isFav = restaurant != null && (favState.isFavorite(restaurant!.id) || restaurant!.isFavorite);
               return CommonDetailsActions(
                 isFavorite: isFav,
-                onShareTap: () {},
+                onShareTap: () => _shareRestaurant(context),
                 onLoveTap: () {
                   if (restaurant != null) {
                     context.read<FavoritesBloc>().add(
@@ -63,6 +64,25 @@ class RestaurantFlexibleBackground extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _shareRestaurant(BuildContext context) {
+    if (restaurant == null) return;
+    final box = context.findRenderObject() as RenderBox?;
+    final origin =
+        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+    final storeLink =
+        'https://cheeringshop.online/store-details/${restaurant!.id}';
+    final shareText =
+        'Check out ${restaurant!.name} on Cheering!\n$storeLink';
+
+    SharePlus.instance.share(
+      ShareParams(
+        text: shareText,
+        subject: restaurant!.name,
+        sharePositionOrigin: origin,
+      ),
     );
   }
 

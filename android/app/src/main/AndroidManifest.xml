@@ -30,11 +30,13 @@
             </intent-filter>
             
             <!-- Deep linking intent filter for GoRouter -->
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="crshop" />
+                <data android:scheme="https" android:host="cheeringshop.online" />
+                <data android:scheme="https" android:host="www.cheeringshop.online" />
             </intent-filter>
         </activity>
 

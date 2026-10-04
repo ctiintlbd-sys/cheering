@@ -9,6 +9,7 @@ abstract final class AppAuthGuard {
     RoutePaths.accountSettings,
     RoutePaths.cart,
      RoutePaths.ordersTab,
+     RoutePaths.favorites,
     // RoutePaths.savedAddresses,
   };
 
