@@ -1,83 +1,56 @@
-# Codemagic CI/CD — Cheering
-#
-# Before first yaml build in Codemagic UI:
-# 1. App Store Connect integration name must match app_store_connect below
-# 2. iOS signing: App Store cert + profile for com.ctibd.cheering
+# Codemagic CI/CD — Cheering (with Shorebird)
 definitions:
   env_versions: &env_versions
-    flutter: 3.44.7
+    flutter: 3.44.7   # Codemagic e na pele "stable" dao
     xcode: latest
     cocoapods: default
   app_vars: &app_vars
-    APP_ID: com.ctibd.cheering # DEMO: App Store theke ekhane App ID bosate hobe (e.g. com.example.cheering)
-    PACKAGE_NAME: com.ctibd.cheering # DEMO: App er package name bosate hobe
-    APP_STORE_APPLE_ID: YOUR_APPLE_ID_HERE # DEMO: App Store Apple ID ekhane bosate hobe
-    FLUTTER_VERSION: 3.44.7
+    APP_ID: com.ctibd.cheering
+    PACKAGE_NAME: com.ctibd.cheering
+    APP_STORE_APPLE_ID: 6821031458
   scripts:
-    - &disable_spm_and_install
+    - &install_deps
       name: Install Flutter dependencies
       script: |
         set -e
         flutter config --no-enable-swift-package-manager
         flutter pub get
-    - &analyze_project
-      name: Analyze project
+    - &install_shorebird
+      name: Install Shorebird
       script: |
         set -e
-        flutter analyze || true
-    - &run_tests
-      name: Run tests
+        curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf | bash
+        echo PATH="$HOME/.shorebird/bin:$PATH" >> $CM_ENV
+        $HOME/.shorebird/bin/shorebird --version
+    - &ios_signing_setup
+      name: Set up iOS code signing
       script: |
         set -e
-        flutter test || true
-    - &install_pods
-      name: Install CocoaPods
-      script: |
-        set -e
-        find . -name "Podfile" -execdir pod install \;
-    - &build_ios_ipa
-      name: iOS Build (TestFlight IPA)
-      script: |
-        set -e
-        flutter build ipa --release \
-          --export-options-plist=/Users/builder/export_options.plist
+        keychain initialize
+        xcode-project use-profiles
+  publishing_email: &publishing_email
+    email:
+      recipients:
+        - ikramulhasantanvir@gmail.com
+      notify:
+        success: false
+        failure: true
 
 workflows:
-  flutter-ci:
-    name: Flutter CI
-    instance_type: mac_mini_m2
-    max_build_duration: 30
-    environment:
-      <<: *env_versions
-      vars:
-        <<: *app_vars
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - $HOME/.pub-cache
-    triggering:
-      events:
-        - push
-        - pull_request
-      branch_patterns:
-        - pattern: "*"
-          include: true
-    scripts:
-      - *disable_spm_and_install
-      - *analyze_project
-      - *run_tests
-      
+  # ---------- iOS: main e push -> Shorebird release -> TestFlight ----------
   ios-testflight:
-    name: iOS TestFlight
+    name: iOS TestFlight (Shorebird release)
     instance_type: mac_mini_m2
     max_build_duration: 120
     integrations:
-      app_store_connect: Codemagic # DEMO: Codemagic integration name er sathe match korte hobe
+      app_store_connect: "Codemagic Key"
     environment:
       <<: *env_versions
+      groups:
+        - shorebird          # SHOREBIRD_TOKEN (secure)
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.ctibd.cheering # DEMO: Ekhane bundle identifier bosate hobe
+        bundle_identifier: com.ctibd.cheering
       vars:
         <<: *app_vars
     cache:
@@ -92,30 +65,39 @@ workflows:
         - pattern: main
           include: true
     scripts:
-      - *disable_spm_and_install
-      - *analyze_project
-      - *run_tests
-      - *install_pods
-      - *build_ios_ipa
+      - *install_deps
+      - *install_shorebird
+      - *ios_signing_setup
+      - name: Shorebird release iOS
+        script: |
+          set -e
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")
+          shorebird release ios \
+            --export-options-plist=/Users/builder/export_options.plist \
+            -- --build-number=$((LATEST + 1))
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
     publishing:
+      <<: *publishing_email
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        
+
+  # ---------- Android: main e push -> Shorebird release -> AAB ----------
   android-release:
-    name: Android Release
-    instance_type: mac_mini_m2
+    name: Android Release (Shorebird release)
+    instance_type: linux_x2
     max_build_duration: 60
     environment:
       <<: *env_versions
+      groups:
+        - shorebird
       android_signing:
         - keystore_reference
       vars:
         <<: *app_vars
+        BUILD_NUMBER_OFFSET: 0   # Play te age bundle thakle boro number dao, jemon 100
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -128,16 +110,48 @@ workflows:
         - pattern: main
           include: true
     scripts:
-      - *disable_spm_and_install
-      - *analyze_project
-      - *run_tests
-      - name: Build Android App Bundle
+      - *install_deps
+      - *install_shorebird
+      - name: Shorebird release Android
         script: |
           set -e
-          flutter build appbundle \
-            --release \
-            --build-number=$PROJECT_BUILD_NUMBER
+          shorebird release android --artifact aab \
+            -- --build-number=$((PROJECT_BUILD_NUMBER + BUILD_NUMBER_OFFSET))
     artifacts:
       - build/app/outputs/bundle/release/*.aab
-      - build/app/outputs/flutter-apk/app-release.apk
-      - flutter_drive.log
+    publishing:
+      <<: *publishing_email
+
+  # ---------- Patch: manual (Codemagic UI theke Start new build) ----------
+  shorebird-patch:
+    name: Shorebird Patch
+    instance_type: mac_mini_m2   # iOS patch er jonno Mac lagbe
+    max_build_duration: 60
+    integrations:
+      app_store_connect: "Codemagic Key"
+    environment:
+      <<: *env_versions
+      groups:
+        - shorebird
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.ctibd.cheering
+      android_signing:
+        - keystore_reference
+      vars:
+        <<: *app_vars
+        IOS_RELEASE_VERSION: latest       # exact dite chaile jemon 1.0.0+12
+        ANDROID_RELEASE_VERSION: latest   # exact dite chaile jemon 1.0.0+5
+    # triggering nai: shudhu manually chalbe
+    scripts:
+      - *install_deps
+      - *install_shorebird
+      - *ios_signing_setup
+      - name: Patch iOS and Android
+        script: |
+          set -e
+          shorebird patch ios --release-version="$IOS_RELEASE_VERSION" \
+            --export-options-plist=/Users/builder/export_options.plist
+          shorebird patch android --release-version="$ANDROID_RELEASE_VERSION"
+    publishing:
+      <<: *publishing_email
