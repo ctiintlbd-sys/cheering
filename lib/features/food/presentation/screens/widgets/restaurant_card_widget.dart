@@ -26,7 +26,7 @@ class RestaurantCardWidget extends StatelessWidget {
       },
       child: SizedBox(
         width:  174.w,
-        height:  194.w,
+        height:  196.w,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
