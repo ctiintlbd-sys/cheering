@@ -1,0 +1,143 @@
+# Codemagic CI/CD — Cheering
+#
+# Before first yaml build in Codemagic UI:
+# 1. App Store Connect integration name must match app_store_connect below
+# 2. iOS signing: App Store cert + profile for com.ctibd.cheering
+definitions:
+  env_versions: &env_versions
+    flutter: 3.44.7
+    xcode: latest
+    cocoapods: default
+  app_vars: &app_vars
+    APP_ID: com.ctibd.cheering # DEMO: App Store theke ekhane App ID bosate hobe (e.g. com.example.cheering)
+    PACKAGE_NAME: com.ctibd.cheering # DEMO: App er package name bosate hobe
+    APP_STORE_APPLE_ID: YOUR_APPLE_ID_HERE # DEMO: App Store Apple ID ekhane bosate hobe
+    FLUTTER_VERSION: 3.44.7
+  scripts:
+    - &disable_spm_and_install
+      name: Install Flutter dependencies
+      script: |
+        set -e
+        flutter config --no-enable-swift-package-manager
+        flutter pub get
+    - &analyze_project
+      name: Analyze project
+      script: |
+        set -e
+        flutter analyze || true
+    - &run_tests
+      name: Run tests
+      script: |
+        set -e
+        flutter test || true
+    - &install_pods
+      name: Install CocoaPods
+      script: |
+        set -e
+        find . -name "Podfile" -execdir pod install \;
+    - &build_ios_ipa
+      name: iOS Build (TestFlight IPA)
+      script: |
+        set -e
+        flutter build ipa --release \
+          --export-options-plist=/Users/builder/export_options.plist
+
+workflows:
+  flutter-ci:
+    name: Flutter CI
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      <<: *env_versions
+      vars:
+        <<: *app_vars
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch_patterns:
+        - pattern: "*"
+          include: true
+    scripts:
+      - *disable_spm_and_install
+      - *analyze_project
+      - *run_tests
+      
+  ios-testflight:
+    name: iOS TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    integrations:
+      app_store_connect: Codemagic # DEMO: Codemagic integration name er sathe match korte hobe
+    environment:
+      <<: *env_versions
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.ctibd.cheering # DEMO: Ekhane bundle identifier bosate hobe
+      vars:
+        <<: *app_vars
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - *disable_spm_and_install
+      - *analyze_project
+      - *run_tests
+      - *install_pods
+      - *build_ios_ipa
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        
+  android-release:
+    name: Android Release
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      <<: *env_versions
+      android_signing:
+        - keystore_reference
+      vars:
+        <<: *app_vars
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
+        - $HOME/.gradle/caches
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - *disable_spm_and_install
+      - *analyze_project
+      - *run_tests
+      - name: Build Android App Bundle
+        script: |
+          set -e
+          flutter build appbundle \
+            --release \
+            --build-number=$PROJECT_BUILD_NUMBER
+    artifacts:
+      - build/app/outputs/bundle/release/*.aab
+      - build/app/outputs/flutter-apk/app-release.apk
+      - flutter_drive.log
