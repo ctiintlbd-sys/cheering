@@ -46,6 +46,10 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (menuItem != null && !menuItem!.isAvailable) {
+      return const SizedBox.shrink();
+    }
+
     final isLoggedIn = getIt<AppRouterNotifier>().isAuthenticated;
     final hasVariants = menuItem?.variants?.isNotEmpty ?? false;
     final hasAddOns = menuItem?.addOns?.isNotEmpty ?? false;
