@@ -26,8 +26,7 @@ definitions:
       name: Set up iOS code signing
       script: |
         set -e
-        keychain initialize
-        xcode-project use-profiles
+        xcode-project use-profiles --custom-export-options='{"manageAppVersionAndBuildNumber": false}'
   publishing_email: &publishing_email
     email:
       recipients:
