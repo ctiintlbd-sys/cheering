@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ctibd.cheering</string>
+	<string>com.ctibd.cheering-bd</string>
 	<key>PROJECT_ID</key>
 	<string>cheering-d183a</string>
 	<key>STORAGE_BUCKET</key>

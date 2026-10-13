@@ -5,9 +5,9 @@ definitions:
     xcode: latest
     cocoapods: default
   app_vars: &app_vars
-    APP_ID: com.ctibd.cheering
-    PACKAGE_NAME: com.ctibd.cheering
-    APP_STORE_APPLE_ID: 6821031458
+    APP_ID: com.ctibd.cheering-bd
+    PACKAGE_NAME: com.ctibd.cheering-bd
+    APP_STORE_APPLE_ID: 6822406768
   scripts:
     - &install_deps
       name: Install Flutter dependencies
@@ -50,7 +50,7 @@ workflows:
         - shorebird          # SHOREBIRD_TOKEN (secure)
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.ctibd.cheering
+        bundle_identifier: com.ctibd.cheering-bd
       vars:
         <<: *app_vars
     cache:
@@ -71,7 +71,10 @@ workflows:
       - name: Shorebird release iOS
         script: |
           set -e
-          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          if [ -z "$LATEST" ] || ! [ "$LATEST" -eq "$LATEST" ] 2>/dev/null; then
+            LATEST=0
+          fi
           shorebird release ios \
             --export-options-plist=/Users/builder/export_options.plist \
             -- --build-number=$((LATEST + 1))
@@ -135,7 +138,7 @@ workflows:
         - shorebird
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.ctibd.cheering
+        bundle_identifier: com.ctibd.cheering-bd
       android_signing:
         - keystore_reference
       vars:
