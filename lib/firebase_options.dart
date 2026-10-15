@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '803066840519',
     projectId: 'cheering-d183a',
     storageBucket: 'cheering-d183a.firebasestorage.app',
-    iosBundleId: 'com.ctibd.cheering',
+    iosBundleId: 'com.ctibd.cheering-bd',
   );
 }
