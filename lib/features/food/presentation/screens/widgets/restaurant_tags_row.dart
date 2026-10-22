@@ -105,7 +105,7 @@ class RestaurantTagsRow extends StatelessWidget {
             fontSize: 12.r,
             fontWeight: FontWeight.w600,
           ),
-          if (suffixIcon != null) suffixIcon,
+          ?suffixIcon,
         ],
       ),
     );

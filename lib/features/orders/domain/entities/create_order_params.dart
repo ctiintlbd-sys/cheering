@@ -30,7 +30,7 @@ class CreateOrderParams extends Equatable {
       if (specialInstructions != null)
         'special_instructions': specialInstructions,
       if (scheduledFor != null)
-        'scheduled_for': scheduledFor!.toIso8601String(),
+        'scheduled_for': scheduledFor!.toUtc().toIso8601String(),
     };
   }
 

@@ -7,7 +7,6 @@ import 'package:cheering/features/cart/presentation/blocs/cart/cart_event.dart';
 import 'package:cheering/features/cart/presentation/blocs/cart/cart_state.dart';
 import 'package:cheering/features/food/domain/entities/menu_entity.dart';
 import 'package:cheering/features/food/presentation/blocs/item_details/item_details_state.dart';
-import 'package:cheering/features/store/presentation/screens/widgets/view_cart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,6 +57,7 @@ class ItemDetailsBottomBar extends StatelessWidget {
             ),
             SizedBox(width: 24.w),
             QuantityButton(
+              size: QuantityButtonSize.big,
               count: count,
               onIncrement: () => updateQuantity(count + 1),
               onDecrement: () {
