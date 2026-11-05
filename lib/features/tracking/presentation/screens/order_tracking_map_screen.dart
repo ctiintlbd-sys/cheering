@@ -47,7 +47,10 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
   }
 
   void _fitRoute() {
-    final update = TrackingMapGeometry.cameraUpdateOf(widget.tracking);
+    final update = TrackingMapGeometry.cameraUpdateOf(
+      widget.tracking,
+      routePoints: _overlay.value.routePoints,
+    );
     if (update == null) return;
     _mapController?.animateCamera(update);
   }
@@ -72,7 +75,7 @@ class _OrderTrackingMapScreenState extends State<OrderTrackingMapScreen> {
                   _fitRoute();
                 },
                 markers: overlay.markers,
-               // polylines: overlay.polylines,
+                polylines: overlay.polylines,
                 myLocationEnabled: false,
                 myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,

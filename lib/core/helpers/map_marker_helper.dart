@@ -101,7 +101,7 @@ abstract final class MapMarkerHelper {
   static Future<BitmapDescriptor> createSvgBadgeMarker({
     required String assetPath,
     double size = 42,
-    Color color = const Color(0xFFF5B400),
+    Color color = const Color(0xFFE2146E),
     double padFactor = 0.14,
   }) async {
     final cacheKey = '$size|${color.toARGB32()}|$assetPath|$padFactor';

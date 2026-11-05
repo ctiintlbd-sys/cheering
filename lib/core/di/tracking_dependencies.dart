@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/services/directions_api_client.dart';
 import '../../features/tracking/data/datasources/tracking_remote_source.dart';
 import '../../features/tracking/data/repositories/tracking_repository_impl.dart';
 import '../../features/tracking/domain/repositories/i_tracking_repository.dart';
@@ -8,6 +9,9 @@ import '../../features/tracking/presentation/blocs/order_tracking/order_tracking
 import '../network/i_api_client.dart';
 
 void setupTrackingDependencies(GetIt getIt) {
+  getIt.registerLazySingleton<DirectionsApiClient>(
+    () => DirectionsApiClient(),
+  );
   getIt.registerLazySingleton<TrackingRemoteSource>(
     () => TrackingRemoteSource(getIt<IApiClient>()),
   );

@@ -1,23 +1,29 @@
 import 'dart:math' as math;
 
 import 'package:cheering/core/helpers/map_marker_helper.dart';
+import 'package:cheering/core/services/directions_api_client.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/features/address/domain/entities/map_location_entities.dart';
 import 'package:cheering/features/tracking/domain/entities/order_tracking_entity.dart';
+import 'package:cheering/features/tracking/presentation/helpers/tracking_status.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TrackingMapOverlay {
   const TrackingMapOverlay({
     this.markers = const {},
     this.polylines = const {},
+    this.routePoints = const [],
   });
 
   final Set<Marker> markers;
   final Set<Polyline> polylines;
+  final List<LatLng> routePoints;
 
   static Future<TrackingMapOverlay> build({
     required OrderTrackingEntity tracking,
+    DirectionsApiClient? directionsClient,
   }) async {
     final restaurant = TrackingMapGeometry.restaurantOf(tracking);
     final rider = TrackingMapGeometry.riderOf(tracking);
@@ -56,9 +62,45 @@ class TrackingMapOverlay {
     final customerIcon = icons[0];
     final restaurantIcon = icons[1];
     final riderIcon = icons[2];
-    final points = TrackingMapGeometry.routePointsOf(tracking);
+
+    final client =
+        directionsClient ??
+        (GetIt.I.isRegistered<DirectionsApiClient>()
+            ? GetIt.I<DirectionsApiClient>()
+            : DirectionsApiClient());
+
+    final isOutForDelivery =
+        TrackingStatus.normalize(tracking.status) ==
+        TrackingStatus.outForDelivery;
+
+    LatLng? origin;
+    final LatLng? destination = delivery;
+    List<LatLng>? waypoints;
+
+    if (rider != null) {
+      origin = rider;
+      if (!isOutForDelivery && restaurant != null) {
+        waypoints = [restaurant];
+      }
+    } else {
+      origin = restaurant;
+    }
+
+    List<LatLng> points = const [];
+    if (origin != null && destination != null) {
+      points = await client.getRoute(
+        origin: origin,
+        destination: destination,
+        waypoints: waypoints,
+      );
+    }
+
+    if (points.isEmpty) {
+      points = TrackingMapGeometry.routePointsOf(tracking);
+    }
 
     return TrackingMapOverlay(
+      routePoints: points,
       markers: {
         if (delivery != null && customerIcon != null)
           Marker(
@@ -91,19 +133,20 @@ class TrackingMapOverlay {
             infoWindow: InfoWindow(title: tracking.restaurantName),
           ),
       },
-      polylines: points.length < 2
-          ? const {}
-          : {
-              Polyline(
-                polylineId: const PolylineId('route'),
-                color: const Color(0xFF2563EB),
-                width: 5,
-                points: points,
-                startCap: Cap.roundCap,
-                endCap: Cap.roundCap,
-                jointType: JointType.round,
-              ),
-            },
+      polylines:
+          points.length < 2
+              ? const {}
+              : {
+                Polyline(
+                  polylineId: const PolylineId('route'),
+                  color: const Color(0xFF2563EB),
+                  width: 5,
+                  points: points,
+                  startCap: Cap.roundCap,
+                  endCap: Cap.roundCap,
+                  jointType: JointType.round,
+                ),
+              },
     );
   }
 
@@ -146,8 +189,14 @@ abstract final class TrackingMapGeometry {
       restaurantOf(tracking) ??
       MapLocationDefaults.dhaka;
 
-  static CameraUpdate? cameraUpdateOf(OrderTrackingEntity tracking) {
-    final points = routePointsOf(tracking);
+  static CameraUpdate? cameraUpdateOf(
+    OrderTrackingEntity tracking, {
+    List<LatLng>? routePoints,
+  }) {
+    final points =
+        (routePoints != null && routePoints.isNotEmpty)
+            ? routePoints
+            : routePointsOf(tracking);
     if (points.isEmpty) return null;
     if (points.length == 1) {
       return CameraUpdate.newLatLngZoom(points.first, singlePointZoom);
