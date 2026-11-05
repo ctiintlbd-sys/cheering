@@ -1,4 +1,3 @@
-import 'package:cheering/core/di/service_locator.dart';
 import 'package:cheering/core/router/route_args.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/features/address/presentation/bloc/address_bloc.dart';
@@ -26,14 +25,11 @@ final List<RouteBase> cartRoutes = [
     path: RoutePaths.checkout,
     builder: (context, state) {
       final addressId = context.read<AddressBloc>().state.activeDefaultId;
-      final bloc = getIt<CheckoutSummaryBloc>();
-      if (addressId != null) {
+      final bloc = context.read<CheckoutSummaryBloc>();
+      if (addressId != null && bloc.state.currentParams == null) {
         bloc.add(LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)));
       }
-      return BlocProvider.value(
-        value: bloc,
-        child: const CheckoutScreen(),
-      );
+      return const CheckoutScreen();
     },
   ),
   GoRoute(

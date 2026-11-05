@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../food/domain/entities/promotion_entity.dart';
 import 'cart_item_entity.dart';
 
 class CartEntity extends Equatable {
@@ -11,6 +12,7 @@ class CartEntity extends Equatable {
   final int itemCount;
   final double minOrderAmount;
   final bool meetsMinimum;
+  final List<PromotionEntity> promotions;
 
   const CartEntity({
     required this.id,
@@ -22,6 +24,7 @@ class CartEntity extends Equatable {
     required this.itemCount,
     required this.minOrderAmount,
     required this.meetsMinimum,
+    this.promotions = const [],
   });
 
   CartEntity copyWith({
@@ -34,6 +37,7 @@ class CartEntity extends Equatable {
     int? itemCount,
     double? minOrderAmount,
     bool? meetsMinimum,
+    List<PromotionEntity>? promotions,
   }) {
     return CartEntity(
       id: id ?? this.id,
@@ -45,6 +49,7 @@ class CartEntity extends Equatable {
       itemCount: itemCount ?? this.itemCount,
       minOrderAmount: minOrderAmount ?? this.minOrderAmount,
       meetsMinimum: meetsMinimum ?? this.meetsMinimum,
+      promotions: promotions ?? this.promotions,
     );
   }
 
@@ -124,5 +129,6 @@ class CartEntity extends Equatable {
         itemCount,
         minOrderAmount,
         meetsMinimum,
+        promotions,
       ];
 }

@@ -8,15 +8,17 @@ class PromoCodeCard extends StatelessWidget {
     super.key,
     required this.items,
     required this.onSelected,
+    this.selectedText,
   });
 
   final List<String> items;
   final ValueChanged<String> onSelected;
+  final String? selectedText;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: CustomMenuContainer(
         items: items,
         onSelected: onSelected,
@@ -37,7 +39,9 @@ class PromoCodeCard extends StatelessWidget {
               SizedBox(width: 10.w),
               Expanded(
                 child: CustomText(
-                  text: 'Apply Promo',
+                  text: (selectedText != null && selectedText!.isNotEmpty)
+                      ? selectedText!
+                      : 'Apply Promo',
                   fontSize: 14.r,
                   fontWeight: FontWeight.w600,
                   color: context.colors.textPrimary,

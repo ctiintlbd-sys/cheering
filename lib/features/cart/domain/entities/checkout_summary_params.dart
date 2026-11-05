@@ -9,7 +9,7 @@ class CheckoutSummaryParams extends Equatable {
   const CheckoutSummaryParams({
     required this.addressId,
     this.promoCode,
-    this.tip,
+    this.tip = 0,
     this.deliveryType = 'STANDARD',
   });
 
@@ -17,9 +17,11 @@ class CheckoutSummaryParams extends Equatable {
     final query = <String, dynamic>{
       'address_id': addressId,
       'delivery_type': deliveryType,
+      'tip': (tip ?? 0).toInt() == (tip ?? 0) ? (tip ?? 0).toInt() : (tip ?? 0),
     };
-    if (promoCode != null) query['promo_code'] = promoCode;
-    if (tip != null) query['tip'] = tip;
+    if (promoCode != null && promoCode!.isNotEmpty) {
+      query['promo_code'] = promoCode;
+    }
     return query;
   }
 

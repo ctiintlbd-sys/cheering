@@ -2,6 +2,10 @@ import 'package:cheering/core/helpers/toast_message_helper.dart';
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/cart/domain/entities/checkout_summary_params.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_bloc.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_event.dart';
+import 'package:cheering/features/cart/presentation/blocs/checkout_summary/checkout_summary_state.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/bill_details_card.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_botton_bar_widget.dart';
 import 'package:cheering/features/cart/presentation/screens/widgets/cart_item_container.dart';
@@ -104,7 +108,41 @@ class _CartScreenState extends State<CartScreen> {
                 },
               ),
               SizedBox(height: 20.w),
-              PromoCodeCard(items: const [], onSelected: (String value) {}),
+              BlocBuilder<CheckoutSummaryBloc, CheckoutSummaryState>(
+                builder: (context, checkoutState) {
+                  final promoItems = state.cart!.promotions
+                      .map((p) => p.displayDiscount)
+                      .toList();
+                  final activeCode = checkoutState.summary?.promoCode ??
+                      checkoutState.currentParams?.promoCode;
+                  final selectedPromotion = state.cart!.promotions
+                      .where((p) => p.code == activeCode)
+                      .firstOrNull;
+
+                  return PromoCodeCard(
+                    items: promoItems,
+                    selectedText: selectedPromotion?.displayDiscount,
+                    onSelected: (String value) {
+                      final index = promoItems.indexOf(value);
+                      final promoCode = index != -1
+                          ? state.cart!.promotions[index].code
+                          : value;
+                      final addressId =
+                          context.read<AddressBloc>().state.activeDefaultId;
+                      if (addressId != null) {
+                        context.read<CheckoutSummaryBloc>().add(
+                          LoadCheckoutSummary(
+                            CheckoutSummaryParams(
+                              addressId: addressId,
+                              promoCode: promoCode,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
               SizedBox(height: 24.w),
               BillDetailsCard(
                 itemTotal: state.cart!.itemTotal,

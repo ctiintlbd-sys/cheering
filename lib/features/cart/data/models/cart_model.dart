@@ -1,3 +1,4 @@
+import '../../../food/data/models/promotion_model.dart';
 import '../../domain/entities/cart_entity.dart';
 import 'cart_item_model.dart';
 
@@ -12,6 +13,7 @@ class CartModel extends CartEntity {
     required super.itemCount,
     required super.minOrderAmount,
     required super.meetsMinimum,
+    super.promotions = const [],
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,11 @@ class CartModel extends CartEntity {
       itemCount: json['item_count'] as int? ?? 0,
       minOrderAmount: (json['min_order_amount'] as num).toDouble(),
       meetsMinimum: json['meets_minimum'] as bool? ?? false,
+      promotions:
+          (json['promotions'] as List<dynamic>?)
+              ?.map((e) => PromotionModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -43,6 +50,8 @@ class CartModel extends CartEntity {
       'item_count': itemCount,
       'min_order_amount': minOrderAmount,
       'meets_minimum': meetsMinimum,
+      'promotions':
+          promotions.map((e) => (e as PromotionModel).toJson()).toList(),
     };
   }
 }
