@@ -91,6 +91,8 @@ class RestaurantFlexibleBackground extends StatelessWidget {
   }
 
   Widget _buildRestaurantDetailsHeader(BuildContext context) {
+    final isFreeDelivery = (restaurant?.deliveryFee ?? 1) <= 0;
+
     return CustomContainer(
       color: context.colors.background,
       topRightRadius: 32.r,
@@ -149,13 +151,22 @@ class RestaurantFlexibleBackground extends StatelessWidget {
                   alignment: PlaceholderAlignment.middle,
                   child: Icon(
                     Icons.directions_bike,
-                    color: context.colors.iconSecondary,
+                    color: isFreeDelivery
+                        ? context.colors.success
+                        : context.colors.iconSecondary,
                     size: 14.r,
                   ),
                 ),
                 TextSpan(
-                  text:
-                      '  ৳${restaurant?.deliveryFee.toStringAsFixed(0) ?? 0} · ${restaurant?.distanceKm ?? 0.0}Km',
+                  text: isFreeDelivery
+                      ? '  Free · ${restaurant?.distanceKm ?? 0.0}Km'
+                      : '  ৳${restaurant?.deliveryFee.toStringAsFixed(0) ?? 0} · ${restaurant?.distanceKm ?? 0.0}Km',
+                  style: isFreeDelivery
+                      ? TextStyle(
+                          color: context.colors.success,
+                          fontWeight: FontWeight.w600,
+                        )
+                      : null,
                 ),
               ],
             ),

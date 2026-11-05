@@ -21,12 +21,14 @@ class RestaurantTagsRow extends StatelessWidget {
           if (restaurant?.promotions != null &&
               restaurant!.promotions!.isNotEmpty) ...[
             CustomMenuContainer(
-              items: restaurant!.promotions!.map((e) => e.title).toList(),
+              items: restaurant!.promotions!
+                  .map((e) => e.displayDiscount)
+                  .toList(),
               onSelected: (selectedPromo) {},
               child: _buildTag(
                 context: context,
                 icon: Icons.local_offer_outlined,
-                text: restaurant!.promotions!.first.title,
+                text: restaurant!.promotions!.first.displayDiscount,
                 color: context.colors.primary,
                 bgColor: context.colors.primary.withValues(alpha: 0.1),
               ),
