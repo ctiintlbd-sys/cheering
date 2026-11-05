@@ -16,6 +16,12 @@ class AllRestaurantsSection extends StatelessWidget {
         if (state.restaurants.isEmpty) {
           return const SizedBox.shrink();
         }
+
+        final sortedRestaurants = [
+          ...state.restaurants.where((r) => r.isOpen),
+          ...state.restaurants.where((r) => !r.isOpen),
+        ];
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -27,14 +33,14 @@ class AllRestaurantsSection extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.zero,
-              itemCount: state.restaurants.length,
+              itemCount: sortedRestaurants.length,
               separatorBuilder: (context, index) => SizedBox(height: 4.w),
               itemBuilder: (context, index) {
                 return CustomItemAnimator(
                   index: index,
                   animationType: CustomItemAnimationType.slide,
                   child: HRestaurantCardWidget(
-                    restaurant: state.restaurants[index],
+                    restaurant: sortedRestaurants[index],
                   ),
                 );
               },
