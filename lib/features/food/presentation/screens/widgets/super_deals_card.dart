@@ -1,5 +1,6 @@
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/animated_promotion_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -74,29 +75,13 @@ class SuperDealsCard extends StatelessWidget {
             Positioned(
               top: 12.w,
               right: 12.w,
-              child: CustomContainer(
-                alignment: Alignment.center,
-                color: context.colors.primary,
-                radiusAll: 16.r,
-                paddingVertical: 4.w,
+              child: AnimatedPromotionBadge(
+                promotions: r.promotions!,
                 paddingHorizontal: 8.w,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.local_offer,
-                      color: context.colors.white,
-                      size: 11.r,
-                    ),
-                    SizedBox(width: 4.w),
-                    CustomText(
-                      text: r.promotions!.first.displayDiscount,
-                      color: context.colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 11.r,
-                    ),
-                  ],
-                ),
+                paddingVertical: 4.w,
+                borderRadius: 16.r,
+                fontSize: 11.r,
+                iconSize: 11.r,
               ),
             ),
           Positioned(

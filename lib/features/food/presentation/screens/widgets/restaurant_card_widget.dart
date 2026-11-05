@@ -1,6 +1,7 @@
 import 'package:cheering/core/router/route_paths.dart';
 import 'package:cheering/core/widgets/widgets.dart';
 import 'package:cheering/features/food/domain/entities/restaurant_entity.dart';
+import 'package:cheering/features/food/presentation/screens/widgets/animated_promotion_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -84,28 +85,8 @@ class RestaurantCardWidget extends StatelessWidget {
                   Positioned(
                     top: 8.w,
                     left: 8.w,
-                    child: CustomContainer(
-                      paddingHorizontal: 6.w,
-                      paddingVertical: 3.w,
-                      radiusAll: 6.r,
-                      color: context.colors.primary,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.local_offer,
-                            color: context.colors.white,
-                            size: 9.r,
-                          ),
-                          SizedBox(width: 3.w),
-                          CustomText(
-                            text: restaurant.promotions!.first.displayDiscount,
-                            color: context.colors.white,
-                            fontSize: 9.r,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ],
-                      ),
+                    child: AnimatedPromotionBadge(
+                      promotions: restaurant.promotions!,
                     ),
                   ),
                 Positioned(
