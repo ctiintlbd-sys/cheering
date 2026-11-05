@@ -84,6 +84,17 @@ class _CartScreenState extends State<CartScreen> {
                     if (activeAddress == null || activeAddress.isCurrentLocation) {
                       context.push(RoutePaths.address);
                     } else {
+                      final checkoutBloc = context.read<CheckoutSummaryBloc>();
+                      final activeCode = checkoutBloc.state.currentParams?.promoCode ??
+                          checkoutBloc.state.summary?.promoCode;
+                      final isValid = activeCode != null &&
+                          state.cart!.promotions.any((p) => p.code == activeCode);
+                      if (activeCode != null && !isValid) {
+                        final addressId = addressState.activeDefaultId ?? activeAddress.id;
+                        checkoutBloc.add(
+                          LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)),
+                        );
+                      }
                       context.push(RoutePaths.checkout);
                     }
                   },
@@ -120,13 +131,15 @@ class _CartScreenState extends State<CartScreen> {
               ),
               SizedBox(height: 20.w),
               BlocBuilder<CheckoutSummaryBloc, CheckoutSummaryState>(
-                buildWhen: (prev, curr) =>
-                    prev.summary?.promoCode != curr.summary?.promoCode,
                 builder: (context, checkoutState) {
+                  final activeCode = checkoutState.summary?.promoCode ??
+                      checkoutState.currentParams?.promoCode;
+                  final isValid = state.cart!.promotions
+                      .any((p) => p.code == activeCode);
                   return PromoCodeCard(
                     promotions: state.cart!.promotions,
                     itemTotal: state.cart!.itemTotal,
-                    selectedCode: checkoutState.summary?.promoCode,
+                    selectedCode: isValid ? activeCode : null,
                     onSelected: _applyPromoCode,
                   );
                 },
