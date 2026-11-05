@@ -90,7 +90,7 @@ class QuantityButton extends StatelessWidget {
     final effectiveAddPadding =
         paddingAll ?? _bySize(small: 3.r, medium: 4.r, big: 6.r);
     final effectiveAddIconSize =
-        iconSize ?? _bySize(small: 16.r, medium: 20.r, big: 26.r);
+        iconSize ?? _bySize(small: 16.r, medium: 24.r, big: 26.r);
     final borderWidth = _bySize(small: 1.0, medium: 1.5, big: 2.0);
     return CustomContainer(
       onTap: () {
@@ -112,19 +112,19 @@ class QuantityButton extends StatelessWidget {
   Widget _buildQuantityControl(BuildContext context) {
     final isDelete = (count ?? 0) <= 1;
     final effectiveIconSize =
-        iconSize ?? _bySize(small: 14.r, medium: 16.r, big: 22.r);
+        iconSize ?? _bySize(small: 14.r, medium: 20.r, big: 22.r);
     final effectiveButtonPadding =
         paddingAll ?? _bySize(small: 4.r, medium: 5.r, big: 8.r);
-    final buttonRadius = _bySize(small: 4.r, medium: 6.r, big: 10.r);
-    final containerRadius = _bySize(small: 6.r, medium: 8.r, big: 12.r);
+    final buttonRadius = _bySize(small: 4.r, medium: 8.r, big: 10.r);
+    final containerRadius = _bySize(small: 6.r, medium: 10.r, big: 12.r);
     final effectiveFontSize =
-        fontSize ?? _bySize(small: 12.r, medium: 14.r, big: 18.r);
+        fontSize ?? _bySize(small: 12.r, medium: 16.r, big: 18.r);
     final textFontWeight = _bySize(
       small: FontWeight.w600,
       medium: FontWeight.w500,
       big: FontWeight.w600,
     );
-    final horizontalPadding = _bySize(small: 6.w, medium: 8.w, big: 14.w);
+    final horizontalPadding = _bySize(small: 6.w, medium: 10.w, big: 14.w);
     final containerPadding = _bySize(small: 2.r, medium: 2.r, big: 3.r);
 
     return CustomContainer(
