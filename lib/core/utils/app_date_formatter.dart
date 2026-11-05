@@ -27,7 +27,7 @@ class AppDateFormatter {
 
   /// Format: 10:30 AM
   static String formatTime(DateTime date) {
-    return DateFormat('hh:mm a').format(date.toUtc());
+    return DateFormat('hh:mm a').format(date.toLocal());
   }
 
   /// Format '14:30' -> '2:30 PM'
@@ -113,19 +113,20 @@ class AppDateFormatter {
 
   /// Format Schedule Time: Today, 10:30 AM | Tomorrow, 10:30 AM | 14 Aug, 10:30 AM
   static String formatScheduleTime(DateTime date) {
+    final localDate = date.toLocal();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
-    final targetDate = DateTime(date.year, date.month, date.day);
+    final targetDate = DateTime(localDate.year, localDate.month, localDate.day);
     
-    final timeStr = formatTime(date);
+    final timeStr = formatTime(localDate);
 
     if (targetDate == today) {
       return 'Today, $timeStr';
     } else if (targetDate == tomorrow) {
       return 'Tomorrow, $timeStr';
     } else {
-      return '${formatDayMonth(date)}, $timeStr';
+      return '${formatDayMonth(localDate)}, $timeStr';
     }
   }
 

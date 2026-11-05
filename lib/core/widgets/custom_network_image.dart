@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'image_preview_screen.dart';
