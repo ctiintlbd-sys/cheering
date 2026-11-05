@@ -95,8 +95,8 @@ workflows:
       <<: *env_versions
       groups:
         - shorebird
-      android_signing:
-        - keystore_reference
+      # android_signing:
+      #   - keystore_reference
       vars:
         <<: *app_vars
         BUILD_NUMBER_OFFSET: 0   # Play te age bundle thakle boro number dao, jemon 100
@@ -126,7 +126,7 @@ workflows:
 
   # ---------- Patch: manual (Codemagic UI theke Start new build) ----------
   shorebird-patch:
-    name: Shorebird Patch
+    name: iOS Shorebird Patch
     instance_type: mac_mini_m2   # iOS patch er jonno Mac lagbe
     max_build_duration: 45
     integrations:
@@ -138,22 +138,18 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.ctibd.cheering-bd
-      android_signing:
-        - keystore_reference
       vars:
         <<: *app_vars
         IOS_RELEASE_VERSION: latest       # exact dite chaile jemon 1.0.0+12
-        ANDROID_RELEASE_VERSION: latest   # exact dite chaile jemon 1.0.0+5
     # triggering nai: shudhu manually chalbe
     scripts:
       - *install_deps
       - *install_shorebird
       - *ios_signing_setup
-      - name: Patch iOS and Android
+      - name: Shorebird patch iOS
         script: |
           set -e
           shorebird patch ios --release-version="$IOS_RELEASE_VERSION" \
             --export-options-plist=/Users/builder/export_options.plist
-          shorebird patch android --release-version="$ANDROID_RELEASE_VERSION"
     publishing:
       <<: *publishing_email
