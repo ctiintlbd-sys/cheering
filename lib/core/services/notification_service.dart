@@ -84,7 +84,8 @@ class NotificationService {
     // 4. Foreground push banner
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final notification = message.notification;
-      if (notification != null) {
+      if (notification != null &&
+          (Platform.isAndroid || message.notification == null)) {
         _showNotification(
           title: notification.title ?? 'Cheering',
           body: notification.body ?? '',

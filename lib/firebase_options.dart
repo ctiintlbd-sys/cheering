@@ -56,10 +56,9 @@ class DefaultFirebaseOptions {
     projectId: 'cheering-d183a',
     storageBucket: 'cheering-d183a.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAg1Xey3NNwEbFUAXDUwBcgfwWVuekfKBQ',
-    appId: '1:803066840519:ios:fd60822e6e79adc7cb45e2',
+    appId: '1:803066840519:ios:163fa3f0c6f4d7d9cb45e2',
     messagingSenderId: '803066840519',
     projectId: 'cheering-d183a',
     storageBucket: 'cheering-d183a.firebasestorage.app',

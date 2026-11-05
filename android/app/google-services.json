@@ -26,28 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:803066840519:android:62940646825d6cadcb45e2",
+        "mobilesdk_app_id": "1:803066840519:android:9732a7ba062ca61fcb45e2",
         "android_client_info": {
-          "package_name": "com.example.cheering"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAhj1ySN4lWnZTKBQvQ0bSrcUiYBeMz620"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:803066840519:android:26784cf8b12ab76ecb45e2",
-        "android_client_info": {
-          "package_name": "com.ctibd.cheering.test"
+          "package_name": "com.ctibd.cheeringpartner"
         }
       },
       "oauth_client": [],
