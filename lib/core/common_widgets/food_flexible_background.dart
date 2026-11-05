@@ -29,7 +29,7 @@ class FoodFlexibleBackground extends StatelessWidget {
           imageUrl: imageUrl,
           fallbackAsset:
               fallbackAsset ??
-              Assets.images.foodBanner.image(
+              Assets.lotties.banner.lottie(
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
