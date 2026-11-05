@@ -25,3 +25,7 @@ class ToggleAddOnEvent extends ItemDetailsEvent {
   @override
   List<Object?> get props => [addOn];
 }
+
+class LoadMenuItemDetailsEvent extends ItemDetailsEvent {
+  const LoadMenuItemDetailsEvent();
+}
