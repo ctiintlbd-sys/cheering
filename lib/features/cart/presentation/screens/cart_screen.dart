@@ -125,6 +125,7 @@ class _CartScreenState extends State<CartScreen> {
                 builder: (context, checkoutState) {
                   return PromoCodeCard(
                     promotions: state.cart!.promotions,
+                    itemTotal: state.cart!.itemTotal,
                     selectedCode: checkoutState.summary?.promoCode,
                     onSelected: _applyPromoCode,
                   );
