@@ -72,8 +72,6 @@ class BillDetailsCard extends StatelessWidget {
                     grandTotal != null
                         ? context.colors.textPrimary
                         : context.colors.primary,
-                fontWeight:
-                    grandTotal != null ? FontWeight.w400 : FontWeight.w600,
               ),
               if (deliveryFee != null)
                 _buildBillRow(
@@ -89,7 +87,6 @@ class BillDetailsCard extends StatelessWidget {
                   context,
                   'Delivery discount',
                   '-৳${deliveryDiscount!.toStringAsFixed(0)}',
-                  valueColor: context.colors.success,
                 ),
               if (priorityFee != null && priorityFee! > 0)
                 _buildBillRow(
@@ -120,7 +117,7 @@ class BillDetailsCard extends StatelessWidget {
                   context,
                   'Discount',
                   '-৳${discount!.toStringAsFixed(0)}',
-                  valueColor: Colors.green,
+                  valueColor: context.colors.success,
                 ),
               if (grandTotal != null)
                 _buildBillRow(
@@ -157,7 +154,7 @@ class BillDetailsCard extends StatelessWidget {
           ),
           CustomText(
             text: amount,
-            fontWeight: fontWeight ?? FontWeight.w400,
+            fontWeight: fontWeight ?? FontWeight.w500,
             color: valueColor ?? context.colors.textPrimary,
           ),
         ],
