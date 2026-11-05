@@ -63,11 +63,27 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     try {
       await emit.forEach<List<AddressEntity>>(
         _getAddressesUseCase(),
-        onData: (addresses) => state.copyWith(
-          status: AddressStatus.success,
-          addresses: addresses,
-          clearError: true,
-        ),
+        onData: (addresses) {
+          final defaultAddress =
+              addresses.where((a) => a.isDefault).firstOrNull;
+
+          final shouldSwitchToDefault =
+              defaultAddress != null &&
+              (state.activeDefaultId == null ||
+                  state.activeDefaultId == AddressEntity.currentLocationId);
+
+          final activeId =
+              shouldSwitchToDefault
+                  ? defaultAddress.id
+                  : state.activeDefaultId;
+
+          return state.copyWith(
+            status: AddressStatus.success,
+            addresses: addresses,
+            activeDefaultId: activeId,
+            clearError: true,
+          );
+        },
         // Keep showing what we already have rather than replacing it with an
         // error the user can't act on.
         onError: (error, stackTrace) => state.addresses.isNotEmpty
@@ -102,6 +118,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     SetDefaultAddressRequested event,
     Emitter<AddressState> emit,
   ) {
+    emit(state.copyWith(activeDefaultId: event.id));
     return _runMutation(emit, () => _setDefaultAddressUseCase(event.id));
   }
 
@@ -175,8 +192,12 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     InitializeAddressScreenData event,
     Emitter<AddressState> emit,
   ) async {
+    final defaultAddress =
+        state.addresses.where((a) => a.isDefault).firstOrNull;
+
     final activeId =
         _activeLocationService.activeAddress?.id ??
+        defaultAddress?.id ??
         AddressEntity.currentLocationId;
     emit(state.copyWith(activeDefaultId: activeId, isFetchingLocation: true));
 

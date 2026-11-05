@@ -49,10 +49,15 @@ class AddressState extends Equatable {
   }
 
   AddressEntity? get activeAddress {
-    for (final address in displayAddresses) {
-      if (address.id == activeDefaultId) return address;
+    if (activeDefaultId != null) {
+      for (final address in displayAddresses) {
+        if (address.id == activeDefaultId) return address;
+      }
     }
-    return null;
+    for (final address in addresses) {
+      if (address.isDefault) return address;
+    }
+    return currentLocationAddress;
   }
 
   AddressState copyWith({
