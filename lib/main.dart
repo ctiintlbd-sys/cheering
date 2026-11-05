@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cheering/core/cache/hive_cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,20 @@ import 'features/authentication/data/services/biometric_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Protect app from unhandled async / platform errors that would crash to home screen
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrint('FlutterError: ${details.exceptionAsString()}');
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint('Unhandled error prevented crash: $error\n$stack');
+    return true;
+  };
+
+  // Optimize image memory cache to prevent Out Of Memory crashes on low/mid-range phones
+  PaintingBinding.instance.imageCache.maximumSize = 100;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 50 << 20; // 50MB max
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

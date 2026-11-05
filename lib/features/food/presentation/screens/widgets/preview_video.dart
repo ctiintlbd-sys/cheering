@@ -92,40 +92,54 @@ class _PreviewVideoState extends State<PreviewVideo>
 
   bool get _effectiveMixWithOthers => widget.mixWithOthers ?? widget.isMuted;
 
+  bool get _isControllerValid {
+    final c = _controller;
+    if (c == null || _disposed) return false;
+    try {
+      return c.value.isInitialized;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initController();
+    if (widget.isActive) {
+      _initController();
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final controller = _controller;
-    if (controller == null || !_ready.value) return;
+    if (controller == null || !_ready.value || !_isControllerValid) return;
 
-    switch (state) {
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.hidden:
-        // Capture playing state only if actively playing.
-        // Don't overwrite if subsequent states (e.g. inactive -> paused) arrive.
-        if (controller.value.isPlaying) {
-          _wasPlayingBeforeBackground = true;
-          controller.pause();
-          _isPlaying.value = false;
-        }
-        break;
-      case AppLifecycleState.resumed:
-        if (_wasPlayingBeforeBackground && widget.isActive && widget.autoPlay) {
-          controller.play();
-          _isPlaying.value = true;
-        }
-        _wasPlayingBeforeBackground = false;
-        break;
-      case AppLifecycleState.detached:
-        break;
-    }
+    try {
+      switch (state) {
+        case AppLifecycleState.inactive:
+        case AppLifecycleState.paused:
+        case AppLifecycleState.hidden:
+          // Capture playing state only if actively playing.
+          // Don't overwrite if subsequent states (e.g. inactive -> paused) arrive.
+          if (controller.value.isPlaying) {
+            _wasPlayingBeforeBackground = true;
+            controller.pause();
+            _isPlaying.value = false;
+          }
+          break;
+        case AppLifecycleState.resumed:
+          if (_wasPlayingBeforeBackground && widget.isActive && widget.autoPlay) {
+            controller.play();
+            _isPlaying.value = true;
+          }
+          _wasPlayingBeforeBackground = false;
+          break;
+        case AppLifecycleState.detached:
+          break;
+      }
+    } catch (_) {}
   }
 
   Future<void> _initController() async {
@@ -216,10 +230,13 @@ class _PreviewVideoState extends State<PreviewVideo>
 
   void _onControllerUpdate() {
     if (_disposed || _controller == null) return;
-    final isPlaying = _controller!.value.isPlaying;
-    if (_isPlaying.value != isPlaying) {
-      _isPlaying.value = isPlaying;
-    }
+    try {
+      if (!_controller!.value.isInitialized) return;
+      final isPlaying = _controller!.value.isPlaying;
+      if (_isPlaying.value != isPlaying) {
+        _isPlaying.value = isPlaying;
+      }
+    } catch (_) {}
   }
 
   @override
@@ -230,12 +247,19 @@ class _PreviewVideoState extends State<PreviewVideo>
       _ready.value = false;
       _isPlaying.value = false;
       _disposeController();
-      _initController();
+      if (widget.isActive) {
+        _initController();
+      }
       return;
     }
 
     final controller = _controller;
-    if (controller == null) return;
+    if (controller == null) {
+      if (widget.isActive) {
+        _initController();
+      }
+      return;
+    }
 
     final oldMix = oldWidget.mixWithOthers ?? oldWidget.isMuted;
     final newMix = widget.mixWithOthers ?? widget.isMuted;
@@ -243,49 +267,61 @@ class _PreviewVideoState extends State<PreviewVideo>
       _ready.value = false;
       _isPlaying.value = false;
       _disposeController();
-      _initController();
+      if (widget.isActive) {
+        _initController();
+      }
       return;
     }
 
     if (!_ready.value) return;
 
-    if (oldWidget.isMuted != widget.isMuted) {
-      controller.setVolume(widget.isMuted ? 0.0 : 1.0);
-    }
-
-    if (oldWidget.isLooping != widget.isLooping) {
-      controller.setLooping(widget.isLooping);
-    }
-
-    if (oldWidget.isActive != widget.isActive) {
-      if (widget.isActive && widget.autoPlay) {
-        controller.play();
-      } else {
-        _wasPlayingBeforeBackground = false;
-        controller.pause();
+    try {
+      if (oldWidget.isMuted != widget.isMuted) {
+        controller.setVolume(widget.isMuted ? 0.0 : 1.0);
       }
-    }
+
+      if (oldWidget.isLooping != widget.isLooping) {
+        controller.setLooping(widget.isLooping);
+      }
+
+      if (oldWidget.isActive != widget.isActive) {
+        if (widget.isActive && widget.autoPlay) {
+          controller.play();
+          _isPlaying.value = true;
+        } else {
+          _wasPlayingBeforeBackground = false;
+          controller.pause();
+          _isPlaying.value = false;
+        }
+      }
+    } catch (_) {}
   }
 
   void _togglePlayPause() {
     final controller = _controller;
-    if (controller == null || !_ready.value) return;
+    if (controller == null || !_ready.value || !_isControllerValid) return;
 
-    if (controller.value.isPlaying) {
-      controller.pause();
-    } else {
-      controller.play();
-    }
+    try {
+      if (controller.value.isPlaying) {
+        controller.pause();
+      } else {
+        controller.play();
+      }
+    } catch (_) {}
   }
 
   void _disposeController() {
     final controller = _controller;
     _controller = null;
     if (controller != null) {
-      controller.removeListener(_onControllerUpdate);
+      try {
+        controller.removeListener(_onControllerUpdate);
+      } catch (_) {}
       if (!widget.useSharedPool) {
-        controller.pause();
-        controller.dispose();
+        try {
+          controller.pause();
+          controller.dispose();
+        } catch (_) {}
       }
     }
   }
@@ -312,23 +348,27 @@ class _PreviewVideoState extends State<PreviewVideo>
             builder: (context, ready, _) {
               final controller = _controller;
               final isReady =
-                  ready && controller != null && controller.value.isInitialized;
-              return AnimatedOpacity(
-                opacity: isReady ? 1.0 : 0.0,
-                duration: widget.fadeDuration,
-                curve: Curves.easeInOut,
-                child: isReady
-                    ? FittedBox(
-                        fit: widget.fit,
-                        clipBehavior: Clip.hardEdge,
-                        child: SizedBox(
-                          width: controller.value.size.width,
-                          height: controller.value.size.height,
-                          child: VideoPlayer(controller),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              );
+                  ready && controller != null && _isControllerValid;
+              if (!isReady) return const SizedBox.shrink();
+
+              try {
+                return AnimatedOpacity(
+                  opacity: 1.0,
+                  duration: widget.fadeDuration,
+                  curve: Curves.easeInOut,
+                  child: FittedBox(
+                    fit: widget.fit,
+                    clipBehavior: Clip.hardEdge,
+                    child: SizedBox(
+                      width: controller.value.size.width,
+                      height: controller.value.size.height,
+                      child: VideoPlayer(controller),
+                    ),
+                  ),
+                );
+              } catch (_) {
+                return const SizedBox.shrink();
+              }
             },
           ),
           if (widget.enableTapToPlayPause)
