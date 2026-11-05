@@ -90,7 +90,7 @@ class RestaurantCardWidget extends StatelessWidget {
                       child: CustomText(
                         text: 'Free Delivery',
                         color: context.colors.white,
-                        fontSize: 9.r,
+                        fontSize: 10.r,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
