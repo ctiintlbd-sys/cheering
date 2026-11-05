@@ -4,6 +4,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
 import '../../../../core/services/active_location_service.dart';
 import '../../../../core/services/current_location_service.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../address/presentation/bloc/address_bloc.dart';
 import '../../../address/presentation/bloc/address_event.dart';
 import '../../../profile/presentation/bloc/profile_bloc.dart';
@@ -356,6 +357,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     try {
+      await NotificationService.removeDeviceToken();
       await logoutUseCase(allDevices: event.allDevices);
       _clearDependenciesOnLogout();
       routerNotifier.updateAuth(isAuthenticated: false);
@@ -425,6 +427,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await biometricService.isBiometricsAvailable()) {
       routerNotifier.setPendingBiometricOffer(true);
     }
+    NotificationService.syncDeviceToken();
     routerNotifier.updateAuth(isAuthenticated: true);
   }
 }

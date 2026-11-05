@@ -59,4 +59,8 @@ class ApiEndpoints {
   static String orderTracking(String id) => '/orders/$id/tracking';
   static String orderReviews(String id) => '/orders/$id/reviews';
   static String orderMessages(String id) => '/orders/$id/messages';
+
+  // ── Devices & Notifications ─────────────────────────────────
+  static const String devices = '/users/me/devices';
+  static String deleteDevice(String fcmToken) => '/users/me/devices/$fcmToken';
 }

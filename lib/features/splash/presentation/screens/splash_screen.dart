@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/router/app_router_notifier.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/storage/onboarding_storage.dart';
 import '../../../authentication/domain/usecases/check_stored_session_usecase.dart';
 import '../../../../core/utils/assets/assets.gen.dart';
@@ -27,6 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final isOnboardingSeen = OnboardingStorage.isOnboardingCompleted;
     final isAuthenticated = await getIt<CheckStoredSessionUseCase>()();
+    if (isAuthenticated) {
+      NotificationService.syncDeviceToken();
+    }
     getIt<AppRouterNotifier>().updateAuth(
       isAuthenticated: isAuthenticated,
       isOnboardingSeen: isOnboardingSeen,
