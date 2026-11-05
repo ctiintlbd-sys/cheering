@@ -51,7 +51,10 @@ class FoodScreen extends StatelessWidget {
               backgroundColor: context.colors.background,
               collapsedBgColor: context.colors.primary,
               flexibleChild: const DeliveryTitleWidget(),
-              flexibleBackground: const FoodFlexibleBackground(imageUrl: ''),
+              flexibleBackground: FoodFlexibleBackground(
+                imageUrl: state.feed?.banners.firstOrNull?.mediaUrl ?? '',
+                mediaType: state.feed?.banners.firstOrNull?.mediaType,
+              ),
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(58.w),
                 child: Padding(
@@ -79,7 +82,7 @@ class FoodScreen extends StatelessWidget {
                 EmptyState(message: state.errorMessage ?? ''),
               ],
               HomeFeedStatus.success => [
-                SizedBox(height: 20.w),
+               // SizedBox(height: 16.w),
                 if (state.feed!.categories.isNotEmpty)
                   CategoriesSection(categories: state.feed!.categories),
 

@@ -37,6 +37,7 @@ class RestaurantModel extends RestaurantEntity {
     required super.isOpen,
     super.distanceKm,
     required super.isFavorite,
+    super.hasOffer = false,
     super.description,
     super.phone,
     super.addressLine,
@@ -66,6 +67,9 @@ class RestaurantModel extends RestaurantEntity {
       isOpen: json['is_open'] == true,
       distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 0.0,
       isFavorite: json['is_favorite'] == true,
+      hasOffer:
+          json['has_offer'] == true ||
+          (json['offers'] as List?)?.isNotEmpty == true,
       description: json['description'] as String?,
       phone: json['phone'] as String?,
       addressLine: json['address_line'] as String?,
@@ -77,7 +81,7 @@ class RestaurantModel extends RestaurantEntity {
           BusinessHoursModel.fromJson(value as Map<String, dynamic>),
         ),
       ),
-      promotions: (json['promotions'] as List<dynamic>?)
+      promotions: ((json['offers'] ?? json['promotions']) as List<dynamic>?)
           ?.map((e) => PromotionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -99,6 +103,7 @@ class RestaurantModel extends RestaurantEntity {
       'is_open': isOpen,
       'distance_km': distanceKm,
       'is_favorite': isFavorite,
+      'has_offer': hasOffer,
       'description': description,
       'phone': phone,
       'address_line': addressLine,

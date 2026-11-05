@@ -19,14 +19,16 @@ class RestaurantCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFreeDelivery = restaurant.deliveryFee <= 0;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         context.push(RoutePaths.storeDetails(restaurant.id), extra: restaurant);
       },
       child: SizedBox(
-        width:  174.w,
-        height:  196.w,
+        width: 174.w,
+        height: 196.w,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,30 +78,48 @@ class RestaurantCardWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (isFreeDelivery && restaurant.isOpen)
                   Positioned(
                     top: 8.w,
-                    right: 8.w,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: onFavoriteTap,
-                      child: CustomContainer(
-                        alignment: Alignment.center,
-                        height: 28.w,
-                        width: 28.w,
-                        shape: BoxShape.circle,
-                        color: context.colors.black.withValues(alpha: 0.1),
-                        child: Icon(
-                          (isFavorite ?? restaurant.isFavorite) == true
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: (isFavorite ?? restaurant.isFavorite) == true
-                              ? context.colors.primary
-                              : context.colors.white,
-                          size: 16.r,
-                        ),
+                    left: 8.w,
+                    child: CustomContainer(
+                      paddingHorizontal: 6.w,
+                      paddingVertical: 3.w,
+                      radiusAll: 6.r,
+                      color: context.colors.success,
+                      child: CustomText(
+                        text: 'Free Delivery',
+                        color: context.colors.white,
+                        fontSize: 9.r,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
+                Positioned(
+                  top: 8.w,
+                  right: 8.w,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onFavoriteTap,
+                    child: CustomContainer(
+                      alignment: Alignment.center,
+                      height: 28.w,
+                      width: 28.w,
+                      shape: BoxShape.circle,
+                      color: context.colors.black.withValues(alpha: 0.1),
+                      child: Icon(
+                        (isFavorite ?? restaurant.isFavorite) == true
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color:
+                            (isFavorite ?? restaurant.isFavorite) == true
+                                ? context.colors.primary
+                                : context.colors.white,
+                        size: 16.r,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             CustomText(
@@ -123,14 +143,27 @@ class RestaurantCardWidget extends StatelessWidget {
                     alignment: PlaceholderAlignment.middle,
                     child: Icon(
                       Icons.directions_bike,
-                      color: context.colors.iconSecondary,
+                      color:
+                          isFreeDelivery
+                              ? context.colors.success
+                              : context.colors.iconSecondary,
                       size: 12.r,
                     ),
                   ),
                   TextSpan(
-                    text: ' ৳${restaurant.deliveryFee.toStringAsFixed(0)} ',
+                    text:
+                        isFreeDelivery
+                            ? ' Free '
+                            : ' ৳${restaurant.deliveryFee.toStringAsFixed(0)} ',
+                    style:
+                        isFreeDelivery
+                            ? TextStyle(
+                              color: context.colors.success,
+                              fontWeight: FontWeight.w600,
+                            )
+                            : null,
                   ),
-                  TextSpan(text: '•'),
+                  const TextSpan(text: '•'),
                   TextSpan(text: ' ${restaurant.distanceKm}Km\n'),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
@@ -144,7 +177,7 @@ class RestaurantCardWidget extends StatelessWidget {
                     text:
                         ' ${restaurant.ratingAvg} (${restaurant.ratingCount}) ',
                   ),
-                  TextSpan(text: '•'),
+                  const TextSpan(text: '•'),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
                     child: Icon(

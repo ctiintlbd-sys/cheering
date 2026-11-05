@@ -31,6 +31,7 @@ class RestaurantEntity extends Equatable {
   final bool isOpen;
   final double distanceKm;
   final bool isFavorite;
+  final bool hasOffer;
 
   // Details fields
   final String? description;
@@ -56,6 +57,7 @@ class RestaurantEntity extends Equatable {
     required this.isOpen,
     this.distanceKm = 0.0,
     required this.isFavorite,
+    this.hasOffer = false,
     this.description,
     this.phone,
     this.addressLine,
@@ -150,6 +152,7 @@ class RestaurantEntity extends Equatable {
     isOpen,
     distanceKm,
     isFavorite,
+    hasOffer,
     description,
     phone,
     addressLine,

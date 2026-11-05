@@ -82,7 +82,7 @@ class SuperDealsSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SectionHeaderWidget(
-          title: 'Today’s Deals',
+          title: 'Top Sellers',
           onTap: () {
             context.push(RoutePaths.restaurantList, extra: RestaurantListArgs(title: 'Today’s Deals', params: const RestaurantQueryParams(sort: 'offers')));
           },
