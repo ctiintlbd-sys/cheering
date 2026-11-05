@@ -64,23 +64,16 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       await emit.forEach<List<AddressEntity>>(
         _getAddressesUseCase(),
         onData: (addresses) {
-          final defaultAddress =
-              addresses.where((a) => a.isDefault).firstOrNull;
-
-          final shouldSwitchToDefault =
-              defaultAddress != null &&
-              (state.activeDefaultId == null ||
-                  state.activeDefaultId == AddressEntity.currentLocationId);
-
-          final activeId =
-              shouldSwitchToDefault
-                  ? defaultAddress.id
-                  : state.activeDefaultId;
+          final defaultId =
+              addresses.where((a) => a.isDefault).firstOrNull?.id;
 
           return state.copyWith(
             status: AddressStatus.success,
             addresses: addresses,
-            activeDefaultId: activeId,
+            activeDefaultId:
+                defaultId ??
+                state.activeDefaultId ??
+                AddressEntity.currentLocationId,
             clearError: true,
           );
         },
@@ -192,12 +185,9 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     InitializeAddressScreenData event,
     Emitter<AddressState> emit,
   ) async {
-    final defaultAddress =
-        state.addresses.where((a) => a.isDefault).firstOrNull;
-
     final activeId =
         _activeLocationService.activeAddress?.id ??
-        defaultAddress?.id ??
+        state.addresses.where((a) => a.isDefault).firstOrNull?.id ??
         AddressEntity.currentLocationId;
     emit(state.copyWith(activeDefaultId: activeId, isFetchingLocation: true));
 
