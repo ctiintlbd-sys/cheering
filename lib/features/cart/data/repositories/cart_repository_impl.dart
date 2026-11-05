@@ -8,7 +8,6 @@ import '../../../../core/cache/cache_service.dart';
 import '../../../../core/config/chache_keys.dart';
 import '../../../../core/network/api_result.dart';
 import '../models/cart_model.dart';
-import '../models/checkout_summary_model.dart';
 
 class CartRepositoryImpl implements ICartRepository {
   final CartRemoteSource _remoteSource;
@@ -82,15 +81,13 @@ class CartRepositoryImpl implements ICartRepository {
   }
 
   @override
-  Stream<CheckoutSummaryEntity> getCheckoutSummary(
+  Future<CheckoutSummaryEntity> getCheckoutSummary(
     CheckoutSummaryParams params,
-  ) {
-    return _cache.getOrFetch<CheckoutSummaryModel>(
-      CacheKeys.checkoutSummary(params.toQueryParameters()),
-      fromJson: (json) => CheckoutSummaryModel.fromJson(json),
-      toJson: (data) => data.toJson(),
-      fetch: () => _remoteSource.getCheckoutSummary(params),
-      ttl: const Duration(minutes: 5),
+  ) async {
+    final response = await _remoteSource.getCheckoutSummary(params);
+    return response.fold(
+      onSuccess: (data) => data,
+      onFailure: (exception) => throw exception,
     );
   }
 }

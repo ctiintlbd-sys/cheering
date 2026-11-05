@@ -7,7 +7,7 @@ class GetCheckoutSummaryUseCase {
 
   GetCheckoutSummaryUseCase(this._repository);
 
-  Stream<CheckoutSummaryEntity> call(CheckoutSummaryParams params) {
+  Future<CheckoutSummaryEntity> call(CheckoutSummaryParams params) {
     return _repository.getCheckoutSummary(params);
   }
 }

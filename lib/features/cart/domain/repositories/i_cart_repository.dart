@@ -12,5 +12,5 @@ abstract class ICartRepository {
     String? notes,
   });
   Future<CartEntity> removeCartItem(String lineId);
-  Stream<CheckoutSummaryEntity> getCheckoutSummary(CheckoutSummaryParams params);
+  Future<CheckoutSummaryEntity> getCheckoutSummary(CheckoutSummaryParams params);
 }

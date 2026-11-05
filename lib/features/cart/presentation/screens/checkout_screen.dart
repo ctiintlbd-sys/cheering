@@ -106,6 +106,7 @@ class CheckoutScreen extends StatelessWidget {
                     itemCount: cartState.cart?.itemCount ?? 0,
                     minOrderAmount: cartState.cart?.minOrderAmount ?? 0,
                     deliveryFee: state.summary?.deliveryFee,
+                    deliveryDiscount: state.summary?.deliveryDiscount,
                     priorityFee: state.summary?.priorityFee,
                     platformFee: state.summary?.platformFee,
                     discount: state.summary?.discount,

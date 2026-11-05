@@ -7,6 +7,7 @@ class BillDetailsCard extends StatelessWidget {
   final int itemCount;
   final double minOrderAmount;
   final double? deliveryFee;
+  final double? deliveryDiscount;
   final double? priorityFee;
   final double? taxAmount;
   final double? platformFee;
@@ -18,8 +19,9 @@ class BillDetailsCard extends StatelessWidget {
     super.key,
     required this.itemTotal,
     required this.itemCount,
-    required this.minOrderAmount,
+    this.minOrderAmount = 0,
     this.deliveryFee,
+    this.deliveryDiscount,
     this.priorityFee,
     this.taxAmount,
     this.platformFee,
@@ -56,25 +58,63 @@ class BillDetailsCard extends StatelessWidget {
             children: [
               if (grandTotal == null)
                 _buildBillRow(context, 'Total Items', '$itemCount'),
-              if (minOrderAmount > 0)
-                _buildBillRow(context, 'Min Order Amount', '৳${minOrderAmount.toStringAsFixed(0)}'),
+              if (grandTotal == null && minOrderAmount > 0)
+                _buildBillRow(
+                  context,
+                  'Min Order Amount',
+                  '৳${minOrderAmount.toStringAsFixed(0)}',
+                ),
               _buildBillRow(
                 context,
                 grandTotal != null ? 'Item total' : 'Subtotal',
                 '৳${itemTotal.toStringAsFixed(0)}',
-                valueColor: grandTotal != null ? context.colors.textPrimary : context.colors.primary,
-                fontWeight: grandTotal != null ? FontWeight.w400 : FontWeight.w600,
+                valueColor:
+                    grandTotal != null
+                        ? context.colors.textPrimary
+                        : context.colors.primary,
+                fontWeight:
+                    grandTotal != null ? FontWeight.w400 : FontWeight.w600,
               ),
-              if (deliveryFee != null && deliveryFee! > 0)
-                _buildBillRow(context, 'Delivery fee', '৳${deliveryFee!.toStringAsFixed(0)}'),
+              if (deliveryFee != null)
+                _buildBillRow(
+                  context,
+                  'Delivery fee',
+                  deliveryFee! == 0
+                      ? 'Free'
+                      : '৳${deliveryFee!.toStringAsFixed(0)}',
+                  valueColor: deliveryFee! == 0 ? context.colors.success : null,
+                ),
+              if (deliveryDiscount != null && deliveryDiscount! > 0)
+                _buildBillRow(
+                  context,
+                  'Delivery discount',
+                  '-৳${deliveryDiscount!.toStringAsFixed(0)}',
+                  valueColor: context.colors.success,
+                ),
               if (priorityFee != null && priorityFee! > 0)
-                _buildBillRow(context, 'Priority fee', '৳${priorityFee!.toStringAsFixed(0)}'),
+                _buildBillRow(
+                  context,
+                  'Priority fee',
+                  '৳${priorityFee!.toStringAsFixed(0)}',
+                ),
               if (taxAmount != null && taxAmount! > 0)
-                _buildBillRow(context, 'Tax', '৳${taxAmount!.toStringAsFixed(0)}'),
+                _buildBillRow(
+                  context,
+                  'Tax',
+                  '৳${taxAmount!.toStringAsFixed(0)}',
+                ),
               if (platformFee != null && platformFee! > 0)
-                _buildBillRow(context, 'Platform fee', '৳${platformFee!.toStringAsFixed(0)}'),
+                _buildBillRow(
+                  context,
+                  'Platform fee',
+                  '৳${platformFee!.toStringAsFixed(0)}',
+                ),
               if (tip != null && tip! > 0)
-                _buildBillRow(context, 'Rider tip', '৳${tip!.toStringAsFixed(0)}'),
+                _buildBillRow(
+                  context,
+                  'Rider tip',
+                  '৳${tip!.toStringAsFixed(0)}',
+                ),
               if (discount != null && discount! > 0)
                 _buildBillRow(
                   context,
@@ -85,7 +125,7 @@ class BillDetailsCard extends StatelessWidget {
               if (grandTotal != null)
                 _buildBillRow(
                   context,
-                  '$itemCount pcs',
+                  'Grand Total',
                   '৳${grandTotal!.toStringAsFixed(0)}',
                   valueColor: context.colors.primary,
                   fontWeight: FontWeight.w600,

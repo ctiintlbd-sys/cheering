@@ -27,7 +27,7 @@ final List<RouteBase> cartRoutes = [
     builder: (context, state) {
       final addressId = context.read<AddressBloc>().state.activeDefaultId;
       final bloc = getIt<CheckoutSummaryBloc>();
-      if (addressId != null && bloc.state.currentParams?.addressId != addressId) {
+      if (addressId != null) {
         bloc.add(LoadCheckoutSummary(CheckoutSummaryParams(addressId: addressId)));
       }
       return BlocProvider.value(

@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../orders/domain/usecases/create_order_usecase.dart';
 import '../../../../orders/domain/entities/create_order_params.dart';
-import '../../../domain/entities/checkout_summary_entity.dart';
 import '../../../domain/entities/checkout_summary_params.dart';
 import '../../../domain/usecases/get_checkout_summary_usecase.dart';
 import '../../../../orders/domain/entities/order_schedule_state.dart';
@@ -38,16 +37,12 @@ class CheckoutSummaryBloc
     );
 
     try {
-      await emit.forEach<CheckoutSummaryEntity>(
-        _getCheckoutSummaryUseCase(event.params),
-        onData: (summary) => state.copyWith(
+      final summary = await _getCheckoutSummaryUseCase(event.params);
+      emit(
+        state.copyWith(
           status: CheckoutSummaryStatus.success,
           summary: summary,
           clearError: true,
-        ),
-        onError: (error, _) => state.copyWith(
-          status: CheckoutSummaryStatus.failure,
-          errorMessage: error.toString(),
         ),
       );
     } catch (e) {
