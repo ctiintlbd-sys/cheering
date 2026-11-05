@@ -1,27 +1,36 @@
 import 'package:cheering/core/utils/assets/assets.gen.dart';
 import 'package:cheering/core/widgets/widgets.dart';
+import 'package:cheering/features/food/domain/entities/promotion_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PromoCodeCard extends StatelessWidget {
   const PromoCodeCard({
     super.key,
-    required this.items,
+    required this.promotions,
     required this.onSelected,
-    this.selectedText,
+    this.selectedCode,
   });
 
-  final List<String> items;
+  final List<PromotionEntity> promotions;
   final ValueChanged<String> onSelected;
-  final String? selectedText;
+  final String? selectedCode;
 
   @override
   Widget build(BuildContext context) {
+    final promoItems = promotions.map((p) => p.displayDiscount).toList();
+    final selectedPromo =
+        promotions.where((p) => p.code == selectedCode).firstOrNull;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: CustomMenuContainer(
-        items: items,
-        onSelected: onSelected,
+        items: promoItems,
+        onSelected: (value) {
+          final index = promoItems.indexOf(value);
+          final code = index != -1 ? promotions[index].code : value;
+          onSelected(code);
+        },
         child: CustomContainer(
           radiusAll: 12.r,
           paddingAll: 16.r,
@@ -39,9 +48,7 @@ class PromoCodeCard extends StatelessWidget {
               SizedBox(width: 10.w),
               Expanded(
                 child: CustomText(
-                  text: (selectedText != null && selectedText!.isNotEmpty)
-                      ? selectedText!
-                      : 'Apply Promo',
+                  text: selectedPromo?.displayDiscount ?? 'Apply Promo',
                   fontSize: 14.r,
                   fontWeight: FontWeight.w600,
                   color: context.colors.textPrimary,

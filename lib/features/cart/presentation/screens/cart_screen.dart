@@ -31,6 +31,17 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   int selectedIndex = 0;
 
+  void _applyPromoCode(String code) {
+    final addressId = context.read<AddressBloc>().state.activeDefaultId;
+    if (addressId != null) {
+      context.read<CheckoutSummaryBloc>().add(
+        LoadCheckoutSummary(
+          CheckoutSummaryParams(addressId: addressId, promoCode: code),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
@@ -109,37 +120,13 @@ class _CartScreenState extends State<CartScreen> {
               ),
               SizedBox(height: 20.w),
               BlocBuilder<CheckoutSummaryBloc, CheckoutSummaryState>(
+                buildWhen: (prev, curr) =>
+                    prev.summary?.promoCode != curr.summary?.promoCode,
                 builder: (context, checkoutState) {
-                  final promoItems = state.cart!.promotions
-                      .map((p) => p.displayDiscount)
-                      .toList();
-                  final activeCode = checkoutState.summary?.promoCode ??
-                      checkoutState.currentParams?.promoCode;
-                  final selectedPromotion = state.cart!.promotions
-                      .where((p) => p.code == activeCode)
-                      .firstOrNull;
-
                   return PromoCodeCard(
-                    items: promoItems,
-                    selectedText: selectedPromotion?.displayDiscount,
-                    onSelected: (String value) {
-                      final index = promoItems.indexOf(value);
-                      final promoCode = index != -1
-                          ? state.cart!.promotions[index].code
-                          : value;
-                      final addressId =
-                          context.read<AddressBloc>().state.activeDefaultId;
-                      if (addressId != null) {
-                        context.read<CheckoutSummaryBloc>().add(
-                          LoadCheckoutSummary(
-                            CheckoutSummaryParams(
-                              addressId: addressId,
-                              promoCode: promoCode,
-                            ),
-                          ),
-                        );
-                      }
-                    },
+                    promotions: state.cart!.promotions,
+                    selectedCode: checkoutState.summary?.promoCode,
+                    onSelected: _applyPromoCode,
                   );
                 },
               ),
