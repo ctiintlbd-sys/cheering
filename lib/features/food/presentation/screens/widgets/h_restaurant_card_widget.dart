@@ -12,6 +12,8 @@ class HRestaurantCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFreeDelivery = (restaurant?.deliveryFee ?? 1) <= 0;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
       child: GestureDetector(
@@ -134,13 +136,25 @@ class HRestaurantCardWidget extends StatelessWidget {
                           alignment: PlaceholderAlignment.middle,
                           child: Icon(
                             Icons.directions_bike,
-                            color: context.colors.iconSecondary,
+                            color:
+                                isFreeDelivery
+                                    ? context.colors.success
+                                    : context.colors.iconSecondary,
                             size: 14.r,
                           ),
                         ),
                         TextSpan(
                           text:
-                              ' ৳${restaurant?.deliveryFee.toStringAsFixed(0) ?? 0}(${restaurant?.distanceKm.toStringAsFixed(1) ?? 0.0}Km)  ·  ',
+                              isFreeDelivery
+                                  ? ' Free (${restaurant?.distanceKm.toStringAsFixed(1) ?? 0.0}Km)  ·  '
+                                  : ' ৳${restaurant?.deliveryFee.toStringAsFixed(0) ?? 0}(${restaurant?.distanceKm.toStringAsFixed(1) ?? 0.0}Km)  ·  ',
+                          style:
+                              isFreeDelivery
+                                  ? TextStyle(
+                                    color: context.colors.success,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                  : null,
                         ),
                         WidgetSpan(
                           alignment: PlaceholderAlignment.middle,
@@ -157,39 +171,55 @@ class HRestaurantCardWidget extends StatelessWidget {
                     ),
                   ),
 
-                  // Discount Tag
+                  // Discount Tags (Horizontally Scrollable)
                   if (restaurant?.promotions != null &&
                       restaurant!.promotions!.isNotEmpty) ...[
                     SizedBox(height: 10.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.colors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(32.r),
-                      ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.local_offer_outlined,
-                            color: context.colors.primary,
-                            size: 12.r,
-                          ),
-                          Flexible(
-                            child: CustomText(
-                              left: 4.w,
-                              text: restaurant!.promotions!.first.title,
-                              color: context.colors.primary,
-                              fontSize: 10.r,
-                              fontWeight: FontWeight.w600,
-                              maxLines: 1,
-                              textOverflow: TextOverflow.ellipsis,
+                          for (
+                            var i = 0;
+                            i < restaurant!.promotions!.length;
+                            i++
+                          ) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.colors.primary.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(32.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.local_offer_outlined,
+                                    color: context.colors.primary,
+                                    size: 12.r,
+                                  ),
+                                  CustomText(
+                                    left: 4.w,
+                                    text:
+                                        restaurant!
+                                            .promotions![i]
+                                            .displayDiscount,
+                                    color: context.colors.primary,
+                                    fontSize: 10.r,
+                                    fontWeight: FontWeight.w600,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            if (i < restaurant!.promotions!.length - 1)
+                              SizedBox(width: 6.w),
+                          ],
                         ],
                       ),
                     ),

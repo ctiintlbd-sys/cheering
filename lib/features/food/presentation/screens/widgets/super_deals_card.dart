@@ -22,6 +22,8 @@ class SuperDealsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final r = restaurant;
     final cuisines = r.cuisineTypes.where((e) => e.isNotEmpty).join(' • ');
+    final isFreeDelivery = r.deliveryFee <= 0;
+    final hasPromos = r.promotions != null && r.promotions!.isNotEmpty;
 
     return CustomContainer(
       onTap: () => context.push(
@@ -68,6 +70,35 @@ class SuperDealsCard extends StatelessWidget {
               ),
             ),
           ),
+          if (hasPromos)
+            Positioned(
+              top: 12.w,
+              right: 12.w,
+              child: CustomContainer(
+                alignment: Alignment.center,
+                color: context.colors.primary,
+                radiusAll: 16.r,
+                paddingVertical: 4.w,
+                paddingHorizontal: 8.w,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.local_offer,
+                      color: context.colors.white,
+                      size: 11.r,
+                    ),
+                    SizedBox(width: 4.w),
+                    CustomText(
+                      text: r.promotions!.first.displayDiscount,
+                      color: context.colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 11.r,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           Positioned(
             bottom: 12.w,
             left: 12.w,
@@ -118,14 +149,25 @@ class SuperDealsCard extends StatelessWidget {
                         alignment: PlaceholderAlignment.middle,
                         child: Icon(
                           Icons.directions_bike,
-                          color: context.colors.white.withValues(alpha: 0.8),
+                          color:
+                              isFreeDelivery
+                                  ? context.colors.success
+                                  : context.colors.white.withValues(alpha: 0.8),
                           size: 12.r,
                         ),
                       ),
                       TextSpan(
                         text:
-                            ' ৳${r.deliveryFee}'
-                            '${'(${r.distanceKm.toStringAsFixed(1)}Km)'} ',
+                            isFreeDelivery
+                                ? ' Free (${r.distanceKm.toStringAsFixed(1)}Km) '
+                                : ' ৳${r.deliveryFee.toStringAsFixed(0)} (${r.distanceKm.toStringAsFixed(1)}Km) ',
+                        style:
+                            isFreeDelivery
+                                ? TextStyle(
+                                  color: context.colors.success,
+                                  fontWeight: FontWeight.w600,
+                                )
+                                : null,
                       ),
                       const TextSpan(text: '• '),
                       WidgetSpan(

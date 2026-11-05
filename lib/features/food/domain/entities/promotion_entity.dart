@@ -19,6 +19,16 @@ class PromotionEntity extends Equatable {
     required this.validUntil,
   });
 
+  String get displayDiscount {
+    if (discountType.toUpperCase() == 'PERCENTAGE' && discountValue > 0) {
+      return '${discountValue.toStringAsFixed(0)}% OFF';
+    }
+    if (discountValue > 0) {
+      return '৳${discountValue.toStringAsFixed(0)} OFF';
+    }
+    return title;
+  }
+
   @override
   List<Object?> get props => [
     code,
